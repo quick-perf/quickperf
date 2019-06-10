@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+  ~ the License. You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  ~ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations under the License.
+  ~
+  ~ Copyright 2019-2019 the original author or authors.
+  -->
+
+<licenses>
+    <valid>
+        <license>
+            <name>The 2-Clause BSD License</name>
+            <names>
+                <name>New BSD License</name>
+            </names>
+            <urls>
+                <url>http://www.opensource.org/licenses/bsd-license.php</url>
+            </urls>
+        </license>
+        <license>
+            <name>The BSD 3-Clause License</name>
+            <names>
+                <name>The BSD 3-Clause License</name>
+            </names>
+            <urls>
+                <url>http://www.opensource.org/licenses/BSD-3-Clause</url>
+            </urls>
+        </license>
+        <license>
+            <name>Apache Software License, Version 2.0</name>
+            <names>
+                <name>The Apache Software License, Version 2.0</name>
+                <name>Apache Public License 2.0</name>
+            </names>
+            <urls>
+                <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+                <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            </urls>
+        </license>
+        <license>
+            <name>Eclipse Public License 1.0</name>
+            <names>
+                <name>Eclipse Public License 1.0</name>
+            </names>
+            <urls>
+                <url>http://www.eclipse.org/legal/epl-v10.html</url>
+            </urls>
+        </license>
+        <license>
+            <name>Eclipse Public License v2.0</name>
+            <names>
+                <name>Eclipse Public License v2.0</name>
+            </names>
+            <urls>
+                <url>http://www.eclipse.org/legal/epl-v20.html"</url>
+            </urls>
+        </license>
+        <license>
+            <name>Public Domain</name>
+            <names>
+                <name>Public Domain</name>
+            </names>
+        </license>
+        <license>
+            <name>MIT License</name>
+            <names>
+                <name>MIT License</name>
+            </names>
+        </license>
+        <license>
+            <name>MIT license</name>
+            <names>
+                <name>MIT license</name>
+            </names>
+        </license>
+        <license>
+            <name>The MIT License</name>
+            <names>
+                <name>The MIT License</name>
+            </names>
+        </license>
+    </valid>
+    <forbidden>
+        <license>
+            <name>GNU General Public License version 2</name>
+            <names>
+                <name>GNU General Public License version 2</name>
+            </names>
+            <urls>
+                <url>https://opensource.org/licenses/gpl-2.0.php</url>
+            </urls>
+        </license>
+    </forbidden>
+</licenses>

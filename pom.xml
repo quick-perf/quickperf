@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+  ~ the License. You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  ~ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations under the License.
+  ~
+  ~ Copyright 2019-2019 the original author or authors.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.quickperf</groupId>
+    <artifactId>quick-perf</artifactId>
+    <packaging>pom</packaging>
+    <name>quick-perf</name>
+    <version>1.0-SNAPSHOT</version>
+    <inceptionYear>2019</inceptionYear>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <dependencies.max.jdk.version>1.7</dependencies.max.jdk.version>
+        <junit4.test.version>4.12</junit4.test.version>
+        <mockito.core.version>2.25.0</mockito.core.version>
+        <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+        <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
+        <surefire-junit47.version>2.22.1</surefire-junit47.version>
+        <logback-classic.version>1.1.0</logback-classic.version>
+        <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
+    </properties>
+
+
+    <modules>
+
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>2.9.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+
+        <pluginManagement>
+           <plugins>
+               <plugin>
+                   <groupId>se.ayoy.maven-plugins</groupId>
+                   <artifactId>ayoy-license-verifier-maven-plugin</artifactId>
+                   <version>1.0.5</version>
+                   <executions>
+                       <execution>
+                           <phase>compile</phase>
+                           <goals>
+                               <goal>verify</goal>
+                           </goals>
+                       </execution>
+                   </executions>
+                   <configuration>
+                       <licenseFile>licenses/licenses.xml</licenseFile>
+                       <excludedMissingLicensesFile>licenses/allowedMissingLicense.xml</excludedMissingLicensesFile>
+                       <failOnForbidden>true</failOnForbidden>
+                       <failOnUnknown>true</failOnUnknown>
+                       <failOnMissing>false</failOnMissing>
+                   </configuration>
+               </plugin>
+           </plugins>
+
+        </pluginManagement>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>${surefire-junit47.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <parallel>all</parallel>
+                    <threadCount>5</threadCount>
+                    <argLine>
+                    </argLine>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.4.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-bytecode-version</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <banCircularDependencies/>
+                                <enforceBytecodeVersion>
+                                    <maxJdkVersion>${dependencies.max.jdk.version}</maxJdkVersion>
+                                    <ignoreClasses>
+                                        <ignoreClass>module-info</ignoreClass>
+                                    </ignoreClasses>
+                                </enforceBytecodeVersion>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>extra-enforcer-rules</artifactId>
+                        <version>1.0-beta-9</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+        </plugins>
+
+
+    </build>
+
+</project>
