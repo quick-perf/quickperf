@@ -41,6 +41,7 @@
         <module>core</module>
         <module>jvm-annotations</module>
         <module>junit4</module>
+        <module>junit4-jvm-test</module>
     </modules>
 
     <dependencies>
