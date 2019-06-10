@@ -39,7 +39,7 @@
 
 
     <modules>
-
+        <module>core</module>
     </modules>
 
     <dependencies>
