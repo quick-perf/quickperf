@@ -40,6 +40,7 @@
 
     <modules>
         <module>core</module>
+        <module>jvm-annotations</module>
     </modules>
 
     <dependencies>
