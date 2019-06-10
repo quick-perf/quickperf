@@ -37,10 +37,10 @@
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
     </properties>
 
-
     <modules>
         <module>core</module>
         <module>jvm-annotations</module>
+        <module>junit4</module>
     </modules>
 
     <dependencies>
@@ -135,7 +135,6 @@
             </plugin>
 
         </plugins>
-
 
     </build>
 
