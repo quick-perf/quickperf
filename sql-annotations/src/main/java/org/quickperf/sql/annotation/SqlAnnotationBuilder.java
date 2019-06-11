@@ -37,6 +37,15 @@ public class SqlAnnotationBuilder {
         };
     }
 
+    public static DisableSameSelectTypesWithDifferentParams disableSameSelectTypesWithDifferentParams() {
+        return new DisableSameSelectTypesWithDifferentParams() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return DisableSameSelectTypesWithDifferentParams.class;
+            }
+        };
+    }
+
     public static ExpectJdbcBatching expectJdbcBatching() {
         return new ExpectJdbcBatching() {
             @Override

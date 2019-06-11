@@ -55,14 +55,24 @@ class SqlAnnotationsConfigs {
             .build(ExpectMaxSelect.class);
 
     static final AnnotationConfig DISPLAY_ALL_SQL =
-            new AnnotationConfig.Builder()
+             new AnnotationConfig.Builder()
             .perfRecorderClass(DisplaySqlRecorder.class)
             .build(DisplaySql.class);
 
     static final AnnotationConfig DISPLAY_SQL =
-            new AnnotationConfig.Builder()
+             new AnnotationConfig.Builder()
             .perfRecorderClass(DisplaySqlOfTestMethodBodyRecorder.class)
             .build(DisplaySqlOfTestMethodBody.class);
+
+	static final AnnotationConfig DISABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS = new AnnotationConfig.Builder()
+			.perfRecorderClass(PersistenceSqlRecorder.class)
+			.perfMeasureExtractor(HasSameSelectTypesWithDiffParamsExtractor.INSTANCE)
+			.perfIssueVerifier(HasSameSelectTypesWithDiffParamsVerifier.INSTANCE)
+			.build(DisableSameSelectTypesWithDifferentParams.class);
+
+	static final AnnotationConfig ENABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS = new AnnotationConfig.Builder()
+			.disableAnnotation(DisableSameSelectTypesWithDifferentParams.class)
+			.build(EnableSameSelectTypesWithDifferentParams.class);
 
     static final AnnotationConfig NUMBER_OF_SQL_INSERT =
              new AnnotationConfig.Builder()
