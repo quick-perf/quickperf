@@ -42,6 +42,8 @@
         <module>jvm-annotations</module>
         <module>junit4</module>
         <module>junit4-jvm-test</module>
+        <module>sql-annotations</module>
+        <module>junit4-sql-test</module>
     </modules>
 
     <dependencies>

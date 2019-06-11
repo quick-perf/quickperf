@@ -1,0 +1,114 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ *
+ * Copyright 2019-2019 the original author or authors.
+ */
+
+package org.quickperf.sql.config.library;
+
+import org.quickperf.config.library.AnnotationConfig;
+import org.quickperf.sql.PersistenceSqlRecorder;
+import org.quickperf.sql.annotation.*;
+import org.quickperf.sql.batch.SqlRequestBatchRecorder;
+import org.quickperf.sql.batch.SqlRequestBatchVerifier;
+import org.quickperf.sql.crossjoin.HasSqlCrossJoinPerfMeasureExtractor;
+import org.quickperf.sql.crossjoin.NoSqlCrossJoinPerfIssueVerifier;
+import org.quickperf.sql.delete.DeleteCountMeasureExtractor;
+import org.quickperf.sql.delete.NumberOfSqlDeletePerfIssueVerifier;
+import org.quickperf.sql.insert.InsertCountMeasureExtractor;
+import org.quickperf.sql.insert.InsertNumberPerfIssueVerifier;
+import org.quickperf.sql.like.ContainsLikeWithLeadingWildcardExtractor;
+import org.quickperf.sql.like.HasLikeWithLeadingWildcardVerifier;
+import org.quickperf.sql.select.*;
+import org.quickperf.sql.select.columns.MaxSelectedColumnsPerMeasureExtractor;
+import org.quickperf.sql.select.columns.MaxSelectedColumnsPerfIssueVerifier;
+import org.quickperf.sql.select.columns.SelectedColumnNumberPerfIssueVerifier;
+import org.quickperf.sql.select.columns.SelectedColumnNumberPerfMeasureExtractor;
+import org.quickperf.sql.update.UpdateCountMeasureExtractor;
+import org.quickperf.sql.update.UpdateNumberPerfIssueVerifier;
+
+class SqlAnnotationsConfigs {
+
+    private SqlAnnotationsConfigs() { }
+
+    static final AnnotationConfig NUMBER_OF_SQL_SELECT =
+             new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(SelectCountMeasureExtractor.INSTANCE)
+            .perfIssueVerifier(SelectNumberPerfIssueVerifier.INSTANCE)
+            .build(ExpectSelect.class);
+
+    static final AnnotationConfig MAX_SQL_SELECT =
+             new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(SelectCountMeasureExtractor.INSTANCE)
+            .perfIssueVerifier(MaxOfSelectsPerfIssueVerifier.INSTANCE)
+            .build(ExpectMaxSelect.class);
+
+
+    static final AnnotationConfig NUMBER_OF_SQL_INSERT =
+             new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(InsertCountMeasureExtractor.INSTANCE)
+            .perfIssueVerifier(InsertNumberPerfIssueVerifier.INSTANCE)
+            .build(ExpectInsert.class);
+
+    static final AnnotationConfig SQL_REQUESTS_BATCHED =
+            new AnnotationConfig.Builder()
+            .perfRecorderClass(SqlRequestBatchRecorder.class)
+            .perfIssueVerifier(SqlRequestBatchVerifier.INSTANCE)
+            .build(ExpectJdbcBatching.class);
+
+    static final AnnotationConfig NUMBER_OF_SQL_DELETE =
+             new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(DeleteCountMeasureExtractor.INSTANCE)
+            .perfIssueVerifier(NumberOfSqlDeletePerfIssueVerifier.INSTANCE)
+            .build(ExpectDelete.class);
+
+    static final AnnotationConfig NUMBER_OF_SQL_UPDATE = new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(UpdateCountMeasureExtractor.INSTANCE)
+            .perfIssueVerifier(UpdateNumberPerfIssueVerifier.INSTANCE)
+            .build(ExpectUpdate.class);
+
+    static final AnnotationConfig MAX_SELECTED_COLUMNS = new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(MaxSelectedColumnsPerMeasureExtractor.INSTANCE)
+            .perfIssueVerifier(MaxSelectedColumnsPerfIssueVerifier.INSTANCE)
+            .build(ExpectMaxSelectedColumn.class);
+
+    static final AnnotationConfig NUMBER_OF_SELECTED_COLUMNS = new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(SelectedColumnNumberPerfMeasureExtractor.INSTANCE)
+            .perfIssueVerifier(SelectedColumnNumberPerfIssueVerifier.INSTANCE)
+            .build(ExpectSelectedColumn.class);
+
+    static final AnnotationConfig DISABLE_SQL_CROSS_JOIN = new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(HasSqlCrossJoinPerfMeasureExtractor.INSTANCE)
+            .perfIssueVerifier(NoSqlCrossJoinPerfIssueVerifier.INSTANCE)
+            .build(DisableCrossJoin.class);
+
+    static final AnnotationConfig ENABLE_SQL_CROSS_JOIN = new AnnotationConfig.Builder()
+            .disableAnnotation(DisableCrossJoin.class)
+            .build(EnableCrossJoin.class);
+
+    static final AnnotationConfig DISABLE_LIKE_STARTING_WITH_WILDCARD = new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(ContainsLikeWithLeadingWildcardExtractor.INSTANCE)
+            .perfIssueVerifier(HasLikeWithLeadingWildcardVerifier.INSTANCE)
+            .build(DisableLikeWithLeadingWildcard.class);
+
+    static final AnnotationConfig ENABLE_LIKE_STARTING_WITH_WILDCARD = new AnnotationConfig.Builder()
+            .disableAnnotation(DisableLikeWithLeadingWildcard.class)
+            .build(EnableLikeWithLeadingWildcard.class);
+
+}
