@@ -40,6 +40,16 @@ class SqlAnnotationsConfigs {
 
     private SqlAnnotationsConfigs() { }
 
+	static final AnnotationConfig DISABLE_EXACTLY_SAME_SQL_SELECTS = new AnnotationConfig.Builder()
+			.perfRecorderClass(PersistenceSqlRecorder.class)
+			.perfMeasureExtractor(HasExactlySameSelectExtractor.INSTANCE)
+			.perfIssueVerifier(HasExactlySameSelectVerifier.INSTANCE)
+			.build(DisableExactlySameSelects.class);
+
+	static final AnnotationConfig ENABLE_EXACTLY_SAME_SQL_SELECTS = new AnnotationConfig.Builder()
+			.disableAnnotation(DisableExactlySameSelects.class)
+			.build(EnableExactlySameSelects.class);
+
     static final AnnotationConfig NUMBER_OF_SQL_SELECT =
              new AnnotationConfig.Builder()
             .perfRecorderClass(PersistenceSqlRecorder.class)

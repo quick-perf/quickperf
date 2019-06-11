@@ -45,6 +45,8 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                 , SqlAnnotationsConfigs.DISPLAY_SQL
                 , SqlAnnotationsConfigs.DISABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS
                 , SqlAnnotationsConfigs.ENABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS
+                , SqlAnnotationsConfigs.DISABLE_EXACTLY_SAME_SQL_SELECTS
+                , SqlAnnotationsConfigs.ENABLE_EXACTLY_SAME_SQL_SELECTS
         );
     }
 

@@ -46,6 +46,15 @@ public class SqlAnnotationBuilder {
         };
     }
 
+    public static DisableExactlySameSelects disableExactlySameSelects() {
+        return new DisableExactlySameSelects() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return DisableExactlySameSelects.class;
+            }
+        };
+    }
+
     public static ExpectJdbcBatching expectJdbcBatching() {
         return new ExpectJdbcBatching() {
             @Override
