@@ -11,7 +11,7 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.sql.sametype;
+package org.quickperf.sql.select.sametype;
 
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
