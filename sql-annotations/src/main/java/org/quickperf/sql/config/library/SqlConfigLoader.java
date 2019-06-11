@@ -60,9 +60,9 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
     @Override
     public Collection<RecorderExecutionOrder> loadRecorderExecutionOrdersAfterTestMethod() {
         return Arrays.asList(
-                    new RecorderExecutionOrder(PersistenceSqlRecorder.class, 7000)
-                //, new RecorderExecutionOrder(DisplaySqlRecorder.class, 7001)
-                //, new RecorderExecutionOrder(DisplaySqlOfTestMethodBodyRecorder.class, 7002)
+        		  new RecorderExecutionOrder(PersistenceSqlRecorder.class, 7000)
+                , new RecorderExecutionOrder(DisplaySqlRecorder.class, 7001)
+                , new RecorderExecutionOrder(DisplaySqlOfTestMethodBodyRecorder.class, 7002)
                 , new RecorderExecutionOrder(SqlRequestBatchRecorder.class, 7003)
         );
     }
