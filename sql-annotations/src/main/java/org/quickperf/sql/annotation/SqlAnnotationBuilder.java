@@ -154,4 +154,22 @@ public class SqlAnnotationBuilder {
         };
     }
 
+    public static DisplaySql displaySql() {
+        return new DisplaySql() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return DisplaySql.class;
+            }
+        };
+    }
+
+    public static DisplaySqlOfTestMethodBody displaySqlOfTestMethodBody() {
+        return new DisplaySqlOfTestMethodBody() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return DisplaySqlOfTestMethodBody.class;
+            }
+        };
+    }
+
 }

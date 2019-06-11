@@ -18,6 +18,8 @@ import org.quickperf.config.library.AnnotationConfig;
 import org.quickperf.config.library.QuickPerfConfigLoader;
 import org.quickperf.sql.PersistenceSqlRecorder;
 import org.quickperf.sql.batch.SqlRequestBatchRecorder;
+import org.quickperf.sql.display.DisplaySqlOfTestMethodBodyRecorder;
+import org.quickperf.sql.display.DisplaySqlRecorder;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,6 +41,8 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                 , SqlAnnotationsConfigs.DISABLE_LIKE_STARTING_WITH_WILDCARD
                 , SqlAnnotationsConfigs.ENABLE_LIKE_STARTING_WITH_WILDCARD
                 , SqlAnnotationsConfigs.SQL_REQUESTS_BATCHED
+                , SqlAnnotationsConfigs.DISPLAY_ALL_SQL
+                , SqlAnnotationsConfigs.DISPLAY_SQL
         );
     }
 
@@ -46,8 +50,8 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
     public Collection<RecorderExecutionOrder> loadRecorderExecutionOrdersBeforeTestMethod() {
         return Arrays.asList(
                   new RecorderExecutionOrder(PersistenceSqlRecorder.class, 2000)
-                //, new RecorderExecutionOrder(DisplaySqlRecorder.class, 2001)
-                //, new RecorderExecutionOrder(DisplaySqlOfTestMethodBodyRecorder.class, 2002)
+                , new RecorderExecutionOrder(DisplaySqlRecorder.class, 2001)
+                , new RecorderExecutionOrder(DisplaySqlOfTestMethodBodyRecorder.class, 2002)
                 , new RecorderExecutionOrder(SqlRequestBatchRecorder.class, 2003)
 
         );

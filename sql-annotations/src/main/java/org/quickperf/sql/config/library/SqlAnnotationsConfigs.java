@@ -22,6 +22,8 @@ import org.quickperf.sql.crossjoin.HasSqlCrossJoinPerfMeasureExtractor;
 import org.quickperf.sql.crossjoin.NoSqlCrossJoinPerfIssueVerifier;
 import org.quickperf.sql.delete.DeleteCountMeasureExtractor;
 import org.quickperf.sql.delete.NumberOfSqlDeletePerfIssueVerifier;
+import org.quickperf.sql.display.DisplaySqlOfTestMethodBodyRecorder;
+import org.quickperf.sql.display.DisplaySqlRecorder;
 import org.quickperf.sql.insert.InsertCountMeasureExtractor;
 import org.quickperf.sql.insert.InsertNumberPerfIssueVerifier;
 import org.quickperf.sql.like.ContainsLikeWithLeadingWildcardExtractor;
@@ -52,6 +54,15 @@ class SqlAnnotationsConfigs {
             .perfIssueVerifier(MaxOfSelectsPerfIssueVerifier.INSTANCE)
             .build(ExpectMaxSelect.class);
 
+    static final AnnotationConfig DISPLAY_ALL_SQL =
+            new AnnotationConfig.Builder()
+            .perfRecorderClass(DisplaySqlRecorder.class)
+            .build(DisplaySql.class);
+
+    static final AnnotationConfig DISPLAY_SQL =
+            new AnnotationConfig.Builder()
+            .perfRecorderClass(DisplaySqlOfTestMethodBodyRecorder.class)
+            .build(DisplaySqlOfTestMethodBody.class);
 
     static final AnnotationConfig NUMBER_OF_SQL_INSERT =
              new AnnotationConfig.Builder()
