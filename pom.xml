@@ -44,6 +44,7 @@
         <module>junit4-jvm-test</module>
         <module>sql-annotations</module>
         <module>junit4-sql-test</module>
+        <module>spring</module>
     </modules>
 
     <dependencies>
