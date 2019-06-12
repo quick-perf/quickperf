@@ -29,37 +29,23 @@ public class JvmVersion {
         return jvmVersionAsString.contains("1.8");
     }
 
-    public static boolean is12() {
+    public static boolean isGreaterThanOrEqualTo9() {
+        if (is7() || is8()) {
+            return false;
+        }
+        return findJvmVersionAsInt() >= 9;
+    }
+
+    private static int findJvmVersionAsInt() {
         String jvmVersionAsString = System.getProperty(JAVA_VM_SPECIFICATION_VERSION_PROPERTY);
-        return jvmVersionAsString.contains("12");
+        return Integer.parseInt(jvmVersionAsString);
     }
 
     public static boolean isGreaterThanOrEqualTo11() {
         if (is7() || is8()) {
             return false;
         }
-
-        String jvmVersionAsString = System.getProperty(JAVA_VM_SPECIFICATION_VERSION_PROPERTY);
-        try {
-            int jvmVersion = Integer.parseInt(jvmVersionAsString);
-            return jvmVersion >= 11;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    public static boolean isGreaterThanOrEqualTo9() {
-        if (is7() || is8()) {
-            return false;
-        }
-
-        String jvmVersionAsString = System.getProperty(JAVA_VM_SPECIFICATION_VERSION_PROPERTY);
-        try {
-            int jvmVersion = Integer.parseInt(jvmVersionAsString);
-            return jvmVersion >= 9;
-        } catch (NumberFormatException e) {
-            return false;
-        }
+        return findJvmVersionAsInt() >= 11;
     }
 
 }

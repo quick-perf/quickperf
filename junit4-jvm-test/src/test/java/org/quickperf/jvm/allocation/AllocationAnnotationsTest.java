@@ -22,8 +22,7 @@ import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class AllocationAnnotationsTest {
 
-    @Test
-    public void
+    @Test public void
     test_should_fail_if_allocation_is_greater_than_expected() {
 
         // GIVEN
@@ -72,6 +71,7 @@ public class AllocationAnnotationsTest {
 
         // THEN
         assertThat(printableResult.failureCount()).isEqualTo(0);
+
     }
 
 }

@@ -20,6 +20,7 @@ import java.lang.management.ManagementFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
+ * From https://github.com/danielshaya/ByteWatcher/blob/master/src/main/java/org/octtech/bw/ByteWatcherSingleThread.java
  * A class to measure how much allocation there has been on an
  * individual thread.  The class would be useful to embed into
  * regression tests to make sure that there has been no
