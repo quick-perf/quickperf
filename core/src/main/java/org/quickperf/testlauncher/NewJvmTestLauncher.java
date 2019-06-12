@@ -53,7 +53,7 @@ public class NewJvmTestLauncher {
         System.out.println(cmdExecutionResult.getMessage());
 
         if(!cmdExecutionResult.isCommandSuccessful()) {
-            throw new IllegalStateException("Unable to run test in a new JMV: " + cmdExecutionResult.getErrorMessage());
+            System.err.println("Unable to run test in a new JMV: " + cmdExecutionResult.getErrorMessage());
         }
 
     }

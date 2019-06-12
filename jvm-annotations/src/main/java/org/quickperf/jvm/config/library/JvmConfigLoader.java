@@ -17,7 +17,6 @@ import org.quickperf.config.library.QuickPerfConfigLoader;
 import org.quickperf.RecorderExecutionOrder;
 import org.quickperf.config.library.AnnotationConfig;
 import org.quickperf.jvm.allocation.bytewatcher.ByteWatcherRecorder;
-import org.quickperf.jvm.config.library.JvmAnnotationsConfigs;
 import org.quickperf.jvm.jfr.JfrEventsRecorder;
 
 import java.util.Arrays;

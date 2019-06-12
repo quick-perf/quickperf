@@ -29,10 +29,9 @@ class JFREventsLoader {
         File jfrFile = new File(jfrFilePath);
         if(!jfrFile.exists()) {
             String message =
-                      "Flight recorder file not found: " + jfrFilePath
+                      "Java Flight Recorder profiling is available for "
                     + System.lineSeparator()
-                    + "Java Flight Recorder profiling is available for "
-                    + "Oracle JDK >= 1.7u40 and OpenJDK >=11.";
+                    + "Oracle JDK >= 1.7u40 and OpenJDK >= 11";
             throw new IllegalStateException(message);
         }
 
