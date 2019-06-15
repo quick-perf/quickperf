@@ -13,10 +13,12 @@
 
 package org.quickperf;
 
-import java.io.File;
-import java.util.concurrent.ThreadLocalRandom;
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class WorkingFolder {
+
+    private static final WorkingFolder NONE = new WorkingFolder("");
 
     private final String path;
 
@@ -31,23 +33,21 @@ public class WorkingFolder {
             return new WorkingFolder(path);
         }
 
-        String path = buildWorkingFolderPath();
         if (hasTestMethodToBeLaunchedInASpecificJvm) {
-            createFileFrom(path);
+            String path = createTempDirectory();
+            return new WorkingFolder(path);
         }
-        return new WorkingFolder(path);
+
+        return NONE;
 
     }
 
-    private static String buildWorkingFolderPath() {
-        String tmpDirPath = System.getProperty("java.io.tmpdir");
-        int randomInt = Math.abs(ThreadLocalRandom.current().nextInt());
-        return tmpDirPath + "QuickPerf-" + randomInt;
-    }
-
-    private static void createFileFrom(String filePath) {
-        File file = new File(filePath);
-        file.mkdir();
+    private static String createTempDirectory() {
+        try {
+            return Files.createTempDirectory("QuickPerf-").toString();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public String getPath() {
