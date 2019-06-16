@@ -108,7 +108,7 @@ public class AnnotationConfig {
             return this;
         }
 
-        public Builder disableAnnotation(Class<? extends Annotation> annotationToDisable) {
+        public Builder cancelBehaviorOf(Class<? extends Annotation> annotationToDisable) {
             this.classOfAnnotationToDisable = annotationToDisable;
             return this;
         }

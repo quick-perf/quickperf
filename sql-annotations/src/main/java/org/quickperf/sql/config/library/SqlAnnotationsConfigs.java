@@ -47,30 +47,26 @@ class SqlAnnotationsConfigs {
 			.build(DisableExactlySameSelects.class);
 
 	static final AnnotationConfig ENABLE_EXACTLY_SAME_SQL_SELECTS = new AnnotationConfig.Builder()
-			.disableAnnotation(DisableExactlySameSelects.class)
+			.cancelBehaviorOf(DisableExactlySameSelects.class)
 			.build(EnableExactlySameSelects.class);
 
-    static final AnnotationConfig NUMBER_OF_SQL_SELECT =
-             new AnnotationConfig.Builder()
+    static final AnnotationConfig NUMBER_OF_SQL_SELECT = new AnnotationConfig.Builder()
             .perfRecorderClass(PersistenceSqlRecorder.class)
             .perfMeasureExtractor(SelectCountMeasureExtractor.INSTANCE)
             .perfIssueVerifier(SelectNumberPerfIssueVerifier.INSTANCE)
             .build(ExpectSelect.class);
 
-    static final AnnotationConfig MAX_SQL_SELECT =
-             new AnnotationConfig.Builder()
+    static final AnnotationConfig MAX_SQL_SELECT = new AnnotationConfig.Builder()
             .perfRecorderClass(PersistenceSqlRecorder.class)
             .perfMeasureExtractor(SelectCountMeasureExtractor.INSTANCE)
             .perfIssueVerifier(MaxOfSelectsPerfIssueVerifier.INSTANCE)
             .build(ExpectMaxSelect.class);
 
-    static final AnnotationConfig DISPLAY_ALL_SQL =
-             new AnnotationConfig.Builder()
+    static final AnnotationConfig DISPLAY_ALL_SQL = new AnnotationConfig.Builder()
             .perfRecorderClass(DisplaySqlRecorder.class)
             .build(DisplaySql.class);
 
-    static final AnnotationConfig DISPLAY_SQL =
-             new AnnotationConfig.Builder()
+    static final AnnotationConfig DISPLAY_SQL = new AnnotationConfig.Builder()
             .perfRecorderClass(DisplaySqlOfTestMethodBodyRecorder.class)
             .build(DisplaySqlOfTestMethodBody.class);
 
@@ -81,24 +77,21 @@ class SqlAnnotationsConfigs {
 			.build(DisableSameSelectTypesWithDifferentParams.class);
 
 	static final AnnotationConfig ENABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS = new AnnotationConfig.Builder()
-			.disableAnnotation(DisableSameSelectTypesWithDifferentParams.class)
+			.cancelBehaviorOf(DisableSameSelectTypesWithDifferentParams.class)
 			.build(EnableSameSelectTypesWithDifferentParams.class);
 
-    static final AnnotationConfig NUMBER_OF_SQL_INSERT =
-             new AnnotationConfig.Builder()
+    static final AnnotationConfig NUMBER_OF_SQL_INSERT = new AnnotationConfig.Builder()
             .perfRecorderClass(PersistenceSqlRecorder.class)
             .perfMeasureExtractor(InsertCountMeasureExtractor.INSTANCE)
             .perfIssueVerifier(InsertNumberPerfIssueVerifier.INSTANCE)
             .build(ExpectInsert.class);
 
-    static final AnnotationConfig SQL_REQUESTS_BATCHED =
-            new AnnotationConfig.Builder()
+    static final AnnotationConfig SQL_REQUESTS_BATCHED = new AnnotationConfig.Builder()
             .perfRecorderClass(SqlRequestBatchRecorder.class)
             .perfIssueVerifier(SqlRequestBatchVerifier.INSTANCE)
             .build(ExpectJdbcBatching.class);
 
-    static final AnnotationConfig NUMBER_OF_SQL_DELETE =
-             new AnnotationConfig.Builder()
+    static final AnnotationConfig NUMBER_OF_SQL_DELETE = new AnnotationConfig.Builder()
             .perfRecorderClass(PersistenceSqlRecorder.class)
             .perfMeasureExtractor(DeleteCountMeasureExtractor.INSTANCE)
             .perfIssueVerifier(NumberOfSqlDeletePerfIssueVerifier.INSTANCE)
@@ -129,7 +122,7 @@ class SqlAnnotationsConfigs {
             .build(DisableCrossJoin.class);
 
     static final AnnotationConfig ENABLE_SQL_CROSS_JOIN = new AnnotationConfig.Builder()
-            .disableAnnotation(DisableCrossJoin.class)
+            .cancelBehaviorOf(DisableCrossJoin.class)
             .build(EnableCrossJoin.class);
 
     static final AnnotationConfig DISABLE_LIKE_STARTING_WITH_WILDCARD = new AnnotationConfig.Builder()
@@ -139,7 +132,7 @@ class SqlAnnotationsConfigs {
             .build(DisableLikeWithLeadingWildcard.class);
 
     static final AnnotationConfig ENABLE_LIKE_STARTING_WITH_WILDCARD = new AnnotationConfig.Builder()
-            .disableAnnotation(DisableLikeWithLeadingWildcard.class)
+            .cancelBehaviorOf(DisableLikeWithLeadingWildcard.class)
             .build(EnableLikeWithLeadingWildcard.class);
 
 }
