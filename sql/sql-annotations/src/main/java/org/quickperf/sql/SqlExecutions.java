@@ -55,7 +55,7 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
     }
 
     public boolean isEmpty() {
-        return this == NONE || sqlExecutions.isEmpty() ;
+        return this == NONE || sqlExecutions.isEmpty();
     }
 
     public long retrieveQueryNumberOfType(QueryType queryType) {
@@ -71,11 +71,56 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
         return queryNumber;
     }
 
-    public long getMaxNumberOfColumns() {
+    public long getMaxNumberOfUpdatedColumn() {
+        QueryTypeRetriever queryTypeRetriever = QueryTypeRetriever.INSTANCE;
+        long maxColumnCount = 0L;
+        for (SqlExecution sqlExecution : sqlExecutions) {
+            for (QueryInfo query : sqlExecution.getQueries()) {
+                if (queryTypeRetriever.typeOf(query) == QueryType.UPDATE) {
+                    long updatedColumnCount = countUpdatedColumn(query.getQuery());
+                    if (updatedColumnCount > maxColumnCount) {
+                        maxColumnCount = updatedColumnCount;
+                    }
+                }
+            }
+        }
+        return maxColumnCount;
+    }
+
+    private long countUpdatedColumn(String sql) {
+        // UPDATE book SET isbn = ?, title = ? WHERE id = ?
+        int setIndex = sql.toLowerCase().indexOf("set");
+        int whereIndex = sql.toLowerCase().indexOf("where");
+        whereIndex = whereIndex > -1 ? whereIndex : sql.length();
+
+        String sqlSetClause = sql.substring(setIndex, whereIndex);
+        return countUnquotedEquals(sqlSetClause);
+    }
+
+    /**
+     * Examples :
+     *  - "SET isbn = ?, title = ? " returns 2
+     *  - "SET isbn = '123', title = '1 + 1 = 0' " returns 2
+     */
+    private long countUnquotedEquals(String setClause) {
+        boolean inQuote = false;
+        long equalCounter = 0;
+        for (char c : setClause.toCharArray()) {
+            if (c == '\'') {
+               inQuote = !inQuote;
+            }
+            if (!inQuote && c == '=') {
+                equalCounter++;
+            }
+        }
+        return equalCounter;
+    }
+
+    public long getMaxNumberOfSelectedColumns() {
         long maxNumberOfColumnsForAllExecs = 0;
         for (SqlExecution sqlExecution : sqlExecutions) {
             long columnCount = sqlExecution.getColumnCount();
-            if(columnCount > maxNumberOfColumnsForAllExecs) {
+            if (columnCount > maxNumberOfColumnsForAllExecs) {
                 maxNumberOfColumnsForAllExecs = columnCount;
             }
         }
@@ -85,7 +130,7 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
     @Override
     public String format(Collection<PerfIssue> perfIssues) {
         String standardFormatting = PerfIssuesFormat.STANDARD.format(perfIssues);
-        return    standardFormatting
+        return standardFormatting
                 + System.lineSeparator()
                 + System.lineSeparator()
                 + "[SQL EXECUTIONS]"
