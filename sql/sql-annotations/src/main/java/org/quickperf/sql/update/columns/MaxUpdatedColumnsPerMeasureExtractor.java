@@ -11,22 +11,22 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.sql.select.columns;
+package org.quickperf.sql.update.columns;
 
 import org.quickperf.ExtractablePerformanceMeasure;
 import org.quickperf.sql.SqlExecutions;
 import org.quickperf.unit.Count;
 
-public class SelectedColumnNumberPerfMeasureExtractor implements ExtractablePerformanceMeasure<SqlExecutions, Count>  {
+public class MaxUpdatedColumnsPerMeasureExtractor implements ExtractablePerformanceMeasure<SqlExecutions, Count> {
 
-    public static final SelectedColumnNumberPerfMeasureExtractor INSTANCE = new SelectedColumnNumberPerfMeasureExtractor();
+    public static final MaxUpdatedColumnsPerMeasureExtractor INSTANCE = new MaxUpdatedColumnsPerMeasureExtractor();
 
-    private SelectedColumnNumberPerfMeasureExtractor() {}
+    private MaxUpdatedColumnsPerMeasureExtractor() {}
 
     @Override
-    public Count extractPerfMeasureFrom(SqlExecutions sqlExecutions) {
-        long maxNumberOfColumns = sqlExecutions.getMaxNumberOfSelectedColumns();
-        return new Count(maxNumberOfColumns);
+    public Count extractPerfMeasureFrom(SqlExecutions perfRecord) {
+        long numberOfUpdatedColumns = perfRecord.getMaxNumberOfUpdatedColumn();
+        return new Count(numberOfUpdatedColumns);
     }
 
 }

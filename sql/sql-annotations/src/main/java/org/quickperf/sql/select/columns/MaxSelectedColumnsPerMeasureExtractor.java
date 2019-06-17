@@ -25,7 +25,7 @@ public class MaxSelectedColumnsPerMeasureExtractor implements ExtractablePerform
 
     @Override
     public Count extractPerfMeasureFrom(SqlExecutions sqlExecutions) {
-        long maxNumberOfColumns = sqlExecutions.getMaxNumberOfColumns();
+        long maxNumberOfColumns = sqlExecutions.getMaxNumberOfSelectedColumns();
         return new Count(maxNumberOfColumns);
     }
 

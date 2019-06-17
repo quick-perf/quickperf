@@ -35,6 +35,8 @@ import org.quickperf.sql.select.columns.SelectedColumnNumberPerfIssueVerifier;
 import org.quickperf.sql.select.columns.SelectedColumnNumberPerfMeasureExtractor;
 import org.quickperf.sql.update.UpdateCountMeasureExtractor;
 import org.quickperf.sql.update.UpdateNumberPerfIssueVerifier;
+import org.quickperf.sql.update.columns.MaxUpdatedColumnsPerMeasureExtractor;
+import org.quickperf.sql.update.columns.MaxUpdatedColumnsPerfIssueVerifier;
 
 class SqlAnnotationsConfigs {
 
@@ -108,6 +110,12 @@ class SqlAnnotationsConfigs {
             .perfMeasureExtractor(MaxSelectedColumnsPerMeasureExtractor.INSTANCE)
             .perfIssueVerifier(MaxSelectedColumnsPerfIssueVerifier.INSTANCE)
             .build(ExpectMaxSelectedColumn.class);
+
+	static final AnnotationConfig MAX_UPDATED_COLUMNS = new AnnotationConfig.Builder()
+			.perfRecorderClass(PersistenceSqlRecorder.class)
+			.perfMeasureExtractor(MaxUpdatedColumnsPerMeasureExtractor.INSTANCE)
+			.perfIssueVerifier(MaxUpdatedColumnsPerfIssueVerifier.INSTANCE)
+			.build(ExpectMaxUpdatedColumn.class);
 
     static final AnnotationConfig NUMBER_OF_SELECTED_COLUMNS = new AnnotationConfig.Builder()
             .perfRecorderClass(PersistenceSqlRecorder.class)

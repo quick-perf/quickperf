@@ -206,7 +206,17 @@ Many thanks to all our contributors!
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=rdm100" title="Documentation">📖</a>
-        </td>       
+        </td>
+        <td align="center">
+            <a href="https://github.com/Artus2b">
+                <img src="https://avatars1.githubusercontent.com/u/3645691?v=4" width="100px;"  alt="Artus de Benque"/>
+                <br/>
+                <sub><b>Artus de Benque</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=ablanchard" title="Bug reports">🐛</a>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=ablanchard" title="Code">💻</a>
+        </td>                  
     </tr>
 </table>
 <a href = "https://allcontributors.org/docs/en/emoji-key">emoji key</a>
