@@ -28,7 +28,7 @@ public class MeasureHeapAllocationPerfVerifier implements VerifiablePerformanceI
     @Override
     public PerfIssue verifyPerfIssue(MeasureHeapAllocation annotation, Allocation measuredAllocation) {
         String allocationAsString = byteAllocationMeasureFormatter.format(measuredAllocation);
-        System.out.println("Measured allocation: " + allocationAsString);
+        System.out.println("Measured heap allocation: " + allocationAsString);
         return PerfIssue.NONE;
     }
 
