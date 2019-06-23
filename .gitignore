@@ -1,0 +1,15 @@
+# Maven
+target
+
+# IntelliJ
+.idea
+*.iml
+out
+
+# Eclipse
+.classpath
+.project
+.settings
+
+# NetBeans
+.nbattrs
