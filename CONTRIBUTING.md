@@ -1,5 +1,6 @@
 # Contributing to QuickPerf
-Thank you for your interest in contributing to QuickPerf!
+Thank you for your interest in contributing to QuickPerf! <br>
+Feel free to open an issue to suggest a new feature or report a bug. Also don't hesitate to work on an existing issue.
 
 ## Build
 You need the following setup:
@@ -10,9 +11,6 @@ To build:
 * Clone the repository: git clone https://github.com/quick-perf/quickperf.git
 * Navigate to the *quickperf* repository
 * mvn clean install
-
-## Automatic tests
-For each issue, please add one or several automatic tests.
 
 ## Legal stuff
 Project License: [Apache License Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
