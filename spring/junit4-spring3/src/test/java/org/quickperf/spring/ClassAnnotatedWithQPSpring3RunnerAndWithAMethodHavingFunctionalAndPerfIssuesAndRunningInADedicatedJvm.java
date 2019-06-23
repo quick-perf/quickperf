@@ -13,24 +13,18 @@
 
 package org.quickperf.spring;import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.quickperf.jvm.annotations.ExpectNoAllocation;
 import org.quickperf.spring.junit4.QuickPerfSpringRunner;
-import org.quickperf.sql.annotation.ExpectSelect;
 import org.springframework.test.context.ContextConfiguration;
 
 @RunWith(QuickPerfSpringRunner.class)
 @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
-public class ClassAnnotatedWithQPSpring3RunnerAndWithTwoMethodsHavingFunctionnalAndPerfIssues {
+public class ClassAnnotatedWithQPSpring3RunnerAndWithAMethodHavingFunctionalAndPerfIssuesAndRunningInADedicatedJvm {
 
-    @ExpectSelect(1)
+    @ExpectNoAllocation
     @Test public void
-    a_first_failing_test() {
-        throw new AssertionError("Failing assertion of first test!");
-    }
-
-    @ExpectSelect(1)
-    @Test public void
-    a_second_failing_test() {
-        throw new AssertionError("Failing assertion of second test!");
+    a_failing_test() {
+        throw new AssertionError("Failing assertion !");
     }
 
 }

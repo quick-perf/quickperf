@@ -39,9 +39,9 @@ import java.util.List;
 public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
 
     // Only used if test method is executed in a dedicated JVM
-    private static SpringRunnerWithQuickPerfFunctionalities QUICK_PERF_SPRING_RUNNER_FOR_SPECIFIC_JVM;
+    private static SpringRunnerWithQuickPerfFeatures QUICK_PERF_SPRING_RUNNER_FOR_SPECIFIC_JVM;
 
-    private SpringRunnerWithQuickPerfFunctionalities springRunnerWithQuickPerfFunctionalities;
+    private SpringRunnerWithQuickPerfFeatures springRunnerWithQuickPerfFunctionalities;
 
     private SpringRunnerWithCallableProtectedMethods springRunner;
 
@@ -70,7 +70,7 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
 
     private static Class<?> init(Class<?> klass) {
         if (SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
-            QUICK_PERF_SPRING_RUNNER_FOR_SPECIFIC_JVM = SpringRunnerWithQuickPerfFunctionalities.build(klass);
+            QUICK_PERF_SPRING_RUNNER_FOR_SPECIFIC_JVM = SpringRunnerWithQuickPerfFeatures.build(klass);
         }
         return klass;
     }
@@ -216,7 +216,7 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
                 Method method = frameworkMethod.getMethod();
                 Class<?> testClass = method.getDeclaringClass();
                 this.springRunnerWithQuickPerfFunctionalities =
-                    SpringRunnerWithQuickPerfFunctionalities.build(testClass);
+                    SpringRunnerWithQuickPerfFeatures.build(testClass);
                 springRunnerWithQuickPerfFunctionalities.runChild(frameworkMethod, notifier);
             }
 

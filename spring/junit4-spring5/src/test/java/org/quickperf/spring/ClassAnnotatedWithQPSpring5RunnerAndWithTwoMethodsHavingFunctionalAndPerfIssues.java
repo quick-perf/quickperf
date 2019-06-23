@@ -19,7 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 @RunWith(QuickPerfSpringRunner.class)
 @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
-public class ClassAnnotatedWithQPSpring5RunnerAndWithTwoMethodsHavingFunctionnalAndPerfIssues {
+public class ClassAnnotatedWithQPSpring5RunnerAndWithTwoMethodsHavingFunctionalAndPerfIssues {
 
     @ExpectSelect(1)
     @Test public void

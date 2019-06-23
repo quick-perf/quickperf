@@ -13,15 +13,15 @@
 
 package org.quickperf.spring;import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.quickperf.jvm.annotations.ExpectNoAllocation;
 import org.quickperf.spring.junit4.QuickPerfSpringRunner;
+import org.quickperf.sql.annotation.ExpectSelect;
 import org.springframework.test.context.ContextConfiguration;
 
 @RunWith(QuickPerfSpringRunner.class)
 @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
-public class ClassAnnotatedWithQPSpring5RunnerAndWithAMethodHavingFunctionnalAndPerfIssuesAndRunningInADedicatedJvm {
+public class ClassAnnotatedWithQPSpring3RunnerAndWithAMethodHavingFunctionalAndPerfIssues {
 
-    @ExpectNoAllocation
+    @ExpectSelect(1)
     @Test public void
     a_failing_test() {
         throw new AssertionError("Failing assertion !");

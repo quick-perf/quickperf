@@ -11,19 +11,17 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.spring;
-
-import org.junit.Test;
+package org.quickperf.spring;import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.quickperf.jvm.annotations.ExpectNoAllocation;
 import org.quickperf.spring.junit4.QuickPerfSpringRunner;
-import org.quickperf.sql.annotation.ExpectSelect;
 import org.springframework.test.context.ContextConfiguration;
 
 @RunWith(QuickPerfSpringRunner.class)
 @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
-public class ClassAnnotatedWithQPSpring5RunnerAndWithAMethodHavingFunctionnalAndPerfIssues {
+public class ClassAnnotatedWithQPSpring5RunnerAndWithAMethodHavingFunctionalAndPerfIssuesAndRunningInADedicatedJvm {
 
-    @ExpectSelect(1)
+    @ExpectNoAllocation
     @Test public void
     a_failing_test() {
         throw new AssertionError("Failing assertion !");

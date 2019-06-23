@@ -16,13 +16,13 @@ package org.quickperf.spring;
 public class JUnit4Spring5Test extends AbstractJUnit4SpringTestBase {
 
     @Override
-    protected Class<?> classWithTestHavingFunctionnalAndPerfIssues() {
-        return ClassAnnotatedWithQPSpring5RunnerAndWithAMethodHavingFunctionnalAndPerfIssues.class;
+    protected Class<?> classWithTestHavingFunctionalAndPerfIssues() {
+        return ClassAnnotatedWithQPSpring5RunnerAndWithAMethodHavingFunctionalAndPerfIssues.class;
     }
 
     @Override
-    public Class<?> classWithTestHavingFunctionnalAndPerfIssuesAndRunningInADedicatedJvm() {
-        return ClassAnnotatedWithQPSpring5RunnerAndWithAMethodHavingFunctionnalAndPerfIssuesAndRunningInADedicatedJvm.class;
+    public Class<?> classWithTestHavingFunctionalAndPerfIssuesAndRunningInADedicatedJvm() {
+        return ClassAnnotatedWithQPSpring5RunnerAndWithAMethodHavingFunctionalAndPerfIssuesAndRunningInADedicatedJvm.class;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class JUnit4Spring5Test extends AbstractJUnit4SpringTestBase {
 
     @Override
     protected Class<?> aClassWithTwoMethodsHavingFunctionnalAndPerfIssues() {
-        return ClassAnnotatedWithQPSpring5RunnerAndWithTwoMethodsHavingFunctionnalAndPerfIssues.class;
+        return ClassAnnotatedWithQPSpring5RunnerAndWithTwoMethodsHavingFunctionalAndPerfIssues.class;
     }
 
 }

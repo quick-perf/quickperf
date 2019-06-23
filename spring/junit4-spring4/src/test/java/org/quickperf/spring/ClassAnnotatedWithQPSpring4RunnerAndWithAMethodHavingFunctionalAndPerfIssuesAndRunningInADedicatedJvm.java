@@ -19,7 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 @RunWith(QuickPerfSpringRunner.class)
 @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
-public class ClassAnnotatedWithQPSpring3RunnerAndWithAMethodHavingFunctionnalAndPerfIssuesAndRunningInADedicatedJvm {
+public class ClassAnnotatedWithQPSpring4RunnerAndWithAMethodHavingFunctionalAndPerfIssuesAndRunningInADedicatedJvm {
 
     @ExpectNoAllocation
     @Test public void

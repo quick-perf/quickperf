@@ -18,7 +18,7 @@ import org.junit.experimental.results.PrintableResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DisableQuickPerfFunctionalitiesTest {
+public class DisableQuickPerfFeaturesTest {
 
     @Test public void
     disable_quick_perf_annotation_should_disable_quick_perf() {

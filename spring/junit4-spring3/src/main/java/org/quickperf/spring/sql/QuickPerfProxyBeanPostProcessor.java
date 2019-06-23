@@ -43,20 +43,20 @@ public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor {
 
     private static class ProxyDataSourceInterceptor implements MethodInterceptor {
 
-        private DataSource proxifiedDatasource;
+        private DataSource datasourceProxy;
 
         public ProxyDataSourceInterceptor(final DataSource dataSource) {
-            this.proxifiedDatasource =
+            this.datasourceProxy =
                     QuickPerfSqlDataSourceBuilder.aDataSourceBuilder()
                     .buildProxy(dataSource);
         }
 
         @Override
         public Object invoke(final MethodInvocation invocation) throws Throwable {
-            Method proxyMethod = ReflectionUtils.findMethod( this.proxifiedDatasource.getClass()
+            Method proxyMethod = ReflectionUtils.findMethod( this.datasourceProxy.getClass()
                                                            , invocation.getMethod().getName());
             if (proxyMethod != null) {
-                return proxyMethod.invoke(this.proxifiedDatasource, invocation.getArguments());
+                return proxyMethod.invoke(this.datasourceProxy, invocation.getArguments());
             }
             return invocation.proceed();
         }

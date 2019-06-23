@@ -29,19 +29,19 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 
-class SpringRunnerWithQuickPerfFunctionalities extends SpringJUnit4ClassRunner {
+class SpringRunnerWithQuickPerfFeatures extends SpringJUnit4ClassRunner {
 
     private QuickPerfJUnitRunner quickPerfJUnitRunner;
 
-    static SpringRunnerWithQuickPerfFunctionalities build(Class<?> testClass) {
+    static SpringRunnerWithQuickPerfFeatures build(Class<?> testClass) {
         try {
-            return new SpringRunnerWithQuickPerfFunctionalities(testClass);
+            return new SpringRunnerWithQuickPerfFeatures(testClass);
         } catch (InitializationError initializationError) {
             throw new IllegalStateException(initializationError);
         }
     }
 
-    private SpringRunnerWithQuickPerfFunctionalities(Class<?> clazz) throws InitializationError {
+    private SpringRunnerWithQuickPerfFeatures(Class<?> clazz) throws InitializationError {
         super(clazz);
         quickPerfJUnitRunner = new QuickPerfJUnitRunner(clazz);
     }

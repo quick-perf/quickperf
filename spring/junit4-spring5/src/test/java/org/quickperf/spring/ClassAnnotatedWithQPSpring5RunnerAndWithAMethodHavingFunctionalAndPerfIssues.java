@@ -11,7 +11,9 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.spring;import org.junit.Test;
+package org.quickperf.spring;
+
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quickperf.spring.junit4.QuickPerfSpringRunner;
 import org.quickperf.sql.annotation.ExpectSelect;
@@ -19,7 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 @RunWith(QuickPerfSpringRunner.class)
 @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
-public class ClassAnnotatedWithQPSpring4RunnerAndWithAMethodHavingFunctionnalAndPerfIssues {
+public class ClassAnnotatedWithQPSpring5RunnerAndWithAMethodHavingFunctionalAndPerfIssues {
 
     @ExpectSelect(1)
     @Test public void

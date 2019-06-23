@@ -26,7 +26,7 @@ public abstract class AbstractJUnit4SpringTestBase {
     a_test_throwing_an_assertion_error_and_a_performance_issue_should_fail() {
 
         // GIVEN
-        Class<?> testClass = classWithTestHavingFunctionnalAndPerfIssues();
+        Class<?> testClass = classWithTestHavingFunctionalAndPerfIssues();
 
         // WHEN
         PrintableResult printableResult = testResult(testClass);
@@ -47,13 +47,13 @@ public abstract class AbstractJUnit4SpringTestBase {
 
     }
 
-    protected abstract Class<?> classWithTestHavingFunctionnalAndPerfIssues();
+    protected abstract Class<?> classWithTestHavingFunctionalAndPerfIssues();
 
     @Test public void
     a_test_throwing_an_assertion_error_and_a_performance_issue_and_running_in_a_dedicated_jvm_should_fail() {
 
         // GIVEN
-        Class<?> testClass = classWithTestHavingFunctionnalAndPerfIssuesAndRunningInADedicatedJvm();
+        Class<?> testClass = classWithTestHavingFunctionalAndPerfIssuesAndRunningInADedicatedJvm();
 
         // WHEN
         PrintableResult printableResult = testResult(testClass);
@@ -75,7 +75,7 @@ public abstract class AbstractJUnit4SpringTestBase {
 
     }
 
-     public abstract Class<?> classWithTestHavingFunctionnalAndPerfIssuesAndRunningInADedicatedJvm();
+     public abstract Class<?> classWithTestHavingFunctionalAndPerfIssuesAndRunningInADedicatedJvm();
 
     @Test public void
     a_test_method_having_a_performance_property_not_respected_in_a_dedicated_jvm_should_fail() {
