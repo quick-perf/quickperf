@@ -15,12 +15,12 @@ package org.quickperf.junit4;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.quickperf.jvm.annotations.ExpectNoAllocation;
+import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
 
 @RunWith(QuickPerfJUnitRunner.class)
 public class ClassWithFuntionalIssueInNewJvmAndPerfIssue {
 
-    @ExpectNoAllocation
+    @ExpectNoHeapAllocation
     @Test public void
     failing_test() {
         throw new IllegalStateException("Functional issue !");

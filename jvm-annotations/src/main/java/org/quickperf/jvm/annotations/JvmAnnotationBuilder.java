@@ -103,11 +103,11 @@ public class JvmAnnotationBuilder {
         };
     }
 
-    public static ExpectNoAllocation expectNoAllocation() {
-        return new ExpectNoAllocation() {
+    public static ExpectNoHeapAllocation expectNoHeapAllocation() {
+        return new ExpectNoHeapAllocation() {
             @Override
             public Class<? extends Annotation> annotationType() {
-                return ExpectNoAllocation.class;
+                return ExpectNoHeapAllocation.class;
             }
         };
     }

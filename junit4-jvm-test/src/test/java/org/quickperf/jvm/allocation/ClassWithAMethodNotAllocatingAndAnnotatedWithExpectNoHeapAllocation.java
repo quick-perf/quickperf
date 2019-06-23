@@ -17,19 +17,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.jvm.annotations.JvmOptions;
-import org.quickperf.jvm.annotations.ExpectNoAllocation;
-
-import java.util.ArrayList;
+import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
 
 @RunWith(QuickPerfJUnitRunner.class)
-public class ClassWithAMethodAllocatingAndAnnotatedWithExpectNoAllocation {
+public class ClassWithAMethodNotAllocatingAndAnnotatedWithExpectNoHeapAllocation {
 
-    @ExpectNoAllocation
+    @ExpectNoHeapAllocation
     // See ClassWithMethodAnnotatedWithMeasureHeapAllocation
     @JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers")
     @Test
-    public void method_allocating() {
-        ArrayList<Object> data = new ArrayList<>(100);
+    public void method_without_allocation() {
     }
 
 }

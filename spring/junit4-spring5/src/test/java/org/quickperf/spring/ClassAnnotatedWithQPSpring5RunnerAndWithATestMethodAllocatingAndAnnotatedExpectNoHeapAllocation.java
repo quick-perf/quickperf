@@ -11,25 +11,20 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.spring;
-
-import org.junit.Test;
+package org.quickperf.spring;import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.quickperf.annotation.FunctionalIteration;
 import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
 import org.quickperf.spring.junit4.QuickPerfSpringRunner;
 import org.springframework.test.context.ContextConfiguration;
 
 @RunWith(QuickPerfSpringRunner.class)
-@FunctionalIteration
 @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
-public class ClassAnnotatedWithQPSpring3RunnerAndFunctionalIteration {
+public class ClassAnnotatedWithQPSpring5RunnerAndWithATestMethodAllocatingAndAnnotatedExpectNoHeapAllocation {
 
-    @ExpectNoHeapAllocation
-    @Test
-    public void
-    a_test_method_allocating() {
-        Object object = new Object();
-    }
+     @ExpectNoHeapAllocation
+     @Test public void
+     a_test_method_allocating() {
+         Object object = new Object();
+     }
 
 }

@@ -32,7 +32,7 @@ public class JUnit4Spring3Test extends AbstractJUnit4SpringTestBase {
 
     @Override
     protected Class<?> aClassWithMethodAllocatingAndNoAllocationAnnotation() {
-        return ClassAnnotatedWithQPSpring3RunnerAndWithATestMethodAllocatingAndAnnotatedExpectNoAllocation.class;
+        return ClassAnnotatedWithQPSpring3RunnerAndWithATestMethodAllocatingAndAnnotatedExpectNoHeapAllocation.class;
     }
 
     @Override

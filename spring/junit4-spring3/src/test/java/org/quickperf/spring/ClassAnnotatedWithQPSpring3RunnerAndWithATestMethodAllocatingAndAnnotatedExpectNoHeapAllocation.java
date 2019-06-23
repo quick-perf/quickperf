@@ -11,22 +11,21 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.jvm.allocation;
-
+package org.quickperf.spring;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.quickperf.junit4.QuickPerfJUnitRunner;
-import org.quickperf.jvm.annotations.JvmOptions;
-import org.quickperf.jvm.annotations.ExpectNoAllocation;
+import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
+import org.quickperf.spring.junit4.QuickPerfSpringRunner;
+import org.springframework.test.context.ContextConfiguration;
 
-@RunWith(QuickPerfJUnitRunner.class)
-public class ClassWithAMethodNotAllocatingAndAnnotatedWithExpectNoAllocation {
+@RunWith(QuickPerfSpringRunner.class)
+@ContextConfiguration(initializers = TestApplicationContextInitializer.class)
+public class ClassAnnotatedWithQPSpring3RunnerAndWithATestMethodAllocatingAndAnnotatedExpectNoHeapAllocation {
 
-    @ExpectNoAllocation
-    // See ClassWithMethodAnnotatedWithMeasureHeapAllocation
-    @JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers")
-    @Test
-    public void method_without_allocation() {
-    }
+     @ExpectNoHeapAllocation
+     @Test public void
+     a_test_method_allocating() {
+         Object object = new Object();
+     }
 
 }

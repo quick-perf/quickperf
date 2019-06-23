@@ -11,20 +11,14 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.spring;import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.quickperf.jvm.annotations.ExpectNoAllocation;
-import org.quickperf.spring.junit4.QuickPerfSpringRunner;
-import org.springframework.test.context.ContextConfiguration;
+package org.quickperf.jvm.annotations;
 
-@RunWith(QuickPerfSpringRunner.class)
-@ContextConfiguration(initializers = TestApplicationContextInitializer.class)
-public class ClassAnnotatedWithQPSpring4RunnerAndWithATestMethodAllocatingAndAnnotatedExpectNoAllocation {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-     @ExpectNoAllocation
-     @Test public void
-     a_test_method_allocating() {
-         Object object = new Object();
-     }
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.TYPE})
+public @interface ExpectNoHeapAllocation {
 }

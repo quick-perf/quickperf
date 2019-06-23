@@ -15,21 +15,21 @@ package org.quickperf.jvm.allocation;
 
 import org.quickperf.PerfIssue;
 import org.quickperf.VerifiablePerformanceIssue;
-import org.quickperf.jvm.annotations.ExpectNoAllocation;
+import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
 
-public class NoAllocationPerfVerifier implements VerifiablePerformanceIssue<ExpectNoAllocation, Allocation> {
+public class NoHeapAllocationPerfVerifier implements VerifiablePerformanceIssue<ExpectNoHeapAllocation, Allocation> {
 
     private static final Allocation ZERO_ALLOCATION = new Allocation(0D, AllocationUnit.BYTE);
 
-    public static final NoAllocationPerfVerifier INSTANCE = new NoAllocationPerfVerifier();
+    public static final NoHeapAllocationPerfVerifier INSTANCE = new NoHeapAllocationPerfVerifier();
 
-    private NoAllocationPerfVerifier() {}
+    private NoHeapAllocationPerfVerifier() {}
 
     private final ByteAllocationMeasureFormatter byteAllocationMeasureFormatter = ByteAllocationMeasureFormatter.INSTANCE;
 
 
     @Override
-    public PerfIssue verifyPerfIssue(ExpectNoAllocation annotation, Allocation measuredAllocation) {
+    public PerfIssue verifyPerfIssue(ExpectNoHeapAllocation annotation, Allocation measuredAllocation) {
 
         if(!ZERO_ALLOCATION.isEqualTo(measuredAllocation)) {
             String assertionMessage =

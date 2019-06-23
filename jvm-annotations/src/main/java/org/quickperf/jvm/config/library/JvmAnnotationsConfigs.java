@@ -16,7 +16,7 @@ package org.quickperf.jvm.config.library;
 import org.quickperf.config.library.AnnotationConfig;
 import org.quickperf.jvm.allocation.MeasureHeapAllocationPerfVerifier;
 import org.quickperf.jvm.allocation.MaxHeapAllocationPerfVerifier;
-import org.quickperf.jvm.allocation.NoAllocationPerfVerifier;
+import org.quickperf.jvm.allocation.NoHeapAllocationPerfVerifier;
 import org.quickperf.jvm.allocation.bytewatcher.ByteWatcherRecorder;
 import org.quickperf.jvm.annotations.*;
 import org.quickperf.jvm.jfr.JfrEventsRecorder;
@@ -75,9 +75,9 @@ class JvmAnnotationsConfigs {
 
     static final AnnotationConfig NO_ALLOCATION_BY_BYTE_WATCHER = new AnnotationConfig.Builder()
             .perfRecorderClass(ByteWatcherRecorder.class)
-            .perfIssueVerifier(NoAllocationPerfVerifier.INSTANCE)
+            .perfIssueVerifier(NoHeapAllocationPerfVerifier.INSTANCE)
             .testHasToBeLaunchedInASpecificJvm()
-            .build(ExpectNoAllocation.class);
+            .build(ExpectNoHeapAllocation.class);
 
     static final AnnotationConfig CHECK_JVM = new AnnotationConfig.Builder()
             .perfRecorderClass(JfrEventsRecorder.class)

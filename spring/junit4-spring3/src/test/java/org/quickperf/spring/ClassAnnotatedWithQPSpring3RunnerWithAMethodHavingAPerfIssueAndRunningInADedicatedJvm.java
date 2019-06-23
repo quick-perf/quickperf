@@ -13,7 +13,7 @@
 
 package org.quickperf.spring;import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.quickperf.jvm.annotations.ExpectNoAllocation;
+import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
 import org.quickperf.spring.junit4.QuickPerfSpringRunner;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -21,7 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
 public class ClassAnnotatedWithQPSpring3RunnerWithAMethodHavingAPerfIssueAndRunningInADedicatedJvm {
 
-     @ExpectNoAllocation
+     @ExpectNoHeapAllocation
      @Test public void
      a_test_method_without_allocation() {
          int a = 1;

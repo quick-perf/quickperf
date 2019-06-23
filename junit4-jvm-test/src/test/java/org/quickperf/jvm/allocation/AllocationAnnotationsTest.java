@@ -45,7 +45,7 @@ public class AllocationAnnotationsTest {
     test_should_fail_if_test_method_annotated_with_no_allocation_allocates() {
 
         // GIVEN
-        Class<?> testClass = ClassWithAMethodAllocatingAndAnnotatedWithExpectNoAllocation.class;
+        Class<?> testClass = ClassWithAMethodAllocatingAndAnnotatedWithExpectNoHeapAllocation.class;
 
         // WHEN
         PrintableResult printableResult = testResult(testClass);
@@ -64,7 +64,7 @@ public class AllocationAnnotationsTest {
     test_should_not_fail_with_a_method_without_allocation_and_annotation_with_no_allocation() {
 
         // GIVEN
-        Class<?> testClass = ClassWithAMethodNotAllocatingAndAnnotatedWithExpectNoAllocation.class;
+        Class<?> testClass = ClassWithAMethodNotAllocatingAndAnnotatedWithExpectNoHeapAllocation.class;
 
         // WHEN
         PrintableResult printableResult = testResult(testClass);

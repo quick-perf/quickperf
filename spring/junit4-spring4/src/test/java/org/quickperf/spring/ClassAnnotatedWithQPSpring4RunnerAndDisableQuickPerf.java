@@ -16,7 +16,7 @@ package org.quickperf.spring;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quickperf.annotation.DisableQuickPerf;
-import org.quickperf.jvm.annotations.ExpectNoAllocation;
+import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
 import org.quickperf.spring.junit4.QuickPerfSpringRunner;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -25,7 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
 public class ClassAnnotatedWithQPSpring4RunnerAndDisableQuickPerf {
 
-    @ExpectNoAllocation
+    @ExpectNoHeapAllocation
     @Test
     public void
     a_test_method_allocating() {
