@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class ClassWithMethodAnnotatedWithExpectMaxAllocation {
 
     @ExpectMaxAllocation(value = 439, unit = AllocationUnit.BYTE)
-    // See ClassWithMethodAnnotatedWithMeasureAllocation
+    // See ClassWithMethodAnnotatedWithMeasureHeapAllocation
     @JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers")
     @Test
     public void array_list_with_size_100_should_allocate_440_bytes() {

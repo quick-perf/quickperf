@@ -17,14 +17,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.jvm.annotations.JvmOptions;
-import org.quickperf.jvm.annotations.MeasureAllocation;
+import org.quickperf.jvm.annotations.MeasureHeapAllocation;
 
 import java.util.ArrayList;
 
 @RunWith(QuickPerfJUnitRunner.class)
-public class ClassWithMethodAnnotatedWithMeasureAllocation {
+public class ClassWithMethodAnnotatedWithMeasureHeapAllocation {
 
-    @MeasureAllocation
+    @MeasureHeapAllocation
     @JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers")
     // Allocation batchSize depends on UseCompressedOops and UseCompressedClassPointers.
     // QuickPerf works with JDK >= 7u40 where UseCompressedOops is enabled by default.

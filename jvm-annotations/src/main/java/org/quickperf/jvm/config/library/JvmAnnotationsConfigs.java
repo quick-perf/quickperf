@@ -14,7 +14,7 @@
 package org.quickperf.jvm.config.library;
 
 import org.quickperf.config.library.AnnotationConfig;
-import org.quickperf.jvm.allocation.AllocationMeasurePerfVerifier;
+import org.quickperf.jvm.allocation.MeasureHeapAllocationPerfVerifier;
 import org.quickperf.jvm.allocation.MaxAllocationPerfVerifier;
 import org.quickperf.jvm.allocation.NoAllocationPerfVerifier;
 import org.quickperf.jvm.allocation.bytewatcher.ByteWatcherRecorder;
@@ -63,9 +63,9 @@ class JvmAnnotationsConfigs {
 
     static final AnnotationConfig DISPLAY_ALLOCATION_BY_BYTE_WATCHER = new AnnotationConfig.Builder()
             .perfRecorderClass(ByteWatcherRecorder.class)
-            .perfIssueVerifier(AllocationMeasurePerfVerifier.INSTANCE)
+            .perfIssueVerifier(MeasureHeapAllocationPerfVerifier.INSTANCE)
             .testHasToBeLaunchedInASpecificJvm()
-            .build(MeasureAllocation.class);
+            .build(MeasureHeapAllocation.class);
 
     static final AnnotationConfig MAX_ALLOCATION_BY_BYTE_WATCHER = new AnnotationConfig.Builder()
             .perfRecorderClass(ByteWatcherRecorder.class)

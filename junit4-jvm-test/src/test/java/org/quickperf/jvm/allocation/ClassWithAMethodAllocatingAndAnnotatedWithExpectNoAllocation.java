@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class ClassWithAMethodAllocatingAndAnnotatedWithExpectNoAllocation {
 
     @ExpectNoAllocation
-    // See ClassWithMethodAnnotatedWithMeasureAllocation
+    // See ClassWithMethodAnnotatedWithMeasureHeapAllocation
     @JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers")
     @Test
     public void method_allocating() {

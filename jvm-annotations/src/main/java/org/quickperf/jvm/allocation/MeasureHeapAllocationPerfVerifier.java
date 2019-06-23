@@ -15,18 +15,18 @@ package org.quickperf.jvm.allocation;
 
 import org.quickperf.PerfIssue;
 import org.quickperf.VerifiablePerformanceIssue;
-import org.quickperf.jvm.annotations.MeasureAllocation;
+import org.quickperf.jvm.annotations.MeasureHeapAllocation;
 
-public class AllocationMeasurePerfVerifier implements VerifiablePerformanceIssue<MeasureAllocation, Allocation> {
+public class MeasureHeapAllocationPerfVerifier implements VerifiablePerformanceIssue<MeasureHeapAllocation, Allocation> {
 
-    public static final VerifiablePerformanceIssue INSTANCE = new AllocationMeasurePerfVerifier();
+    public static final VerifiablePerformanceIssue INSTANCE = new MeasureHeapAllocationPerfVerifier();
 
     private final ByteAllocationMeasureFormatter byteAllocationMeasureFormatter = ByteAllocationMeasureFormatter.INSTANCE;
 
-    private AllocationMeasurePerfVerifier() { }
+    private MeasureHeapAllocationPerfVerifier() { }
 
     @Override
-    public PerfIssue verifyPerfIssue(MeasureAllocation annotation, Allocation measuredAllocation) {
+    public PerfIssue verifyPerfIssue(MeasureHeapAllocation annotation, Allocation measuredAllocation) {
         String allocationAsString = byteAllocationMeasureFormatter.format(measuredAllocation);
         System.out.println("Measured allocation: " + allocationAsString);
         return PerfIssue.NONE;

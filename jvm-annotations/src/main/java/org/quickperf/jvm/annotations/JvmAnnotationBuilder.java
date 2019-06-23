@@ -94,11 +94,11 @@ public class JvmAnnotationBuilder {
         };
     }
 
-    public static MeasureAllocation measureAllocation() {
-        return new MeasureAllocation() {
+    public static MeasureHeapAllocation measureHeapAllocation() {
+        return new MeasureHeapAllocation() {
             @Override
             public Class<? extends Annotation> annotationType() {
-                return MeasureAllocation.class;
+                return MeasureHeapAllocation.class;
             }
         };
     }

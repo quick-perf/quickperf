@@ -23,7 +23,7 @@ import org.quickperf.jvm.annotations.ExpectNoAllocation;
 public class ClassWithAMethodNotAllocatingAndAnnotatedWithExpectNoAllocation {
 
     @ExpectNoAllocation
-    // See ClassWithMethodAnnotatedWithMeasureAllocation
+    // See ClassWithMethodAnnotatedWithMeasureHeapAllocation
     @JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers")
     @Test
     public void method_without_allocation() {
