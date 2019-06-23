@@ -15,18 +15,18 @@ package org.quickperf.jvm.allocation;
 
 import org.quickperf.PerfIssue;
 import org.quickperf.VerifiablePerformanceIssue;
-import org.quickperf.jvm.annotations.ExpectMaxAllocation;
+import org.quickperf.jvm.annotations.ExpectMaxHeapAllocation;
 
-public class MaxAllocationPerfVerifier implements VerifiablePerformanceIssue<ExpectMaxAllocation, Allocation> {
+public class MaxHeapAllocationPerfVerifier implements VerifiablePerformanceIssue<ExpectMaxHeapAllocation, Allocation> {
 
-    public static final VerifiablePerformanceIssue INSTANCE = new MaxAllocationPerfVerifier();
+    public static final VerifiablePerformanceIssue INSTANCE = new MaxHeapAllocationPerfVerifier();
 
     private final ByteAllocationMeasureFormatter byteAllocationMeasureFormatter = ByteAllocationMeasureFormatter.INSTANCE;
 
-    private MaxAllocationPerfVerifier() { }
+    private MaxHeapAllocationPerfVerifier() { }
 
     @Override
-    public PerfIssue verifyPerfIssue(ExpectMaxAllocation annotation, Allocation measuredAllocation) {
+    public PerfIssue verifyPerfIssue(ExpectMaxHeapAllocation annotation, Allocation measuredAllocation) {
 
         Allocation maxExpectedAllocation = new Allocation(annotation.value(), annotation.unit());
 

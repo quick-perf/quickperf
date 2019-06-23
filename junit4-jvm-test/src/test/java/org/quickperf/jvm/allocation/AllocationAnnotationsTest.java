@@ -26,7 +26,7 @@ public class AllocationAnnotationsTest {
     test_should_fail_if_allocation_is_greater_than_expected() {
 
         // GIVEN
-        Class<?> testClass = ClassWithMethodAnnotatedWithExpectMaxAllocation.class;
+        Class<?> testClass = ClassWithMethodAnnotatedWithExpectMaxHeapAllocation.class;
 
         // WHEN
         PrintableResult printableResult = testResult(testClass);

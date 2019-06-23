@@ -77,11 +77,11 @@ public class JvmAnnotationBuilder {
         };
     }
 
-    public static ExpectMaxAllocation expectMaxAllocation(final int value, final AllocationUnit unit) {
-        return new ExpectMaxAllocation() {
+    public static ExpectMaxHeapAllocation expectMaxHeapAllocation(final int value, final AllocationUnit unit) {
+        return new ExpectMaxHeapAllocation() {
             @Override
             public Class<? extends Annotation> annotationType() {
-                return ExpectMaxAllocation.class;
+                return ExpectMaxHeapAllocation.class;
             }
             @Override
             public double value() {

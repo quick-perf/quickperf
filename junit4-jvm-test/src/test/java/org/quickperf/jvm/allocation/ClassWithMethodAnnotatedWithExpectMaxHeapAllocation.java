@@ -17,14 +17,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.jvm.annotations.JvmOptions;
-import org.quickperf.jvm.annotations.ExpectMaxAllocation;
+import org.quickperf.jvm.annotations.ExpectMaxHeapAllocation;
 
 import java.util.ArrayList;
 
 @RunWith(QuickPerfJUnitRunner.class)
-public class ClassWithMethodAnnotatedWithExpectMaxAllocation {
+public class ClassWithMethodAnnotatedWithExpectMaxHeapAllocation {
 
-    @ExpectMaxAllocation(value = 439, unit = AllocationUnit.BYTE)
+    @ExpectMaxHeapAllocation(value = 439, unit = AllocationUnit.BYTE)
     // See ClassWithMethodAnnotatedWithMeasureHeapAllocation
     @JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers")
     @Test
