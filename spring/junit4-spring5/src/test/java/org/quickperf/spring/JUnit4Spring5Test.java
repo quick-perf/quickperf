@@ -41,6 +41,11 @@ public class JUnit4Spring5Test extends AbstractJUnit4SpringTestBase {
     }
 
     @Override
+    protected Class<?> aClassAnnotatedWithQPSpringRunnerAndFunctionalIteration() {
+        return ClassAnnotatedWithQPSpring5RunnerAndFunctionalIteration.class;
+    }
+
+    @Override
     protected Class<?> aClassAnnotatedWithQPSpringRunnerOneJvm() {
         return ClassAnnotatedWithQPSpring5RunnerWithATestMethodHavingAPerformanceIssueAnRunningInADedicatedJvm.class;
     }

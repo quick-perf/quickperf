@@ -118,7 +118,7 @@ public abstract class AbstractJUnit4SpringTestBase {
     protected abstract Class<?> aClassWithMethodAllocatingAndNoAllocationAnnotation();
 
     @Test public void
-    disable_quick_perf_annotation_should_disable_quick_perf_functionalities() {
+    disable_quick_perf_annotation_should_disable_quick_perf_features() {
 
         // GIVEN
         Class<?> testClass = aClassAnnotatedWithQPSpringRunnerAndDisableQuickPerf();
@@ -128,12 +128,29 @@ public abstract class AbstractJUnit4SpringTestBase {
 
         // THEN
         assertThat(printableResult.failureCount()).isEqualTo(0);
+
     }
 
     protected abstract Class<?> aClassAnnotatedWithQPSpringRunnerAndDisableQuickPerf();
 
     @Test public void
-    execute_quick_perf_functionalities_using_one_jvm() {
+    functional_iteration_annotation_should_disable_quick_perf_features() {
+
+        // GIVEN
+        Class<?> testClass = aClassAnnotatedWithQPSpringRunnerAndFunctionalIteration();
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isEqualTo(0);
+
+    }
+
+    protected abstract Class<?> aClassAnnotatedWithQPSpringRunnerAndFunctionalIteration();
+
+    @Test public void
+    execute_quick_perf_features_with_one_jvm() {
 
         // GIVEN
         Class<?> testClass = aClassAnnotatedWithQPSpringRunnerOneJvm();
