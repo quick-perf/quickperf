@@ -1,6 +1,6 @@
 # Contributing to QuickPerf
 Thank you for your interest in contributing to QuickPerf! <br>
-Feel free to open an issue to suggest a new feature or report a bug. Also don't hesitate to work on an existing issue.
+Feel free to open an issue to suggest a new feature or report a bug. Also don't hesitate to work on an existing issue. When you start to work on an issue, please leave a comment "I start to work on this issue", so we can assign it to you.
 
 ## Build
 You need the following setup:
