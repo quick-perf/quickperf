@@ -27,8 +27,8 @@ public class ContainsLikeWithLeadingWildcardExtractor implements ExtractablePerf
     private ContainsLikeWithLeadingWildcardExtractor() { }
 
     @Override
-    public BooleanMeasure extractPerfMeasureFrom(SqlExecutions perfRecord) {
-        for (SqlExecution sqlExecution : perfRecord.getExecutions()) {
+    public BooleanMeasure extractPerfMeasureFrom(SqlExecutions sqlExecutions) {
+        for (SqlExecution sqlExecution : sqlExecutions) {
             for (QueryInfo query : sqlExecution.getQueries()) {
                 if (searchLikeWithLeadingWildcardOn(query)) {
                     return BooleanMeasure.TRUE;

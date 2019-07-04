@@ -37,7 +37,7 @@ public class HasSameSelectTypesWithDiffParamsExtractor implements ExtractablePer
     @Override
     public BooleanMeasure extractPerfMeasureFrom(SqlExecutions sqlExecutions) {
         HasSameSelectTypesWithDiffParamsExtractor.SqlSelects sqlSelects = new HasSameSelectTypesWithDiffParamsExtractor.SqlSelects();
-        for (SqlExecution sqlExecution : sqlExecutions.getExecutions()) {
+        for (SqlExecution sqlExecution : sqlExecutions) {
             for (QueryInfo query : sqlExecution.getQueries()) {
                 if (   isSelectType(query)
                     && sqlSelects.sameSqlQueryWithDifferentParams(query)) {
