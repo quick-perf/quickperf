@@ -10,7 +10,8 @@ You need the following setup:
 To build:
 * Clone the repository: git clone https://github.com/quick-perf/quickperf.git
 * Navigate to the *quickperf* repository
-* mvn clean install
+* mvn clean install <br>
+  To disable Spring Boot tests: mvn clean install -P -SpringBootTests
 
 ## Legal stuff
 Project License: [Apache License Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
