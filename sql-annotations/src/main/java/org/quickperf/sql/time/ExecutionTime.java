@@ -38,5 +38,10 @@ public class ExecutionTime extends AbstractComparablePerfMeasure<ExecutionTime> 
 		long otherTimeInMs = other.unit.toMillis(other.value);
 		return (int)(currentTimeInMs - otherTimeInMs);
 	}
+	
+	@Override
+	public String toString() {
+		return unit.toMillis(value) + " ms";
+	}
 
 }
