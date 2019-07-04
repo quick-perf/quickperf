@@ -18,9 +18,9 @@ import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.sql.SqlTestBase;
 import org.quickperf.sql.annotation.ExpectUpdate;
-import org.quickperf.sql.entities.Book;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 @RunWith(QuickPerfJUnitRunner.class)
 public class SqlUpdate extends SqlTestBase {
@@ -31,29 +31,17 @@ public class SqlUpdate extends SqlTestBase {
 
         EntityManager em = emf.createEntityManager();
 
-        Book effectiveJava = new Book();
-        effectiveJava.setIsbn("effectiveJavaIsbn"); //TODO: TO MODIFY
-        effectiveJava.setTitle("Effective Java");
-
-        persist(em, effectiveJava);
-
-        effectiveJava.setTitle("New Title");
-
-        update(em, effectiveJava);
-
-    }
-
-    private void update(EntityManager em, Book effectiveJava) {
-        em.merge(effectiveJava);
         em.getTransaction().begin();
-        em.persist(effectiveJava);
-        em.getTransaction().commit();
-    }
 
-    private void persist(EntityManager em, Book effectiveJava) {
-        em.getTransaction().begin();
-        em.persist(effectiveJava);
+        String sql =   " UPDATE book"
+                     + " SET isbn ='978-0134685991'"
+                     + " WHERE id = 1";
+        Query query = em.createNativeQuery(sql);
+
+        query.executeUpdate();
+
         em.getTransaction().commit();
+
     }
 
 }

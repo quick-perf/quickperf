@@ -31,12 +31,16 @@ public class SqlUpdateTest {
 
         // THEN
         SoftAssertions softAssertions = new SoftAssertions();
+
         softAssertions.assertThat(printableResult.failureCount()).isEqualTo(1);
-        softAssertions.assertThat(printableResult.toString()).contains("Expected number of UPDATE requests <5> but is <1>");
-        softAssertions.assertThat(printableResult.toString()).contains("update")
-                .contains("Book")
-                .contains("set")
-                .contains("isbn=?");
+
+        softAssertions.assertThat(printableResult.toString())
+                      .contains("Expected number of UPDATE requests <5> but is <1>")
+                      .contains("UPDATE")
+                      .contains("book")
+                      .contains("SET")
+                      .contains("isbn");
+
         softAssertions.assertAll();
 
     }
