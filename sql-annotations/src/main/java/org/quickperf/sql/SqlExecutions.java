@@ -21,12 +21,9 @@ import org.quickperf.PerfIssuesFormat;
 import org.quickperf.perfrecording.ViewablePerfRecordIfPerfIssue;
 
 import java.io.Serializable;
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
-public class SqlExecutions implements ViewablePerfRecordIfPerfIssue, Serializable {
+public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecordIfPerfIssue, Serializable {
 
     public static final SqlExecutions NONE = new SqlExecutions();
 
@@ -35,10 +32,6 @@ public class SqlExecutions implements ViewablePerfRecordIfPerfIssue, Serializabl
     public void add(ExecutionInfo execInfo, List<QueryInfo> queries) {
         SqlExecution sqlExecution = new SqlExecution(execInfo, queries);
         sqlExecutions.addLast(sqlExecution);
-    }
-
-    public Collection<SqlExecution> getExecutions() {
-        return sqlExecutions;
     }
 
     @Override
@@ -100,4 +93,8 @@ public class SqlExecutions implements ViewablePerfRecordIfPerfIssue, Serializabl
                 + toString();
     }
 
+    @Override
+    public Iterator<SqlExecution> iterator() {
+        return sqlExecutions.iterator();
+    }
 }

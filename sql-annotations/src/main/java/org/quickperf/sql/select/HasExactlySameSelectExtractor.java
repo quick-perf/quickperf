@@ -36,7 +36,7 @@ public class HasExactlySameSelectExtractor implements ExtractablePerformanceMeas
     @Override
     public BooleanMeasure extractPerfMeasureFrom(SqlExecutions sqlExecutions) {
         SqlSelects sqlSelects = new SqlSelects();
-        for (SqlExecution sqlExecution : sqlExecutions.getExecutions()) {
+        for (SqlExecution sqlExecution : sqlExecutions) {
             for (QueryInfo query : sqlExecution.getQueries()) {
                 if (       isSelectType(query)
                         && sqlSelects.exactlySameSqlQueryExists(query)
