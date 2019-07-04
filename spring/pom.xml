@@ -35,7 +35,18 @@
         <module>junit4-spring4</module>
         <module>junit4-spring5</module>
         <module>junit4-spring-base-tests</module>
-        <module>junit4-spring-boot-test</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>SpringBootTests</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>junit4-spring-boot-test</module>
+            </modules>
+        </profile>
+    </profiles>
 
 </project>
