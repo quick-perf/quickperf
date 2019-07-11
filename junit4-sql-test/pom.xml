@@ -28,6 +28,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <dependencies.max.jdk.version>1.8</dependencies.max.jdk.version>
+        <jar.skipIfEmpty>true</jar.skipIfEmpty>
+        <maven.install.skip>true</maven.install.skip>
     </properties>
 
     <dependencies>
