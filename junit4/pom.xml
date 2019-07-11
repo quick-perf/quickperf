@@ -57,13 +57,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>se.ayoy.maven-plugins</groupId>
-                <artifactId>ayoy-license-verifier-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>

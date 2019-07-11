@@ -63,7 +63,7 @@
                <plugin>
                    <groupId>se.ayoy.maven-plugins</groupId>
                    <artifactId>ayoy-license-verifier-maven-plugin</artifactId>
-                   <version>1.0.5</version>
+                   <version>1.0.7</version>
                    <executions>
                        <execution>
                            <phase>compile</phase>
@@ -76,7 +76,7 @@
                        <licenseFile>licenses/licenses.xml</licenseFile>
                        <excludedMissingLicensesFile>licenses/allowedMissingLicense.xml</excludedMissingLicensesFile>
                        <failOnForbidden>true</failOnForbidden>
-                       <failOnUnknown>true</failOnUnknown>
+                       <failOnUnknown>false</failOnUnknown>
                        <failOnMissing>false</failOnMissing>
                    </configuration>
                </plugin>
@@ -137,6 +137,13 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
+            <!-- Uncomment to verify licences
+            <plugin>
+                <groupId>se.ayoy.maven-plugins</groupId>
+                <artifactId>ayoy-license-verifier-maven-plugin</artifactId>
+            </plugin>
+            -->
 
         </plugins>
 
