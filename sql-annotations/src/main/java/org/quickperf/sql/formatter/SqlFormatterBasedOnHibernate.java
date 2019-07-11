@@ -33,11 +33,11 @@ class SqlFormatterBasedOnHibernate implements SqlFormatter {
    private SqlFormatterBasedOnHibernate() {
    }
 
+   @SuppressWarnings("unchecked")
    private static SqlFormatter buildSqlFormatterBasedOnHibernate() {
        try {
            Class<? extends Enum> formatStyleClass = retrieveHibernateFormatStyleClass();
            Method getFormatterMethod = formatStyleClass.getDeclaredMethod("getFormatter", null);
-
            Enum formatStyleBasic = Enum.valueOf(formatStyleClass, "BASIC");
            Object basicFormatter = getFormatterMethod.invoke(formatStyleBasic, null);
 
@@ -58,6 +58,7 @@ class SqlFormatterBasedOnHibernate implements SqlFormatter {
        }
    }
 
+    @SuppressWarnings("unchecked")
     private static Class<? extends Enum> retrieveHibernateFormatStyleClass() throws ClassNotFoundException {
         ClassLoader loader = SqlFormatterBasedOnHibernate.class.getClassLoader();
         String formatStyleClassName = "org.hibernate.engine.jdbc.internal.FormatStyle";
