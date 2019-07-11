@@ -197,9 +197,9 @@ public class AnnotationsExtractor {
             return classes;
         }
 
-        private Annotation[] convertToArray(List mergedAnnotationsAsList) {
+        private Annotation[] convertToArray(List<Annotation> mergedAnnotationsAsList) {
             int size = mergedAnnotationsAsList.size();
-            return (Annotation[]) mergedAnnotationsAsList.toArray(new Annotation[size]);
+            return mergedAnnotationsAsList.toArray(new Annotation[size]);
         }
 
     }
