@@ -19,4 +19,5 @@ import java.util.Collection;
 public interface SpecifiableAnnotations {
 
     Collection<Annotation> specifyAnnotationsAppliedOnEachTest();
+
 }

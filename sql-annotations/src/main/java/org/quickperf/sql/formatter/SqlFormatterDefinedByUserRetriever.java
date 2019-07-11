@@ -19,6 +19,7 @@ import org.quickperf.sql.SqlFormatter;
 import org.quickperf.sql.config.SpecifiableSqlFormatter;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 class SqlFormatterDefinedByUserRetriever {
 
@@ -52,12 +53,23 @@ class SqlFormatterDefinedByUserRetriever {
                     if (!SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
                         System.out.println("A class specifying a SQL basicFormatter has been found: " + clazz.getCanonicalName());
                     }
-                    return (SpecifiableSqlFormatter) clazz.newInstance();
-
+                    try {
+                        return instantiateSpecifiableSqlFormatter(clazz);
+                    } catch (InvocationTargetException | NoSuchMethodException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
+
         return null;
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private SpecifiableSqlFormatter instantiateSpecifiableSqlFormatter(Class clazz) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        return (SpecifiableSqlFormatter) clazz.getDeclaredConstructor()
+                                         .newInstance();
     }
 
     private boolean isSpecifiableSqlFormatterImpl(Class interfaceClass) {

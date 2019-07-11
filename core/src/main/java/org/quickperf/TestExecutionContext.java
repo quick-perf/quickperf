@@ -25,6 +25,7 @@ import org.quickperf.testlauncher.AllJvmOptions;
 import org.quickperf.testlauncher.JvmOption;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -155,14 +156,22 @@ public class TestExecutionContext {
     private static List<RecordablePerformance> buildPerfRecorderInstances(Set<Class<? extends RecordablePerformance>> perfRecorderClasses) {
         List<RecordablePerformance> perfRecorders = new ArrayList<>();
         for (Class<? extends RecordablePerformance> perfRecorderClass : perfRecorderClasses) {
-            try {
-                RecordablePerformance perfRecorder = perfRecorderClass.newInstance();
+            RecordablePerformance perfRecorder = instantiatePerfRecorderFrom(perfRecorderClass);
+            if(perfRecorder != RecordablePerformance.NONE) {
                 perfRecorders.add(perfRecorder);
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
             }
         }
         return perfRecorders;
+    }
+
+    private static RecordablePerformance instantiatePerfRecorderFrom(Class<? extends RecordablePerformance> perfRecorderClass) {
+        try {
+            return perfRecorderClass.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException
+                | NoSuchMethodException | InvocationTargetException e) {
+            e.printStackTrace();
+            return RecordablePerformance.NONE;
+        }
     }
 
     public boolean testExecutionUsesTwoJVMs() {

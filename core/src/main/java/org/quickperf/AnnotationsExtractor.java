@@ -19,6 +19,7 @@ import org.quickperf.config.library.SetOfAnnotationConfigs;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -37,8 +38,7 @@ public class AnnotationsExtractor {
     private Collection<Annotation> retrieveDefaultAnnotations() {
 
         try {
-            SpecifiableAnnotations specifiableAnnotations =
-                    classSpecifyingGlobalAnnotation();
+            SpecifiableAnnotations specifiableAnnotations = classSpecifyingGlobalAnnotation();
             if (specifiableAnnotations == null) {
                 return Collections.emptyList();
             }
@@ -59,23 +59,39 @@ public class AnnotationsExtractor {
         } catch (ClassNotFoundException | IOException e) {
             throw new IllegalStateException(e);
         }
+
+        Class classImplementingSpecifiableAnnotations = findClassImplementingSpecifiableAnnotations(classes);
+
+        return instantiateSpecifiableAnnotationsFrom(classImplementingSpecifiableAnnotations);
+
+    }
+
+    private Class findClassImplementingSpecifiableAnnotations(Class[] classes) {
         for (Class clazz : classes) {
             Class[] interfaces = clazz.getInterfaces();
             for (Class interfaceClass : interfaces) {
-                if (isSpecifiableAnnotationsClass(interfaceClass)) {
-                    try {
-                        return (SpecifiableAnnotations) clazz.newInstance();
-                    } catch (InstantiationException | IllegalAccessException e) {
-                        throw new IllegalStateException(e);
-                    }
-
+                if (isSpecifiableAnnotationsInterface(interfaceClass)) {
+                    return clazz;
                 }
             }
         }
         return null;
     }
 
-    private boolean isSpecifiableAnnotationsClass(Class interfaceClass) {
+    @SuppressWarnings("unchecked")
+    private SpecifiableAnnotations instantiateSpecifiableAnnotationsFrom(Class clazz) {
+        if(clazz == null) {
+            return null;
+        }
+        try {
+            return (SpecifiableAnnotations) clazz.getDeclaredConstructor().newInstance();
+        } catch ( InstantiationException | IllegalAccessException
+                | NoSuchMethodException  | InvocationTargetException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private boolean isSpecifiableAnnotationsInterface(Class interfaceClass) {
         return interfaceClass.getCanonicalName().equals(SpecifiableAnnotations.class.getCanonicalName());
     }
 
