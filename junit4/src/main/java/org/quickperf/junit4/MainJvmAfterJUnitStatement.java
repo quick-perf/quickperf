@@ -267,6 +267,7 @@ public class MainJvmAfterJUnitStatement extends Statement {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Map<Annotation, PerfMeasure> extractPerfMeasureByAnnotation(SetOfAnnotationConfigs testAnnotationConfigs, Map<Annotation, PerfRecord> perfRecordByAnnotation) {
         Map<Annotation, PerfMeasure> perfMeasureByAnnotation = new HashMap<>();
             for (Annotation annotation : testExecutionContext.getPerfAnnotations()) {
@@ -303,6 +304,7 @@ public class MainJvmAfterJUnitStatement extends Statement {
         return perfIssueByAnnotation;
     }
 
+    @SuppressWarnings("unchecked")
     private PerfIssue evaluatePerfIssue(Map<Annotation, PerfMeasure> perfMeasuredByAnnotation
                                       , SetOfAnnotationConfigs testAnnotationConfigs
                                       , Annotation annotation) {

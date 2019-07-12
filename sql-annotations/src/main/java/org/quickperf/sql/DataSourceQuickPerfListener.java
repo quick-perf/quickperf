@@ -25,7 +25,9 @@ class DataSourceQuickPerfListener implements QueryExecutionListener {
     @Override
     public void beforeQuery(ExecutionInfo executionInfo, List<QueryInfo> queries) {}
 
+
     @Override
+    @SuppressWarnings("unchecked")
     public void afterQuery(ExecutionInfo executionInfo, List<QueryInfo> queries) {
 
         Collection<SqlRecorder> sqlRecorders = SqlRecorderRegistry.INSTANCE.getSqlRecorders();
