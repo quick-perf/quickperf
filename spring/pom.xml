@@ -30,14 +30,19 @@
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
 
-    <modules>
-        <module>junit4-spring3</module>
-        <module>junit4-spring4</module>
-        <module>junit4-spring5</module>
-        <module>junit4-spring-base-tests</module>
-    </modules>
-
     <profiles>
+        <profile>
+            <id>default-spring</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>junit4-spring3</module>
+                <module>junit4-spring4</module>
+                <module>junit4-spring5</module>
+                <module>junit4-spring-base-tests</module>
+            </modules>
+        </profile>
         <profile>
             <id>SpringBootTests</id>
             <activation>
@@ -45,6 +50,14 @@
             </activation>
             <modules>
                 <module>junit4-spring-boot-test</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>spring-release</id>
+            <modules>
+                <module>junit4-spring3</module>
+                <module>junit4-spring4</module>
+                <module>junit4-spring5</module>
             </modules>
         </profile>
     </profiles>

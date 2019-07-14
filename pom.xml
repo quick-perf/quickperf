@@ -23,7 +23,7 @@
     <artifactId>quick-perf</artifactId>
     <packaging>pom</packaging>
     <name>quick-perf</name>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
 
     <inceptionYear>2019</inceptionYear>
 
@@ -177,9 +177,7 @@
                 <module>jvm-annotations</module>
                 <module>junit4</module>
                 <module>sql-annotations</module>
-                <module>spring/junit4-spring3</module>
-                <module>spring/junit4-spring4</module>
-                <module>spring/junit4-spring5</module>
+                <module>spring</module>
             </modules>
             <build>
                 <plugins>
