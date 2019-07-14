@@ -12,17 +12,34 @@
   ~ Copyright 2019-2019 the original author or authors.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <description>QuickPerf is a testing library for Java providing annotations to quickly evaluate some performance properties.</description>
+
+    <url>https://github.com/quick-perf/quickperf</url>
 
     <groupId>org.quickperf</groupId>
     <artifactId>quick-perf</artifactId>
     <packaging>pom</packaging>
     <name>quick-perf</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
+
     <inceptionYear>2019</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/quick-perf/quickperf.git</connection>
+        <developerConnection>scm:git:git@github.com:quick-perf/quickperf.git</developerConnection>
+        <url>https://github.com/quick-perf/quickperf</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,16 +54,6 @@
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
     </properties>
 
-    <modules>
-        <module>core</module>
-        <module>jvm-annotations</module>
-        <module>junit4</module>
-        <module>junit4-jvm-test</module>
-        <module>sql-annotations</module>
-        <module>junit4-sql-test</module>
-        <module>spring</module>
-    </modules>
-
     <dependencies>
         <dependency>
             <groupId>org.assertj</groupId>
@@ -59,33 +66,31 @@
     <build>
 
         <pluginManagement>
-           <plugins>
-               <plugin>
-                   <groupId>se.ayoy.maven-plugins</groupId>
-                   <artifactId>ayoy-license-verifier-maven-plugin</artifactId>
-                   <version>1.0.7</version>
-                   <executions>
-                       <execution>
-                           <phase>compile</phase>
-                           <goals>
-                               <goal>verify</goal>
-                           </goals>
-                       </execution>
-                   </executions>
-                   <configuration>
-                       <licenseFile>licenses/licenses.xml</licenseFile>
-                       <excludedMissingLicensesFile>licenses/allowedMissingLicense.xml</excludedMissingLicensesFile>
-                       <failOnForbidden>true</failOnForbidden>
-                       <failOnUnknown>false</failOnUnknown>
-                       <failOnMissing>false</failOnMissing>
-                   </configuration>
-               </plugin>
-           </plugins>
-
+            <plugins>
+                <plugin>
+                    <groupId>se.ayoy.maven-plugins</groupId>
+                    <artifactId>ayoy-license-verifier-maven-plugin</artifactId>
+                    <version>1.0.7</version>
+                    <executions>
+                        <execution>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <licenseFile>licenses/licenses.xml</licenseFile>
+                        <excludedMissingLicensesFile>licenses/allowedMissingLicense.xml</excludedMissingLicensesFile>
+                        <failOnForbidden>true</failOnForbidden>
+                        <failOnUnknown>false</failOnUnknown>
+                        <failOnMissing>false</failOnMissing>
+                    </configuration>
+                </plugin>
+            </plugins>
         </pluginManagement>
 
         <plugins>
-
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
@@ -103,7 +108,6 @@
                     </argLine>
                 </configuration>
             </plugin>
-
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>1.4.1</version>
@@ -115,7 +119,7 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <banCircularDependencies/>
+                                <banCircularDependencies />
                                 <enforceBytecodeVersion>
                                     <maxJdkVersion>${dependencies.max.jdk.version}</maxJdkVersion>
                                     <ignoreClasses>
@@ -135,16 +139,151 @@
                     </dependency>
                 </dependencies>
             </plugin>
-
             <!-- Uncomment to verify licences
             <plugin>
                 <groupId>se.ayoy.maven-plugins</groupId>
                 <artifactId>ayoy-license-verifier-maven-plugin</artifactId>
             </plugin>
             -->
-
         </plugins>
 
     </build>
+
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/quick-perf/quickperf/issues</url>
+    </issueManagement>
+
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>core</module>
+                <module>jvm-annotations</module>
+                <module>junit4</module>
+                <module>junit4-jvm-test</module>
+                <module>sql-annotations</module>
+                <module>junit4-sql-test</module>
+                <module>spring</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>release</id>
+            <modules>
+                <module>core</module>
+                <module>jvm-annotations</module>
+                <module>junit4</module>
+                <module>sql-annotations</module>
+                <module>spring/junit4-spring3</module>
+                <module>spring/junit4-spring4</module>
+                <module>spring/junit4-spring5</module>
+            </modules>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>gpg</executable>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <failOnError>true</failOnError>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.7</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>2.5.3</version>
+                        <configuration>
+                            <!-- QuickPerf uses 7.1.0-SNAPSHOT version of flightrecorder.rules.jdk artifact
+                            that seems stable. -->
+                            <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                            <useReleaseProfile>false</useReleaseProfile>
+                            <releaseProfiles>release</releaseProfiles>
+                            <goals>deploy</goals>
+                            <tagNameFormat>release-@{project.version}</tagNameFormat>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
+    <developers>
+        <developer>
+            <id>jeanbisutti</id>
+            <name>Jean Bisutti</name>
+            <email>jean.bisutti@gmail.com</email>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+
+    <contributors>
+        <contributor>
+            <name>Guillaume Raghoumandan</name>
+            <url>https://github.com/guiRagh</url>
+        </contributor>
+        <contributor>
+            <name>Alexandre Blanchard </name>
+            <url>https://github.com/ablanchard</url>
+        </contributor>
+    </contributors>
 
 </project>
