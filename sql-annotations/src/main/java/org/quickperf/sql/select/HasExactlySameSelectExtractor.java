@@ -22,10 +22,7 @@ import org.quickperf.sql.QueryTypeRetriever;
 import org.quickperf.sql.SqlExecution;
 import org.quickperf.sql.SqlExecutions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HasExactlySameSelectExtractor implements ExtractablePerformanceMeasure<SqlExecutions, BooleanMeasure> {
 
@@ -66,20 +63,8 @@ public class HasExactlySameSelectExtractor implements ExtractablePerformanceMeas
             if (paramsCalls == null) {
                 return false;
             }
-            List<Object> paramsList = getParamsOf(query);
+            List<Object> paramsList = QueryParamsExtractor.INSTANCE.getParamsOf(query);
             return paramsCalls.alreadySameParamsCalled(paramsList);
-        }
-
-        private List<Object> getParamsOf(QueryInfo query) {
-            List<Object> paramsList = new ArrayList<>();
-            List<ParameterSetOperation> paramSetOfThisQuery = query.getParametersList().get(0);
-
-            for (ParameterSetOperation parameterSetOperation : paramSetOfThisQuery) {
-                Object[] paramsOfThisQuery = parameterSetOperation.getArgs();
-                paramsList.add(paramsOfThisQuery[1]);
-            }
-
-            return paramsList;
         }
 
         void add(QueryInfo query) {
@@ -88,7 +73,7 @@ public class HasExactlySameSelectExtractor implements ExtractablePerformanceMeas
             if (paramsCalls == null) {
                 paramsCalls = new ParamsCalls();
             }
-            List<Object> paramsList = getParamsOf(query);
+            List<Object> paramsList = QueryParamsExtractor.INSTANCE.getParamsOf(query);
             paramsCalls.addParams(paramsList);
             callsParamsByQuery.put(queryAsString, paramsCalls);
         }

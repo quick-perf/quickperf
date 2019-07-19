@@ -31,11 +31,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class HasSameSelectTypesWithDiffParamsExtractorTest {
+public class HasExactlySameSelectExtractorTest {
 
     //Not a use case with requests executed on a database waiting for to have a clear use case
     @Test public void
-    should_return_false_with_same_selects_without_params() throws SQLException {
+    should_return_true_with_exactly_same_selects_without_params() throws SQLException {
 
         // GIVEN
         String select = "SELECT * FROM Book";
@@ -56,16 +56,15 @@ public class HasSameSelectTypesWithDiffParamsExtractorTest {
 
         SqlExecutions sqlExecutions = SqlExecutions.NONE;
         sqlExecutions.add(execInfo
-                        , asList(queryInfo1, queryInfo2));
+                       , asList(queryInfo1, queryInfo2));
 
-        HasSameSelectTypesWithDiffParamsExtractor extractor
-                = HasSameSelectTypesWithDiffParamsExtractor.INSTANCE;
+        HasExactlySameSelectExtractor extractor = HasExactlySameSelectExtractor.INSTANCE;
 
         // WHEN
         BooleanMeasure sameSelectsWithDifferentParams = extractor.extractPerfMeasureFrom(sqlExecutions);
 
         // THEN
-        assertThat(sameSelectsWithDifferentParams.getValue()).isFalse();
+        assertThat(sameSelectsWithDifferentParams.getValue()).isTrue();
 
     }
 

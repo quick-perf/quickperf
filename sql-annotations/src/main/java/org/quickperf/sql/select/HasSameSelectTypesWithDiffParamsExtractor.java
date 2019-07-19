@@ -57,42 +57,13 @@ public class HasSameSelectTypesWithDiffParamsExtractor implements ExtractablePer
 
         private final Map<String, ParamsCalls> callsParamsByQuery = new HashMap<>();
 
-        private List<Object> getParamsOf(QueryInfo query) {
-
-            List<List<ParameterSetOperation>> parametersList = query.getParametersList();
-            List<ParameterSetOperation> parameterSetOperations =
-                    retrieveParameterSetOperations(parametersList);
-
-            List<Object> paramsList = new ArrayList<>();
-            for (ParameterSetOperation parameterSetOperation : parameterSetOperations) {
-                Object[] paramsOfThisQuery = parameterSetOperation.getArgs();
-                paramsList.add(paramsOfThisQuery[1]);
-            }
-
-            return paramsList;
-
-        }
-
-        private List<ParameterSetOperation> retrieveParameterSetOperations(List<List<ParameterSetOperation>> parametersList) {
-            if(parametersList.isEmpty()) {
-                return Collections.emptyList();
-            }
-            if(parametersList.size() > 1) {
-                String message = "Several parameter set not managed, please create an issue"
-                        + " on https://github.com/quick-perf/quickperf/issues describing your"
-                        + " use case.";
-                throw new IllegalStateException(message);
-            }
-            return parametersList.get(0);
-        }
-
         void add(QueryInfo query) {
             String queryAsString = query.getQuery();
             HasSameSelectTypesWithDiffParamsExtractor.SqlSelects.ParamsCalls paramsCalls = callsParamsByQuery.get(queryAsString);
             if (paramsCalls == null) {
                 paramsCalls = new HasSameSelectTypesWithDiffParamsExtractor.SqlSelects.ParamsCalls();
             }
-            List<Object> paramsList = getParamsOf(query);
+            List<Object> paramsList = QueryParamsExtractor.INSTANCE.getParamsOf(query);
             paramsCalls.addParams(paramsList);
             callsParamsByQuery.put(queryAsString, paramsCalls);
         }
@@ -103,7 +74,7 @@ public class HasSameSelectTypesWithDiffParamsExtractor implements ExtractablePer
             if (paramsCalls == null) {
                 return false;
             }
-            List<Object> paramsList = getParamsOf(query);
+            List<Object> paramsList = QueryParamsExtractor.INSTANCE.getParamsOf(query);
             return !paramsCalls.alreadySameParamsCalled(paramsList);
         }
 
