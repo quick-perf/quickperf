@@ -47,6 +47,8 @@
         <dependencies.max.jdk.version>1.7</dependencies.max.jdk.version>
         <junit4.test.version>4.12</junit4.test.version>
         <mockito.core.version>2.25.0</mockito.core.version>
+        <h2.version>1.4.198</h2.version>
+        <commons-dbcp.version>1.4</commons-dbcp.version>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <surefire-junit47.version>2.22.2</surefire-junit47.version>

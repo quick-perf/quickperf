@@ -65,11 +65,11 @@ public abstract class AbstractJUnit4SpringTestBase {
                       .isEqualTo(1);
 
         softAssertions.assertThat(printableResult.toString())
-                     .contains("java.lang.AssertionError: Performance and functional properties not respected")
-                     .contains("PERFORMANCE PROPERTIES(S)")
-                     .contains("Expected allocation to be 0 but is")
-                     .contains("FUNCTIONAL PROPERTY")
-                     .contains("Failing assertion !");
+                      .contains("java.lang.AssertionError: Performance and functional properties not respected")
+                      .contains("PERFORMANCE PROPERTIES(S)")
+                      .contains("Expected allocation to be 0 but is")
+                      .contains("FUNCTIONAL PROPERTY")
+                      .contains("Failing assertion !");
 
         softAssertions.assertAll();
 
@@ -196,5 +196,30 @@ public abstract class AbstractJUnit4SpringTestBase {
     }
 
     protected abstract Class<?> aClassWithTwoMethodsHavingFunctionnalAndPerfIssues();
+
+    @Test public void
+    a_failing_test_with_transactional_test_execution_listener() {
+
+        // GIVEN
+        Class<?> testClass = aClassWithTransactionalTestExecutionListenerAndAFailingTest();
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        SoftAssertions softAssertions = new SoftAssertions();
+
+        softAssertions.assertThat(printableResult.failureCount()).isEqualTo(1);
+
+        softAssertions.assertThat(printableResult.toString())
+                      .contains("java.lang.AssertionError: a performance property is not respected")
+                      .contains("insert")
+                      .contains("into");
+
+        softAssertions.assertAll();
+
+    }
+
+    protected abstract Class<?> aClassWithTransactionalTestExecutionListenerAndAFailingTest();
 
 }

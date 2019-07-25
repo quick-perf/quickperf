@@ -13,6 +13,8 @@
 
 package org.quickperf.spring;
 
+import org.quickperf.spring.database.ClassWithAFailingTestAndTransactionalTestExecutionListener;
+
 public class JUnit4Spring5Test extends AbstractJUnit4SpringTestBase {
 
     @Override
@@ -53,6 +55,11 @@ public class JUnit4Spring5Test extends AbstractJUnit4SpringTestBase {
     @Override
     protected Class<?> aClassWithTwoMethodsHavingFunctionnalAndPerfIssues() {
         return ClassAnnotatedWithQPSpring5RunnerAndWithTwoMethodsHavingFunctionalAndPerfIssues.class;
+    }
+
+    @Override
+    protected Class<?> aClassWithTransactionalTestExecutionListenerAndAFailingTest() {
+        return ClassWithAFailingTestAndTransactionalTestExecutionListener.class;
     }
 
 }
