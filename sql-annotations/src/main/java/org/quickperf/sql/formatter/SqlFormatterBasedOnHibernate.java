@@ -53,7 +53,8 @@ class SqlFormatterBasedOnHibernate implements SqlFormatter {
            return sqlFormatterBasedOnHibernate;
 
        } catch (Exception e) {
-           e.printStackTrace();
+           // QuickPerf can't automatically retrieve Hibernate formatters
+           // if Hibernate version is less than 4
            return SqlFormatter.NONE;
        }
    }
