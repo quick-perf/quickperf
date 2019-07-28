@@ -12,13 +12,16 @@ public class SqlQueryMaxExecutionTimeVerifier implements VerifiablePerformanceIs
 	
 	@Override
 	public PerfIssue verifyPerfIssue(ExpectMaxQueryExecutionTime annotation, ExecutionTime measuredExecutionTime) {
+		
 		ExecutionTime expectedSqlExecutionTime = new ExecutionTime(annotation.value(), annotation.unit());
 		
 		if(expectedSqlExecutionTime.isGreaterThan(measuredExecutionTime)) {
 			String message = "Expected sql execution time <" + expectedSqlExecutionTime + "> but was <" + measuredExecutionTime + ">.";
 			return new PerfIssue(message);
 		}
+		
 		return PerfIssue.NONE;
+		
 	}
 	
 	

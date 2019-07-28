@@ -1,6 +1,5 @@
 package org.quickperf.sql.time;
 
-import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 import org.quickperf.ExtractablePerformanceMeasure;
@@ -16,22 +15,19 @@ public class SqlQueryExecutionTimeExtractor implements ExtractablePerformanceMea
 	@Override
 	public ExecutionTime extractPerfMeasureFrom(SqlExecutions sqlExecutions) {
 		
-		long maxExcutionTime = 0;
+		long maxExecutionTime = 0;
 		
-		Iterator<SqlExecution> sqlExecutionsIt = sqlExecutions.iterator();
-		
-		while (sqlExecutionsIt.hasNext()) {
-			
-			SqlExecution sqlExecution = sqlExecutionsIt.next();
+		for (SqlExecution sqlExecution : sqlExecutions) {
 			
 			long executionTime = sqlExecution.getElapsedTime();
 			
-			if(executionTime > maxExcutionTime) {
-				maxExcutionTime = executionTime;
+			if(executionTime > maxExecutionTime) {
+				maxExecutionTime = executionTime;
 			}
 		}
 		
-		return new ExecutionTime(maxExcutionTime, TimeUnit.MILLISECONDS);
+		return new ExecutionTime(maxExecutionTime, TimeUnit.MILLISECONDS);
+		
 	}
 
 }
