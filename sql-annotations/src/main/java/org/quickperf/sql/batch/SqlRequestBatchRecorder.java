@@ -68,7 +68,7 @@ public class SqlRequestBatchRecorder implements SqlRecorder<SqlBatchSizes> {
     }
 
     @Override
-    public void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries) {
+    public void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries, int listenerIdentifier) {
         for (QueryInfo query : queries) {
             if (       previousRequestsAreBatched
                     && isRequestTypeInsertOrUpdateOrDeleteType(query)

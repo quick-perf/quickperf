@@ -19,8 +19,11 @@ import net.ttddyy.dsproxy.listener.QueryExecutionListener;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 class DataSourceQuickPerfListener implements QueryExecutionListener {
+
+    private final int listenerIdentifier = ThreadLocalRandom.current().nextInt();
 
     @Override
     public void beforeQuery(ExecutionInfo executionInfo, List<QueryInfo> queries) {}
@@ -33,7 +36,7 @@ class DataSourceQuickPerfListener implements QueryExecutionListener {
         Collection<SqlRecorder> sqlRecorders = SqlRecorderRegistry.INSTANCE.getSqlRecorders();
 
         for (SqlRecorder sqlRecorder : sqlRecorders) {
-            sqlRecorder.addQueryExecution(executionInfo, queries);
+            sqlRecorder.addQueryExecution(executionInfo, queries, listenerIdentifier);
         }
 
     }

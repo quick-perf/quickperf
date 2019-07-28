@@ -25,6 +25,8 @@ import java.util.List;
 
 public class PersistenceSqlRecorder implements SqlRecorder<SqlExecutions> {
 
+    private final DataSourceProxyVerifier datasourceProxyVerifier = new DataSourceProxyVerifier();
+
     private SqlRepository sqlRepository;
 
     @Override
@@ -34,7 +36,8 @@ public class PersistenceSqlRecorder implements SqlRecorder<SqlExecutions> {
     }
 
     @Override
-    public void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries) {
+    public void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries, int listenerIdentifier) {
+        datasourceProxyVerifier.addListenerIdentifier(listenerIdentifier);
         sqlRepository.addQueryExecution(execInfo, queries);
     }
 
@@ -43,6 +46,10 @@ public class PersistenceSqlRecorder implements SqlRecorder<SqlExecutions> {
         SqlRecorderRegistry.unregister(this);
         WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
         sqlRepository.flush(workingFolder);
+        if(datasourceProxyVerifier.hasQuickPerfBuiltSeveralDataSourceProxies()) {
+            System.out.println();
+            System.out.println(DataSourceProxyVerifier.SEVERAL_PROXIES_WARNING);
+        }
     }
 
     @Override

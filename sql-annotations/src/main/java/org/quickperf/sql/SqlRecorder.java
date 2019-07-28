@@ -22,6 +22,6 @@ import java.util.List;
 
 public interface SqlRecorder<R extends PerfRecord> extends RecordablePerformance<R> {
 
-    void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries);
+    void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries, int listenerIdentifier);
 
 }
