@@ -36,7 +36,7 @@ import java.util.Properties;
 
 import static org.quickperf.sql.HibernateConfigBuilder.anHibernateConfig;
 import static org.quickperf.sql.PersistenceUnitInfoBuilder.aPersistenceUnitInfo;
-import static org.quickperf.sql.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
+import static org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
 
 @RunWith(QuickPerfJUnitRunner.class)
 public class AClassHavingAPassingMethodAnnotatedExpectJdbcBatchingWithoutBatchSize {

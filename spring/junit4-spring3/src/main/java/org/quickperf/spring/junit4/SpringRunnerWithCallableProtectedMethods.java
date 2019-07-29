@@ -28,7 +28,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
-public class SpringRunnerWithCallableProtectedMethods extends SpringJUnit4ClassRunner {
+class SpringRunnerWithCallableProtectedMethods extends SpringJUnit4ClassRunner {
 
     static SpringRunnerWithCallableProtectedMethods buildSpringRunner(Class<?> testClass) {
         try {

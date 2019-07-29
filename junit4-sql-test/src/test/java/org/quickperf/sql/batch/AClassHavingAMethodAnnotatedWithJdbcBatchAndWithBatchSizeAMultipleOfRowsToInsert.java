@@ -35,7 +35,7 @@ import java.util.Properties;
 
 import static org.quickperf.sql.HibernateConfigBuilder.*;
 import static org.quickperf.sql.PersistenceUnitInfoBuilder.*;
-import static org.quickperf.sql.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
+import static org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
 
 @RunWith(QuickPerfJUnitRunner.class)
 public class AClassHavingAMethodAnnotatedWithJdbcBatchAndWithBatchSizeAMultipleOfRowsToInsert extends SqlTestBase {

@@ -11,11 +11,13 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.sql;
+package org.quickperf.sql.config;
 
 import net.ttddyy.dsproxy.ExecutionInfo;
 import net.ttddyy.dsproxy.QueryInfo;
 import net.ttddyy.dsproxy.listener.QueryExecutionListener;
+import org.quickperf.sql.SqlRecorder;
+import org.quickperf.sql.SqlRecorderRegistry;
 
 import java.util.Collection;
 import java.util.List;

@@ -54,6 +54,8 @@
         <surefire-junit47.version>2.22.2</surefire-junit47.version>
         <logback-classic.version>1.1.0</logback-classic.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
+        <javadoc-subpackages></javadoc-subpackages>
+        <javadoc-sourceFileIncludes>**\/\*.java</javadoc-sourceFileIncludes>
     </properties>
 
     <dependencies>
@@ -224,6 +226,9 @@
                         </executions>
                         <configuration>
                             <failOnError>true</failOnError>
+                            <show>public</show>
+                            <subpackages>${javadoc-subpackages}</subpackages>
+                            <sourceFileIncludes>${javadoc-sourceFileIncludes}</sourceFileIncludes>
                         </configuration>
                     </plugin>
                     <plugin>

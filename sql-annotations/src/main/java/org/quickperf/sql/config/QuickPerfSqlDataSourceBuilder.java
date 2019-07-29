@@ -11,7 +11,7 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.sql;
+package org.quickperf.sql.config;
 
 import net.ttddyy.dsproxy.listener.ChainListener;
 import net.ttddyy.dsproxy.support.ProxyDataSource;
