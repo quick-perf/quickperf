@@ -23,6 +23,9 @@ import org.springframework.util.ReflectionUtils;
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
 
+/*
+From https://blog.arnoldgalovics.com/configuring-a-datasource-proxy-in-spring-boot/
+ */
 public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor {
 
     @Override
