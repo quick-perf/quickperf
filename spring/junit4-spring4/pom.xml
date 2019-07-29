@@ -16,12 +16,12 @@
     <parent>
         <groupId>org.quickperf</groupId>
         <artifactId>quick-perf-spring</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0-RC3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>quick-perf-junit4-spring4</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-RC3</version>
 
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-junit4</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0-RC3</version>
         </dependency>
 
         <dependency>
@@ -48,7 +48,7 @@
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-sql-annotations</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0-RC3</version>
             <scope>compile</scope>
         </dependency>
 
