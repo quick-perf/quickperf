@@ -95,7 +95,7 @@ public class AnnotationFormatter {
 
     private String evaluateParamValue(Annotation perfAnnotation, Method method) {
         // To have the ability to invoke a method of an anonymous class.
-        // Configuration classes implementing SpecifiableAnnotations
+        // Configuration classes implementing SpecifiableGlobalAnnotations
         // use anonymous classes.
         method.setAccessible(true);
 

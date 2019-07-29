@@ -14,7 +14,7 @@
 package org.quickperf;
 
 import org.quickperf.annotation.DisableGlobalAnnotations;
-import org.quickperf.config.SpecifiableAnnotations;
+import org.quickperf.config.SpecifiableGlobalAnnotations;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
 
 import java.io.IOException;
@@ -38,18 +38,18 @@ public class AnnotationsExtractor {
     private Collection<Annotation> retrieveDefaultAnnotations() {
 
         try {
-            SpecifiableAnnotations specifiableAnnotations = classSpecifyingGlobalAnnotation();
-            if (specifiableAnnotations == null) {
+            SpecifiableGlobalAnnotations specifiableGlobalAnnotations = classSpecifyingGlobalAnnotation();
+            if (specifiableGlobalAnnotations == null) {
                 return Collections.emptyList();
             }
-            return specifiableAnnotations.specifyAnnotationsAppliedOnEachTest();
+            return specifiableGlobalAnnotations.specifyAnnotationsAppliedOnEachTest();
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
 
     }
 
-    public SpecifiableAnnotations classSpecifyingGlobalAnnotation(){
+    public SpecifiableGlobalAnnotations classSpecifyingGlobalAnnotation(){
 
         QuickPerfUserConfigClasses quickPerfUserConfigClasses = QuickPerfUserConfigClasses.INSTANCE;
 
@@ -79,12 +79,12 @@ public class AnnotationsExtractor {
     }
 
     @SuppressWarnings("unchecked")
-    private SpecifiableAnnotations instantiateSpecifiableAnnotationsFrom(Class clazz) {
+    private SpecifiableGlobalAnnotations instantiateSpecifiableAnnotationsFrom(Class clazz) {
         if(clazz == null) {
             return null;
         }
         try {
-            return (SpecifiableAnnotations) clazz.getDeclaredConstructor().newInstance();
+            return (SpecifiableGlobalAnnotations) clazz.getDeclaredConstructor().newInstance();
         } catch ( InstantiationException | IllegalAccessException
                 | NoSuchMethodException  | InvocationTargetException e) {
             throw new IllegalStateException(e);
@@ -92,7 +92,7 @@ public class AnnotationsExtractor {
     }
 
     private boolean isSpecifiableAnnotationsInterface(Class interfaceClass) {
-        return interfaceClass.getCanonicalName().equals(SpecifiableAnnotations.class.getCanonicalName());
+        return interfaceClass.getCanonicalName().equals(SpecifiableGlobalAnnotations.class.getCanonicalName());
     }
 
     public Annotation[] extractAnnotationsFor(Method testMethod, SetOfAnnotationConfigs testAnnotationConfigs) {

@@ -16,7 +16,7 @@ package org.quickperf.config;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 
-public interface SpecifiableAnnotations {
+public interface SpecifiableGlobalAnnotations {
 
     Collection<Annotation> specifyAnnotationsAppliedOnEachTest();
 

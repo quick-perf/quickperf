@@ -18,7 +18,7 @@ import org.junit.runners.model.Statement;
 import org.quickperf.*;
 import org.quickperf.annotation.DisplayAppliedAnnotations;
 import org.quickperf.config.library.QuickPerfConfigLoader;
-import org.quickperf.config.SpecifiableAnnotations;
+import org.quickperf.config.SpecifiableGlobalAnnotations;
 import org.quickperf.config.library.QuickPerfConfigs;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
 import org.quickperf.measure.PerfMeasure;
@@ -153,7 +153,7 @@ public class MainJvmAfterJUnitStatement extends Statement {
 
         System.out.println("[QUICK PERF] Applied annotations: " + perfAnnotationsAsString);
 
-        SpecifiableAnnotations classSpecifyingGlobalAnnotations =
+        SpecifiableGlobalAnnotations classSpecifyingGlobalAnnotations =
                 AnnotationsExtractor.INSTANCE.classSpecifyingGlobalAnnotation();
         if(classSpecifyingGlobalAnnotations != null) {
             String nameOfClassSpecifyingGlobalAnnotation = classSpecifyingGlobalAnnotations.getClass().getCanonicalName();

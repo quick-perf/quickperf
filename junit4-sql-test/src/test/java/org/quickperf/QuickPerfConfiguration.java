@@ -13,7 +13,7 @@
 
 package org.quickperf;
 
-import org.quickperf.config.SpecifiableAnnotations;
+import org.quickperf.config.SpecifiableGlobalAnnotations;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -21,7 +21,7 @@ import java.util.Collection;
 
 import static org.quickperf.sql.annotation.SqlAnnotationBuilder.disableCrossJoin;
 
-public class QuickPerfConfiguration implements SpecifiableAnnotations {
+public class QuickPerfConfiguration implements SpecifiableGlobalAnnotations {
 
     public Collection<Annotation> specifyAnnotationsAppliedOnEachTest() {
         return Arrays.asList(disableCrossJoin());
