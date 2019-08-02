@@ -16,6 +16,12 @@ package org.quickperf.jvm.allocation;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
+import org.junit.runner.RunWith;
+import org.quickperf.junit4.QuickPerfJUnitRunner;
+import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
+import org.quickperf.jvm.annotations.JvmOptions;
+
+import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.experimental.results.PrintableResult.testResult;
@@ -38,6 +44,19 @@ public class AllocationAnnotationsTest {
         softAssertions.assertThat(printableResult.toString())
                       .contains("Expected allocation to be less than 439.0 bytes but is 440.0 bytes.");
         softAssertions.assertAll();
+
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class ClassWithAMethodAllocatingAndAnnotatedWithExpectNoHeapAllocation {
+
+        @ExpectNoHeapAllocation
+        // See ClassWithMethodAnnotatedWithMeasureHeapAllocation
+        @JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers")
+        @Test
+        public void method_allocating() {
+            ArrayList<Object> data = new ArrayList<>(100);
+        }
 
     }
 

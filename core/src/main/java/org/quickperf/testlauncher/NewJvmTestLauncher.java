@@ -84,7 +84,7 @@ public class NewJvmTestLauncher {
 
     private static String retrieveClassNameFrom(Method method) {
         Class<?> classOfTestMethod = method.getDeclaringClass();
-        return classOfTestMethod.getCanonicalName();
+        return classOfTestMethod.getName();
     }
 
     private static String retrieveJavaExePath() {
