@@ -19,9 +19,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
-import org.quickperf.sql.TestDataSourceBuilder;
+import org.quickperf.sql.config.TestDataSourceBuilder;
 import org.quickperf.sql.annotation.ExpectJdbcBatching;
-import org.quickperf.sql.entities.Book;
+import org.quickperf.sql.Book;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,8 +33,8 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Properties;
 
-import static org.quickperf.sql.HibernateConfigBuilder.*;
-import static org.quickperf.sql.PersistenceUnitInfoBuilder.*;
+import static org.quickperf.sql.config.HibernateConfigBuilder.*;
+import static org.quickperf.sql.config.PersistenceUnitInfoBuilder.*;
 import static org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
 
 @RunWith(QuickPerfJUnitRunner.class)

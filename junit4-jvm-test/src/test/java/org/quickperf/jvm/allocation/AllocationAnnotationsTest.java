@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
+import org.quickperf.jvm.annotations.ExpectMaxHeapAllocation;
 import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
 import org.quickperf.jvm.annotations.JvmOptions;
 
@@ -27,6 +28,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class AllocationAnnotationsTest {
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class ClassWithMethodAnnotatedWithExpectMaxHeapAllocation {
+
+        @ExpectMaxHeapAllocation(value = 439, unit = AllocationUnit.BYTE)
+        // See ClassWithMethodAnnotatedWithMeasureHeapAllocation
+        @JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers")
+        @Test
+        public void array_list_with_size_100_should_allocate_440_bytes() {
+            ArrayList<Object> data = new ArrayList<>(100);
+        }
+
+    }
 
     @Test public void
     test_should_fail_if_allocation_is_greater_than_expected() {
@@ -76,6 +90,18 @@ public class AllocationAnnotationsTest {
         softAssertions.assertThat(printableResult.toString())
                       .contains("Expected allocation to be 0 but is 440.0 bytes.");
         softAssertions.assertAll();
+
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class ClassWithAMethodNotAllocatingAndAnnotatedWithExpectNoHeapAllocation {
+
+        @ExpectNoHeapAllocation
+        // See ClassWithMethodAnnotatedWithMeasureHeapAllocation
+        @JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers")
+        @Test
+        public void method_without_allocation() {
+        }
 
     }
 

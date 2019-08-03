@@ -17,12 +17,27 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.sql.SqlTestBase;
+import org.quickperf.sql.annotation.EnableCrossJoin;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 @RunWith(QuickPerfJUnitRunner.class)
 public class SqlCrossJoin extends SqlTestBase {
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class AClassHavingAMethodAnnotatedWithEnableCrossJoin extends SqlTestBase {
+
+        @EnableCrossJoin
+        @Test
+        public void execute_one_cross_join() {
+            EntityManager entityManager = emf.createEntityManager();
+            String nativeQuery = "SELECT b1.* FROM Book b1 CROSS JOIN Book b2";
+            Query query = entityManager.createNativeQuery(nativeQuery);
+            query.getResultList();
+        }
+
+    }
 
     @Test
     public void execute_one_cross_join() {

@@ -13,48 +13,175 @@
 
 package org.quickperf.spring;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.quickperf.annotation.DisableQuickPerf;
+import org.quickperf.annotation.FunctionalIteration;
+import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
 import org.quickperf.spring.database.ClassWithAFailingTestAndTransactionalTestExecutionListener;
+import org.quickperf.spring.junit4.QuickPerfSpringRunner;
+import org.quickperf.sql.annotation.ExpectSelect;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
 
 public class JUnit4Spring3Test extends AbstractJUnit4SpringTestBase {
 
+    private static class TestApplicationContextInitializer
+              implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+        @Override
+        public void initialize(ConfigurableApplicationContext ac) {
+
+            // To check that the initialization of Spring Context
+            // does not affect the measured allocation
+            Object object = new Object();
+
+        }
+
+    }
+
+    @RunWith(QuickPerfSpringRunner.class)
+    @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
+    public static class ClassAnnotatedWithQPSpringRunnerAndWithAMethodHavingFunctionalAndPerfIssues {
+
+        @ExpectSelect(1)
+        @Test
+        public void a_failing_test() {
+            throw new AssertionError("Failing assertion !");
+        }
+
+    }
+
     @Override
     protected Class<?> classWithTestHavingFunctionalAndPerfIssues() {
-        return ClassAnnotatedWithQPSpring3RunnerAndWithAMethodHavingFunctionalAndPerfIssues.class;
+        return ClassAnnotatedWithQPSpringRunnerAndWithAMethodHavingFunctionalAndPerfIssues.class;
+    }
+
+    @RunWith(QuickPerfSpringRunner.class)
+    @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
+    public static class ClassAnnotatedWithQPSpringRunnerAndWithAMethodHavingFunctionalAndPerfIssuesAndRunningInADedicatedJvm {
+
+        @ExpectNoHeapAllocation
+        @Test
+        public void a_failing_test() {
+            throw new AssertionError("Failing assertion !");
+        }
+
     }
 
     @Override
     public Class<?> classWithTestHavingFunctionalAndPerfIssuesAndRunningInADedicatedJvm() {
-        return ClassAnnotatedWithQPSpring3RunnerAndWithAMethodHavingFunctionalAndPerfIssuesAndRunningInADedicatedJvm.class;
+        return ClassAnnotatedWithQPSpringRunnerAndWithAMethodHavingFunctionalAndPerfIssuesAndRunningInADedicatedJvm.class;
+    }
+
+    @RunWith(QuickPerfSpringRunner.class)
+    @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
+    public static class ClassAnnotatedWithQPSpringRunnerWithAMethodHavingAPerfIssueAndRunningInADedicatedJvm {
+
+        @ExpectNoHeapAllocation
+        @Test
+        public void a_test_method_without_allocation() {
+            int a = 1;
+        }
+
     }
 
     @Override
     protected Class<?> aClassWithMethodNoAllocatingAndNoAllocationAnnotation() {
-        return ClassAnnotatedWithQPSpring3RunnerWithAMethodHavingAPerfIssueAndRunningInADedicatedJvm.class;
+        return ClassAnnotatedWithQPSpringRunnerWithAMethodHavingAPerfIssueAndRunningInADedicatedJvm.class;
+    }
+
+    @RunWith(QuickPerfSpringRunner.class)
+    @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
+    public static class ClassAnnotatedWithQPSpringRunnerAndWithATestMethodAllocatingAndAnnotatedExpectNoHeapAllocation {
+
+        @ExpectNoHeapAllocation
+        @Test
+        public void a_test_method_allocating() {
+            Object object = new Object();
+        }
+
     }
 
     @Override
     protected Class<?> aClassWithMethodAllocatingAndNoAllocationAnnotation() {
-        return ClassAnnotatedWithQPSpring3RunnerAndWithATestMethodAllocatingAndAnnotatedExpectNoHeapAllocation.class;
+        return ClassAnnotatedWithQPSpringRunnerAndWithATestMethodAllocatingAndAnnotatedExpectNoHeapAllocation.class;
+    }
+
+    @RunWith(QuickPerfSpringRunner.class)
+    @DisableQuickPerf
+    @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
+    public static class ClassAnnotatedWithQPSpringRunnerAndDisableQuickPerf {
+
+        @ExpectNoHeapAllocation
+        @Test
+        public void a_test_method_allocating() {
+            Object object = new Object();
+        }
+
     }
 
     @Override
     protected Class<?> aClassAnnotatedWithQPSpringRunnerAndDisableQuickPerf() {
-        return ClassAnnotatedWithQPSpring3RunnerAndDisableQuickPerf.class;
+        return ClassAnnotatedWithQPSpringRunnerAndDisableQuickPerf.class;
+    }
+
+    @RunWith(QuickPerfSpringRunner.class)
+    @FunctionalIteration
+    @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
+    public static class ClassAnnotatedWithQPSpringRunnerAndFunctionalIteration {
+
+        @ExpectNoHeapAllocation
+        @Test
+        public void a_test_method_allocating() {
+            Object object = new Object();
+        }
+
     }
 
     @Override
     protected Class<?> aClassAnnotatedWithQPSpringRunnerAndFunctionalIteration() {
-        return ClassAnnotatedWithQPSpring3RunnerAndFunctionalIteration.class;
+        return ClassAnnotatedWithQPSpringRunnerAndFunctionalIteration.class;
+    }
+
+    @RunWith(QuickPerfSpringRunner.class)
+    @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
+    public static class ClassAnnotatedWithQPSpringRunnerWithATestMethodHavingAPerformanceIssueAnRunningInADedicatedJvm {
+
+        @ExpectSelect(1)
+        @Test
+        public void a_test_method_not_executing_a_sql_request() {
+        }
+
     }
 
     @Override
     protected Class<?> aClassAnnotatedWithQPSpringRunnerOneJvm() {
-        return ClassAnnotatedWithQPSpring3RunnerWithATestMethodHavingAPerformanceIssueAnRunningInADedicatedJvm.class;
+        return ClassAnnotatedWithQPSpringRunnerWithATestMethodHavingAPerformanceIssueAnRunningInADedicatedJvm.class;
+    }
+
+    @RunWith(QuickPerfSpringRunner.class)
+    @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
+    public static class ClassAnnotatedWithQPSpringRunnerAndWithTwoMethodsHavingFunctionalAndPerfIssues {
+
+        @ExpectSelect(1)
+        @Test
+        public void a_first_failing_test() {
+            throw new AssertionError("Failing assertion of first test!");
+        }
+
+        @ExpectSelect(1)
+        @Test
+        public void a_second_failing_test() {
+            throw new AssertionError("Failing assertion of second test!");
+        }
+
     }
 
     @Override
     protected Class<?> aClassWithTwoMethodsHavingFunctionnalAndPerfIssues() {
-        return ClassAnnotatedWithQPSpring3RunnerAndWithTwoMethodsHavingFunctionalAndPerfIssues.class;
+        return ClassAnnotatedWithQPSpringRunnerAndWithTwoMethodsHavingFunctionalAndPerfIssues.class;
     }
 
     @Override

@@ -16,10 +16,23 @@ package org.quickperf.junit4;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
+import org.junit.runner.RunWith;
+import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class QuickPerfJUnitRunnerTest {
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class ClassWithAMethodHavingFailingBusinessCode {
+
+        @Test public void
+        a_test_with_failing_business_code() {
+            assertThat(false).isTrue();
+        }
+
+    }
 
     @Test public void
     a_test_with_failing_business_code_should_fail() {
@@ -37,6 +50,17 @@ public class QuickPerfJUnitRunnerTest {
         softAssertions.assertThat(printableResult.toString()).contains("expected:<[tru]e> but was:<[fals]e>");
 
         softAssertions.assertAll();
+
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class ClassWithFuntionalIssueInNewJvmAndPerfIssue {
+
+        @ExpectNoHeapAllocation
+        @Test public void
+        failing_test() {
+            throw new IllegalStateException("Functional issue !");
+        }
 
     }
 

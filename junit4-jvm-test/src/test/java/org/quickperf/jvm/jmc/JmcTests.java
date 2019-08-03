@@ -16,10 +16,46 @@ package org.quickperf.jvm.jmc;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
+import org.junit.runner.RunWith;
+import org.quickperf.junit4.QuickPerfJUnitRunner;
+import org.quickperf.jvm.allocation.AllocationUnit;
+import org.quickperf.jvm.annotations.ExpectNoJvmIssue;
+import org.quickperf.jvm.annotations.HeapSize;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class JmcTests {
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class ClassWithFailingJmcRules {
+
+        private static class IntegerAccumulator {
+
+            private List<Integer> integerList;
+
+            void accumulateInteger(int numberOfIntegers) {
+                integerList = new ArrayList<>(numberOfIntegers);
+                for (int i = 1; i <= numberOfIntegers; i++) {
+                    integerList.add(i);
+                }
+            }
+
+        }
+
+        @HeapSize(value = 100, unit = AllocationUnit.MEGA_BYTE)
+        @ExpectNoJvmIssue(score = 50)
+        @Test
+        public void code_with_scores_of_jmc_rules_greater_than_50() {
+
+            IntegerAccumulator integerAccumulator = new IntegerAccumulator();
+            integerAccumulator.accumulateInteger(3_000_000);
+
+        }
+
+    }
 
     @Test public void
     jmc_rules_having_score_greater_than_expected() {

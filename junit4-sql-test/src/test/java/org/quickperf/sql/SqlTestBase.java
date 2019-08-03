@@ -16,7 +16,9 @@ package org.quickperf.sql;
 import net.ttddyy.dsproxy.support.ProxyDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.junit.Before;
-import org.quickperf.sql.entities.Book;
+import org.quickperf.sql.config.HibernateConfigBuilder;
+import org.quickperf.sql.config.PersistenceUnitInfoBuilder;
+import org.quickperf.sql.config.TestDataSourceBuilder;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceProvider;
