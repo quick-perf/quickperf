@@ -1,0 +1,22 @@
+language: java
+
+os:
+  - linux
+  - osx
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      jdk: oraclejdk8
+  exclude:
+    - os: osx
+      jdk: openjdk12
+
+jdk:
+  - openjdk11
+  - openjdk12
+
+cache:
+  directories:
+    - $HOME/.m2
