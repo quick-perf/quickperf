@@ -14,11 +14,14 @@
 package org.quickperf.jvm.allocation.bytewatcher;
 
 import org.quickperf.TestExecutionContext;
+import org.quickperf.jvm.JvmVersion;
 import org.quickperf.jvm.allocation.Allocation;
 import org.quickperf.jvm.allocation.AllocationRepository;
 import org.quickperf.perfrecording.RecordablePerformance;
 
 public class ByteWatcherRecorder implements RecordablePerformance<Allocation> {
+
+    private static final boolean IS_JVM_VERSION_AT_LEAST_12 = JvmVersion.isGreaterThanOrEqualTo12();
 
     private AllocationRepository allocationRepository;
 
@@ -39,23 +42,10 @@ public class ByteWatcherRecorder implements RecordablePerformance<Allocation> {
     }
 
     private int retrieveJunit4ByteOffset() {
-
-        String jvmVersionAsString = System.getProperty("java.vm.specification.version");
-
-        if("11".equals(jvmVersionAsString)) {
-            return 160;
+        if (IS_JVM_VERSION_AT_LEAST_12) {
+            return 72;
         }
-
-        if("12".equals(jvmVersionAsString)) {
-            return 240;
-        }
-
-        if("1.7".contains(jvmVersionAsString)) {
-            return 136;
-        }
-
         return 40;
-
     }
 
     @Override

@@ -48,4 +48,11 @@ public class JvmVersion {
         return findJvmVersionAsInt() >= 11;
     }
 
+    public static boolean isGreaterThanOrEqualTo12() {
+        if (is7() || is8()) {
+            return false;
+        }
+        return findJvmVersionAsInt() >= 12;
+    }
+
 }
