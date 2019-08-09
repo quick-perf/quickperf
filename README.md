@@ -4,6 +4,7 @@
 <br><br>
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.quickperf/quick-perf/badge.svg)](https://search.maven.org/search?q=org.quickperf)
 [![License](https://img.shields.io/badge/license-Apache2-blue.svg)](https://github.com/quick-perf/quickperf/blob/master/LICENSE.txt)
+[![Build Status](https://travis-ci.com/quick-perf/quickperf.svg?branch=master)](https://travis-ci.com/quick-perf/quickperf)
 [![Twitter Follow](https://img.shields.io/twitter/follow/QuickPerf.svg?label=Follow%20%40QuickPerf&style=social)](https://twitter.com/quickperf)
 <br><br>
 [Documentation](https://github.com/quick-perf/doc/wiki/QuickPerf)
