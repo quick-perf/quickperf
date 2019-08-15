@@ -11,9 +11,15 @@ matrix:
       jdk: oraclejdk8
   exclude:
     - os: osx
+      jdk: oraclejdk11
+    - os: osx
+      jdk: oraclejdk12
+    - os: osx
       jdk: openjdk12
 
 jdk:
+  - oraclejdk11
+  - oraclejdk12
   - openjdk11
   - openjdk12
 
