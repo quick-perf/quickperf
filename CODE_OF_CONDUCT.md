@@ -1,3 +1,7 @@
+<div align="center">
+<img src="https://pbs.twimg.com/profile_banners/926219963333038086/1518645789" alt="QuickPerf"/>
+</div>
+
 # Contributor Covenant Code of Conduct
 
 ## Our Pledge
