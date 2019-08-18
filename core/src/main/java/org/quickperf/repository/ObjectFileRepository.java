@@ -36,17 +36,13 @@ public class ObjectFileRepository {
     }
 
     public void save(String workingFolderPath, String fileName, Object object) {
-        ObjectOutputStream objectOutputStream = objectOutputStreamBuilder
-                                               .build(workingFolderPath, fileName);
-
-        try {
+        try(ObjectOutputStream objectOutputStream = objectOutputStreamBuilder
+                                                   .build(workingFolderPath, fileName)) {
             objectOutputStream.writeObject(object);
             objectOutputStream.flush();
-            objectOutputStream.close();
         } catch (IOException e) {
             throw buildSerializationException(e);
         }
-
     }
 
     private IllegalStateException buildSerializationException(Exception e) {
@@ -54,13 +50,12 @@ public class ObjectFileRepository {
     }
 
     public Object find(String workingFolderPath, String fileName) {
-
-        try(ObjectInputStream ois = objectInputStreamBuilder.buildObjectInputStream(workingFolderPath, fileName)) {
+        try(ObjectInputStream ois = objectInputStreamBuilder
+                                   .buildObjectInputStream(workingFolderPath, fileName)) {
             return ois.readObject();
         } catch (IOException|ClassNotFoundException e) {
             throw buildDeserializationException(e);
         }
-
     }
 
     private IllegalStateException buildDeserializationException(Exception e) {

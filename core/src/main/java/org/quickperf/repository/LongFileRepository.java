@@ -27,17 +27,13 @@ public class LongFileRepository implements LongRepository {
 
     @Override
     public void save(long longToSave, String workingFolderPath, String fileName) {
-
-        ObjectOutputStream objectOutputStream = objectOutputStreamBuilder
-                                                .build(workingFolderPath, fileName);
-        try {
+        try(ObjectOutputStream objectOutputStream = objectOutputStreamBuilder
+                                                   .build(workingFolderPath, fileName)) {
             objectOutputStream.writeLong(longToSave);
             objectOutputStream.flush();
-            objectOutputStream.close();
         } catch (IOException ioe) {
             throw new IllegalStateException("Unable to save " + "", ioe);
         }
-
     }
 
     @Override
@@ -55,9 +51,8 @@ public class LongFileRepository implements LongRepository {
     }
 
     private Long retrieveLongValueFromFile(String workingFolderPath, String fileName) {
-        ObjectInputStream objectInputStream = objectInputStreamBuilder.buildObjectInputStream(workingFolderPath, fileName);
-
-        try {
+        try(ObjectInputStream objectInputStream = objectInputStreamBuilder
+                                                 .buildObjectInputStream(workingFolderPath, fileName)) {
             return objectInputStream.readLong();
         } catch (IOException ioe) {
             throw new IllegalStateException("Unable to deserialize.", ioe);
