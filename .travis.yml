@@ -9,6 +9,13 @@ matrix:
     - os: linux
       dist: trusty
       jdk: oraclejdk8
+    - os: linux
+      dist: trusty
+      jdk: oraclejdk9
+      before_install:
+        - sudo rm "${JAVA_HOME}/lib/security/cacerts"
+        - sudo ln -s /etc/ssl/certs/java/cacerts "${JAVA_HOME}/lib/security/cacerts"
+
   exclude:
     - os: osx
       jdk: oraclejdk11
@@ -26,3 +33,4 @@ jdk:
 cache:
   directories:
     - $HOME/.m2
+
