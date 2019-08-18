@@ -100,7 +100,7 @@ public class TestExecutionContext {
 
         TestExecutionContext testExecutionContext = new TestExecutionContext();
 
-        if (quickPerfFunctionalitiesAreDisabled(perfAnnotations)) {
+        if (quickPerfIsDisabled(perfAnnotations)) {
             testExecutionContext.quickPerfDisabled = true;
             return testExecutionContext;
         }
@@ -136,7 +136,7 @@ public class TestExecutionContext {
         return testExecutionContext;
     }
 
-    private static boolean quickPerfFunctionalitiesAreDisabled(Annotation[] perfAnnotations) {
+    private static boolean quickPerfIsDisabled(Annotation[] perfAnnotations) {
         if(SystemProperties.QUICK_PERF_DISABLED.evaluate()) {
             return true;
         }
