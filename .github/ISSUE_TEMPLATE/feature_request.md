@@ -3,6 +3,8 @@ name: Feature request
 about: Request or propose a new feature
 title: ''
 labels: enhancement
+assignees: ''
+
 ---
 
 **Description**
