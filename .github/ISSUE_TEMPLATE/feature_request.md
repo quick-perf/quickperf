@@ -11,4 +11,4 @@ assignees: ''
 (Describe the feature here.)
 
 **Implementation ideas**
-(If you have any implementation ideas, they can go here).
+(If you have any implementation ideas, they can go here.)
