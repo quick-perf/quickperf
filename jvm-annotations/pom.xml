@@ -16,7 +16,7 @@
     <parent>
         <groupId>org.quickperf</groupId>
         <artifactId>quick-perf</artifactId>
-        <version>1.0.0-RC4</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-core</artifactId>
-            <version>1.0.0-RC4</version>
+            <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
