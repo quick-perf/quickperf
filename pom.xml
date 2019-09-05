@@ -172,6 +172,7 @@
                 <module>sql-annotations</module>
                 <module>junit4-sql-test</module>
                 <module>spring</module>
+                <module>junit5</module>
             </modules>
         </profile>
         <profile>
