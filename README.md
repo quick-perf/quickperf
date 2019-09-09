@@ -41,7 +41,7 @@
     @MeasureHeapAllocation
     @HeapSize(value = 1, unit = AllocationUnit.GIGA_BYTE)
     @Test
-    public void execute_batch(){
+    public void execute_batch() {
         ...
     }
 ```
