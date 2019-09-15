@@ -29,9 +29,9 @@ You can contribute in many ways to QuickPerf:
 ## Submission guidelines
 When you start to work on an issue, please leave a comment "*I start to work on this issue*", so we can assign it to you. Do not hesitate to ask for information about the issue.
 
-Please rebase your PR on master (no merge). We prefer integrating PR by squashing all the commits and rebase it to master, if you PR has diverged and needs to integrate with master, please rebase on master but do not merge as it will prevent rebasing later on.
+Please rebase your PR on master (no merge). We prefer integrating PR by squashing all the commits and rebase it to master, if your PR has diverged and needs to integrate with master, please rebase on master but do not merge as it will prevent rebasing later on.
 
-Need some help with Git or Github? Don't worry, you can look at [these videos](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github).
+Need some help with Git or Github? Don't worry, you can watch [these videos](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github).
 
 ## Build QuickPerf
 You need the following setup:
