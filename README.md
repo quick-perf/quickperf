@@ -91,7 +91,7 @@ The full documentation is available [here](https://github.com/quick-perf/doc/wik
 Please ⭐ this repository or [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Tweet%20to%20support%20QuickPerf)](https://twitter.com/intent/tweet?text=You%20can%20use%20%40QuickPerf%20to%20quickly%20evaluate%20some%20Java%20performance%20properties%0Ahttps%3A%2F%2Fgithub.com%2Fquick-perf%2Fquickperf%0A) if this project helped you!
 
 ## Contributing
-You are very welcome to contribute to QuickPerf! You can contribute in many ways to QuickPerf. Some relatively easy things can be done. Other issues are more challenging. Every contribution is appreciated. Read our <a href="/CONTRIBUTING.md">contributing guidelines</a> to learn more.
+You are very welcome to contribute to QuickPerf! You can contribute in many ways to QuickPerf. Some relatively easy things can be done. Other issues are more challenging. Every contribution is appreciated. Read our <a href="/CONTRIBUTING.md">contributing guide</a> to learn more.
 
 ## Contributors
 
