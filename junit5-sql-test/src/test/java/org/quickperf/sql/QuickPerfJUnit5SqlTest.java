@@ -15,12 +15,11 @@ package org.quickperf.sql;
 
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
-import org.quickperf.junit5.QuickPerfTestExtension;
+import org.quickperf.junit5.QuickPerfTest;
 import org.quickperf.sql.annotation.ExpectSelect;
 
 import javax.persistence.EntityManager;
@@ -34,7 +33,7 @@ public class QuickPerfJUnit5SqlTest {
 
     private final JUnit5FailuresFormatter jUnit5FailuresFormatter = JUnit5FailuresFormatter.INSTANCE;
 
-    @ExtendWith(QuickPerfTestExtension.class)
+    @QuickPerfTest
     public static class SqlSelectJUnit5 extends SqlJUnit5TestBase {
 
         @ExpectSelect(5)
