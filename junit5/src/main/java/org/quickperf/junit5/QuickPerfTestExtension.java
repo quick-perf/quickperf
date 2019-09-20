@@ -46,7 +46,20 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
         exePerfInstrumentBeforeTestMethod(perfRecordersToExecuteBeforeTestMethod);
         Throwable businessThrowable = null;
+
+        //retrieve the quickperf annotation and log about JVM forking
+        QuickPerfTest quickPerfTest = invocationContext.getExecutable().getDeclaringClass().getDeclaredAnnotation(QuickPerfTest.class);
+        boolean forkDisabled = quickPerfTest != null && quickPerfTest.disableFork();
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
+            if (forkDisabled) {
+                System.out.println("QUICKPERF: WARNING forking is explicitly disabled, this can cause inconcistent results");
+            } else {
+                System.out.println("QUICKPERF: INFO forking the VM, it is done later on JUnit5 and can cause issues on your test, " +
+                        "if it occurs you can use '@QuickPerfTest(disableFork = true)' to disable forking");
+            }
+        }
+
+        if (testExecutionContext.testExecutionUsesTwoJVMs() && !forkDisabled) {
             newJvmTestLauncher.run( invocationContext.getExecutable()
                     , testExecutionContext.getWorkingFolder()
                     , testExecutionContext.getJvmOptions()
