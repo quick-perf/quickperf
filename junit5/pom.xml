@@ -15,6 +15,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <dependencies.max.jdk.version>8</dependencies.max.jdk.version>
+        <junit5.test.version>5.5.1</junit5.test.version>
     </properties>
 
     <dependencies>
@@ -34,19 +35,24 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>compile</scope>
-            <version>5.5.1</version>
+            <version>${junit5.test.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
             <scope>compile</scope>
-            <version>5.5.1</version>
+            <version>${junit5.test.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>compile</scope>
-            <version>5.5.1</version>
+            <version>${junit5.test.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>1.2.0</version>
         </dependency>
     </dependencies>
 

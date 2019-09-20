@@ -13,6 +13,7 @@ import org.quickperf.perfrecording.PerfRecord;
 import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.perfrecording.ViewablePerfRecordIfPerfIssue;
 import org.quickperf.reporter.ConsoleReporter;
+import org.quickperf.testlauncher.NewJvmTestLauncher;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -26,6 +27,8 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
     private final QuickPerfConfigs quickPerfConfigs =  QuickPerfConfigsLoader.INSTANCE.loadQuickPerfConfigs();
     private final IssueThrower issueThrower = IssueThrower.INSTANCE;
+    private final NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
+    private final JUnit5FailuresRepository jUnit5FailuresRepository = JUnit5FailuresRepository.INSTANCE;
 
     private TestExecutionContext testExecutionContext;
 
@@ -44,18 +47,23 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         exePerfInstrumentBeforeTestMethod(perfRecordersToExecuteBeforeTestMethod);
         Throwable businessThrowable = null;
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
-            System.err.println("[QUICK PERF] WARNING : Unable to execute a test on a separate JVM for JUnit5 yet");
+            newJvmTestLauncher.run( invocationContext.getExecutable()
+                    , testExecutionContext.getWorkingFolder()
+                    , testExecutionContext.getJvmOptions()
+                    , QuickPerfJunit5Core.class);
+            WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
+            businessThrowable = jUnit5FailuresRepository.find(workingFolder);
+        }
+        else {
+            try{
+                invocation.proceed();
+            }
+            catch (Throwable throwable){
+                businessThrowable = throwable;
+            }
         }
 
-        try{
-            invocation.proceed();
-        }
-        catch (Throwable throwable){
-            businessThrowable = throwable;
-        }
-        finally {
-            exePerfInstrumentAfterTestMethod(perfRecordersToExecuteAfterTestMethod);
-        }
+        exePerfInstrumentAfterTestMethod(perfRecordersToExecuteAfterTestMethod);
 
         Map<Annotation, PerfRecord> perfRecordByAnnotation
                 = buildPerfRecordByAnnotation(quickPerfConfigs.getTestAnnotationConfigs());
@@ -116,17 +124,16 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
     }
 
     private PerfRecord findPerfRecord(RecordablePerformance perfRecorder) {
-        //FIXME
-        //try {
+        try {
             return perfRecorder.findRecord(testExecutionContext);
-//        } catch (Exception e) {
-//            WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
-//            Throwable throwableFromTestJvm = jUnit4FailuresRepository.find(workingFolder);
-//            if(throwableFromTestJvm != null) {
-//                e.addSuppressed(throwableFromTestJvm);
-//            }
-//            throw e;
-//        }
+        } catch (Exception e) {
+            WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
+            Throwable throwableFromTestJvm = jUnit5FailuresRepository.find(workingFolder);
+            if(throwableFromTestJvm != null) {
+                e.addSuppressed(throwableFromTestJvm);
+            }
+            throw e;
+        }
     }
 
     private Collection<PerfIssuesToFormat> perfIssuesToFormatGroup(
