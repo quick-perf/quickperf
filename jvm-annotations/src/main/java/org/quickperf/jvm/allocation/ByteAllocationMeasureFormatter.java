@@ -25,13 +25,18 @@ public class ByteAllocationMeasureFormatter {
 
         if(isByteOrderOfMagnitude(allocationValue)) {
             return formatByteAllocation(allocation);
-        } else if(isKiloByteOrderOfMagnitude(allocationValue)) {
-            return formatKiloByteAllocation(allocation);
-        } else if(isMegaByteOrderOfMagnitude(allocationValue)) {
-            return formatMegaByteAllocation(allocation);
         }
 
-        return formatGigaByteAllocation(allocation);
+        String formatted = null;
+        if(isKiloByteOrderOfMagnitude(allocationValue)) {
+            formatted = formatKiloByteAllocation(allocation);
+        } else if(isMegaByteOrderOfMagnitude(allocationValue)) {
+            formatted = formatMegaByteAllocation(allocation);
+        } else {
+            formatted =  formatGigaByteAllocation(allocation);
+        }
+
+        return formatByteSuffixAllocationValue(formatted, allocation);
 
     }
 
@@ -95,6 +100,11 @@ public class ByteAllocationMeasureFormatter {
 
         return integerPartAsString + "." + truncatedDecimalPartAsString;
 
+    }
+
+    private String formatByteSuffixAllocationValue(String prefix, Allocation allocationValue)
+    {
+        return String.format("%s (%s)", prefix, formatByteAllocation(allocationValue));
     }
 
 }
