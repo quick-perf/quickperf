@@ -118,8 +118,8 @@ public class ByteAllocationMeasureFormatterTest {
     should_convert_bytes_to_1023_bytes_without_byte_suffix() {
 
         // GIVEN
-        double tenGigaByteAllocationValue = 1023;
-        Allocation allocationInBytes = new Allocation(tenGigaByteAllocationValue, AllocationUnit.BYTE, "");
+        double lessThanAKilobyte = 1023;
+        Allocation allocationInBytes = new Allocation(lessThanAKilobyte, AllocationUnit.BYTE, "");
 
         // WHEN
         String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
@@ -133,8 +133,8 @@ public class ByteAllocationMeasureFormatterTest {
     should_convert_bytes_to_1024_bytes_with_byte_suffix() {
 
         // GIVEN
-        double tenGigaByteAllocationValue = 1024;
-        Allocation allocationInBytes = new Allocation(tenGigaByteAllocationValue, AllocationUnit.BYTE, "");
+        double exactlyOneKilobyte = 1024;
+        Allocation allocationInBytes = new Allocation(exactlyOneKilobyte, AllocationUnit.BYTE, "");
 
         // WHEN
         String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
