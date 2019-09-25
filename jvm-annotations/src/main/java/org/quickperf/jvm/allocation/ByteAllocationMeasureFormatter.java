@@ -104,7 +104,7 @@ public class ByteAllocationMeasureFormatter {
 
     private String formatByteSuffixAllocationValue(String prefix, Allocation allocationValue)
     {
-        return String.format("%s (%s)", prefix, formatByteAllocation(allocationValue));
+        return prefix + " (" + formatByteAllocation(allocationValue) + ")";
     }
 
 }
