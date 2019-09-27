@@ -13,6 +13,7 @@ import org.quickperf.perfrecording.PerfRecord;
 import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.perfrecording.ViewablePerfRecordIfPerfIssue;
 import org.quickperf.reporter.ConsoleReporter;
+import org.quickperf.testlauncher.AllJvmOptions;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
 
 import java.lang.annotation.Annotation;
@@ -41,42 +42,55 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
     public void interceptTestMethod(Invocation<Void> invocation,
                                     ReflectiveInvocationContext<Method> invocationContext,
                                     ExtensionContext extensionContext) throws Throwable {
-        List<RecordablePerformance> perfRecordersToExecuteBeforeTestMethod = testExecutionContext.getPerfRecordersToExecuteBeforeTestMethod();
-        List<RecordablePerformance> perfRecordersToExecuteAfterTestMethod = testExecutionContext.getPerfRecordersToExecuteAfterTestMethod();
-
-        exePerfInstrumentBeforeTestMethod(perfRecordersToExecuteBeforeTestMethod);
-        Throwable businessThrowable = null;
+        // FIXME use a system property to avoid recursive forking
+        boolean inAFork = "true".equals(System.getProperty("quickPerfInAFork", "false"));
+        if(inAFork){
+            invocation.proceed();
+            return;
+        }
 
         //retrieve the quickperf annotation and log about JVM forking
         QuickPerfTest quickPerfTest = invocationContext.getExecutable().getDeclaringClass().getDeclaredAnnotation(QuickPerfTest.class);
         boolean forkDisabled = quickPerfTest != null && quickPerfTest.disableFork();
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
             if (forkDisabled) {
-                System.out.println("[QUICK PERF] WARNING forking is explicitly disabled, this can cause inconcistent results");
+                System.out.println("[QUICK PERF] WARNING forking is explicitly disabled, this can cause inconsistent results");
             } else {
                 System.out.println("[QUICK PERF] INFO forking the VM, it is done later on JUnit5 and can cause issues on your test, " +
                         "if it occurs you can use '@QuickPerfTest(disableFork = true)' to disable forking");
             }
         }
 
-        if (testExecutionContext.testExecutionUsesTwoJVMs() && !forkDisabled) {
+        Throwable businessThrowable = null;
+        List<RecordablePerformance> perfRecordersToExecuteBeforeTestMethod = testExecutionContext.getPerfRecordersToExecuteBeforeTestMethod();
+        List<RecordablePerformance> perfRecordersToExecuteAfterTestMethod = testExecutionContext.getPerfRecordersToExecuteAfterTestMethod();
+
+
+        //FIXME even with forking the VM, there is 16.0 bytes of allocation that comes from QuickPerf
+        if (testExecutionContext.testExecutionUsesTwoJVMs() && !forkDisabled && "false".equals(inAFork)) {
+            exePerfInstrumentBeforeTestMethod(perfRecordersToExecuteBeforeTestMethod);
             newJvmTestLauncher.run( invocationContext.getExecutable()
                     , testExecutionContext.getWorkingFolder()
                     , testExecutionContext.getJvmOptions()
                     , QuickPerfJunit5Core.class);
+            exePerfInstrumentAfterTestMethod(perfRecordersToExecuteAfterTestMethod);
             WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
             businessThrowable = jUnit5FailuresRepository.find(workingFolder);
         }
         else {
             try{
+                exePerfInstrumentBeforeTestMethod(perfRecordersToExecuteBeforeTestMethod);
                 invocation.proceed();
             }
             catch (Throwable throwable){
                 businessThrowable = throwable;
             }
+            finally {
+                exePerfInstrumentAfterTestMethod(perfRecordersToExecuteAfterTestMethod);
+            }
         }
 
-        exePerfInstrumentAfterTestMethod(perfRecordersToExecuteAfterTestMethod);
+
 
         Map<Annotation, PerfRecord> perfRecordByAnnotation
                 = buildPerfRecordByAnnotation(quickPerfConfigs.getTestAnnotationConfigs());

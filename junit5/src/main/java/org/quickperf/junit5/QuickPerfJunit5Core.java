@@ -15,7 +15,6 @@ package org.quickperf.junit5;
 
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -30,6 +29,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMetho
 public class QuickPerfJunit5Core {
 
     public static void main(String... args) {
+        System.setProperty("quickPerfInAFork", "true");//FIXME avoid recursive forking
 
         String className = args[0];
         String methodName = args[1];
@@ -46,11 +46,9 @@ public class QuickPerfJunit5Core {
         // To be sure that tests using Tomcat
         // or Jetty web server will stop
         System.exit(0);
-
     }
 
     private static TestExecutionSummary runTestMethod(String className, String methodName) {
-
         Class<?> aClass = retrieveClassFrom(className);
 
         SummaryGeneratingListener listener = new SummaryGeneratingListener();
@@ -58,9 +56,7 @@ public class QuickPerfJunit5Core {
                 .selectors(selectMethod(aClass, methodName))
                 .build();
         Launcher launcher = LauncherFactory.create();
-        TestPlan testPlan = launcher.discover(request);//TODO is it necessary ?
-        launcher.registerTestExecutionListeners(listener);
-        launcher.execute(request);
+        launcher.execute(request, listener);
         TestExecutionSummary summary = listener.getSummary();
         summary.printTo(new PrintWriter(System.out));
 
