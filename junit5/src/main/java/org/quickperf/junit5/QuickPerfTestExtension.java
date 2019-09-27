@@ -1,86 +1,64 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
- *
- * Copyright 2019-2019 the original author or authors.
- */
+package org.quickperf.junit5;
 
-package org.quickperf.junit4;
-
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.Statement;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
+import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.quickperf.*;
-import org.quickperf.annotation.DisplayAppliedAnnotations;
-import org.quickperf.config.library.QuickPerfConfigLoader;
-import org.quickperf.config.SpecifiableGlobalAnnotations;
 import org.quickperf.config.library.QuickPerfConfigs;
+import org.quickperf.config.library.QuickPerfConfigsLoader;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
 import org.quickperf.measure.PerfMeasure;
 import org.quickperf.perfrecording.PerfRecord;
 import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.perfrecording.ViewablePerfRecordIfPerfIssue;
 import org.quickperf.reporter.ConsoleReporter;
-import org.quickperf.testlauncher.NewJvmTestLauncher;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class MainJvmAfterJUnitStatement extends Statement {
+public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInterceptor {
 
-    private final FrameworkMethod frameworkMethod;
-
-    private final TestExecutionContext testExecutionContext;
-
-    private final SetOfAnnotationConfigs testAnnotationConfigs;
-
-    private final Statement junitAfters;
-
+    private final QuickPerfConfigs quickPerfConfigs =  QuickPerfConfigsLoader.INSTANCE.loadQuickPerfConfigs();
     private final IssueThrower issueThrower = IssueThrower.INSTANCE;
 
-    private final NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
+    private TestExecutionContext testExecutionContext;
 
-    private final JUnit4FailuresRepository jUnit4FailuresRepository = JUnit4FailuresRepository.getInstance();
-
-    public MainJvmAfterJUnitStatement(
-              FrameworkMethod frameworkMethod
-            , TestExecutionContext testExecutionContext
-            , QuickPerfConfigs quickPerfConfigs
-            , Statement junitAfters) {
-        this.testExecutionContext = testExecutionContext;
-        this.frameworkMethod = frameworkMethod;
-        this.testAnnotationConfigs = quickPerfConfigs.getTestAnnotationConfigs();
-        this.junitAfters = junitAfters;
+    @Override
+    public void beforeEach(ExtensionContext extensionContext) throws Exception {
+        testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs, extensionContext.getRequiredTestMethod());
     }
 
     @Override
-    public void evaluate() throws Throwable {
+    public void interceptTestMethod(Invocation<Void> invocation,
+                                    ReflectiveInvocationContext<Method> invocationContext,
+                                    ExtensionContext extensionContext) throws Throwable {
+        List<RecordablePerformance> perfRecordersToExecuteBeforeTestMethod = testExecutionContext.getPerfRecordersToExecuteBeforeTestMethod();
+        List<RecordablePerformance> perfRecordersToExecuteAfterTestMethod = testExecutionContext.getPerfRecordersToExecuteAfterTestMethod();
 
+        exePerfInstrumentBeforeTestMethod(perfRecordersToExecuteBeforeTestMethod);
         Throwable businessThrowable = null;
-
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
-            newJvmTestLauncher.run( frameworkMethod.getMethod()
-                                  , testExecutionContext.getWorkingFolder()
-                                  , testExecutionContext.getJvmOptions()
-                                  , QuickPerfJunit4Core.class);
-            WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
-            businessThrowable = jUnit4FailuresRepository.find(workingFolder);
-        } else {
-            // Run test in same jvm
-            try {
-                junitAfters.evaluate();
-            } catch (Throwable throwable) {
-                businessThrowable = throwable;
-            }
+            System.err.println("[QUICK PERF] WARNING : Unable to execute a test on a separate JVM for JUnit5 yet");
+        }
+
+        try{
+            invocation.proceed();
+        }
+        catch (Throwable throwable){
+            businessThrowable = throwable;
+        }
+        finally {
+            exePerfInstrumentAfterTestMethod(perfRecordersToExecuteAfterTestMethod);
         }
 
         Map<Annotation, PerfRecord> perfRecordByAnnotation
-                = buildPerfRecordByAnnotation(testAnnotationConfigs);
+                = buildPerfRecordByAnnotation(quickPerfConfigs.getTestAnnotationConfigs());
 
         Map<Annotation, PerfIssue> perfIssuesByAnnotation
                 = evaluatePerfIssuesByAnnotation(perfRecordByAnnotation);
@@ -99,14 +77,27 @@ public class MainJvmAfterJUnitStatement extends Statement {
         }
 
         issueThrower.throwIfNecessary(businessThrowable, groupOfPerfIssuesToFormat);
+    }
 
+    private void exePerfInstrumentBeforeTestMethod(List<RecordablePerformance> perfRecordersToExecuteBeforeTestMethod) {
+        for (int i = 0; i < perfRecordersToExecuteBeforeTestMethod.size(); i++) {
+            RecordablePerformance recordablePerformance = perfRecordersToExecuteBeforeTestMethod.get(i);
+            recordablePerformance.startRecording(testExecutionContext);
+        }
+    }
+
+    private void exePerfInstrumentAfterTestMethod(List<RecordablePerformance> perfRecordersToExecuteAfterTestMethod) {
+        for (int i = 0; i < perfRecordersToExecuteAfterTestMethod.size() ; i++) {
+            RecordablePerformance recordablePerformance = perfRecordersToExecuteAfterTestMethod.get(i);
+            recordablePerformance.stopRecording(testExecutionContext);
+        }
     }
 
     private Map<Annotation, PerfIssue> evaluatePerfIssuesByAnnotation(Map<Annotation, PerfRecord> perfRecordByAnnotation) {
         Map<Annotation, PerfMeasure> perfMeasureByAnnotation
-                = extractPerfMeasureByAnnotation(testAnnotationConfigs, perfRecordByAnnotation);
+                = extractPerfMeasureByAnnotation(quickPerfConfigs.getTestAnnotationConfigs(), perfRecordByAnnotation);
         return evaluatePerfIssuesByAnnotation(perfMeasureByAnnotation
-                                            , testAnnotationConfigs);
+                , quickPerfConfigs.getTestAnnotationConfigs());
     }
 
     private Map<Annotation, PerfRecord> buildPerfRecordByAnnotation(SetOfAnnotationConfigs testAnnotationConfigs) {
@@ -125,20 +116,21 @@ public class MainJvmAfterJUnitStatement extends Statement {
     }
 
     private PerfRecord findPerfRecord(RecordablePerformance perfRecorder) {
-        try {
+        //FIXME
+        //try {
             return perfRecorder.findRecord(testExecutionContext);
-        } catch (Exception e) {
-            WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
-            Throwable throwableFromTestJvm = jUnit4FailuresRepository.find(workingFolder);
-            if(throwableFromTestJvm != null) {
-               e.addSuppressed(throwableFromTestJvm);
-            }
-            throw e;
-        }
+//        } catch (Exception e) {
+//            WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
+//            Throwable throwableFromTestJvm = jUnit4FailuresRepository.find(workingFolder);
+//            if(throwableFromTestJvm != null) {
+//                e.addSuppressed(throwableFromTestJvm);
+//            }
+//            throw e;
+//        }
     }
 
     private Collection<PerfIssuesToFormat> perfIssuesToFormatGroup(
-              Map<Annotation, PerfRecord> perfRecordByAnnotation
+            Map<Annotation, PerfRecord> perfRecordByAnnotation
             , Map<Annotation, PerfIssue> perfIssuesByAnnotation) {
         List<PerfIssuesToFormat> perfIssuesToFormatGroup = new ArrayList<>();
         Map<PerfRecord, List<PerfIssue>> perfIssuesByPerfRecord = buildPerfIssuesByPerfRecord(perfRecordByAnnotation, perfIssuesByAnnotation);
@@ -189,13 +181,13 @@ public class MainJvmAfterJUnitStatement extends Statement {
     @SuppressWarnings("unchecked")
     private Map<Annotation, PerfMeasure> extractPerfMeasureByAnnotation(SetOfAnnotationConfigs testAnnotationConfigs, Map<Annotation, PerfRecord> perfRecordByAnnotation) {
         Map<Annotation, PerfMeasure> perfMeasureByAnnotation = new HashMap<>();
-            for (Annotation annotation : testExecutionContext.getPerfAnnotations()) {
-                ExtractablePerformanceMeasure perfMeasureExtractor = testAnnotationConfigs.retrievePerfMeasureExtractorFor(annotation);
-                PerfRecord perfRecord = perfRecordByAnnotation.get(annotation);
-                PerfMeasure perfMeasure = perfMeasureExtractor.extractPerfMeasureFrom(perfRecord);
-                if(perfMeasure != PerfMeasure.NONE) {
-                    perfMeasureByAnnotation.put(annotation, perfMeasure);
-                }
+        for (Annotation annotation : testExecutionContext.getPerfAnnotations()) {
+            ExtractablePerformanceMeasure perfMeasureExtractor = testAnnotationConfigs.retrievePerfMeasureExtractorFor(annotation);
+            PerfRecord perfRecord = perfRecordByAnnotation.get(annotation);
+            PerfMeasure perfMeasure = perfMeasureExtractor.extractPerfMeasureFrom(perfRecord);
+            if(perfMeasure != PerfMeasure.NONE) {
+                perfMeasureByAnnotation.put(annotation, perfMeasure);
+            }
         }
         return perfMeasureByAnnotation;
     }
@@ -211,8 +203,8 @@ public class MainJvmAfterJUnitStatement extends Statement {
     }
 
     private Map<Annotation, PerfIssue> evaluatePerfIssuesByAnnotation(
-                                               Map<Annotation, PerfMeasure> perfMeasuredByAnnotation
-                                             , SetOfAnnotationConfigs testAnnotationConfigs) {
+            Map<Annotation, PerfMeasure> perfMeasuredByAnnotation
+            , SetOfAnnotationConfigs testAnnotationConfigs) {
         Map<Annotation, PerfIssue> perfIssueByAnnotation = new HashMap<>();
         for (Annotation annotation : perfMeasuredByAnnotation.keySet()) {
             PerfIssue perfIssue = evaluatePerfIssue(perfMeasuredByAnnotation, testAnnotationConfigs, annotation);
@@ -225,8 +217,8 @@ public class MainJvmAfterJUnitStatement extends Statement {
 
     @SuppressWarnings("unchecked")
     private PerfIssue evaluatePerfIssue(Map<Annotation, PerfMeasure> perfMeasuredByAnnotation
-                                      , SetOfAnnotationConfigs testAnnotationConfigs
-                                      , Annotation annotation) {
+            , SetOfAnnotationConfigs testAnnotationConfigs
+            , Annotation annotation) {
         PerfMeasure perfMeasure = perfMeasuredByAnnotation.get(annotation);
         VerifiablePerformanceIssue perfIssueVerifier = testAnnotationConfigs.retrievePerfIssuerVerifierFor(annotation);
         return perfIssueVerifier.verifyPerfIssue(annotation, perfMeasure);
