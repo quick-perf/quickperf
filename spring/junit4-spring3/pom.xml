@@ -138,13 +138,6 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.surefire</groupId>
-                        <artifactId>surefire-junit47</artifactId>
-                        <version>${surefire-junit47.version}</version>
-                    </dependency>
-                </dependencies>
                 <configuration>
                     <parallel>all</parallel>
                     <threadCount>5</threadCount>

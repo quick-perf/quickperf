@@ -51,7 +51,6 @@
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <surefire-junit47.version>2.22.2</surefire-junit47.version>
         <logback-classic.version>1.1.0</logback-classic.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
         <javadoc-subpackages />
@@ -98,13 +97,6 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.surefire</groupId>
-                        <artifactId>surefire-junit47</artifactId>
-                        <version>${surefire-junit47.version}</version>
-                    </dependency>
-                </dependencies>
                 <configuration>
                     <parallel>all</parallel>
                     <threadCount>5</threadCount>
@@ -172,6 +164,8 @@
                 <module>sql-annotations</module>
                 <module>junit4-sql-test</module>
                 <module>spring</module>
+                <module>junit5</module>
+                <module>junit5-sql-test</module>
             </modules>
         </profile>
         <profile>
@@ -182,6 +176,7 @@
                 <module>junit4</module>
                 <module>sql-annotations</module>
                 <module>spring</module>
+                <module>junit5</module>
             </modules>
             <build>
                 <plugins>
