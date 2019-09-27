@@ -18,6 +18,9 @@ import org.quickperf.jvm.allocation.Allocation;
 import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.allocation.ByteAllocationMeasureFormatter;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ByteAllocationMeasureFormatterTest {
@@ -35,7 +38,7 @@ public class ByteAllocationMeasureFormatterTest {
         String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
 
         // THEN
-        assertThat(formattedAllocation).isEqualTo("100.0 Kilo bytes (102400.0 bytes)");
+        assertThat(formattedAllocation).isEqualTo("100.0 Kilo bytes (102 400 bytes)");
 
     }
 
@@ -50,7 +53,7 @@ public class ByteAllocationMeasureFormatterTest {
         String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
 
         // THEN
-        assertThat(formattedAllocation).isEqualTo("1.0 Mega bytes (1048576.0 bytes)");
+        assertThat(formattedAllocation).isEqualTo("1.0 Mega bytes (1 048 576 bytes)");
 
     }
 
@@ -65,7 +68,7 @@ public class ByteAllocationMeasureFormatterTest {
         String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
 
         // THEN
-        assertThat(formattedAllocation).isEqualTo("100.0 Mega bytes (1.048576E8 bytes)");
+        assertThat(formattedAllocation).isEqualTo("100.0 Mega bytes (104 857 600 bytes)");
 
     }
 
@@ -80,7 +83,7 @@ public class ByteAllocationMeasureFormatterTest {
         String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
 
         // THEN
-        assertThat(formattedAllocation).isEqualTo("1.0 Giga bytes (1.073741824E9 bytes)");
+        assertThat(formattedAllocation).isEqualTo("1.0 Giga bytes (1 073 741 824 bytes)");
 
     }
 
@@ -95,7 +98,7 @@ public class ByteAllocationMeasureFormatterTest {
         String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
 
         // THEN
-        assertThat(formattedAllocation).isEqualTo("10.0 Giga bytes (1.073741824E10 bytes)");
+        assertThat(formattedAllocation).isEqualTo("10.0 Giga bytes (10 737 418 240 bytes)");
 
     }
 
@@ -110,7 +113,7 @@ public class ByteAllocationMeasureFormatterTest {
         String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
 
         // THEN
-        assertThat(formattedAllocation).isEqualTo("100.0 Giga bytes (1.073741824E11 bytes)");
+        assertThat(formattedAllocation).isEqualTo("100.0 Giga bytes (107 374 182 400 bytes)");
 
     }
 
@@ -140,7 +143,7 @@ public class ByteAllocationMeasureFormatterTest {
         String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
 
         // THEN
-        assertThat(formattedAllocation).isEqualTo("1.0 Kilo bytes (1024.0 bytes)");
+        assertThat(formattedAllocation).isEqualTo("1.0 Kilo bytes (1 024 bytes)");
 
     }
 

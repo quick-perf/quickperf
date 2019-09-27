@@ -13,14 +13,26 @@
 
 package org.quickperf.jvm.allocation;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class ByteAllocationMeasureFormatter {
 
     public static final ByteAllocationMeasureFormatter INSTANCE = new ByteAllocationMeasureFormatter();
 
+    private final static DecimalFormat BYTE_PREFIX_FORMATTER = (DecimalFormat) NumberFormat.getInstance(Locale.ENGLISH);
+
+    static {
+        final DecimalFormatSymbols symbols = BYTE_PREFIX_FORMATTER.getDecimalFormatSymbols();
+        symbols.setGroupingSeparator(' ');
+        BYTE_PREFIX_FORMATTER.setDecimalFormatSymbols(symbols);
+    }
+
     private ByteAllocationMeasureFormatter() {}
 
     public String format(Allocation allocation) {
-
         Double allocationValue = allocation.getValue();
 
         if(isByteOrderOfMagnitude(allocationValue)) {
@@ -104,7 +116,7 @@ public class ByteAllocationMeasureFormatter {
 
     private String formatByteSuffixAllocationValue(String prefix, Allocation allocationValue)
     {
-        return prefix + " (" + formatByteAllocation(allocationValue) + ")";
+        return prefix + " (" + BYTE_PREFIX_FORMATTER.format(allocationValue.getValue()) +  " bytes)";
     }
 
 }
