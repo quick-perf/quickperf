@@ -52,9 +52,9 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         boolean forkDisabled = quickPerfTest != null && quickPerfTest.disableFork();
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
             if (forkDisabled) {
-                System.out.println("QUICKPERF: WARNING forking is explicitly disabled, this can cause inconcistent results");
+                System.out.println("[QUICK PERF] WARNING forking is explicitly disabled, this can cause inconcistent results");
             } else {
-                System.out.println("QUICKPERF: INFO forking the VM, it is done later on JUnit5 and can cause issues on your test, " +
+                System.out.println("[QUICK PERF] INFO forking the VM, it is done later on JUnit5 and can cause issues on your test, " +
                         "if it occurs you can use '@QuickPerfTest(disableFork = true)' to disable forking");
             }
         }
