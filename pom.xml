@@ -176,6 +176,7 @@
                 <module>junit4</module>
                 <module>sql-annotations</module>
                 <module>spring</module>
+                <module>junit5</module>
             </modules>
             <build>
                 <plugins>
