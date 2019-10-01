@@ -18,24 +18,27 @@ import org.quickperf.jvm.allocation.Allocation;
 import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.allocation.ByteAllocationMeasureFormatter;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ByteAllocationMeasureFormatterTest {
 
     private final ByteAllocationMeasureFormatter byteAllocationMeasureFormatter = ByteAllocationMeasureFormatter.INSTANCE;
-    
+
     @Test public void
     should_convert_bytes_to_100_0_kilo_bytes() {
 
         // GIVEN
-        double tenGigaByteAllocationValue = 100 * 1024;
-        Allocation allocationInBytes = new Allocation(tenGigaByteAllocationValue, AllocationUnit.BYTE, "");
+        double oneHundredKiloBytes = 100 * 1024;
+        Allocation allocation = new Allocation(oneHundredKiloBytes, AllocationUnit.BYTE, "");
 
         // WHEN
-        String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
+        String formattedAllocation = byteAllocationMeasureFormatter.format(allocation);
 
         // THEN
-        assertThat(formattedAllocation).isEqualTo("100.0 Kilo bytes");
+        assertThat(formattedAllocation).isEqualTo("100.0 Kilo bytes (102 400 bytes)");
 
     }
 
@@ -43,14 +46,14 @@ public class ByteAllocationMeasureFormatterTest {
     should_convert_bytes_to_one_mega_byte() {
 
         // GIVEN
-        double oneMegaByteAllocationValue = 1 * Math.pow(1024, 2);
-        Allocation allocationInBytes = new Allocation(oneMegaByteAllocationValue, AllocationUnit.BYTE, "");
+        double oneMegaBytes = 1 * Math.pow(1024, 2);
+        Allocation allocation = new Allocation(oneMegaBytes, AllocationUnit.BYTE, "");
 
         // WHEN
-        String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
+        String formattedAllocation = byteAllocationMeasureFormatter.format(allocation);
 
         // THEN
-        assertThat(formattedAllocation).isEqualTo("1.0 Mega bytes");
+        assertThat(formattedAllocation).isEqualTo("1.0 Mega bytes (1 048 576 bytes)");
 
     }
 
@@ -58,14 +61,14 @@ public class ByteAllocationMeasureFormatterTest {
     should_convert_bytes_to_100_0_mega_bytes() {
 
         // GIVEN
-        double tenMegaByteAllocationValue = 100 * Math.pow(1024, 2);
-        Allocation allocationInBytes = new Allocation(tenMegaByteAllocationValue, AllocationUnit.BYTE, "");
+        double oneHundredMegaBytes = 100 * Math.pow(1024, 2);
+        Allocation allocation = new Allocation(oneHundredMegaBytes, AllocationUnit.BYTE, "");
 
         // WHEN
-        String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
+        String formattedAllocation = byteAllocationMeasureFormatter.format(allocation);
 
         // THEN
-        assertThat(formattedAllocation).isEqualTo("100.0 Mega bytes");
+        assertThat(formattedAllocation).isEqualTo("100.0 Mega bytes (104 857 600 bytes)");
 
     }
 
@@ -73,14 +76,14 @@ public class ByteAllocationMeasureFormatterTest {
     should_convert_bytes_to_1_0_giga_byte() {
 
         // GIVEN
-        double oneGigaByteAllocationValue = Math.pow(1024, 3);
-        Allocation allocationInBytes = new Allocation(oneGigaByteAllocationValue, AllocationUnit.BYTE, "");
+        double oneGigaBytes = Math.pow(1024, 3);
+        Allocation allocation = new Allocation(oneGigaBytes, AllocationUnit.BYTE, "");
 
         // WHEN
-        String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
+        String formattedAllocation = byteAllocationMeasureFormatter.format(allocation);
 
         // THEN
-        assertThat(formattedAllocation).isEqualTo("1.0 Giga bytes");
+        assertThat(formattedAllocation).isEqualTo("1.0 Giga bytes (1 073 741 824 bytes)");
 
     }
 
@@ -88,14 +91,14 @@ public class ByteAllocationMeasureFormatterTest {
     should_convert_bytes_to_10_0_giga_bytes() {
 
         // GIVEN
-        double tenGigaByteAllocationValue = 10 * Math.pow(1024, 3);
-        Allocation allocationInBytes = new Allocation(tenGigaByteAllocationValue, AllocationUnit.BYTE, "");
+        double tenGigaBytes = 10 * Math.pow(1024, 3);
+        Allocation allocation = new Allocation(tenGigaBytes, AllocationUnit.BYTE, "");
 
         // WHEN
-        String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
+        String formattedAllocation = byteAllocationMeasureFormatter.format(allocation);
 
         // THEN
-        assertThat(formattedAllocation).isEqualTo("10.0 Giga bytes");
+        assertThat(formattedAllocation).isEqualTo("10.0 Giga bytes (10 737 418 240 bytes)");
 
     }
 
@@ -103,14 +106,44 @@ public class ByteAllocationMeasureFormatterTest {
     should_convert_bytes_to_100_0_giga_bytes() {
 
         // GIVEN
-        double tenGigaByteAllocationValue = 100 * Math.pow(1024, 3);
-        Allocation allocationInBytes = new Allocation(tenGigaByteAllocationValue, AllocationUnit.BYTE, "");
+        double oneHundredGigaBytes = 100 * Math.pow(1024, 3);
+        Allocation allocation = new Allocation(oneHundredGigaBytes, AllocationUnit.BYTE, "");
 
         // WHEN
-        String formattedAllocation = byteAllocationMeasureFormatter.format(allocationInBytes);
+        String formattedAllocation = byteAllocationMeasureFormatter.format(allocation);
 
         // THEN
-        assertThat(formattedAllocation).isEqualTo("100.0 Giga bytes");
+        assertThat(formattedAllocation).isEqualTo("100.0 Giga bytes (107 374 182 400 bytes)");
+
+    }
+
+    @Test public void
+    should_convert_bytes_to_1023_bytes_without_byte_suffix() {
+
+        // GIVEN
+        double lessThanAKilobyte = 1023;
+        Allocation allocation = new Allocation(lessThanAKilobyte, AllocationUnit.BYTE, "");
+
+        // WHEN
+        String formattedAllocation = byteAllocationMeasureFormatter.format(allocation);
+
+        // THEN
+        assertThat(formattedAllocation).isEqualTo("1023.0 bytes");
+
+    }
+
+    @Test public void
+    should_convert_bytes_to_1024_bytes_with_byte_suffix() {
+
+        // GIVEN
+        double exactlyOneKilobyte = 1024;
+        Allocation allocation = new Allocation(exactlyOneKilobyte, AllocationUnit.BYTE, "");
+
+        // WHEN
+        String formattedAllocation = byteAllocationMeasureFormatter.format(allocation);
+
+        // THEN
+        assertThat(formattedAllocation).isEqualTo("1.0 Kilo bytes (1 024 bytes)");
 
     }
 

@@ -13,6 +13,10 @@
 
 package org.quickperf.jvm.allocation;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
 public class ByteAllocationMeasureFormatter {
 
     public static final ByteAllocationMeasureFormatter INSTANCE = new ByteAllocationMeasureFormatter();
@@ -21,33 +25,34 @@ public class ByteAllocationMeasureFormatter {
 
     public String format(Allocation allocation) {
 
-        Double allocationValue = allocation.getValue();
-
-        if(isByteOrderOfMagnitude(allocationValue)) {
-            return formatByteAllocation(allocation);
-        } else if(isKiloByteOrderOfMagnitude(allocationValue)) {
-            return formatKiloByteAllocation(allocation);
-        } else if(isMegaByteOrderOfMagnitude(allocationValue)) {
-            return formatMegaByteAllocation(allocation);
+        if(isByteOrderOfMagnitude(allocation)) {
+            return formatAllocationInBytes(allocation);
+        } else if(isKiloByteOrderOfMagnitude(allocation)) {
+            String formattedAllocation = formatAllocationInKiloBytes(allocation);
+            return formatByteSuffixAllocationValue(formattedAllocation, allocation);
+        } else if(isMegaByteOrderOfMagnitude(allocation)) {
+            String formattedAllocation = formatAllocationInMegaBytes(allocation);
+            return formatByteSuffixAllocationValue(formattedAllocation, allocation);
         }
 
-        return formatGigaByteAllocation(allocation);
+        String formattedAllocation = formatAllocationInGigaBytes(allocation);
+        return formatByteSuffixAllocationValue(formattedAllocation, allocation);
 
     }
 
-    private boolean isByteOrderOfMagnitude(Double allocationValue) {
-        return allocationValue < 1024;
+    private boolean isByteOrderOfMagnitude(Allocation allocation) {
+        return allocation.getValue() < 1024;
     }
 
-    private String formatByteAllocation(Allocation allocation) {
+    private String formatAllocationInBytes(Allocation allocation) {
         return "" + allocation.getValue() + " " + allocation.getUnit();
     }
 
-    private boolean isKiloByteOrderOfMagnitude(Double allocationValue) {
-        return allocationValue < 1024 * 1024;
+    private boolean isKiloByteOrderOfMagnitude(Allocation allocation) {
+        return allocation.getValue() < 1024 * 1024;
     }
 
-    private String formatKiloByteAllocation(Allocation allocation) {
+    private String formatAllocationInKiloBytes(Allocation allocation) {
 
         double kiloByteValue = allocation.getValue() / 1024;
 
@@ -57,11 +62,11 @@ public class ByteAllocationMeasureFormatter {
 
     }
 
-    private boolean isMegaByteOrderOfMagnitude(Double allocationValue) {
-        return allocationValue < Math.pow(1024, 3);
+    private boolean isMegaByteOrderOfMagnitude(Allocation allocation) {
+        return allocation.getValue() < Math.pow(1024, 3);
     }
 
-    private String formatMegaByteAllocation(Allocation allocation) {
+    private String formatAllocationInMegaBytes(Allocation allocation) {
 
         double megaByteValue = allocation.getValue() / Math.pow(1024, 2);
 
@@ -71,7 +76,7 @@ public class ByteAllocationMeasureFormatter {
 
     }
 
-    private String formatGigaByteAllocation(Allocation allocation) {
+    private String formatAllocationInGigaBytes(Allocation allocation) {
 
         double gigaByteValue = allocation.getValue() / Math.pow(1024, 3);
 
@@ -95,6 +100,24 @@ public class ByteAllocationMeasureFormatter {
 
         return integerPartAsString + "." + truncatedDecimalPartAsString;
 
+    }
+
+    private String formatByteSuffixAllocationValue(String prefix, Allocation allocationValue)
+    {
+        return prefix + formatInByteAllocationBetweenParentheses(allocationValue);
+    }
+
+    private String formatInByteAllocationBetweenParentheses(Allocation allocationValue) {
+        DecimalFormat decimalFormat = buildBytePrefixFormatter();
+        return " (" + decimalFormat.format(allocationValue.getValue()) + " bytes)";
+    }
+
+    private DecimalFormat buildBytePrefixFormatter() {
+        DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat.getInstance(Locale.ENGLISH);
+        DecimalFormatSymbols symbols = decimalFormat.getDecimalFormatSymbols();
+        symbols.setGroupingSeparator(' ');
+        decimalFormat.setDecimalFormatSymbols(symbols);
+        return decimalFormat;
     }
 
 }
