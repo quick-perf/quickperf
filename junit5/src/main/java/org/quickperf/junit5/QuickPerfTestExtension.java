@@ -35,7 +35,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) throws Exception {
-        testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs, extensionContext.getRequiredTestMethod());
+        testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs, extensionContext.getRequiredTestMethod(), JUnitVersion.JUNIT5);
     }
 
     @Override

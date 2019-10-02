@@ -13,6 +13,7 @@
 
 package org.quickperf.jvm.allocation.bytewatcher;
 
+import org.quickperf.JUnitVersion;
 import org.quickperf.TestExecutionContext;
 import org.quickperf.jvm.JvmVersion;
 import org.quickperf.jvm.allocation.Allocation;
@@ -27,6 +28,10 @@ public class ByteWatcherRecorder implements RecordablePerformance<Allocation> {
 
     private ByteWatcherSingleThread byteWatcher;
 
+    private int junit4ByteOffset = 40;
+    private int junit5ByteOffset = 56;
+    private int java12ByteOffsetForJunit4 = 32;
+
     @Override
     public void startRecording(TestExecutionContext testExecutionContext) {
         allocationRepository = new AllocationRepository();
@@ -36,16 +41,17 @@ public class ByteWatcherRecorder implements RecordablePerformance<Allocation> {
 
     @Override
     public void stopRecording(TestExecutionContext testExecutionContext) {
-        int junit4ByteOffset = retrieveJunit4ByteOffset();
-        long allocationInBytes = byteWatcher.calculateAllocations() - junit4ByteOffset;
+        int junitByteOffset = retrieveJunitByteOffset(testExecutionContext);
+        long allocationInBytes = byteWatcher.calculateAllocations() - junitByteOffset;
         allocationRepository.saveAllocationInBytes(allocationInBytes, testExecutionContext);
     }
 
-    private int retrieveJunit4ByteOffset() {
-        if (IS_JVM_VERSION_AT_LEAST_12) {
-            return 72;
+    private int retrieveJunitByteOffset(TestExecutionContext testExecutionContext) {
+        int byteOffset = testExecutionContext.getjUnitVersion() == JUnitVersion.JUNIT4 ? junit4ByteOffset : junit5ByteOffset;
+        if (testExecutionContext.getjUnitVersion() == JUnitVersion.JUNIT4 && IS_JVM_VERSION_AT_LEAST_12) {
+            byteOffset += java12ByteOffsetForJunit4;
         }
-        return 40;
+        return byteOffset;
     }
 
     @Override

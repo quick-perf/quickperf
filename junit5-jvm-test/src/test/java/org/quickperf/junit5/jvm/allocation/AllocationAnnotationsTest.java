@@ -62,7 +62,7 @@ public class AllocationAnnotationsTest {
                       .isEqualTo(1);
         String cause = summary.getFailures().get(0).getException().getMessage();
         softAssertions.assertThat(cause)
-                      .contains("Expected allocation to be less than 439.0 bytes but is 456.0 bytes");//FIXME should be 440.0 bytes
+                      .contains("Expected allocation to be less than 439.0 bytes but is 440.0 bytes");
         softAssertions.assertAll();
 
     }
@@ -106,7 +106,7 @@ public class AllocationAnnotationsTest {
                       .isEqualTo(1);
         String cause = summary.getFailures().get(0).getException().getMessage();
         softAssertions.assertThat(cause)
-                      .contains("Expected allocation to be 0 but is 456.0 bytes");//FIXME should be 440.0 bytes
+                      .contains("Expected allocation to be 0 but is 440.0 bytes");
         softAssertions.assertAll();
 
     }
@@ -114,8 +114,7 @@ public class AllocationAnnotationsTest {
     @QuickPerfTest
     public static class ClassWithAMethodNotAllocatingAndAnnotatedWithExpectNoHeapAllocation {
 
-        //@ExpectNoHeapAllocation FIXME we should have no allocation but we 16 bytes ...
-        @ExpectMaxHeapAllocation(value = 16, unit = AllocationUnit.BYTE)
+        @ExpectNoHeapAllocation
         @JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers")
         @Test
         public void method_without_allocation() {
