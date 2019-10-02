@@ -151,6 +151,15 @@ Many thanks to all our contributors!
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=emcdow123" title="Code">💻</a>
+        </td>        
+        <td align="center">
+            <a href="https://github.com/waterfl0w">
+                <img src="https://avatars1.githubusercontent.com/u/3315137?v=4" width="100px;" alt="Jan Krüger"/>
+                <br/>
+                <sub><b>Jan Krüger</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=waterfl0w" title="Code">💻</a>
         </td>
     </tr>
 </table>
