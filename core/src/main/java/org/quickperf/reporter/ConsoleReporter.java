@@ -1,3 +1,16 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ *
+ * Copyright 2019-2019 the original author or authors.
+ */
+
 package org.quickperf.reporter;
 
 import org.quickperf.AnnotationFormatter;
@@ -17,13 +30,13 @@ import java.util.ServiceLoader;
 
 public final class ConsoleReporter {
 
+    public static final ConsoleReporter INSTANCE = new ConsoleReporter();
+
+    private ConsoleReporter() {}
+
     private static final AnnotationFormatter ANNOTATION_FORMATTER = AnnotationFormatter.INSTANCE;
 
-    private ConsoleReporter (){
-        //utility class pattern
-    }
-
-    public static void displayQuickPerfDebugInfos() {
+    public void displayQuickPerfDebugInfos() {
 
         ServiceLoader<QuickPerfConfigLoader> serviceLoader = ServiceLoader.load(QuickPerfConfigLoader.class);
         Iterator<QuickPerfConfigLoader> serviceIterator = serviceLoader.iterator();
@@ -50,7 +63,7 @@ public final class ConsoleReporter {
         printExecutionOrders(executionOrderListAfter);
     }
 
-    public static void displayQuickPerfAnnotations(Annotation[] perfAnnotations) {
+    public void displayQuickPerfAnnotations(Annotation[] perfAnnotations) {
 
         List<Annotation> perfAnnotationsWithoutDisplayAppliedAnnotations =
                 removeDisplayAppliedAnnotations(perfAnnotations);
@@ -67,7 +80,7 @@ public final class ConsoleReporter {
         }
     }
 
-    private static void printExecutionOrders(List<RecorderExecutionOrder> executionOrderList) {
+    private void printExecutionOrders(List<RecorderExecutionOrder> executionOrderList) {
         Collections.sort(executionOrderList);
         System.out.println("----" + " | -----------------------------------------");
         System.out.println("Prio" + " | Recorder");
@@ -78,7 +91,7 @@ public final class ConsoleReporter {
         }
     }
 
-    private static List<Annotation> removeDisplayAppliedAnnotations(Annotation[] perfAnnotations) {
+    private List<Annotation> removeDisplayAppliedAnnotations(Annotation[] perfAnnotations) {
         List<Annotation> perfAnnotationsWithoutDisplayAppliedAnnotations = new ArrayList<>(perfAnnotations.length - 1);
         for (Annotation perfAnnotation : perfAnnotations) {
             if (!perfAnnotation.annotationType().equals(DisplayAppliedAnnotations.class)) {
@@ -88,7 +101,7 @@ public final class ConsoleReporter {
         return perfAnnotationsWithoutDisplayAppliedAnnotations;
     }
 
-    private static String buildPerfAnnotationAsString(List<Annotation> perfAnnotations) {
+    private String buildPerfAnnotationAsString(List<Annotation> perfAnnotations) {
         String perfAnnotationsAsString = "";
         for (int i = 0; i < perfAnnotations.size(); i++) {
             Annotation perfAnnotation = perfAnnotations.get(i);
@@ -99,4 +112,5 @@ public final class ConsoleReporter {
         }
         return perfAnnotationsAsString;
     }
+
 }

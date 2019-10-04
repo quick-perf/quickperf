@@ -14,13 +14,14 @@
 package org.quickperf.junit4;
 
 import org.junit.runner.notification.Failure;
+import org.quickperf.RetrievableFailure;
 import org.quickperf.WorkingFolder;
 import org.quickperf.repository.ObjectFileRepository;
 
 import java.io.File;
 import java.util.List;
 
-public class JUnit4FailuresRepository {
+public class JUnit4FailuresRepository implements RetrievableFailure {
 
     public static final JUnit4FailuresRepository INSTANCE = new JUnit4FailuresRepository();
 

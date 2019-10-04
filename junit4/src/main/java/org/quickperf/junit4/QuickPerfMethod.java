@@ -42,24 +42,24 @@ public class QuickPerfMethod extends FrameworkMethod {
         return new ReflectiveCallable() {
             @Override
             protected Object runReflectiveCall() throws Throwable {
-                exePerfInstrumentBeforeTestMethod();
+                startRecordings();
                 try {
                     return method.invoke(target, params);
                 } finally {
-                    exePerfInstrumentAfterTestMethod();
+                    stopRecordings();
                 }
             }
         }.run();
     }
 
-    private void exePerfInstrumentBeforeTestMethod() {
+    private void startRecordings() {
         for (int i = 0; i < perfRecordersToExecuteBeforeTestMethod.size(); i++) {
             RecordablePerformance recordablePerformance = perfRecordersToExecuteBeforeTestMethod.get(i);
             recordablePerformance.startRecording(testExecutionContext);
         }
     }
 
-    private void exePerfInstrumentAfterTestMethod() {
+    private void stopRecordings() {
         for (int i = 0; i < perfRecordersToExecuteAfterTestMethod.size() ; i++) {
             RecordablePerformance recordablePerformance = perfRecordersToExecuteAfterTestMethod.get(i);
             recordablePerformance.stopRecording(testExecutionContext);
