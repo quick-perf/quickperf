@@ -52,16 +52,20 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         List<RecordablePerformance> perfRecordersToExecuteBeforeTestMethod = testExecutionContext.getPerfRecordersToExecuteBeforeTestMethod();
         List<RecordablePerformance> perfRecordersToExecuteAfterTestMethod = testExecutionContext.getPerfRecordersToExecuteAfterTestMethod();
 
-        startRecordings(perfRecordersToExecuteBeforeTestMethod);
+        if(!testExecutionContext.isQuickPerfDisabled()) {
+            startRecordings(perfRecordersToExecuteBeforeTestMethod);
+        }
+
         Throwable businessThrowable = null;
         try{
             invocation.proceed();
         }
         catch (Throwable throwable){
             businessThrowable = throwable;
-        }
-        finally {
-            stopRecordings(perfRecordersToExecuteAfterTestMethod);
+        } finally {
+            if (!testExecutionContext.isQuickPerfDisabled()) {
+                stopRecordings(perfRecordersToExecuteAfterTestMethod);
+            }
         }
 
         SetOfAnnotationConfigs testAnnotationConfigs = quickPerfConfigs.getTestAnnotationConfigs();

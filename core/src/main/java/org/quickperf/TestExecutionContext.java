@@ -28,6 +28,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -35,9 +36,9 @@ public class TestExecutionContext {
 
     private WorkingFolder workingFolder;
 
-    private List<RecordablePerformance> perfRecordersToExecuteBeforeTestMethod;
+    private List<RecordablePerformance> perfRecordersToExecuteBeforeTestMethod = Collections.emptyList();
 
-    private List<RecordablePerformance> perfRecordersToExecuteAfterTestMethod;
+    private List<RecordablePerformance> perfRecordersToExecuteAfterTestMethod = Collections.emptyList();
 
     private boolean testMethodToBeLaunchedInASpecificJvm;
 
