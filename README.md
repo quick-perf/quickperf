@@ -131,6 +131,7 @@ Many thanks to all our contributors!
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=pcavezzan" title="Code">💻</a>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=pcavezzan" title="Infrastructure">🚇</a>
             <a href="https://github.com/quick-perf/quickperf/commits?author=pcavezzan" title="Documentation">📖</a>
         </td>
         <td align="center">
@@ -170,6 +171,17 @@ Many thanks to all our contributors!
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=loicmathieu" title="">💻</a>
         </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <a href="https://github.com/danny95djb">
+                <img src="https://avatars0.githubusercontent.com/u/6143158?v=4" width="100px;" alt="Daniel Bentley"/>
+                <br/>
+                <sub><b>Daniel Bentley</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=danny95djb" title="Infrastructure">🚇</a>
+        </td>    
     </tr>
 </table>
 <a href = "https://allcontributors.org/docs/en/emoji-key">emoji key</a>
