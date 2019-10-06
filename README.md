@@ -161,6 +161,15 @@ Many thanks to all our contributors!
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=waterfl0w" title="Code">💻</a>
         </td>
+        <td align="center">
+            <a href="https://github.com/loicmathieu">
+                <img src="https://avatars1.githubusercontent.com/u/1819009?v=4" width="100px;" alt="Loïc Mathieu"/>
+                <br/>
+                <sub><b>Loïc Mathieu</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=loicmathieu" title="">💻</a>
+        </td>
     </tr>
 </table>
 <a href = "https://allcontributors.org/docs/en/emoji-key">emoji key</a>
