@@ -37,7 +37,6 @@ public class GlobalAnnotationJUnit5Test {
     @QuickPerfTest
     public static class SqlCrossJoinJUnit5 extends SqlJUnit5TestBase {
 
-        @DisableCrossJoin
         @Test
         public void fail_to_execute_cross_join() {
             EntityManager entityManager = emf.createEntityManager();
