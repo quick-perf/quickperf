@@ -181,6 +181,15 @@ Many thanks to all our contributors!
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=danny95djb" title="Infrastructure">🚇</a>
+        </td> 
+        <td>           
+            <a href="https://github.com/gaurav9822">
+                <img src="https://avatars2.githubusercontent.com/u/5204384?v=4" width="100px;" alt="Gaurav Deshpande"/>
+                <br/>
+                <sub><b>Gaurav Deshpande</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=gaurav9822" title="Tests">⚠</a>
         </td>    
     </tr>
 </table>
