@@ -23,12 +23,32 @@ public class ByteWatcherRecorder implements RecordablePerformance<Allocation> {
 
     private static final boolean IS_JVM_VERSION_AT_LEAST_12 = JvmVersion.isGreaterThanOrEqualTo12();
 
+    private static int junit4ByteOffset = 40;
+    private static int java12ByteOffsetForJunit4 = 72;
+
+    private static int junit5ByteOffset = 40;
+
+    //determine junit4 and junit5 offsets to avoid as much allocation as possible when calling startRecording
+    private static int calculatedJunit4ByteOffset;
+    static {
+        if(IS_JVM_VERSION_AT_LEAST_12){
+            calculatedJunit4ByteOffset = java12ByteOffsetForJunit4;
+        }
+        else {
+            calculatedJunit4ByteOffset = junit4ByteOffset;
+        }
+    }
+    private static int calculatedJunit5ByteOffset =  junit5ByteOffset;
+
     private AllocationRepository allocationRepository;
 
     private ByteWatcherSingleThread byteWatcher;
 
+    private int junitByteOffset;
+
     @Override
     public void startRecording(TestExecutionContext testExecutionContext) {
+        junitByteOffset = retrieveJunitByteOffset(testExecutionContext);
         allocationRepository = new AllocationRepository();
         byteWatcher = new ByteWatcherSingleThread(Thread.currentThread());
         byteWatcher.reset();
@@ -36,16 +56,17 @@ public class ByteWatcherRecorder implements RecordablePerformance<Allocation> {
 
     @Override
     public void stopRecording(TestExecutionContext testExecutionContext) {
-        int junit4ByteOffset = retrieveJunit4ByteOffset();
-        long allocationInBytes = byteWatcher.calculateAllocations() - junit4ByteOffset;
+        long allocationInBytes = byteWatcher.calculateAllocations() - junitByteOffset;
         allocationRepository.saveAllocationInBytes(allocationInBytes, testExecutionContext);
     }
 
-    private int retrieveJunit4ByteOffset() {
-        if (IS_JVM_VERSION_AT_LEAST_12) {
-            return 72;
+    private int retrieveJunitByteOffset(TestExecutionContext testExecutionContext) {
+        switch (testExecutionContext.getjUnitVersion()){
+            case JUNIT4: return calculatedJunit4ByteOffset;
+            case JUNIT5: return calculatedJunit5ByteOffset;
+            default: throw new RuntimeException("Unandled JUnit version");
         }
-        return 40;
+
     }
 
     @Override

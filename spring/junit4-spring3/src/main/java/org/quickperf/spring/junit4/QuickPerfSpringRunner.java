@@ -22,6 +22,7 @@ import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.*;
+import org.quickperf.JUnitVersion;
 import org.quickperf.annotation.FunctionalIteration;
 import org.quickperf.config.library.QuickPerfConfigsLoader;
 import org.quickperf.AnnotationsExtractor;
@@ -87,12 +88,12 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
         if (      testMethodToBeLaunchedInASpecificJvm
               && !SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
             testExecutionContext = TestExecutionContext.buildNewJvmFrom(quickPerfConfigs
-                    , testMethod);
+                    , testMethod, JUnitVersion.JUNIT4);
             return NO_STATEMENT;
         }
 
         testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs
-                                                            , testMethod);
+                                                            , testMethod, JUnitVersion.JUNIT4);
 
         if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
             return QUICK_PERF_SPRING_RUNNER_FOR_SPECIFIC_JVM.methodInvoker(frameworkMethod, test);
