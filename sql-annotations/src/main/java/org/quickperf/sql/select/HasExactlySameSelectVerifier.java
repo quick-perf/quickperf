@@ -30,7 +30,7 @@ public class HasExactlySameSelectVerifier implements VerifiablePerformanceIssue<
     public PerfIssue verifyPerfIssue(DisableExactlySameSelects annotation, BooleanMeasure hasExactlySameSelects) {
 
         if(hasExactlySameSelects.getValue()) {
-            String description = "Exactly same SELECT requests";
+            String description = "Exactly same SELECT statements";
             if(SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
                 description += System.lineSeparator()
                              + HibernateSuggestion.SESSION.getMessage()

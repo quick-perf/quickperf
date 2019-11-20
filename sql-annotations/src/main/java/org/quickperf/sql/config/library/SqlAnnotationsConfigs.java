@@ -16,8 +16,8 @@ package org.quickperf.sql.config.library;
 import org.quickperf.config.library.AnnotationConfig;
 import org.quickperf.sql.PersistenceSqlRecorder;
 import org.quickperf.sql.annotation.*;
-import org.quickperf.sql.batch.SqlRequestBatchRecorder;
-import org.quickperf.sql.batch.SqlRequestBatchVerifier;
+import org.quickperf.sql.batch.SqlStatementBatchRecorder;
+import org.quickperf.sql.batch.SqlStatementBatchVerifier;
 import org.quickperf.sql.crossjoin.HasSqlCrossJoinPerfMeasureExtractor;
 import org.quickperf.sql.crossjoin.NoSqlCrossJoinPerfIssueVerifier;
 import org.quickperf.sql.delete.DeleteCountMeasureExtractor;
@@ -86,9 +86,9 @@ class SqlAnnotationsConfigs {
             .perfIssueVerifier(InsertNumberPerfIssueVerifier.INSTANCE)
             .build(ExpectInsert.class);
 
-    static final AnnotationConfig SQL_REQUESTS_BATCHED = new AnnotationConfig.Builder()
-            .perfRecorderClass(SqlRequestBatchRecorder.class)
-            .perfIssueVerifier(SqlRequestBatchVerifier.INSTANCE)
+    static final AnnotationConfig SQL_STATEMENTS_BATCHED = new AnnotationConfig.Builder()
+            .perfRecorderClass(SqlStatementBatchRecorder.class)
+            .perfIssueVerifier(SqlStatementBatchVerifier.INSTANCE)
             .build(ExpectJdbcBatching.class);
 
     static final AnnotationConfig NUMBER_OF_SQL_DELETE = new AnnotationConfig.Builder()

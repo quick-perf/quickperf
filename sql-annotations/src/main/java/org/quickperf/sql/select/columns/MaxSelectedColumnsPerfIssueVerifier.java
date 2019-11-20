@@ -43,10 +43,6 @@ public class MaxSelectedColumnsPerfIssueVerifier implements VerifiablePerformanc
                   + "<" + expectedCount.getValue() + ">"
                   + " but is "
                   + "<" + maxSqlCountMeasure.getValue() + ">" + "."
-                  + System.lineSeparator()
-                  + System.lineSeparator()
-                  + "The following requests were executed: "
-                  + System.lineSeparator()
                   + maxSqlCountMeasure.getComment();
         return new PerfIssue(description);
     }

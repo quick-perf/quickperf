@@ -18,7 +18,7 @@ import org.quickperf.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectInsert;
 import org.quickperf.unit.Count;
 
-import static org.quickperf.sql.SqlRequestPerfIssueBuilder.aSqlPerfIssue;
+import static org.quickperf.sql.SqlStatementPerfIssueBuilder.aSqlPerfIssue;
 
 public class InsertNumberPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectInsert, Count> {
 
@@ -34,7 +34,7 @@ public class InsertNumberPerfIssueVerifier implements VerifiablePerformanceIssue
         Count expectedCount = new Count(annotation.value());
 
         if (!measuredCount.isEqualTo(expectedCount)) {
-            return aSqlPerfIssue().buildNotEqualNumberOfRequests(measuredCount
+            return aSqlPerfIssue().buildNotEqualNumberOfStatements(measuredCount
                                        , expectedCount
                                        , INSERT);
         }

@@ -17,11 +17,11 @@ import org.quickperf.PerfIssue;
 import org.quickperf.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectJdbcBatching;
 
-public class SqlRequestBatchVerifier implements VerifiablePerformanceIssue<ExpectJdbcBatching, SqlBatchSizes> {
+public class SqlStatementBatchVerifier implements VerifiablePerformanceIssue<ExpectJdbcBatching, SqlBatchSizes> {
 
-    public static final SqlRequestBatchVerifier INSTANCE = new SqlRequestBatchVerifier();
+    public static final SqlStatementBatchVerifier INSTANCE = new SqlStatementBatchVerifier();
 
-    private SqlRequestBatchVerifier() {}
+    private SqlStatementBatchVerifier() {}
 
     @Override
     public PerfIssue verifyPerfIssue(ExpectJdbcBatching annotation, SqlBatchSizes measuredSqlBatchSizes) {

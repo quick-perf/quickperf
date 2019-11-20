@@ -151,7 +151,7 @@ public class JUnit4Spring4Test extends AbstractJUnit4SpringTestBase {
 
         @ExpectSelect(1)
         @Test
-        public void a_test_method_not_executing_a_sql_request() {
+        public void a_test_method_not_executing_a_sql_statement() {
         }
 
     }

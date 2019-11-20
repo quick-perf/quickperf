@@ -28,7 +28,6 @@ import javax.persistence.Query;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-
 public class QuickPerfJUnit5SqlTest {
 
     private final JUnit5FailuresFormatter jUnit5FailuresFormatter = JUnit5FailuresFormatter.INSTANCE;
@@ -68,7 +67,7 @@ public class QuickPerfJUnit5SqlTest {
         softAssertions.assertThat(testsFailedCount).isEqualTo(1);
 
         String testExecutionSummaryAsString = jUnit5FailuresFormatter.formatToStringFrom(testExecutionSummary);
-        softAssertions.assertThat(testExecutionSummaryAsString).contains("You may think that <5> select requests were sent to the database");
+        softAssertions.assertThat(testExecutionSummaryAsString).contains("You may think that <5> select statements were sent to the database");
         softAssertions.assertThat(testExecutionSummaryAsString).contains("But in fact <1>...");
 
         softAssertions.assertThat(testExecutionSummaryAsString)

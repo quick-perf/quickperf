@@ -16,16 +16,16 @@ package org.quickperf.sql;
 import org.quickperf.PerfIssue;
 import org.quickperf.unit.Count;
 
-public class SqlRequestPerfIssueBuilder {
+public class SqlStatementPerfIssueBuilder {
 
-    private SqlRequestPerfIssueBuilder() {}
+    private SqlStatementPerfIssueBuilder() {}
 
-    public static SqlRequestPerfIssueBuilder aSqlPerfIssue() {
-        return new SqlRequestPerfIssueBuilder();
+    public static SqlStatementPerfIssueBuilder aSqlPerfIssue() {
+        return new SqlStatementPerfIssueBuilder();
     }
 
-    public PerfIssue buildNotEqualNumberOfRequests(Count measuredCount, Count expectedCount, String requestType) {
-        String assertionMessage = "Expected number of " + requestType + " requests "
+    public PerfIssue buildNotEqualNumberOfStatements(Count measuredCount, Count expectedCount, String requestType) {
+        String assertionMessage = "Expected number of " + requestType + " statements "
                                + "<" + expectedCount.getValue() + ">"
                                + " but is " + "<" + measuredCount.getValue() + ">" + ".";
         return new PerfIssue(assertionMessage);

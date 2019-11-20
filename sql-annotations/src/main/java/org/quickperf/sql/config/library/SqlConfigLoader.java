@@ -17,7 +17,7 @@ import org.quickperf.RecorderExecutionOrder;
 import org.quickperf.config.library.AnnotationConfig;
 import org.quickperf.config.library.QuickPerfConfigLoader;
 import org.quickperf.sql.PersistenceSqlRecorder;
-import org.quickperf.sql.batch.SqlRequestBatchRecorder;
+import org.quickperf.sql.batch.SqlStatementBatchRecorder;
 import org.quickperf.sql.display.DisplaySqlOfTestMethodBodyRecorder;
 import org.quickperf.sql.display.DisplaySqlRecorder;
 
@@ -40,7 +40,7 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                 , SqlAnnotationsConfigs.ENABLE_SQL_CROSS_JOIN
                 , SqlAnnotationsConfigs.DISABLE_LIKE_STARTING_WITH_WILDCARD
                 , SqlAnnotationsConfigs.ENABLE_LIKE_STARTING_WITH_WILDCARD
-                , SqlAnnotationsConfigs.SQL_REQUESTS_BATCHED
+                , SqlAnnotationsConfigs.SQL_STATEMENTS_BATCHED
                 , SqlAnnotationsConfigs.DISPLAY_ALL_SQL
                 , SqlAnnotationsConfigs.DISPLAY_SQL
                 , SqlAnnotationsConfigs.DISABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS
@@ -56,7 +56,7 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                   new RecorderExecutionOrder(PersistenceSqlRecorder.class, 2000)
                 , new RecorderExecutionOrder(DisplaySqlRecorder.class, 2001)
                 , new RecorderExecutionOrder(DisplaySqlOfTestMethodBodyRecorder.class, 2002)
-                , new RecorderExecutionOrder(SqlRequestBatchRecorder.class, 2003)
+                , new RecorderExecutionOrder(SqlStatementBatchRecorder.class, 2003)
 
         );
     }
@@ -67,7 +67,7 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
         		  new RecorderExecutionOrder(PersistenceSqlRecorder.class, 7000)
                 , new RecorderExecutionOrder(DisplaySqlRecorder.class, 7001)
                 , new RecorderExecutionOrder(DisplaySqlOfTestMethodBodyRecorder.class, 7002)
-                , new RecorderExecutionOrder(SqlRequestBatchRecorder.class, 7003)
+                , new RecorderExecutionOrder(SqlStatementBatchRecorder.class, 7003)
         );
     }
 

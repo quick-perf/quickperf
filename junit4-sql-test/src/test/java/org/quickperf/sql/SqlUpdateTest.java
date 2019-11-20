@@ -50,7 +50,7 @@ public class SqlUpdateTest {
     }
 
     @Test public void
-    should_fail_if_the_number_of_update_requests_is_not_equal_to_the_number_expected() {
+    should_fail_if_the_number_of_update_statements_is_not_equal_to_the_number_expected() {
 
         // GIVEN
         Class<?> testClass = SqlUpdate.class;
@@ -64,7 +64,7 @@ public class SqlUpdateTest {
         softAssertions.assertThat(printableResult.failureCount()).isEqualTo(1);
 
         softAssertions.assertThat(printableResult.toString())
-                      .contains("Expected number of UPDATE requests <5> but is <1>")
+                      .contains("Expected number of UPDATE statements <5> but is <1>")
                       .contains("UPDATE")
                       .contains("book")
                       .contains("SET")

@@ -42,7 +42,7 @@ public class SelectNumberPerfIssueVerifier implements VerifiablePerformanceIssue
 
     private PerfIssue buildPerfIssue(Count measuredCount, Count expectedCount) {
 
-        String description = "You may think that <" + expectedCount.getValue() + "> select request"
+        String description = "You may think that <" + expectedCount.getValue() + "> select statement"
                            + (expectedCount.getValue() > 1 ? "s were" : " was" )
                            + " sent to the database"
                            + System.lineSeparator()

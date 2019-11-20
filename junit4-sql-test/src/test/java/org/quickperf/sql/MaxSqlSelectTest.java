@@ -43,7 +43,7 @@ public class MaxSqlSelectTest {
     }
 
     @Test public void
-    should_fail_if_the_number_of_sql_requests_is_greater_than_the_number_expected_with_annotation_on_method() {
+    should_fail_if_the_number_of_sql_statements_is_greater_than_the_number_expected_with_annotation_on_method() {
 
         // GIVEN
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectMaxSelect.class;
@@ -58,7 +58,7 @@ public class MaxSqlSelectTest {
                       .isEqualTo(1);
 
         softAssertions.assertThat(printableResult.toString())
-                      .contains("You may think that at most <0> select request was sent to the database")
+                      .contains("You may think that at most <0> select statement was sent to the database")
                       .contains("But in fact <1>...")
                       .contains("select")
                       .contains("book0_.id as id1_0_");
@@ -81,7 +81,7 @@ public class MaxSqlSelectTest {
     }
 
     @Test public void
-    should_fail_if_the_number_of_sql_requests_is_greater_than_the_number_expected_with_annotation_on_class() {
+    should_fail_if_the_number_of_sql_statements_is_greater_than_the_number_expected_with_annotation_on_class() {
 
         // GIVEN
         Class<?> testClass = AClassAnnotatedWithExpectMaxSelect.class;
@@ -96,7 +96,7 @@ public class MaxSqlSelectTest {
                       .isEqualTo(1);
 
         softAssertions.assertThat(printableResult.toString())
-                      .contains("You may think that at most <0> select request was sent to the database")
+                      .contains("You may think that at most <0> select statement was sent to the database")
                       .contains("But in fact <1>...")
                       .contains("select")
                       .contains("book0_.id as id1_0_");
@@ -147,7 +147,7 @@ public class MaxSqlSelectTest {
     }
 
     @Test public void
-    should_fail_if_the_number_of_sql_requests_is_greater_than_the_number_expected_and_test_method_annotated_with_xmx() {
+    should_fail_if_the_number_of_sql_statements_is_greater_than_the_number_expected_and_test_method_annotated_with_xmx() {
 
         // GIVEN
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectMaxSelectAndWithXmx.class;
@@ -161,7 +161,7 @@ public class MaxSqlSelectTest {
         softAssertions.assertThat(printableResult.failureCount()).isEqualTo(1);
 
         softAssertions.assertThat(printableResult.toString())
-                      .contains("You may think that at most <0> select request was sent to the database")
+                      .contains("You may think that at most <0> select statement was sent to the database")
                       .contains("But in fact <1>...")
                       .contains("select")
                       .contains("book0_.id as id1_0");

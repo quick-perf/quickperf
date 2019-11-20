@@ -35,7 +35,7 @@ public class SpringBootTest {
                       .isEqualTo(1);
 
         softAssertions.assertThat(printableResult.toString())
-                      .contains("You may think that <1> select request was sent to the database")
+                      .contains("You may think that <1> select statement was sent to the database")
                       .contains("With Spring Data JPA, you may fix it by");
 
         softAssertions.assertAll();
@@ -58,7 +58,7 @@ public class SpringBootTest {
                       .isEqualTo(1);
 
         softAssertions.assertThat(printableResult.toString())
-                      .contains("You may think that <1> select request was sent to the database")
+                      .contains("You may think that <1> select statement was sent to the database")
                       .contains("With Spring Data JPA, you may fix it by");
 
         softAssertions.assertAll();

@@ -45,7 +45,7 @@ public class SqlDeleteTest {
     }
 
     @Test public void
-    should_fail_if_the_number_of_delete_requests_is_not_equal_to_the_number_expected() {
+    should_fail_if_the_number_of_delete_statements_is_not_equal_to_the_number_expected() {
 
         // GIVEN
         Class<?> testClass = SqlDelete.class;
@@ -60,7 +60,7 @@ public class SqlDeleteTest {
                       .isEqualTo(1);
 
         softAssertions.assertThat(printableResult.toString())
-                      .contains("Expected number of DELETE requests <5> but is <1>")
+                      .contains("Expected number of DELETE statements <5> but is <1>")
                       .contains("delete")
                       .contains("from")
                       .contains("Book");

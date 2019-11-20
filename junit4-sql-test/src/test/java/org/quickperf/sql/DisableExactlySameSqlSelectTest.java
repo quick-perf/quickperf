@@ -120,7 +120,7 @@ public class DisableExactlySameSqlSelectTest {
         softAssertions.assertThat(printableResult.failureCount())
                       .isEqualTo(1);
         softAssertions.assertThat(printableResult.toString())
-                      .contains("[PERF] Exactly same SELECT requests");
+                      .contains("[PERF] Exactly same SELECT statements");
         softAssertions.assertAll();
 
     }
@@ -158,7 +158,7 @@ public class DisableExactlySameSqlSelectTest {
         softAssertions.assertThat(printableResult.failureCount())
                       .isEqualTo(1);
         softAssertions.assertThat(printableResult.toString())
-                      .contains("Exactly same SELECT requests");
+                      .contains("Exactly same SELECT statements");
         softAssertions.assertAll();
 
     }
@@ -168,7 +168,7 @@ public class DisableExactlySameSqlSelectTest {
 
         @Test
         @DisableExactlySameSelects
-        public void execute_two_insert_queries_who_should_pass() {
+        public void execute_two_insert_statements_who_should_pass() {
 
             EntityManager em = emf.createEntityManager();
             em.getTransaction().begin();

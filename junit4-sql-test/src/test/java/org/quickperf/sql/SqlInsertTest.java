@@ -47,7 +47,7 @@ public class SqlInsertTest {
     }
 
     @Test public void
-    should_fail_if_the_number_of_insert_requests_is_not_equal_to_the_number_expected() {
+    should_fail_if_the_number_of_insert_statements_is_not_equal_to_the_number_expected() {
 
         // GIVEN
         Class<?> testClass = SqlInsert.class;
@@ -61,7 +61,7 @@ public class SqlInsertTest {
         softAssertions.assertThat(printableResult.failureCount()).isEqualTo(1);
 
         softAssertions.assertThat(printableResult.toString())
-                      .contains("Expected number of INSERT requests <5> but is <1>")
+                      .contains("Expected number of INSERT statements <5> but is <1>")
                       .contains("insert")
                       .contains("into")
                       .contains("Book")

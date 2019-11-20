@@ -39,7 +39,7 @@ public class SqlExpectSelectTest {
     }
 
     @Test public void
-    should_fail_if_the_number_of_select_requests_is_not_equal_to_the_number_expected() {
+    should_fail_if_the_number_of_select_statements_is_not_equal_to_the_number_expected() {
 
         // GIVEN
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectSelect.class;
@@ -54,7 +54,7 @@ public class SqlExpectSelectTest {
             .isEqualTo(1);
 
         softAssertions.assertThat(printableResult.toString())
-                      .contains("You may think that <5> select requests were sent to the database")
+                      .contains("You may think that <5> select statements were sent to the database")
                       .contains("But in fact <1>...")
                       .contains("select")
                       .contains("book0_.id as id1_0");

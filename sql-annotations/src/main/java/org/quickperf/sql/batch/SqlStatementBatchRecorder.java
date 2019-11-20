@@ -25,11 +25,11 @@ import org.quickperf.sql.SqlRecorderRegistry;
 
 import java.util.List;
 
-public class SqlRequestBatchRecorder implements SqlRecorder<SqlBatchSizes> {
+public class SqlStatementBatchRecorder implements SqlRecorder<SqlBatchSizes> {
 
     private static final String BATCH_FILE_NAME = "ExpectJdbcBatching.ser";
 
-    private boolean previousRequestsAreBatched = true;
+    private boolean previousStatementsAreBatched = true;
 
     /* int array is used to avoid boxing since a batch can contain a lot of
        insert, delete or update sql orders.*/
@@ -70,14 +70,14 @@ public class SqlRequestBatchRecorder implements SqlRecorder<SqlBatchSizes> {
     @Override
     public void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries, int listenerIdentifier) {
         for (QueryInfo query : queries) {
-            if (       previousRequestsAreBatched
+            if (       previousStatementsAreBatched
                     && isRequestTypeInsertOrUpdateOrDeleteType(query)
                 ) {
                 int batchSize = execInfo.getBatchSize();
                 if (isNewBatchSize(batchSize)) {
                     differentBatchSizes = createTableWithNewBatchSize(batchSize);
                 }
-                previousRequestsAreBatched = execInfo.isBatch();
+                previousStatementsAreBatched = execInfo.isBatch();
             }
         }
     }
