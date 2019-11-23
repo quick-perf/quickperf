@@ -51,7 +51,7 @@ public class GlobalAnnotationJUnit5Test {
 
         // GIVEN
         LauncherDiscoveryRequest request =
-                request()
+                         request()
                         .selectors(selectClass(SqlCrossJoinJUnit5.class))
                         .build();
         SummaryGeneratingListener summary = new SummaryGeneratingListener();
@@ -61,12 +61,20 @@ public class GlobalAnnotationJUnit5Test {
 
         // THEN
         TestExecutionSummary testExecutionSummary = summary.getSummary();
-        String testExecutionSummaryAsString = jUnit5FailuresFormatter.formatToStringFrom(testExecutionSummary);
+
         SoftAssertions softAssertions = new SoftAssertions();
+
+        long testsFailedCount = testExecutionSummary.getTestsFailedCount();
+        softAssertions.assertThat(testsFailedCount).isEqualTo(1);
+
+        String testExecutionSummaryAsString = jUnit5FailuresFormatter.formatToStringFrom(testExecutionSummary);
         softAssertions.assertThat(testExecutionSummaryAsString)
-                .contains("cross join detected")
-                .contains("CROSS JOIN") //query cross join
+                      .contains("cross join detected")
+                      .contains("CROSS JOIN") //query cross join
         ;
+
         softAssertions.assertAll();
+
     }
+
 }
