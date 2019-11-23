@@ -21,7 +21,7 @@ import java.util.Collection;
 
 import static org.quickperf.sql.annotation.SqlAnnotationBuilder.disableCrossJoin;
 
-public class QuickPerfConfiguration implements SpecifiableGlobalAnnotations {
+public class QuickPerfConfigurationJUnit4 implements SpecifiableGlobalAnnotations {
 
     public Collection<Annotation> specifyAnnotationsAppliedOnEachTest() {
         return Arrays.asList(disableCrossJoin());

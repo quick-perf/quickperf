@@ -16,8 +16,27 @@ package org.quickperf.sql.join;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
+import org.junit.runner.RunWith;
+import org.quickperf.junit4.QuickPerfJUnitRunner;
+import org.quickperf.sql.SqlTestBaseJUnit4;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 public class GlobalAnnotationJUnit4Test {
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class SqlCrossJoin extends SqlTestBaseJUnit4 {
+
+        @Test
+        public void execute_one_cross_join() {
+            EntityManager entityManager = emf.createEntityManager();
+            String nativeQuery = "SELECT b1.* FROM Book b1 CROSS JOIN Book b2";
+            Query query = entityManager.createNativeQuery(nativeQuery);
+            query.getResultList();
+        }
+
+    }
 
     @Test public void
     should_apply_global_annotation() {
@@ -30,11 +49,15 @@ public class GlobalAnnotationJUnit4Test {
 
         // THEN
         SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount()).isEqualTo(1);
+
+        softAssertions.assertThat(printableResult.failureCount())
+                      .isEqualTo(1);
+
         softAssertions.assertThat(printableResult.toString())
                       .contains("cross join detected")
                       .contains("CROSS JOIN") //query cross join
         ;
+
         softAssertions.assertAll();
 
     }

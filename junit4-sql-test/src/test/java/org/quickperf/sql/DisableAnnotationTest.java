@@ -11,19 +11,21 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.sql.join;
+package org.quickperf.sql;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
+import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
-import org.quickperf.sql.SqlTestBaseJUnit4;
 import org.quickperf.sql.annotation.EnableCrossJoin;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-@RunWith(QuickPerfJUnitRunner.class)
-public class SqlCrossJoin extends SqlTestBaseJUnit4 {
+import static org.junit.experimental.results.PrintableResult.testResult;
+
+public class DisableAnnotationTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
     public static class AClassHavingAMethodAnnotatedWithEnableCrossJoin extends SqlTestBaseJUnit4 {
@@ -39,12 +41,21 @@ public class SqlCrossJoin extends SqlTestBaseJUnit4 {
 
     }
 
-    @Test
-    public void execute_one_cross_join() {
-        EntityManager entityManager = emf.createEntityManager();
-        String nativeQuery = "SELECT b1.* FROM Book b1 CROSS JOIN Book b2";
-        Query query = entityManager.createNativeQuery(nativeQuery);
-        query.getResultList();
+    @Test public void
+    an_annotation_can_disable_another_one() {
+
+        // GIVEN
+        Class<?> testClass = AClassHavingAMethodAnnotatedWithEnableCrossJoin.class;
+        // @DisableCrossJoin is applied to each test (see QuickPerfConfiguration class).
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        SoftAssertions softAssertions = new SoftAssertions();
+        softAssertions.assertThat(printableResult.failureCount()).isEqualTo(0);
+        softAssertions.assertAll();
+
     }
 
 }
