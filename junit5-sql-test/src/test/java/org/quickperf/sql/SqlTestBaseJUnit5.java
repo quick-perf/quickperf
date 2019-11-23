@@ -27,7 +27,7 @@ import java.util.Properties;
 
 import static org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
 
-public class SqlJUnit5TestBase {
+public class SqlTestBaseJUnit5 {
 
     protected EntityManagerFactory emf;
 

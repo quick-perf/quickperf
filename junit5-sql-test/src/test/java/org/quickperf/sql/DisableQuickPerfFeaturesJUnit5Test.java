@@ -20,7 +20,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 public class DisableQuickPerfFeaturesJUnit5Test {
 
     @QuickPerfTest
-    public static class AClassWithAMethodAnnotatedWithDisableQuickPerf extends SqlJUnit5TestBase {
+    public static class AClassWithAMethodAnnotatedWithDisableQuickPerf extends SqlTestBaseJUnit5 {
 
         @DisableQuickPerf
         @ExpectSelect(5)
@@ -54,7 +54,7 @@ public class DisableQuickPerfFeaturesJUnit5Test {
     }
 
     @QuickPerfTest
-    public static class AClassWithAMethodAnnotatedWithFunctionalIteration extends SqlJUnit5TestBase {
+    public static class AClassWithAMethodAnnotatedWithFunctionalIteration extends SqlTestBaseJUnit5 {
 
         @FunctionalIteration
         @ExpectSelect(5)

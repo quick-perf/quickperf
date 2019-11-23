@@ -21,7 +21,7 @@ import java.util.Collections;
 
 import static org.quickperf.sql.annotation.SqlAnnotationBuilder.disableCrossJoin;
 
-public class QuickPerfConfiguration implements SpecifiableGlobalAnnotations {
+public class QuickPerfConfigurationJUnit5 implements SpecifiableGlobalAnnotations {
 
     public Collection<Annotation> specifyAnnotationsAppliedOnEachTest() {
         return Collections.singletonList(disableCrossJoin());

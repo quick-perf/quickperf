@@ -21,8 +21,7 @@ import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.quickperf.junit5.QuickPerfTest;
 import org.quickperf.sql.JUnit5FailuresFormatter;
-import org.quickperf.sql.SqlJUnit5TestBase;
-import org.quickperf.sql.annotation.DisableCrossJoin;
+import org.quickperf.sql.SqlTestBaseJUnit5;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -35,7 +34,7 @@ public class GlobalAnnotationJUnit5Test {
     private final JUnit5FailuresFormatter jUnit5FailuresFormatter = JUnit5FailuresFormatter.INSTANCE;
 
     @QuickPerfTest
-    public static class SqlCrossJoinJUnit5 extends SqlJUnit5TestBase {
+    public static class SqlCrossJoinJUnit5 extends SqlTestBaseJUnit5 {
 
         @Test
         public void fail_to_execute_cross_join() {

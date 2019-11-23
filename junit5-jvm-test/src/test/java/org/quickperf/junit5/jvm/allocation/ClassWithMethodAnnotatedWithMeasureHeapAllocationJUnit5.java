@@ -21,7 +21,7 @@ import org.quickperf.jvm.annotations.MeasureHeapAllocation;
 import java.util.ArrayList;
 
 @QuickPerfTest
-public class ClassWithMethodAnnotatedWithMeasureHeapAllocation {
+public class ClassWithMethodAnnotatedWithMeasureHeapAllocationJUnit5 {
 
     @MeasureHeapAllocation
     @JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers")

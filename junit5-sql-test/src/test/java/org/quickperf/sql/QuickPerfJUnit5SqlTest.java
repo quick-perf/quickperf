@@ -33,7 +33,7 @@ public class QuickPerfJUnit5SqlTest {
     private final JUnit5FailuresFormatter jUnit5FailuresFormatter = JUnit5FailuresFormatter.INSTANCE;
 
     @QuickPerfTest
-    public static class SqlSelectJUnit5 extends SqlJUnit5TestBase {
+    public static class SqlSelectJUnit5 extends SqlTestBaseJUnit5 {
 
         @ExpectSelect(5)
         @Test
