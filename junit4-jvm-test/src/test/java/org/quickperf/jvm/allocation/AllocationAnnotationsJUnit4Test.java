@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.experimental.results.PrintableResult.testResult;
 
-public class AllocationAnnotationsTest {
+public class AllocationAnnotationsJUnit4Test {
 
     @RunWith(QuickPerfJUnitRunner.class)
     public static class ClassWithMethodAnnotatedWithExpectMaxHeapAllocation {

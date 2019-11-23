@@ -27,10 +27,10 @@ import javax.persistence.Query;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MaxSqlSelectTest {
+public class MaxSqlSelectJUnit4Test {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelect extends SqlTestBase {
+    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelect extends SqlTestBaseJUnit4 {
 
         @ExpectMaxSelect(0)
         @Test
@@ -69,7 +69,7 @@ public class MaxSqlSelectTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
     @ExpectMaxSelect(0)
-    public static class AClassAnnotatedWithExpectMaxSelect extends SqlTestBase {
+    public static class AClassAnnotatedWithExpectMaxSelect extends SqlTestBaseJUnit4 {
 
         @Test
         public void execute_one_select_but_no_select_expected() {
@@ -106,7 +106,7 @@ public class MaxSqlSelectTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelectAndHavingNoPerfIssue extends SqlTestBase {
+    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelectAndHavingNoPerfIssue extends SqlTestBaseJUnit4 {
 
         @ExpectMaxSelect(1)
         @Test
@@ -133,7 +133,7 @@ public class MaxSqlSelectTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelectAndWithXmx extends SqlTestBase {
+    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelectAndWithXmx extends SqlTestBaseJUnit4 {
 
         @Xmx(value = 20, unit = AllocationUnit.MEGA_BYTE)
         @ExpectMaxSelect(0)

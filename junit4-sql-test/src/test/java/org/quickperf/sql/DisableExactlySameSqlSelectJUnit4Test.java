@@ -23,10 +23,10 @@ import org.quickperf.sql.annotation.DisableExactlySameSelects;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-public class DisableExactlySameSqlSelectTest {
+public class DisableExactlySameSqlSelectJUnit4Test {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlForDifferentParamValues extends SqlTestBase {
+    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlForDifferentParamValues extends SqlTestBaseJUnit4 {
 
         @Test
         @DisableExactlySameSelects
@@ -84,7 +84,7 @@ public class DisableExactlySameSqlSelectTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithSameParams extends SqlTestBase {
+    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithSameParams extends SqlTestBaseJUnit4 {
 
         @Test
         @DisableExactlySameSelects
@@ -126,7 +126,7 @@ public class DisableExactlySameSqlSelectTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithoutParams extends SqlTestBase {
+    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithoutParams extends SqlTestBaseJUnit4 {
 
         @Test
         @DisableExactlySameSelects
@@ -164,7 +164,7 @@ public class DisableExactlySameSqlSelectTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithInsertQueries extends SqlTestBase {
+    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithInsertQueries extends SqlTestBaseJUnit4 {
 
         @Test
         @DisableExactlySameSelects

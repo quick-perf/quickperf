@@ -23,10 +23,10 @@ import org.quickperf.sql.annotation.ExpectUpdate;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-public class SqlUpdateTest {
+public class SqlUpdateJUnit4Test {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class SqlUpdate extends SqlTestBase {
+    public static class SqlUpdate extends SqlTestBaseJUnit4 {
 
         @ExpectUpdate(5)
         @Test

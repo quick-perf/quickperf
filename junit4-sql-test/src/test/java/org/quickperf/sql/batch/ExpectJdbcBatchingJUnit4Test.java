@@ -17,7 +17,7 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 
-public class ExpectJdbcBatchingTest {
+public class ExpectJdbcBatchingJUnit4Test {
 
     @Test public void
     a_method_annotated_with_jdbc_batches_and_with_batch_size_a_multiple_of_rows_to_insert() {

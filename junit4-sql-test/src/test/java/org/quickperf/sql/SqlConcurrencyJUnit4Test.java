@@ -27,10 +27,10 @@ import javax.persistence.Query;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(ConcurrentTestRunner.class)
-public class SqlConcurrencyTest {
+public class SqlConcurrencyJUnit4Test {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodWithoutSqlPerformanceIssue extends SqlTestBase {
+    public static class AClassHavingAMethodWithoutSqlPerformanceIssue extends SqlTestBaseJUnit4 {
 
         @ExpectSelect(1)
         @Test

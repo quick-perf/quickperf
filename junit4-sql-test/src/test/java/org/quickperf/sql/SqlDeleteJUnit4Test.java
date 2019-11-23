@@ -18,27 +18,25 @@ import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
-import org.quickperf.sql.annotation.ExpectInsert;
+import org.quickperf.sql.annotation.ExpectDelete;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
-public class SqlInsertTest {
+public class SqlDeleteJUnit4Test {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class SqlInsert extends SqlTestBase {
+    public static class SqlDelete extends SqlTestBaseJUnit4 {
 
-        @ExpectInsert(5)
+        @ExpectDelete(5)
         @Test
-        public void execute_one_insert_but_five_inserts_expected() {
+        public void execute_one_delete_but_five_deletes_expected() {
 
             EntityManager em = emf.createEntityManager();
             em.getTransaction().begin();
 
-            Book effectiveJava = new Book();
-            effectiveJava.setIsbn("effectiveJavaIsbn");
-            effectiveJava.setTitle("Effective Java");
-
-            em.persist(effectiveJava);
+            Query query = em.createQuery("DELETE FROM " + Book.class.getCanonicalName());
+            query.executeUpdate();
 
             em.getTransaction().commit();
 
@@ -47,10 +45,10 @@ public class SqlInsertTest {
     }
 
     @Test public void
-    should_fail_if_the_number_of_insert_statements_is_not_equal_to_the_number_expected() {
+    should_fail_if_the_number_of_delete_statements_is_not_equal_to_the_number_expected() {
 
         // GIVEN
-        Class<?> testClass = SqlInsert.class;
+        Class<?> testClass = SqlDelete.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);
@@ -58,14 +56,14 @@ public class SqlInsertTest {
         // THEN
         SoftAssertions softAssertions = new SoftAssertions();
 
-        softAssertions.assertThat(printableResult.failureCount()).isEqualTo(1);
+        softAssertions.assertThat(printableResult.failureCount())
+                      .isEqualTo(1);
 
         softAssertions.assertThat(printableResult.toString())
-                      .contains("Expected number of INSERT statements <5> but is <1>")
-                      .contains("insert")
-                      .contains("into")
-                      .contains("Book")
-                      .contains("isbn, title, id)");
+                      .contains("Expected number of DELETE statements <5> but is <1>")
+                      .contains("delete")
+                      .contains("from")
+                      .contains("Book");
 
         softAssertions.assertAll();
 

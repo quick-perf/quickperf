@@ -16,14 +16,14 @@ package org.quickperf.sql.join;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
-import org.quickperf.sql.SqlTestBase;
+import org.quickperf.sql.SqlTestBaseJUnit4;
 import org.quickperf.sql.annotation.EnableCrossJoin;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 @RunWith(QuickPerfJUnitRunner.class)
-public class AClassHavingAMethodAnnotatedWithEnableCrossJoin extends SqlTestBase {
+public class AClassHavingAMethodAnnotatedWithEnableCrossJoin extends SqlTestBaseJUnit4 {
 
     @EnableCrossJoin
     @Test

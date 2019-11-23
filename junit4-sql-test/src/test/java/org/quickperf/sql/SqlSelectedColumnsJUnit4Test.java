@@ -26,10 +26,10 @@ import org.quickperf.sql.annotation.ExpectSelectedColumn;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-public class SqlSelectedColumnsTest {
+public class SqlSelectedColumnsJUnit4Test {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectSelectedColumn extends SqlTestBase {
+    public static class AClassHavingAMethodAnnotatedWithExpectSelectedColumn extends SqlTestBaseJUnit4 {
 
         @ExpectSelectedColumn(2)
         @Test
@@ -65,7 +65,7 @@ public class SqlSelectedColumnsTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelectedColumn extends SqlTestBase {
+    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelectedColumn extends SqlTestBaseJUnit4 {
 
         @ExpectMaxSelectedColumn(2)
         @Test
@@ -97,7 +97,7 @@ public class SqlSelectedColumnsTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelectedColumnAndWithHeapSize extends SqlTestBase {
+    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelectedColumnAndWithHeapSize extends SqlTestBaseJUnit4 {
 
         @HeapSize(value = 20, unit = AllocationUnit.MEGA_BYTE)
         @ExpectMaxSelectedColumn(2)

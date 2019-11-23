@@ -23,10 +23,10 @@ import org.quickperf.sql.annotation.DisableLikeWithLeadingWildcard;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-public class SqlLikeTest {
+public class SqlLikeJUnit4Test {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableLikeWithLeadingWildcardAndGeneratingLikePercentage extends SqlTestBase {
+    public static class AClassHavingAMethodAnnotatedWithDisableLikeWithLeadingWildcardAndGeneratingLikePercentage extends SqlTestBaseJUnit4 {
 
         @Test
         @DisableLikeWithLeadingWildcard
@@ -62,7 +62,7 @@ public class SqlLikeTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableLikeWithLeadingWildcardAndGeneratingLikeUnderscore extends SqlTestBase {
+    public static class AClassHavingAMethodAnnotatedWithDisableLikeWithLeadingWildcardAndGeneratingLikeUnderscore extends SqlTestBaseJUnit4 {
 
         @Test
         @DisableLikeWithLeadingWildcard

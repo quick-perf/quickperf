@@ -19,7 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
-import org.quickperf.sql.SqlTestBase;
+import org.quickperf.sql.SqlTestBaseJUnit4;
 import org.quickperf.sql.config.TestDataSourceBuilder;
 import org.quickperf.sql.annotation.ExpectJdbcBatching;
 import org.quickperf.sql.Book;
@@ -38,7 +38,7 @@ import static org.quickperf.sql.config.PersistenceUnitInfoBuilder.*;
 import static org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
 
 @RunWith(QuickPerfJUnitRunner.class)
-public class AClassHavingAMethodAnnotatedWithJdbcBatchAndWithBatchSizeAMultipleOfRowsToInsert extends SqlTestBase {
+public class AClassHavingAMethodAnnotatedWithJdbcBatchAndWithBatchSizeAMultipleOfRowsToInsert extends SqlTestBaseJUnit4 {
 
     private static final int BATCH_SIZE = 30;
 

@@ -29,7 +29,7 @@ import java.util.Properties;
 
 import static org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
 
-public class SqlTestBase {
+public class SqlTestBaseJUnit4 {
 
     protected EntityManagerFactory emf;
 

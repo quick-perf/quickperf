@@ -23,10 +23,10 @@ import org.quickperf.sql.annotation.DisableSameSelectTypesWithDifferentParams;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-public class DisableSameSelectTypeTest {
+public class DisableSameSelectTypeJUnit4Test {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableSameSelectTypeWithDifferentParams extends SqlTestBase {
+    public static class AClassHavingAMethodAnnotatedWithDisableSameSelectTypeWithDifferentParams extends SqlTestBaseJUnit4 {
 
         @Test
         @DisableSameSelectTypesWithDifferentParams
@@ -72,7 +72,7 @@ public class DisableSameSelectTypeTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingASameParamsMethodAnnotatedWithDisableSameSelectTypeWithDifferentParams extends SqlTestBase {
+    public static class AClassHavingASameParamsMethodAnnotatedWithDisableSameSelectTypeWithDifferentParams extends SqlTestBaseJUnit4 {
 
         @Test
         @DisableSameSelectTypesWithDifferentParams

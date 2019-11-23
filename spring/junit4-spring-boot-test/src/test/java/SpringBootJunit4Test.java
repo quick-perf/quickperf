@@ -17,7 +17,7 @@ import org.junit.experimental.results.PrintableResult;
 import org.quickperf.spring.springboottest.controller.DetectionOfNPlusOneSelectInWebService;
 import org.quickperf.spring.springboottest.service.DetectionOfNPlusOneSelectInService;
 
-public class SpringBootTest {
+public class SpringBootJunit4Test {
 
     @Test
     public void should_fail_if_select_number_is_greater_than_expected_from_web_service_and_with_test_launched_in_a_dedicated_jvm() {

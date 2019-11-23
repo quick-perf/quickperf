@@ -13,21 +13,25 @@
 
 package org.quickperf.sql;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
+import org.quickperf.annotation.DisableQuickPerf;
+import org.quickperf.annotation.FunctionalIteration;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.sql.annotation.ExpectSelect;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-public class SqlExpectSelectTest {
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class DisableQuickPerfFeaturesJUnit4Test {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectSelect extends SqlTestBase {
+    public static class AClassWithAMethodAnnotatedWithDisableQuickPerf extends SqlTestBaseJUnit4 {
 
+        @DisableQuickPerf
         @ExpectSelect(5)
         @Test
         public void execute_one_select_but_five_select_expected() {
@@ -39,36 +43,26 @@ public class SqlExpectSelectTest {
     }
 
     @Test public void
-    should_fail_if_the_number_of_select_statements_is_not_equal_to_the_number_expected() {
+    disable_quick_perf_annotation_should_disable_quick_perf() {
 
         // GIVEN
-        Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectSelect.class;
+        Class<?> testClass = AClassWithAMethodAnnotatedWithDisableQuickPerf.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-
-        softAssertions.assertThat(printableResult.failureCount())
-            .isEqualTo(1);
-
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("You may think that <5> select statements were sent to the database")
-                      .contains("But in fact <1>...")
-                      .contains("select")
-                      .contains("book0_.id as id1_0");
-
-        softAssertions.assertAll();
+        assertThat(printableResult.failureCount()).isEqualTo(0);
 
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectSelectAndSelectsLessThanExpected extends SqlTestBase {
+    public static class AClassWithAMethodAnnotatedWithFunctionalIteration extends SqlTestBaseJUnit4 {
 
-        @ExpectSelect(2)
+        @FunctionalIteration
+        @ExpectSelect(5)
         @Test
-        public void execute_one_select() {
+        public void execute_one_select_but_five_select_expected() {
             EntityManager em = emf.createEntityManager();
             Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
             query.getResultList();
@@ -77,20 +71,16 @@ public class SqlExpectSelectTest {
     }
 
     @Test public void
-    should_not_display_round_trip_and_n_plus_one_select_messages_if_select_number_less_than_expected() {
+    functional_iteration_annotation_should_disable_quick_perf() {
 
         // GIVEN
-        Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectSelectAndSelectsLessThanExpected.class;
+        Class<?> testClass = AClassWithAMethodAnnotatedWithFunctionalIteration.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.toString())
-                      .doesNotContain("server roundtrips")
-                      .doesNotContain("N+1");
-        softAssertions.assertAll();
+        assertThat(printableResult.failureCount()).isEqualTo(0);
 
     }
 

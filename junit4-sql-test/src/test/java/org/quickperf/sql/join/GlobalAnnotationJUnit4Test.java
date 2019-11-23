@@ -17,7 +17,7 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 
-public class GlobalAnnotationTest {
+public class GlobalAnnotationJUnit4Test {
 
     @Test public void
     should_apply_global_annotation() {

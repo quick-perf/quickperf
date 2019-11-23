@@ -27,7 +27,7 @@ import java.util.List;
 
 import static org.junit.experimental.results.PrintableResult.testResult;
 
-public class JmcTests {
+public class JmcJUnit4Tests {
 
     @RunWith(QuickPerfJUnitRunner.class)
     public static class ClassWithFailingJmcRules {
