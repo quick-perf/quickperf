@@ -18,9 +18,6 @@
     <description>QuickPerf is a testing library for Java providing annotations to quickly evaluate some performance properties.</description>
 
     <url>https://github.com/quick-perf/quickperf</url>
-    <modules>
-        <module>junit5-jvm-test</module>
-    </modules>
 
     <groupId>org.quickperf</groupId>
     <artifactId>quick-perf</artifactId>
