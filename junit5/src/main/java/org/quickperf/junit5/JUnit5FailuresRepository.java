@@ -47,7 +47,7 @@ public class JUnit5FailuresRepository {
         if(!junitFailuresFileExists(workingFolder.getPath())) {
             return null;
         }
-        List<DefaultFailure> failures
+        @SuppressWarnings("unchecked") List<DefaultFailure> failures
                 = (List<DefaultFailure>) objectFileRepository.find(workingFolder.getPath()
                                                                  , fileName);
         return buildThrowable(failures);
