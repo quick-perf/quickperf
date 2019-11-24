@@ -11,7 +11,7 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.sql.conf;
+package org.quickperf.sql.config;
 
 import org.apache.commons.dbcp.BasicDataSource;
 
@@ -38,4 +38,5 @@ public class TestDataSourceBuilder {
         dataSource.setPoolPreparedStatements(true);
         return dataSource;
     }
+
 }

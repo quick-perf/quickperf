@@ -11,7 +11,7 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.sql.conf;
+package org.quickperf.sql.config;
 
 import javax.persistence.SharedCacheMode;
 import javax.persistence.ValidationMode;
@@ -26,7 +26,6 @@ import java.util.Properties;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
-
 public class PersistenceUnitInfoBuilder {
 
     private PersistenceUnitInfoBuilder() {}
