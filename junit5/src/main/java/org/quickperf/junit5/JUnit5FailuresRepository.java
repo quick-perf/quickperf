@@ -21,15 +21,14 @@ import org.quickperf.repository.ObjectFileRepository;
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class JUnit5FailuresRepository {
 
     public static final JUnit5FailuresRepository INSTANCE = new JUnit5FailuresRepository();
 
-    public static JUnit5FailuresRepository getInstance() {
-        return INSTANCE;
-    }
+    private JUnit5FailuresRepository() { }
 
     private final String fileName = "junitFailures.ser";
 
@@ -37,7 +36,9 @@ public class JUnit5FailuresRepository {
 
     void save(String workingFolderPath, List<TestExecutionSummary.Failure> failures) {
         if(!failures.isEmpty()) {
-            List<DefaultFailure> mappedFailures = failures.stream().map(this::mapToDefaultFailure).collect(Collectors.toList());
+            List<DefaultFailure> mappedFailures =  failures.stream()
+                                                  .map(this::mapToDefaultFailure)
+                                                  .collect(toList());
             objectFileRepository.save(workingFolderPath, fileName, mappedFailures);
         }
     }
@@ -47,7 +48,8 @@ public class JUnit5FailuresRepository {
             return null;
         }
         List<DefaultFailure> failures
-                = (List<DefaultFailure>) objectFileRepository.find(workingFolder.getPath(), fileName);
+                = (List<DefaultFailure>) objectFileRepository.find(workingFolder.getPath()
+                                                                 , fileName);
         return buildThrowable(failures);
     }
 
@@ -75,15 +77,17 @@ public class JUnit5FailuresRepository {
 
     /**
      * We had to map to a custom DefaultFailure as the concrete type org.junit.platform.launcher.listeners.MutableTestExecutionSummary.Failure
-     * is not seriaizable
+     * is not serializable.
      */
     private DefaultFailure mapToDefaultFailure(TestExecutionSummary.Failure failure){
         return new DefaultFailure(failure.getTestIdentifier(), failure.getException());
     }
 
     public static class DefaultFailure implements TestExecutionSummary.Failure, Serializable {
-        private TestIdentifier testIdentifier;
-        private Throwable exception;
+
+        private final TestIdentifier testIdentifier;
+
+        private final Throwable exception;
 
         DefaultFailure(TestIdentifier testIdentifier, Throwable exception) {
             this.testIdentifier = testIdentifier;
@@ -95,18 +99,11 @@ public class JUnit5FailuresRepository {
             return testIdentifier;
         }
 
-        public void setTestIdentifier(TestIdentifier testIdentifier) {
-            this.testIdentifier = testIdentifier;
-        }
-
         @Override
         public Throwable getException() {
             return exception;
         }
 
-        public void setException(Throwable exception) {
-            this.exception = exception;
-        }
     }
 
 }
