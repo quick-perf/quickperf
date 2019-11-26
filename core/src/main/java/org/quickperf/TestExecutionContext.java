@@ -52,25 +52,26 @@ public class TestExecutionContext {
 
     private boolean quickPerfDebugMode;
 
-    private JUnitVersion jUnitVersion;
+    private int runnerAllocationOffset;
 
     private TestExecutionContext() {}
 
-    //TODO: RENAME METHOD AND REFACTOR
+    // TODO: RENAME METHOD AND REFACTOR
+    // Used by QuickPerfSpringRunner
     public static TestExecutionContext buildNewJvmFrom(QuickPerfConfigs quickPerfConfigs
-                                                     , Method testMethod
-                                                     , JUnitVersion jUnitVersion) {
+                                                     , Method testMethod) {
         SetOfAnnotationConfigs testAnnotationConfigs = quickPerfConfigs.getTestAnnotationConfigs();
         AnnotationsExtractor annotationsExtractor = AnnotationsExtractor.INSTANCE;
 
         Annotation[] perfAnnotations = annotationsExtractor.extractAnnotationsFor(testMethod, testAnnotationConfigs);
         boolean isTestMethodToBeLaunchedInASpecificJvm = true;
 
+        int runnerAllocationOffset = 0;
         TestExecutionContext testExecutionContext = buildFrom(quickPerfConfigs
                                                             , testAnnotationConfigs
                                                             , perfAnnotations
                                                             , isTestMethodToBeLaunchedInASpecificJvm
-                                                            , jUnitVersion);
+                                                            , runnerAllocationOffset);
 
 
         if(testExecutionContext.jvmOptions == null) {
@@ -86,9 +87,9 @@ public class TestExecutionContext {
 
     }
 
-    public static TestExecutionContext buildFrom(QuickPerfConfigs quickPerfConfigs
-                                               , Method testMethod
-                                               , JUnitVersion jUnitVersion) {
+    public static TestExecutionContext buildFrom( QuickPerfConfigs quickPerfConfigs
+                                                , Method testMethod
+                                                , int runnerAllocationOffset) {
 
         SetOfAnnotationConfigs testAnnotationConfigs = quickPerfConfigs.getTestAnnotationConfigs();
         AnnotationsExtractor annotationsExtractor = AnnotationsExtractor.INSTANCE;
@@ -96,17 +97,20 @@ public class TestExecutionContext {
         Annotation[] perfAnnotations = annotationsExtractor.extractAnnotationsFor(testMethod, testAnnotationConfigs);
         boolean isTestMethodToBeLaunchedInASpecificJvm = testAnnotationConfigs.hasTestMethodToBeLaunchedInASpecificJvmWith(perfAnnotations);
 
-        return buildFrom(quickPerfConfigs, testAnnotationConfigs, perfAnnotations, isTestMethodToBeLaunchedInASpecificJvm, jUnitVersion);
+        return buildFrom(quickPerfConfigs
+                       , testAnnotationConfigs
+                       , perfAnnotations
+                       , isTestMethodToBeLaunchedInASpecificJvm
+                       , runnerAllocationOffset);
     }
 
     private static TestExecutionContext buildFrom(QuickPerfConfigs quickPerfConfigs
-                                               , SetOfAnnotationConfigs testAnnotationConfigs
-                                               , Annotation[] perfAnnotations
-                                               , boolean isTestMethodToBeLaunchedInASpecificJvm
-                                               , JUnitVersion jUnitVersion) {
+                                                , SetOfAnnotationConfigs testAnnotationConfigs
+                                                , Annotation[] perfAnnotations
+                                                , boolean isTestMethodToBeLaunchedInASpecificJvm
+                                                , int runnerAllocationOffset) {
 
         TestExecutionContext testExecutionContext = new TestExecutionContext();
-        testExecutionContext.jUnitVersion = jUnitVersion;
 
         if (quickPerfIsDisabled(perfAnnotations)) {
             testExecutionContext.quickPerfDisabled = true;
@@ -126,6 +130,7 @@ public class TestExecutionContext {
 
         if(isTestMethodToBeLaunchedInASpecificJvm) {
             testExecutionContext.jvmOptions = testAnnotationConfigs.retrieveJvmOptionsFor(perfAnnotations);
+            testExecutionContext.runnerAllocationOffset = runnerAllocationOffset;
         }
 
         testExecutionContext.workingFolder = WorkingFolder.createOrRetrieveWorkingFolder(isTestMethodToBeLaunchedInASpecificJvm);
@@ -222,8 +227,9 @@ public class TestExecutionContext {
         return quickPerfDebugMode;
     }
 
-    public JUnitVersion getjUnitVersion() {
-        return jUnitVersion;
+    public int getRunnerAllocationOffset() {
+        return runnerAllocationOffset;
     }
+
 }
 

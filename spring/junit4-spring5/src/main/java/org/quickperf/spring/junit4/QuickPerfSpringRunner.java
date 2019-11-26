@@ -22,7 +22,6 @@ import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.*;
-import org.quickperf.JUnitVersion;
 import org.quickperf.annotation.FunctionalIteration;
 import org.quickperf.config.library.QuickPerfConfigsLoader;
 import org.quickperf.AnnotationsExtractor;
@@ -42,7 +41,7 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
     // Only used if test method is executed in a dedicated JVM
     private static SpringRunnerWithQuickPerfFeatures QUICK_PERF_SPRING_RUNNER_FOR_SPECIFIC_JVM;
 
-    private SpringRunnerWithQuickPerfFeatures springRunnerWithQuickPerfFunctionalities;
+    private SpringRunnerWithQuickPerfFeatures springRunnerWithQuickPerfFeatures;
 
     private SpringRunnerWithCallableProtectedMethods springRunner;
 
@@ -89,19 +88,20 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
              && !SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
             testExecutionContext = TestExecutionContext.buildNewJvmFrom(quickPerfConfigs
                                                                       , testMethod
-                                                                      , JUnitVersion.JUNIT4);
+            );
             return NO_STATEMENT;
         }
 
+        int runnerAllocationOffset = 0;
         testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs
-                , testMethod
-                , JUnitVersion.JUNIT4);
+                                                            , testMethod
+                                                            , runnerAllocationOffset);
 
         if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
             return QUICK_PERF_SPRING_RUNNER_FOR_SPECIFIC_JVM.methodInvoker(frameworkMethod, test);
         }
 
-        return springRunnerWithQuickPerfFunctionalities.methodInvoker(frameworkMethod, test);
+        return springRunnerWithQuickPerfFeatures.methodInvoker(frameworkMethod, test);
 
     }
 
@@ -117,7 +117,7 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
         if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
             return QUICK_PERF_SPRING_RUNNER_FOR_SPECIFIC_JVM.withBefores(frameworkMethod, testInstance, statement);
         }
-        return springRunnerWithQuickPerfFunctionalities.withBefores(frameworkMethod, testInstance, statement);
+        return springRunnerWithQuickPerfFeatures.withBefores(frameworkMethod, testInstance, statement);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
         }
         // The test method is not executed in a specific JVM and performance properties
         // are evaluated
-        return springRunnerWithQuickPerfFunctionalities.withAfters(frameworkMethod, testInstance, statement);
+        return springRunnerWithQuickPerfFeatures.withAfters(frameworkMethod, testInstance, statement);
     }
 
     @Override
@@ -218,9 +218,9 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
             } else {
                 Method method = frameworkMethod.getMethod();
                 Class<?> testClass = method.getDeclaringClass();
-                this.springRunnerWithQuickPerfFunctionalities =
+                this.springRunnerWithQuickPerfFeatures =
                     SpringRunnerWithQuickPerfFeatures.build(testClass);
-                springRunnerWithQuickPerfFunctionalities.runChild(frameworkMethod, notifier);
+                springRunnerWithQuickPerfFeatures.runChild(frameworkMethod, notifier);
             }
 
         }
@@ -429,7 +429,7 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
             return super.methodBlock(method);
         }
 
-        return springRunnerWithQuickPerfFunctionalities.methodBlock(method);
+        return springRunnerWithQuickPerfFeatures.methodBlock(method);
 
     }
 
@@ -550,7 +550,7 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
         } else if (quickPerfFeaturesAreDisabled){
           springRunner.sort(sorter);
         } else {
-            springRunnerWithQuickPerfFunctionalities.sort(sorter);
+            springRunnerWithQuickPerfFeatures.sort(sorter);
         }
     }
 
@@ -561,7 +561,7 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
         }  else if (quickPerfFeaturesAreDisabled) {
             springRunner.setScheduler(scheduler);
         } else {
-            springRunnerWithQuickPerfFunctionalities.setScheduler(scheduler);
+            springRunnerWithQuickPerfFeatures.setScheduler(scheduler);
         }
     }
 
@@ -573,7 +573,7 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
         if (quickPerfFeaturesAreDisabled) {
             return springRunner.testCount();
         }
-        return springRunnerWithQuickPerfFunctionalities.testCount();
+        return springRunnerWithQuickPerfFeatures.testCount();
     }
 
 }

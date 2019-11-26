@@ -18,11 +18,11 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
-import org.quickperf.JUnitVersion;
 import org.quickperf.config.library.QuickPerfConfigsLoader;
 import org.quickperf.TestExecutionContext;
 import org.quickperf.config.library.QuickPerfConfigs;
 import org.quickperf.SystemProperties;
+import org.quickperf.jvm.JvmVersion;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -35,13 +35,12 @@ public class QuickPerfJUnitRunner extends BlockJUnit4ClassRunner {
         }
     };
 
-    private final QuickPerfConfigs quickPerfConfigs;
+    private final QuickPerfConfigs quickPerfConfigs = QuickPerfConfigsLoader.INSTANCE.loadQuickPerfConfigs();
 
     private TestExecutionContext testExecutionContext;
 
     public QuickPerfJUnitRunner(Class<?> klass) throws InitializationError {
         super(klass);
-        quickPerfConfigs = QuickPerfConfigsLoader.INSTANCE.loadQuickPerfConfigs();
     }
 
     @Override
@@ -58,7 +57,11 @@ public class QuickPerfJUnitRunner extends BlockJUnit4ClassRunner {
     public Statement methodInvoker(FrameworkMethod frameworkMethod, Object test) {
         Method testMethod = frameworkMethod.getMethod();
 
-        testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs, testMethod, JUnitVersion.JUNIT4);
+        int runnerAllocationOffset = findJUnit4AllocationOffset();
+
+        testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs
+                                                            , testMethod
+                                                            , runnerAllocationOffset);
 
         if(testExecutionContext.isQuickPerfDisabled()) {
             return super.methodInvoker(frameworkMethod, test);
@@ -73,6 +76,13 @@ public class QuickPerfJUnitRunner extends BlockJUnit4ClassRunner {
         }
 
         return NO_STATEMENT;
+    }
+
+    private int findJUnit4AllocationOffset() {
+        if (JvmVersion.isGreaterThanOrEqualTo12()) {
+            return 72;
+        }
+        return 40;
     }
 
     @Override

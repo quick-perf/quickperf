@@ -25,8 +25,6 @@ import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.reporter.ConsoleReporter;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
@@ -44,7 +42,10 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) throws Exception {
-        testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs, extensionContext.getRequiredTestMethod(), JUnitVersion.JUNIT5);
+        int junit5AllocationOffset = 40;
+        testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs
+                                                            , extensionContext.getRequiredTestMethod()
+                                                            , junit5AllocationOffset);
     }
 
     @Override
