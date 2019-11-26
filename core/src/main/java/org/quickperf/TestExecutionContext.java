@@ -117,14 +117,10 @@ public class TestExecutionContext {
             return testExecutionContext;
         }
 
-        for (Annotation perfAnnotation : perfAnnotations) {
-            if (perfAnnotation.annotationType().equals(DisplayAppliedAnnotations.class)) {
-                testExecutionContext.quickPerfAnnotationsToBeDisplayed = true;
-            }
-            if (perfAnnotation.annotationType().equals(DebugQuickPerf.class)) {
-                testExecutionContext.quickPerfDebugMode = true;
-            }
-        }
+        testExecutionContext.quickPerfAnnotationsToBeDisplayed
+                = haveQuickPerfAnnotationsToBeDisplayed(perfAnnotations);
+
+        testExecutionContext.quickPerfDebugMode = isQuickPerfDebugMode(perfAnnotations);
 
         testExecutionContext.perfAnnotations = perfAnnotations;
 
@@ -136,7 +132,6 @@ public class TestExecutionContext {
         testExecutionContext.workingFolder = WorkingFolder.createOrRetrieveWorkingFolder(isTestMethodToBeLaunchedInASpecificJvm);
         testExecutionContext.testMethodToBeLaunchedInASpecificJvm = isTestMethodToBeLaunchedInASpecificJvm;
 
-
         ExecutionOrderOfPerfRecorders executionOrderOfPerfRecorders = quickPerfConfigs.getExecutionOrderOfPerfRecorders();
 
         Set<Class<? extends RecordablePerformance>> perfRecorderClasses = testAnnotationConfigs.retrievePerfRecorderClassesFor(perfAnnotations);
@@ -147,6 +142,24 @@ public class TestExecutionContext {
         testExecutionContext.perfRecordersToExecuteAfterTestMethod = executionOrderOfPerfRecorders.sortPerfRecordersAfterTestMethod(perfRecordersToExecute);
 
         return testExecutionContext;
+    }
+
+    private static boolean haveQuickPerfAnnotationsToBeDisplayed(Annotation[] perfAnnotations) {
+        for (Annotation perfAnnotation : perfAnnotations) {
+            if (perfAnnotation.annotationType().equals(DisplayAppliedAnnotations.class)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isQuickPerfDebugMode(Annotation[] perfAnnotations) {
+        for (Annotation perfAnnotation : perfAnnotations) {
+            if (perfAnnotation.annotationType().equals(DebugQuickPerf.class)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean quickPerfIsDisabled(Annotation[] perfAnnotations) {
