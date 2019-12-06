@@ -11,7 +11,7 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.sql.join;
+package org.quickperf.sql;
 
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
