@@ -29,6 +29,8 @@ public class JUnit4FailuresRepository implements RetrievableFailure {
         return INSTANCE;
     }
 
+    private JUnit4FailuresRepository() { }
+
     private final String fileName = "junitFailures.ser";
 
     private final ObjectFileRepository objectFileRepository = ObjectFileRepository.INSTANCE;
