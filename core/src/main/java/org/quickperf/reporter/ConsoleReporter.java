@@ -28,15 +28,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
-public final class ConsoleReporter {
+class ConsoleReporter {
 
-    public static final ConsoleReporter INSTANCE = new ConsoleReporter();
+    static final ConsoleReporter INSTANCE = new ConsoleReporter();
 
     private ConsoleReporter() {}
 
     private static final AnnotationFormatter ANNOTATION_FORMATTER = AnnotationFormatter.INSTANCE;
 
-    public void displayQuickPerfDebugInfos() {
+    void displayQuickPerfDebugInfos() {
 
         ServiceLoader<QuickPerfConfigLoader> serviceLoader = ServiceLoader.load(QuickPerfConfigLoader.class);
         Iterator<QuickPerfConfigLoader> serviceIterator = serviceLoader.iterator();

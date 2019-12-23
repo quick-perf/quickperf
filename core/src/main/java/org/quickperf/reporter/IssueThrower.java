@@ -11,17 +11,21 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf;
+package org.quickperf.reporter;
+
+import org.quickperf.BusinessOrTechnicalIssue;
+import org.quickperf.PerfIssuesToFormat;
+import org.quickperf.ThrowableBuilder;
 
 import java.util.Collection;
 
-public class IssueThrower {
+class IssueThrower {
 
-    public static final IssueThrower INSTANCE = new IssueThrower();
+    static final IssueThrower INSTANCE = new IssueThrower();
 
     private IssueThrower() {}
 
-    public void throwIfNecessary( BusinessOrTechnicalIssue businessOrTechnicalIssue
+    void throwIfNecessary( BusinessOrTechnicalIssue businessOrTechnicalIssue
                                 , Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat
     ) throws Throwable {
 

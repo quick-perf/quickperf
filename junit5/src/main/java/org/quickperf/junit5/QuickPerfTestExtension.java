@@ -22,7 +22,7 @@ import org.quickperf.config.library.QuickPerfConfigs;
 import org.quickperf.config.library.QuickPerfConfigsLoader;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
 import org.quickperf.perfrecording.RecordablePerformance;
-import org.quickperf.reporter.ConsoleReporter;
+import org.quickperf.reporter.QuickPerfReporter;
 import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
 
@@ -34,20 +34,18 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
     private final QuickPerfConfigs quickPerfConfigs =  QuickPerfConfigsLoader.INSTANCE.loadQuickPerfConfigs();
 
-    private final IssueThrower issueThrower = IssueThrower.INSTANCE;
-
     private final NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
 
     private final BusinessOrTechnicalIssueRepository businessOrTechnicalIssueRepository = BusinessOrTechnicalIssueRepository.INSTANCE;
 
-    private final ConsoleReporter consoleReporter = ConsoleReporter.INSTANCE;
-
     private final PerfIssuesEvaluator perfIssuesEvaluator = PerfIssuesEvaluator.INSTANCE;
+
+    private final QuickPerfReporter quickPerfReporter = QuickPerfReporter.INSTANCE;
 
     private TestExecutionContext testExecutionContext;
 
     @Override
-    public void beforeEach(ExtensionContext extensionContext) throws Exception {
+    public void beforeEach(ExtensionContext extensionContext) {
         int junit5AllocationOffset = 40;
         testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs
                                                             , extensionContext.getRequiredTestMethod()
@@ -116,15 +114,10 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
         testExecutionContext.cleanResources();
 
-        if(testExecutionContext.areQuickPerfAnnotationsToBeDisplayed()) {
-            consoleReporter.displayQuickPerfAnnotations(testExecutionContext.getPerfAnnotations());
-        }
+        quickPerfReporter.report(businessOrTechnicalIssue
+                               , groupOfPerfIssuesToFormat
+                               , testExecutionContext);
 
-        if (testExecutionContext.isQuickPerfDebugMode()) {
-            consoleReporter.displayQuickPerfDebugInfos();
-        }
-
-        issueThrower.throwIfNecessary(businessOrTechnicalIssue, groupOfPerfIssuesToFormat);
     }
 
     @SuppressWarnings("deprecation")

@@ -18,7 +18,7 @@ import org.junit.runners.model.Statement;
 import org.quickperf.*;
 import org.quickperf.config.library.QuickPerfConfigs;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
-import org.quickperf.reporter.ConsoleReporter;
+import org.quickperf.reporter.QuickPerfReporter;
 import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
 
@@ -34,15 +34,13 @@ public class MainJvmAfterJUnitStatement extends Statement {
 
     private final Statement junitAfters;
 
-    private final IssueThrower issueThrower = IssueThrower.INSTANCE;
-
     private final NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
 
     private final BusinessOrTechnicalIssueRepository businessOrTechnicalIssueRepository = BusinessOrTechnicalIssueRepository.INSTANCE;
 
     private final PerfIssuesEvaluator perfIssuesEvaluator = PerfIssuesEvaluator.INSTANCE;
 
-    private final ConsoleReporter consoleReporter = ConsoleReporter.INSTANCE;
+    private final QuickPerfReporter quickPerfReporter = QuickPerfReporter.INSTANCE;
 
     public MainJvmAfterJUnitStatement(
               FrameworkMethod frameworkMethod
@@ -80,15 +78,9 @@ public class MainJvmAfterJUnitStatement extends Statement {
 
         testExecutionContext.cleanResources();
 
-        if(testExecutionContext.areQuickPerfAnnotationsToBeDisplayed()) {
-            consoleReporter.displayQuickPerfAnnotations(testExecutionContext.getPerfAnnotations());
-        }
-
-        if (testExecutionContext.isQuickPerfDebugMode()) {
-            consoleReporter.displayQuickPerfDebugInfos();
-        }
-
-        issueThrower.throwIfNecessary(businessOrTechnicalIssue, groupOfPerfIssuesToFormat);
+        quickPerfReporter.report(businessOrTechnicalIssue
+                               , groupOfPerfIssuesToFormat
+                               , testExecutionContext);
 
     }
 
