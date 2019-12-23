@@ -53,19 +53,21 @@ public class ThrowableBuilder {
         return sb.toString();
     }
 
-    public static AssertionError buildFunctionalIssueAndPerfIssuesAssertionError(Throwable businessThrowable, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
+    public static AssertionError buildFunctionalIssueAndPerfIssuesAssertionError(BusinessOrTechnicalIssue businessOrTechnicalIssue, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
 
-        String message = buildBusinessIssueAndPerfIssuesMessage(businessThrowable, groupOfPerfIssuesToFormat);
+        Throwable throwable = businessOrTechnicalIssue.getThrowable();
 
-        AssertionError assertionError = new AssertionError(message, businessThrowable.getCause());
+        String message = buildBusinessIssueAndPerfIssuesMessage(throwable, groupOfPerfIssuesToFormat);
 
-        assertionError.setStackTrace(businessThrowable.getStackTrace());
+        AssertionError assertionError = new AssertionError(message, throwable.getCause());
+
+        assertionError.setStackTrace(throwable.getStackTrace());
 
         return assertionError;
 
     }
 
-    private static String buildBusinessIssueAndPerfIssuesMessage(Throwable exception, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
+    private static String buildBusinessIssueAndPerfIssuesMessage(Throwable throwable, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -81,7 +83,7 @@ public class ThrowableBuilder {
         sb.append(System.lineSeparator());
         sb.append("FUNCTIONAL PROPERTY");
         sb.append(System.lineSeparator());
-        String businessMessage = exception.getMessage();
+        String businessMessage = throwable.getMessage();
         sb.append(businessMessage);
 
         return sb.toString();

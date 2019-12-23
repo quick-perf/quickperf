@@ -17,7 +17,10 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
+import org.quickperf.BusinessOrTechnicalIssue;
+import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuickPerfJunit4Core {
@@ -30,11 +33,15 @@ public class QuickPerfJunit4Core {
 
         Result testResult = runTestMethod(className, methodName);
 
-        List<Failure> failures = testResult.getFailures();
+        List<Failure> jUnit4Failures = testResult.getFailures();
 
-        JUnit4FailuresRepository jUnit4FailuresRepository = JUnit4FailuresRepository.INSTANCE;
+        List<Throwable> jUnit4failuresAsThrowables = convertJUnit4FailuresToThrowables(jUnit4Failures);
 
-        jUnit4FailuresRepository.save(workingFolderPath, failures);
+        BusinessOrTechnicalIssue businessOrTechnicalIssue = BusinessOrTechnicalIssue.buildFrom(jUnit4failuresAsThrowables);
+
+        BusinessOrTechnicalIssueRepository businessOrTechnicalIssueRepository = BusinessOrTechnicalIssueRepository.INSTANCE;
+
+        businessOrTechnicalIssueRepository.save(businessOrTechnicalIssue, workingFolderPath);
 
         // To be sure that tests using Tomcat
         // or Jetty web server will stop
@@ -58,6 +65,15 @@ public class QuickPerfJunit4Core {
         } catch (ClassNotFoundException e) {
             throw new IllegalStateException(className + " class not found", e);
         }
+    }
+
+    private static List<Throwable> convertJUnit4FailuresToThrowables(List<Failure> jUnit4Failures) {
+        List<Throwable> throwables = new ArrayList<>();
+        for (Failure failure : jUnit4Failures) {
+            Throwable throwable = failure.getException();
+            throwables.add(throwable);
+        }
+        return throwables;
     }
 
 }

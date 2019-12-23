@@ -18,22 +18,25 @@ import org.quickperf.measure.PerfMeasure;
 import org.quickperf.perfrecording.PerfRecord;
 import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.perfrecording.ViewablePerfRecordIfPerfIssue;
+import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
 
 public class PerfIssuesEvaluator {
 
+    private final BusinessOrTechnicalIssueRepository businessOrTechnicalIssueRepository = BusinessOrTechnicalIssueRepository.INSTANCE;
+
     private PerfIssuesEvaluator() {}
 
     public static final PerfIssuesEvaluator INSTANCE = new PerfIssuesEvaluator();
 
-    public Collection<PerfIssuesToFormat> evaluatePerfIssues(SetOfAnnotationConfigs testAnnotationConfigs, TestExecutionContext testExecutionContext, RetrievableFailure retrievableFailure) {
+    public Collection<PerfIssuesToFormat> evaluatePerfIssues(SetOfAnnotationConfigs testAnnotationConfigs, TestExecutionContext testExecutionContext) {
         if(testExecutionContext.isQuickPerfDisabled()) {
             return Collections.emptyList();
         }
         Map<Annotation, PerfRecord> perfRecordByAnnotation
-                = buildPerfRecordByAnnotation(testAnnotationConfigs, testExecutionContext, retrievableFailure);
+                = buildPerfRecordByAnnotation(testAnnotationConfigs, testExecutionContext);
 
         Map<Annotation, PerfIssue> perfIssuesByAnnotation
                 = evaluatePerfIssuesByAnnotation(perfRecordByAnnotation, testExecutionContext, testAnnotationConfigs);
@@ -47,14 +50,14 @@ public class PerfIssuesEvaluator {
         return evaluatePerfIssuesByAnnotation(perfMeasureByAnnotation, testAnnotationConfigs);
     }
 
-    private Map<Annotation, PerfRecord> buildPerfRecordByAnnotation(SetOfAnnotationConfigs testAnnotationConfigs, TestExecutionContext testExecutionContext, RetrievableFailure retrievableFailure) {
+    private Map<Annotation, PerfRecord> buildPerfRecordByAnnotation(SetOfAnnotationConfigs testAnnotationConfigs, TestExecutionContext testExecutionContext) {
         Map<Annotation, PerfRecord> perfRecordByAnnotation = new HashMap<>();
         Map<Class<? extends RecordablePerformance>, RecordablePerformance> perfRecorderByPerfRecorderClass = buildPerfRecorderInstanceByPerfRecorderClass(testExecutionContext);
         for (Annotation annotation : testExecutionContext.getPerfAnnotations()) {
             Class<? extends RecordablePerformance> perfRecorderClass = testAnnotationConfigs.retrievePerfRecorderClassFor(annotation);
             RecordablePerformance perfRecorder = perfRecorderByPerfRecorderClass.get(perfRecorderClass);
             if (perfRecorder != null) {
-                PerfRecord perfRecord = findPerfRecord(perfRecorder, testExecutionContext, retrievableFailure);
+                PerfRecord perfRecord = findPerfRecord(perfRecorder, testExecutionContext);
                 perfRecordByAnnotation.put(annotation, perfRecord);
 
             }
@@ -62,14 +65,15 @@ public class PerfIssuesEvaluator {
         return perfRecordByAnnotation;
     }
 
-    private PerfRecord findPerfRecord(RecordablePerformance perfRecorder, TestExecutionContext testExecutionContext, RetrievableFailure retrievableFailure) {
+    private PerfRecord findPerfRecord(RecordablePerformance perfRecorder, TestExecutionContext testExecutionContext) {
         try {
             return perfRecorder.findRecord(testExecutionContext);
         } catch (Exception e) {
             WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
-            Throwable throwableFromTestJvm = retrievableFailure.find(workingFolder);
-            if (throwableFromTestJvm != null) {
-                e.addSuppressed(throwableFromTestJvm);
+            BusinessOrTechnicalIssue businessOrTechnicalIssueFromTestJvm = businessOrTechnicalIssueRepository.findFrom(workingFolder);
+            if (!businessOrTechnicalIssueFromTestJvm.isNone()) {
+                Throwable throwable = businessOrTechnicalIssueFromTestJvm.getThrowable();
+                e.addSuppressed(throwable);
             }
             throw e;
         }

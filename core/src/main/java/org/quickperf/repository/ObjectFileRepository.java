@@ -46,7 +46,7 @@ public class ObjectFileRepository {
     }
 
     private IllegalStateException buildSerializationException(Exception e) {
-        return new IllegalStateException("Unable to save junit4 failures.", e);
+        return new IllegalStateException("Unable to save failures.", e);
     }
 
     public Object find(String workingFolderPath, String fileName) {
@@ -59,7 +59,7 @@ public class ObjectFileRepository {
     }
 
     private IllegalStateException buildDeserializationException(Exception e) {
-        return new IllegalStateException("Unable to deserialize junit4 failures.", e);
+        return new IllegalStateException("Unable to deserialize failures.", e);
     }
 
 }

@@ -21,34 +21,35 @@ public class IssueThrower {
 
     private IssueThrower() {}
 
-    public void throwIfNecessary( Throwable businessThrowable
+    public void throwIfNecessary( BusinessOrTechnicalIssue businessOrTechnicalIssue
                                 , Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat
     ) throws Throwable {
 
-        if (onlyBusinessIssue(businessThrowable, groupOfPerfIssuesToFormat)) {
-            throw businessThrowable;
+        if (onlyBusinessIssue(businessOrTechnicalIssue, groupOfPerfIssuesToFormat)) {
+            throw businessOrTechnicalIssue.getThrowable();
         }
 
-        if (onlyPerfIssues(businessThrowable, groupOfPerfIssuesToFormat)) {
+        if (onlyPerfIssues(businessOrTechnicalIssue, groupOfPerfIssuesToFormat)) {
             throw ThrowableBuilder.buildPerfIssuesAssertionError(groupOfPerfIssuesToFormat);
         }
 
-        if (businessIssue(businessThrowable) && atLeastOnePerfIssue(groupOfPerfIssuesToFormat)) {
-            throw ThrowableBuilder.buildFunctionalIssueAndPerfIssuesAssertionError(businessThrowable
+        if (businessIssue(businessOrTechnicalIssue) && atLeastOnePerfIssue(groupOfPerfIssuesToFormat)) {
+            throw ThrowableBuilder.buildFunctionalIssueAndPerfIssuesAssertionError(businessOrTechnicalIssue
                                                                                  , groupOfPerfIssuesToFormat);
         }
+
     }
 
-    private boolean onlyBusinessIssue(Throwable businessThrowable, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
-        return businessIssue(businessThrowable) && !atLeastOnePerfIssue(groupOfPerfIssuesToFormat);
+    private boolean onlyBusinessIssue(BusinessOrTechnicalIssue businessOrTechnicalIssue, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
+        return businessIssue(businessOrTechnicalIssue) && !atLeastOnePerfIssue(groupOfPerfIssuesToFormat);
     }
 
-    private boolean businessIssue(Throwable businessThrowable) {
-        return businessThrowable != null;
+    private boolean businessIssue(BusinessOrTechnicalIssue businessOrTechnicalIssue) {
+        return !businessOrTechnicalIssue.isNone();
     }
 
-    private boolean onlyPerfIssues(Throwable businessThrowable, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
-        return !businessIssue(businessThrowable) && atLeastOnePerfIssue(groupOfPerfIssuesToFormat);
+    private boolean onlyPerfIssues(BusinessOrTechnicalIssue businessOrTechnicalIssue, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
+        return !businessIssue(businessOrTechnicalIssue) && atLeastOnePerfIssue(groupOfPerfIssuesToFormat);
     }
 
     private boolean atLeastOnePerfIssue(Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {

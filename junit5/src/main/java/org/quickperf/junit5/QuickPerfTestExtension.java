@@ -23,6 +23,7 @@ import org.quickperf.config.library.QuickPerfConfigsLoader;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
 import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.reporter.ConsoleReporter;
+import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
 
 import java.lang.reflect.Method;
@@ -32,10 +33,15 @@ import java.util.List;
 public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInterceptor {
 
     private final QuickPerfConfigs quickPerfConfigs =  QuickPerfConfigsLoader.INSTANCE.loadQuickPerfConfigs();
+
     private final IssueThrower issueThrower = IssueThrower.INSTANCE;
+
     private final NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
-    private final JUnit5FailuresRepository jUnit5FailuresRepository = JUnit5FailuresRepository.INSTANCE;
+
+    private final BusinessOrTechnicalIssueRepository businessOrTechnicalIssueRepository = BusinessOrTechnicalIssueRepository.INSTANCE;
+
     private final ConsoleReporter consoleReporter = ConsoleReporter.INSTANCE;
+
     private final PerfIssuesEvaluator perfIssuesEvaluator = PerfIssuesEvaluator.INSTANCE;
 
     private TestExecutionContext testExecutionContext;
@@ -74,7 +80,8 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
             return;
         }
 
-        Throwable businessThrowable = null;
+        BusinessOrTechnicalIssue businessOrTechnicalIssue = BusinessOrTechnicalIssue.NONE;
+
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
             newJvmTestLauncher.run( invocationContext.getExecutable()
                     , testExecutionContext.getWorkingFolder()
@@ -85,7 +92,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
             invocation.skip();
 
             WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
-            businessThrowable = jUnit5FailuresRepository.find(workingFolder);
+            businessOrTechnicalIssue = businessOrTechnicalIssueRepository.findFrom(workingFolder);
         }
         else {
             try{
@@ -95,7 +102,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
                 invocation.proceed();
             }
             catch (Throwable throwable){
-                businessThrowable = throwable;
+                businessOrTechnicalIssue = BusinessOrTechnicalIssue.buildFrom(throwable);
             }
             finally {
                 if(!testExecutionContext.isQuickPerfDisabled()){
@@ -105,7 +112,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         }
 
         SetOfAnnotationConfigs testAnnotationConfigs = quickPerfConfigs.getTestAnnotationConfigs();
-        Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat = perfIssuesEvaluator.evaluatePerfIssues(testAnnotationConfigs, testExecutionContext, RetrievableFailure.NONE);
+        Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat = perfIssuesEvaluator.evaluatePerfIssues(testAnnotationConfigs, testExecutionContext);
 
         cleanResources();
 
@@ -117,7 +124,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
             consoleReporter.displayQuickPerfDebugInfos();
         }
 
-        issueThrower.throwIfNecessary(businessThrowable, groupOfPerfIssuesToFormat);
+        issueThrower.throwIfNecessary(businessOrTechnicalIssue, groupOfPerfIssuesToFormat);
     }
 
     @SuppressWarnings("deprecation")

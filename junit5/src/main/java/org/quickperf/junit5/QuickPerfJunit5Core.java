@@ -16,14 +16,16 @@ package org.quickperf.junit5;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
+import org.junit.platform.launcher.listeners.TestExecutionSummary.Failure;
+import org.quickperf.BusinessOrTechnicalIssue;
+import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
 
-import org.junit.platform.launcher.core.LauncherFactory;
-
-import java.io.PrintWriter;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 
 public class QuickPerfJunit5Core {
@@ -35,11 +37,17 @@ public class QuickPerfJunit5Core {
 
         TestExecutionSummary testResult = runTestMethod(className, methodName);
 
-        List<TestExecutionSummary.Failure> failures = testResult.getFailures();
+        List<Failure> failures = testResult.getFailures();
 
-        JUnit5FailuresRepository jUnit5FailuresRepository = JUnit5FailuresRepository.INSTANCE;
+        List<Throwable> jUnit5failuresAsThrowables =  failures.stream()
+                                                     .map(Failure::getException)
+                                                     .collect(toList());
 
-        jUnit5FailuresRepository.save(workingFolderPath, failures);
+        BusinessOrTechnicalIssue businessOrTechnicalIssue = BusinessOrTechnicalIssue.buildFrom(jUnit5failuresAsThrowables);
+
+        BusinessOrTechnicalIssueRepository businessOrTechnicalIssueRepository = BusinessOrTechnicalIssueRepository.INSTANCE;
+
+        businessOrTechnicalIssueRepository.save(businessOrTechnicalIssue, workingFolderPath);
 
         // To be sure that tests using Tomcat
         // or Jetty web server will stop

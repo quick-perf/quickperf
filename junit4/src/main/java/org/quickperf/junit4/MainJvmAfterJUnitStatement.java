@@ -20,6 +20,7 @@ import org.quickperf.config.library.QuickPerfConfigs;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
 import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.reporter.ConsoleReporter;
+import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
 
 import java.util.Collection;
@@ -39,7 +40,7 @@ public class MainJvmAfterJUnitStatement extends Statement {
 
     private final NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
 
-    private final JUnit4FailuresRepository jUnit4FailuresRepository = JUnit4FailuresRepository.getInstance();
+    private final BusinessOrTechnicalIssueRepository businessOrTechnicalIssueRepository = BusinessOrTechnicalIssueRepository.INSTANCE;
 
     private final PerfIssuesEvaluator perfIssuesEvaluator = PerfIssuesEvaluator.INSTANCE;
 
@@ -59,7 +60,7 @@ public class MainJvmAfterJUnitStatement extends Statement {
     @Override
     public void evaluate() throws Throwable {
 
-        Throwable businessThrowable = null;
+        BusinessOrTechnicalIssue businessOrTechnicalIssue = BusinessOrTechnicalIssue.NONE;
 
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
             newJvmTestLauncher.run( frameworkMethod.getMethod()
@@ -67,17 +68,17 @@ public class MainJvmAfterJUnitStatement extends Statement {
                                   , testExecutionContext.getJvmOptions()
                                   , QuickPerfJunit4Core.class);
             WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
-            businessThrowable = jUnit4FailuresRepository.find(workingFolder);
+            businessOrTechnicalIssue = businessOrTechnicalIssueRepository.findFrom(workingFolder);
         } else {
             // Run test in same jvm
             try {
                 junitAfters.evaluate();
             } catch (Throwable throwable) {
-                businessThrowable = throwable;
+                businessOrTechnicalIssue = BusinessOrTechnicalIssue.buildFrom(throwable);
             }
         }
 
-        Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat = perfIssuesEvaluator.evaluatePerfIssues(testAnnotationConfigs, testExecutionContext, jUnit4FailuresRepository);
+        Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat = perfIssuesEvaluator.evaluatePerfIssues(testAnnotationConfigs, testExecutionContext);
 
         cleanResources();
 
@@ -89,7 +90,7 @@ public class MainJvmAfterJUnitStatement extends Statement {
             consoleReporter.displayQuickPerfDebugInfos();
         }
 
-        issueThrower.throwIfNecessary(businessThrowable, groupOfPerfIssuesToFormat);
+        issueThrower.throwIfNecessary(businessOrTechnicalIssue, groupOfPerfIssuesToFormat);
 
     }
 
