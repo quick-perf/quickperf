@@ -244,5 +244,11 @@ public class TestExecutionContext {
         return runnerAllocationOffset;
     }
 
+    public void cleanResources() {
+        for (RecordablePerformance perfRecorder : perfRecordersToExecuteAfterTestMethod) {
+            perfRecorder.cleanResources();
+        }
+    }
+
 }
 

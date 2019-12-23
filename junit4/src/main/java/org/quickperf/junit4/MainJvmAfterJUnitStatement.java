@@ -18,13 +18,11 @@ import org.junit.runners.model.Statement;
 import org.quickperf.*;
 import org.quickperf.config.library.QuickPerfConfigs;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
-import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.reporter.ConsoleReporter;
 import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
 
 import java.util.Collection;
-import java.util.List;
 
 public class MainJvmAfterJUnitStatement extends Statement {
 
@@ -80,7 +78,7 @@ public class MainJvmAfterJUnitStatement extends Statement {
 
         Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat = perfIssuesEvaluator.evaluatePerfIssues(testAnnotationConfigs, testExecutionContext);
 
-        cleanResources();
+        testExecutionContext.cleanResources();
 
         if(testExecutionContext.areQuickPerfAnnotationsToBeDisplayed()) {
             consoleReporter.displayQuickPerfAnnotations(testExecutionContext.getPerfAnnotations());
@@ -92,13 +90,6 @@ public class MainJvmAfterJUnitStatement extends Statement {
 
         issueThrower.throwIfNecessary(businessOrTechnicalIssue, groupOfPerfIssuesToFormat);
 
-    }
-
-    private void cleanResources() {
-        List<RecordablePerformance> perfRecorders = testExecutionContext.getPerfRecordersToExecuteAfterTestMethod();
-        for (RecordablePerformance perfRecorder : perfRecorders) {
-            perfRecorder.cleanResources();
-        }
     }
 
 }

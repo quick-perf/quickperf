@@ -114,7 +114,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         SetOfAnnotationConfigs testAnnotationConfigs = quickPerfConfigs.getTestAnnotationConfigs();
         Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat = perfIssuesEvaluator.evaluatePerfIssues(testAnnotationConfigs, testExecutionContext);
 
-        cleanResources();
+        testExecutionContext.cleanResources();
 
         if(testExecutionContext.areQuickPerfAnnotationsToBeDisplayed()) {
             consoleReporter.displayQuickPerfAnnotations(testExecutionContext.getPerfAnnotations());
@@ -146,13 +146,6 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         for (int i = 0; i < perfRecordersToExecuteAfterTestMethod.size() ; i++) {
             RecordablePerformance recordablePerformance = perfRecordersToExecuteAfterTestMethod.get(i);
             recordablePerformance.stopRecording(testExecutionContext);
-        }
-    }
-
-    private void cleanResources() {
-        List<RecordablePerformance> perfRecorders = testExecutionContext.getPerfRecordersToExecuteAfterTestMethod();
-        for (RecordablePerformance perfRecorder : perfRecorders) {
-            perfRecorder.cleanResources();
         }
     }
 
