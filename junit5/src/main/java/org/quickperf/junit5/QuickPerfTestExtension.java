@@ -21,20 +21,19 @@ import org.quickperf.*;
 import org.quickperf.config.library.QuickPerfConfigs;
 import org.quickperf.config.library.QuickPerfConfigsLoader;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
-import org.quickperf.perfrecording.RecordablePerformance;
+import org.quickperf.perfrecording.PerformanceRecording;
 import org.quickperf.reporter.QuickPerfReporter;
 import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.List;
 
 public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInterceptor {
 
     private final QuickPerfConfigs quickPerfConfigs =  QuickPerfConfigsLoader.INSTANCE.loadQuickPerfConfigs();
 
-    private final NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
+    private final PerformanceRecording performanceRecording = PerformanceRecording.INSTANCE;
 
     private final BusinessOrTechnicalIssueRepository businessOrTechnicalIssueRepository = BusinessOrTechnicalIssueRepository.INSTANCE;
 
@@ -56,8 +55,6 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
     public void interceptTestMethod(Invocation<Void> invocation,
                                     ReflectiveInvocationContext<Method> invocationContext,
                                     ExtensionContext extensionContext) throws Throwable {
-        List<RecordablePerformance> perfRecordersToExecuteBeforeTestMethod = testExecutionContext.getPerfRecordersToExecuteBeforeTestMethod();
-        List<RecordablePerformance> perfRecordersToExecuteAfterTestMethod = testExecutionContext.getPerfRecordersToExecuteAfterTestMethod();
 
         if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
             Object[] args = invocationContext.getArguments().toArray();
@@ -65,14 +62,14 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
             Method method = makeAccessible(invocationContext.getExecutable());
             invocation.skip();//skip the invocation as we directly invoke the test method
             if (!testExecutionContext.isQuickPerfDisabled()) {
-                startRecording(perfRecordersToExecuteBeforeTestMethod);
+                performanceRecording.start(testExecutionContext);
             }
             try {
                 //directly invoke the method to lower the interaction between JUnit, other extensions and QuickPerf.
                 method.invoke(target, args);
             } finally {
                 if (!testExecutionContext.isQuickPerfDisabled()) {
-                    stopRecording(perfRecordersToExecuteAfterTestMethod);
+                    performanceRecording.stop(testExecutionContext);
                 }
             }
             return;
@@ -81,6 +78,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         BusinessOrTechnicalIssue businessOrTechnicalIssue = BusinessOrTechnicalIssue.NONE;
 
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
+            NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
             newJvmTestLauncher.run( invocationContext.getExecutable()
                     , testExecutionContext.getWorkingFolder()
                     , testExecutionContext.getJvmOptions()
@@ -95,7 +93,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         else {
             try{
                 if(!testExecutionContext.isQuickPerfDisabled()){
-                    startRecording(perfRecordersToExecuteBeforeTestMethod);
+                    performanceRecording.start(testExecutionContext);
                 }
                 invocation.proceed();
             }
@@ -104,7 +102,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
             }
             finally {
                 if(!testExecutionContext.isQuickPerfDisabled()){
-                    stopRecording(perfRecordersToExecuteAfterTestMethod);
+                    performanceRecording.stop(testExecutionContext);
                 }
             }
         }
@@ -126,20 +124,6 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
             executable.setAccessible(true);
         }
         return executable;
-    }
-
-    private void startRecording(List<RecordablePerformance> perfRecordersToExecuteBeforeTestMethod) {
-        for (int i = 0; i < perfRecordersToExecuteBeforeTestMethod.size(); i++) {
-            RecordablePerformance recordablePerformance = perfRecordersToExecuteBeforeTestMethod.get(i);
-            recordablePerformance.startRecording(testExecutionContext);
-        }
-    }
-
-    private void stopRecording(List<RecordablePerformance> perfRecordersToExecuteAfterTestMethod) {
-        for (int i = 0; i < perfRecordersToExecuteAfterTestMethod.size() ; i++) {
-            RecordablePerformance recordablePerformance = perfRecordersToExecuteAfterTestMethod.get(i);
-            recordablePerformance.stopRecording(testExecutionContext);
-        }
     }
 
 }

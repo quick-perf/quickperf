@@ -16,25 +16,23 @@ package org.quickperf.junit4;
 import org.junit.internal.runners.model.ReflectiveCallable;
 import org.junit.runners.model.FrameworkMethod;
 import org.quickperf.TestExecutionContext;
-import org.quickperf.perfrecording.RecordablePerformance;
+import org.quickperf.perfrecording.PerformanceRecording;
 
 import java.lang.reflect.Method;
-import java.util.List;
 
 public class QuickPerfMethod extends FrameworkMethod {
 
     private final Method method;
-    private final List<RecordablePerformance> perfRecordersToExecuteBeforeTestMethod;
-    private final List<RecordablePerformance> perfRecordersToExecuteAfterTestMethod;
+
     private final TestExecutionContext testExecutionContext;
 
+    private final PerformanceRecording performanceRecording = PerformanceRecording.INSTANCE;
+
     public QuickPerfMethod(Method method
-                         , TestExecutionContext testExecutionContext) {
+            , TestExecutionContext testExecutionContext) {
         super(method);
         this.method = method;
         this.testExecutionContext = testExecutionContext;
-        this.perfRecordersToExecuteBeforeTestMethod = testExecutionContext.getPerfRecordersToExecuteBeforeTestMethod();
-        this.perfRecordersToExecuteAfterTestMethod = testExecutionContext.getPerfRecordersToExecuteAfterTestMethod();
     }
 
     public Object invokeExplosively(final Object target, final Object... params)
@@ -42,28 +40,14 @@ public class QuickPerfMethod extends FrameworkMethod {
         return new ReflectiveCallable() {
             @Override
             protected Object runReflectiveCall() throws Throwable {
-                startRecordings();
+                performanceRecording.start(testExecutionContext);
                 try {
                     return method.invoke(target, params);
                 } finally {
-                    stopRecordings();
+                    performanceRecording.stop(testExecutionContext);
                 }
             }
         }.run();
-    }
-
-    private void startRecordings() {
-        for (int i = 0; i < perfRecordersToExecuteBeforeTestMethod.size(); i++) {
-            RecordablePerformance recordablePerformance = perfRecordersToExecuteBeforeTestMethod.get(i);
-            recordablePerformance.startRecording(testExecutionContext);
-        }
-    }
-
-    private void stopRecordings() {
-        for (int i = 0; i < perfRecordersToExecuteAfterTestMethod.size() ; i++) {
-            RecordablePerformance recordablePerformance = perfRecordersToExecuteAfterTestMethod.get(i);
-            recordablePerformance.stopRecording(testExecutionContext);
-        }
     }
 
 }
