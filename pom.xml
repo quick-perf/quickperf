@@ -166,6 +166,7 @@
                 <module>junit4-sql-test</module>
                 <module>spring</module>
                 <module>junit5</module>
+                <module>junit5-test-util</module>
                 <module>junit5-sql-test</module>
                 <module>junit5-jvm-test</module>
             </modules>

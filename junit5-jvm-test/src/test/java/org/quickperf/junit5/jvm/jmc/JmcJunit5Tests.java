@@ -13,14 +13,9 @@
 
 package org.quickperf.junit5.jvm.jmc;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
-import org.junit.platform.launcher.core.LauncherFactory;
-import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
-import org.junit.platform.launcher.listeners.TestExecutionSummary;
+import org.quickperf.junit5.JUnit5Tests;
+import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
 import org.quickperf.junit5.QuickPerfTest;
 import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.annotations.ExpectNoJvmIssue;
@@ -29,7 +24,7 @@ import org.quickperf.jvm.annotations.HeapSize;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class JmcJunit5Tests {
 
@@ -66,31 +61,18 @@ public class JmcJunit5Tests {
 
         // GIVEN
         Class<?> testClass = ClassWithFailingJmcRules.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
 
         // WHEN
-        TestExecutionSummary printableResult = testResult(testClass);
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.getFailures().size())
-                      .isEqualTo(1);
-        String cause = printableResult.getFailures().get(0).getException().getMessage();
-        softAssertions.assertThat(cause)
-                      .contains("JMC rules are expected to have score less than <50>.")
-                      .contains("Rule: Primitive To Object Conversion");
-        softAssertions.assertAll();
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(1);
 
-    }
+        String errorReport = jUnit5TestsResult.getErrorReport();
+        assertThat(errorReport).contains("JMC rules are expected to have score less than <50>.")
+                               .contains("Rule: Primitive To Object Conversion");
 
-    private TestExecutionSummary testResult(Class<?> testClass) {
-        SummaryGeneratingListener listener = new SummaryGeneratingListener();
-        LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-                .selectors(selectClass(testClass))
-                .build();
-        Launcher launcher = LauncherFactory.create();
-        launcher.registerTestExecutionListeners(listener);
-        launcher.execute(request);
-        return listener.getSummary();
     }
 
 }

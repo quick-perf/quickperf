@@ -13,25 +13,16 @@
 
 package org.quickperf.sql;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.core.LauncherFactory;
-import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
-import org.junit.platform.launcher.listeners.TestExecutionSummary;
+import org.quickperf.junit5.JUnit5Tests;
 import org.quickperf.junit5.QuickPerfTest;
-import org.quickperf.sql.JUnit5FailuresFormatter;
-import org.quickperf.sql.SqlTestBaseJUnit5;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GlobalAnnotationJUnit5Test {
-
-    private final JUnit5FailuresFormatter jUnit5FailuresFormatter = JUnit5FailuresFormatter.INSTANCE;
 
     @QuickPerfTest
     public static class SqlCrossJoinJUnit5 extends SqlTestBaseJUnit5 {
@@ -50,30 +41,19 @@ public class GlobalAnnotationJUnit5Test {
     public void should_apply_global_annotation() {
 
         // GIVEN
-        LauncherDiscoveryRequest request =
-                         request()
-                        .selectors(selectClass(SqlCrossJoinJUnit5.class))
-                        .build();
-        SummaryGeneratingListener summary = new SummaryGeneratingListener();
+        Class<?> testClass = SqlCrossJoinJUnit5.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
 
         // WHEN
-        LauncherFactory.create().execute(request, summary);
+        JUnit5Tests.JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        TestExecutionSummary testExecutionSummary = summary.getSummary();
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(1);
 
-        SoftAssertions softAssertions = new SoftAssertions();
-
-        long testsFailedCount = testExecutionSummary.getTestsFailedCount();
-        softAssertions.assertThat(testsFailedCount).isEqualTo(1);
-
-        String testExecutionSummaryAsString = jUnit5FailuresFormatter.formatToStringFrom(testExecutionSummary);
-        softAssertions.assertThat(testExecutionSummaryAsString)
-                      .contains("cross join detected")
-                      .contains("CROSS JOIN") //query cross join
+        String errorReport = jUnit5TestsResult.getErrorReport();
+        assertThat(errorReport).contains("cross join detected")
+                               .contains("CROSS JOIN") //query cross join
         ;
-
-        softAssertions.assertAll();
 
     }
 

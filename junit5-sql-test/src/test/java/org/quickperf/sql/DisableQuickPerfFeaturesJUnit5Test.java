@@ -1,12 +1,10 @@
 package org.quickperf.sql;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.core.LauncherFactory;
-import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
-import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.quickperf.annotation.DisableQuickPerf;
 import org.quickperf.annotation.FunctionalIteration;
+import org.quickperf.junit5.JUnit5Tests;
+import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
 import org.quickperf.junit5.QuickPerfTest;
 import org.quickperf.sql.annotation.ExpectSelect;
 
@@ -14,8 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 public class DisableQuickPerfFeaturesJUnit5Test {
 
@@ -37,19 +33,14 @@ public class DisableQuickPerfFeaturesJUnit5Test {
     disable_quick_perf_annotation_should_disable_quick_perf() {
 
         // GIVEN
-        LauncherDiscoveryRequest request =
-                         request()
-                        .selectors(selectClass(AClassWithAMethodAnnotatedWithDisableQuickPerf.class))
-                        .build();
-        SummaryGeneratingListener summary = new SummaryGeneratingListener();
+        Class<?> testClass = AClassWithAMethodAnnotatedWithDisableQuickPerf.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
 
         // WHEN
-        LauncherFactory.create().execute(request, summary);
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        TestExecutionSummary testExecutionSummary = summary.getSummary();
-        long testsFailedCount = testExecutionSummary.getTestsFailedCount();
-        assertThat(testsFailedCount).isEqualTo(0);
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(0);
 
     }
 
@@ -71,19 +62,15 @@ public class DisableQuickPerfFeaturesJUnit5Test {
     functional_iteration_annotation_should_disable_quick_perf() {
 
         // GIVEN
-        LauncherDiscoveryRequest request =
-                         request()
-                        .selectors(selectClass(AClassWithAMethodAnnotatedWithFunctionalIteration.class))
-                        .build();
-        SummaryGeneratingListener summary = new SummaryGeneratingListener();
+
+        Class<?> testClass = AClassWithAMethodAnnotatedWithFunctionalIteration.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
 
         // WHEN
-        LauncherFactory.create().execute(request, summary);
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        TestExecutionSummary testExecutionSummary = summary.getSummary();
-        long testsFailedCount = testExecutionSummary.getTestsFailedCount();
-        assertThat(testsFailedCount).isEqualTo(0);
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(0);
 
     }
 

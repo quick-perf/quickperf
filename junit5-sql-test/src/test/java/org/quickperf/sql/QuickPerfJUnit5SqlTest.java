@@ -13,24 +13,18 @@
 
 package org.quickperf.sql;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.core.LauncherFactory;
-import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
-import org.junit.platform.launcher.listeners.TestExecutionSummary;
+import org.quickperf.junit5.JUnit5Tests;
+import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
 import org.quickperf.junit5.QuickPerfTest;
 import org.quickperf.sql.annotation.ExpectSelect;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class QuickPerfJUnit5SqlTest {
-
-    private final JUnit5FailuresFormatter jUnit5FailuresFormatter = JUnit5FailuresFormatter.INSTANCE;
 
     @QuickPerfTest
     public static class SqlSelectJUnit5 extends SqlTestBaseJUnit5 {
@@ -49,36 +43,23 @@ public class QuickPerfJUnit5SqlTest {
     should_fail_if_a_sql_performance_property_is_un_respected() {
 
         // GIVEN
-        LauncherDiscoveryRequest request =
-                 request()
-                .selectors(selectClass(SqlSelectJUnit5.class))
-                .build();
-        SummaryGeneratingListener summary = new SummaryGeneratingListener();
+        Class<?> testClass = SqlSelectJUnit5.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
 
         // WHEN
-        LauncherFactory.create().execute(request, summary);
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        TestExecutionSummary testExecutionSummary = summary.getSummary();
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(1);
 
-        SoftAssertions softAssertions = new SoftAssertions();
-
-        long testsFailedCount = testExecutionSummary.getTestsFailedCount();
-        softAssertions.assertThat(testsFailedCount).isEqualTo(1);
-
-        String testExecutionSummaryAsString = jUnit5FailuresFormatter.formatToStringFrom(testExecutionSummary);
-        softAssertions.assertThat(testExecutionSummaryAsString).contains("You may think that <5> select statements were sent to the database");
-        softAssertions.assertThat(testExecutionSummaryAsString).contains("But in fact <1>...");
-
-        softAssertions.assertThat(testExecutionSummaryAsString)
-                      .contains("select")
-                      .contains("book0_.id")
-                      .contains("from")
-                      .contains("Book book0_");
-
-        softAssertions.assertAll();
+        String errorReport = jUnit5TestsResult.getErrorReport();
+        assertThat(errorReport).contains("You may think that <5> select statements were sent to the database")
+                               .contains("But in fact <1>...")
+                               .contains("select")
+                               .contains("book0_.id")
+                               .contains("from")
+                               .contains("Book book0_");
 
     }
-
 
 }

@@ -13,25 +13,18 @@
 
 package org.quickperf.junit5.jvm.allocation;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
-import org.junit.platform.launcher.core.LauncherFactory;
-import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
-import org.junit.platform.launcher.listeners.TestExecutionSummary;
+import org.quickperf.junit5.JUnit5Tests;
+import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
 import org.quickperf.junit5.QuickPerfTest;
 import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.annotations.ExpectMaxHeapAllocation;
 import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
 import org.quickperf.jvm.annotations.JvmOptions;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
 public class AllocationAnnotationsJUnit5Test {
 
@@ -53,30 +46,17 @@ public class AllocationAnnotationsJUnit5Test {
 
         // GIVEN
         Class<?> testClass = ClassWithMethodAnnotatedWithExpectMaxHeapAllocation.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
 
         // WHEN
-        TestExecutionSummary summary = testResult(testClass);
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(summary.getFailures().size())
-                      .isEqualTo(1);
-        String cause = summary.getFailures().get(0).getException().getMessage();
-        softAssertions.assertThat(cause)
-                      .contains("Expected allocation to be less than 439.0 bytes but is 440.0 bytes");
-        softAssertions.assertAll();
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(1);
 
-    }
+        String errorReport = jUnit5TestsResult.getErrorReport();
+        assertThat(errorReport).contains("Expected allocation to be less than 439.0 bytes but is 440.0 bytes");
 
-    private TestExecutionSummary testResult(Class<?> testClass) {
-        SummaryGeneratingListener listener = new SummaryGeneratingListener();
-        LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-                .selectors(selectClass(testClass))
-                .build();
-        Launcher launcher = LauncherFactory.create();
-        launcher.registerTestExecutionListeners(listener);
-        launcher.execute(request);
-        return listener.getSummary();
     }
 
     @QuickPerfTest()
@@ -97,18 +77,16 @@ public class AllocationAnnotationsJUnit5Test {
 
         // GIVEN
         Class<?> testClass = ClassWithAMethodAllocatingAndAnnotatedWithExpectNoHeapAllocation.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
 
         // WHEN
-        TestExecutionSummary summary = testResult(testClass);
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(summary.getFailures().size())
-                      .isEqualTo(1);
-        String cause = summary.getFailures().get(0).getException().getMessage();
-        softAssertions.assertThat(cause)
-                      .contains("Expected allocation to be 0 but is 440.0 bytes");
-        softAssertions.assertAll();
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(1);
+
+        String errorReport = jUnit5TestsResult.getErrorReport();
+        assertThat(errorReport).contains("Expected allocation to be 0 but is 440.0 bytes");
 
     }
 
@@ -128,12 +106,13 @@ public class AllocationAnnotationsJUnit5Test {
 
         // GIVEN
         Class<?> testClass = ClassWithAMethodNotAllocatingAndAnnotatedWithExpectNoHeapAllocation.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
 
         // WHEN
-        TestExecutionSummary summary = testResult(testClass);
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        assertThat(summary.getFailures().size()).isEqualTo(0);
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(0);
 
     }
 
