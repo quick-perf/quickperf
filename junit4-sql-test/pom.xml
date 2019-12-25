@@ -43,7 +43,6 @@
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-sql-annotations</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.quickperf</groupId>
