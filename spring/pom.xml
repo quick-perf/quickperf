@@ -50,14 +50,6 @@
                 <module>junit4-spring-boot-test</module>
             </modules>
         </profile>
-        <profile>
-            <id>spring-release</id>
-            <modules>
-                <module>junit4-spring3</module>
-                <module>junit4-spring4</module>
-                <module>junit4-spring5</module>
-            </modules>
-        </profile>
     </profiles>
 
 </project>
