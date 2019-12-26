@@ -16,21 +16,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>quick-perf</artifactId>
         <groupId>org.quickperf</groupId>
+        <artifactId>quick-perf-junit5-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>quick-perf-junit5-test-util</artifactId>
-
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <dependencies.max.jdk.version>8</dependencies.max.jdk.version>
-        <junit5.jupiter.version>5.6.0-SNAPSHOT</junit5.jupiter.version>
-        <junit5.platform.version>1.6.0-SNAPSHOT</junit5.platform.version>
-    </properties>
 
     <build>
         <plugins>
