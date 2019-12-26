@@ -13,7 +13,7 @@
 
 package org.quickperf.perfrecording;
 
-import org.quickperf.PerfIssuesFormat;
+import org.quickperf.issue.PerfIssuesFormat;
 
 public interface ViewablePerfRecordIfPerfIssue extends PerfRecord, PerfIssuesFormat {
 

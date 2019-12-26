@@ -13,7 +13,7 @@
 
 package org.quickperf.sql;
 
-import org.quickperf.PerfIssue;
+import org.quickperf.issue.PerfIssue;
 import org.quickperf.unit.Count;
 
 public class SqlStatementPerfIssueBuilder {

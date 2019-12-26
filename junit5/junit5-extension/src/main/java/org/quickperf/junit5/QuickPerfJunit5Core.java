@@ -20,7 +20,7 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.junit.platform.launcher.listeners.TestExecutionSummary.Failure;
-import org.quickperf.BusinessOrTechnicalIssue;
+import org.quickperf.issue.BusinessOrTechnicalIssue;
 import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
 
 import java.util.List;

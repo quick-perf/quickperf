@@ -13,8 +13,8 @@
 
 package org.quickperf.reporter;
 
-import org.quickperf.BusinessOrTechnicalIssue;
-import org.quickperf.PerfIssuesToFormat;
+import org.quickperf.issue.BusinessOrTechnicalIssue;
+import org.quickperf.issue.PerfIssuesToFormat;
 
 import java.util.Collection;
 

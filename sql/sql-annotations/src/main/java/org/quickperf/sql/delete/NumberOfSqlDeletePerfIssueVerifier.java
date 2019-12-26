@@ -13,8 +13,8 @@
 
 package org.quickperf.sql.delete;
 
-import org.quickperf.PerfIssue;
-import org.quickperf.VerifiablePerformanceIssue;
+import org.quickperf.issue.PerfIssue;
+import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectDelete;
 import org.quickperf.unit.Count;
 

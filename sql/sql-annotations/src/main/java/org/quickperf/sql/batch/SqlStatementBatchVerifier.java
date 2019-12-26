@@ -13,8 +13,8 @@
 
 package org.quickperf.sql.batch;
 
-import org.quickperf.PerfIssue;
-import org.quickperf.VerifiablePerformanceIssue;
+import org.quickperf.issue.PerfIssue;
+import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectJdbcBatching;
 
 public class SqlStatementBatchVerifier implements VerifiablePerformanceIssue<ExpectJdbcBatching, SqlBatchSizes> {

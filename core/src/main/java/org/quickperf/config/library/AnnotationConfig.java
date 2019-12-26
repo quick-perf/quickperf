@@ -14,7 +14,7 @@
 package org.quickperf.config.library;
 
 import org.quickperf.ExtractablePerformanceMeasure;
-import org.quickperf.VerifiablePerformanceIssue;
+import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.testlauncher.AnnotationToJvmOptionConverter;
 

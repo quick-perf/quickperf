@@ -16,8 +16,8 @@ package org.quickperf.sql;
 import net.ttddyy.dsproxy.ExecutionInfo;
 import net.ttddyy.dsproxy.QueryInfo;
 import net.ttddyy.dsproxy.QueryType;
-import org.quickperf.PerfIssue;
-import org.quickperf.PerfIssuesFormat;
+import org.quickperf.issue.PerfIssue;
+import org.quickperf.issue.PerfIssuesFormat;
 import org.quickperf.perfrecording.ViewablePerfRecordIfPerfIssue;
 
 import java.io.Serializable;

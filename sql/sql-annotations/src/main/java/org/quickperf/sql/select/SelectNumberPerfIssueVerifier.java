@@ -13,8 +13,8 @@
 
 package org.quickperf.sql.select;
 
-import org.quickperf.PerfIssue;
-import org.quickperf.VerifiablePerformanceIssue;
+import org.quickperf.issue.PerfIssue;
+import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectSelect;
 import org.quickperf.sql.framework.HibernateSuggestion;
 import org.quickperf.sql.framework.JdbcSuggestion;

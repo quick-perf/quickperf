@@ -13,8 +13,8 @@
 
 package org.quickperf.jvm.allocation;
 
-import org.quickperf.PerfIssue;
-import org.quickperf.VerifiablePerformanceIssue;
+import org.quickperf.issue.PerfIssue;
+import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.jvm.annotations.MeasureHeapAllocation;
 
 public class MeasureHeapAllocationPerfVerifier implements VerifiablePerformanceIssue<MeasureHeapAllocation, Allocation> {

@@ -11,27 +11,21 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf;
+package org.quickperf.issue;
 
-import java.util.Collection;
+import org.quickperf.measure.PerfMeasure;
 
-public class PerfIssuesToFormat {
+import java.lang.annotation.Annotation;
 
-    private final Collection<PerfIssue> perfIssues;
+public interface VerifiablePerformanceIssue<A extends Annotation, V extends PerfMeasure> {
 
-    private final PerfIssuesFormat perfIssuesFormat;
+    VerifiablePerformanceIssue NO_VERIFIABLE_PERF_ISSUE = new VerifiablePerformanceIssue() {
+        @Override
+        public PerfIssue verifyPerfIssue(Annotation annotation, PerfMeasure measure) {
+            return PerfIssue.NONE;
+        }
+    };
 
-    public PerfIssuesToFormat(Collection<PerfIssue> perfIssues, PerfIssuesFormat perfIssuesFormat) {
-        this.perfIssues = perfIssues;
-        this.perfIssuesFormat = perfIssuesFormat;
-    }
-
-    public String format() {
-        return perfIssuesFormat.format(perfIssues);
-    }
-
-    public int getNumberOfPerfIssues() {
-        return perfIssues.size();
-    }
+    PerfIssue verifyPerfIssue(A annotation, V measure);
 
 }

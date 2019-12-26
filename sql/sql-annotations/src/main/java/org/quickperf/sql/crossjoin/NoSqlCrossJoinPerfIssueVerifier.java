@@ -13,8 +13,8 @@
 
 package org.quickperf.sql.crossjoin;
 
-import org.quickperf.PerfIssue;
-import org.quickperf.VerifiablePerformanceIssue;
+import org.quickperf.issue.PerfIssue;
+import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.measure.BooleanMeasure;
 import org.quickperf.sql.annotation.DisableCrossJoin;
 

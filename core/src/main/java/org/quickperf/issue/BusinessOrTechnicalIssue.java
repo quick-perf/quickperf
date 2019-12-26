@@ -11,7 +11,7 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf;
+package org.quickperf.issue;
 
 import java.io.Serializable;
 import java.util.List;

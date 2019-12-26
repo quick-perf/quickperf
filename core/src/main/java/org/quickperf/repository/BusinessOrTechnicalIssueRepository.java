@@ -13,7 +13,7 @@
 
 package org.quickperf.repository;
 
-import org.quickperf.BusinessOrTechnicalIssue;
+import org.quickperf.issue.BusinessOrTechnicalIssue;
 import org.quickperf.WorkingFolder;
 
 import java.io.File;

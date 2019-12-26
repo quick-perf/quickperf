@@ -11,8 +11,9 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf;
+package org.quickperf.issue;
 
+import org.quickperf.*;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
 import org.quickperf.measure.PerfMeasure;
 import org.quickperf.perfrecording.PerfRecord;

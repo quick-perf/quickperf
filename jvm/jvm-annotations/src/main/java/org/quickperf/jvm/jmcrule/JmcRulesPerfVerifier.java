@@ -13,8 +13,8 @@
 
 package org.quickperf.jvm.jmcrule;
 
-import org.quickperf.PerfIssue;
-import org.quickperf.VerifiablePerformanceIssue;
+import org.quickperf.issue.PerfIssue;
+import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.jvm.annotations.ExpectNoJvmIssue;
 import org.quickperf.unit.Count;
 
