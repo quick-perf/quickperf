@@ -15,7 +15,6 @@ package org.quickperf.reporter;
 
 import org.quickperf.BusinessOrTechnicalIssue;
 import org.quickperf.PerfIssuesToFormat;
-import org.quickperf.ThrowableBuilder;
 
 import java.util.Collection;
 

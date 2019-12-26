@@ -11,15 +11,18 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf;
+package org.quickperf.reporter;
+
+import org.quickperf.BusinessOrTechnicalIssue;
+import org.quickperf.PerfIssuesToFormat;
 
 import java.util.Collection;
 
-public class ThrowableBuilder {
+class ThrowableBuilder {
 
     private ThrowableBuilder() { }
 
-    public static AssertionError buildPerfIssuesAssertionError(Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
+    static AssertionError buildPerfIssuesAssertionError(Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
         String perfIssuesDescription = numberOfPerfIssuesAsString(groupOfPerfIssuesToFormat)
                                      + convertPerfIssuesToString(groupOfPerfIssuesToFormat);
         AssertionError assertionError = new AssertionError(perfIssuesDescription);
@@ -53,7 +56,7 @@ public class ThrowableBuilder {
         return sb.toString();
     }
 
-    public static AssertionError buildFunctionalIssueAndPerfIssuesAssertionError(BusinessOrTechnicalIssue businessOrTechnicalIssue, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
+    static AssertionError buildFunctionalIssueAndPerfIssuesAssertionError(BusinessOrTechnicalIssue businessOrTechnicalIssue, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
 
         Throwable throwable = businessOrTechnicalIssue.getThrowable();
 
