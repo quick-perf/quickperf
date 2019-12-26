@@ -158,7 +158,7 @@
             </activation>
             <modules>
                 <module>core</module>
-                <module>jvm-annotations</module>
+                <module>jvm</module>
                 <module>sql</module>
                 <module>junit4</module>
                 <module>junit5</module>
@@ -169,7 +169,7 @@
             <id>release</id>
             <modules>
                 <module>core</module>
-                <module>jvm-annotations</module>
+                <module>jvm/jvm-annotations</module>
                 <module>junit4/junit4-runner</module>
                 <module>sql/sql-annotations</module>
                 <module>spring</module>
