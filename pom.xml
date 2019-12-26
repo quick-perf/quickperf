@@ -159,8 +159,7 @@
             <modules>
                 <module>core</module>
                 <module>jvm-annotations</module>
-                <module>sql-annotations</module>
-                <module>sql-test-util</module>
+                <module>sql</module>
                 <module>junit4</module>
                 <module>junit5</module>
                 <module>spring</module>
@@ -172,7 +171,7 @@
                 <module>core</module>
                 <module>jvm-annotations</module>
                 <module>junit4/junit4-runner</module>
-                <module>sql-annotations</module>
+                <module>sql/sql-annotations</module>
                 <module>spring</module>
                 <module>junit5/junit5-extension</module>
             </modules>
