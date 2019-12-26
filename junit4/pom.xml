@@ -12,7 +12,9 @@
   ~ Copyright 2019-2019 the original author or authors.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.quickperf</groupId>
         <artifactId>quick-perf</artifactId>
@@ -20,36 +22,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>quick-perf-junit4</artifactId>
+    <artifactId>quick-perf-junit4-parent</artifactId>
 
-    <properties>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-        <dependencies.max.jdk.version>1.7</dependencies.max.jdk.version>
-        <javadoc-sourceFileIncludes>**\/\QuickPerfJUnitRunner.java</javadoc-sourceFileIncludes>
-    </properties>
+    <packaging>pom</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.quickperf</groupId>
-            <artifactId>quick-perf-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.quickperf</groupId>
-            <artifactId>quick-perf-jvm-annotations</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito.core.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>junit4-runner</module>
+        <module>junit4-jvm-test</module>
+        <module>junit4-sql-test</module>
+    </modules>
+
 </project>
