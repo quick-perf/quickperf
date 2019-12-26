@@ -51,19 +51,21 @@ public class AnnotationsExtractor {
 
     public SpecifiableGlobalAnnotations classSpecifyingGlobalAnnotation(){
 
-        QuickPerfUserConfigClasses quickPerfUserConfigClasses = QuickPerfUserConfigClasses.INSTANCE;
+        Class[] userConfigClasses = findUserConfigClasses();
 
-        Class[] classes;
-        try {
-            classes = quickPerfUserConfigClasses.findClasses();
-        } catch (ClassNotFoundException | IOException e) {
-            throw new IllegalStateException(e);
-        }
-
-        Class classImplementingSpecifiableAnnotations = findClassImplementingSpecifiableAnnotations(classes);
+        Class classImplementingSpecifiableAnnotations = findClassImplementingSpecifiableAnnotations(userConfigClasses);
 
         return instantiateSpecifiableAnnotationsFrom(classImplementingSpecifiableAnnotations);
 
+    }
+
+    private Class[] findUserConfigClasses() {
+        QuickPerfUserConfigClasses quickPerfUserConfigClasses = QuickPerfUserConfigClasses.INSTANCE;
+        try {
+            return quickPerfUserConfigClasses.findClasses();
+        } catch (ClassNotFoundException | IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private Class findClassImplementingSpecifiableAnnotations(Class[] classes) {
