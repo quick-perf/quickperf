@@ -33,9 +33,6 @@ public class PerfIssuesEvaluator {
     public static final PerfIssuesEvaluator INSTANCE = new PerfIssuesEvaluator();
 
     public Collection<PerfIssuesToFormat> evaluatePerfIssues(SetOfAnnotationConfigs testAnnotationConfigs, TestExecutionContext testExecutionContext) {
-        if(testExecutionContext.isQuickPerfDisabled()) {
-            return Collections.emptyList();
-        }
         Map<Annotation, PerfRecord> perfRecordByAnnotation
                 = buildPerfRecordByAnnotation(testAnnotationConfigs, testExecutionContext);
 

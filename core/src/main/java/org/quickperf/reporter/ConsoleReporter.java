@@ -63,7 +63,7 @@ class ConsoleReporter {
         printExecutionOrders(executionOrderListAfter);
     }
 
-    public void displayQuickPerfAnnotations(Annotation[] perfAnnotations) {
+    void displayQuickPerfAnnotations(Annotation[] perfAnnotations) {
 
         List<Annotation> perfAnnotationsWithoutDisplayAppliedAnnotations =
                 removeDisplayAppliedAnnotations(perfAnnotations);

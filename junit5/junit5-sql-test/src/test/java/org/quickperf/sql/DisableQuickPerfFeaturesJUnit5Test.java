@@ -30,7 +30,7 @@ public class DisableQuickPerfFeaturesJUnit5Test {
     }
 
     @Test public void
-    disable_quick_perf_annotation_should_disable_quick_perf() {
+    disable_quick_perf_annotation_should_disable_quick_perf_features() {
 
         // GIVEN
         Class<?> testClass = AClassWithAMethodAnnotatedWithDisableQuickPerf.class;
@@ -59,7 +59,7 @@ public class DisableQuickPerfFeaturesJUnit5Test {
     }
 
     @Test public void
-    functional_iteration_annotation_should_disable_quick_perf() {
+    functional_iteration_annotation_should_disable_quick_perf_features() {
 
         // GIVEN
 

@@ -29,7 +29,7 @@ public class QuickPerfMethod extends FrameworkMethod {
     private final PerformanceRecording performanceRecording = PerformanceRecording.INSTANCE;
 
     public QuickPerfMethod(Method method
-            , TestExecutionContext testExecutionContext) {
+                        , TestExecutionContext testExecutionContext) {
         super(method);
         this.method = method;
         this.testExecutionContext = testExecutionContext;

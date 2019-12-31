@@ -15,19 +15,25 @@ package org.quickperf.junit4;
 
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
-import org.quickperf.*;
+import org.quickperf.TestExecutionContext;
 import org.quickperf.config.library.QuickPerfConfigs;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
 import org.quickperf.issue.BusinessOrTechnicalIssue;
 import org.quickperf.issue.PerfIssuesEvaluator;
 import org.quickperf.issue.PerfIssuesToFormat;
 import org.quickperf.reporter.QuickPerfReporter;
-import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 
 public class MainJvmAfterJUnitStatement extends Statement {
+
+    private final NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
+
+    private final PerfIssuesEvaluator perfIssuesEvaluator = PerfIssuesEvaluator.INSTANCE;
+
+    private final QuickPerfReporter quickPerfReporter = QuickPerfReporter.INSTANCE;
 
     private final FrameworkMethod frameworkMethod;
 
@@ -36,14 +42,6 @@ public class MainJvmAfterJUnitStatement extends Statement {
     private final SetOfAnnotationConfigs testAnnotationConfigs;
 
     private final Statement junitAfters;
-
-    private final NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
-
-    private final BusinessOrTechnicalIssueRepository businessOrTechnicalIssueRepository = BusinessOrTechnicalIssueRepository.INSTANCE;
-
-    private final PerfIssuesEvaluator perfIssuesEvaluator = PerfIssuesEvaluator.INSTANCE;
-
-    private final QuickPerfReporter quickPerfReporter = QuickPerfReporter.INSTANCE;
 
     public MainJvmAfterJUnitStatement(
               FrameworkMethod frameworkMethod
@@ -59,25 +57,11 @@ public class MainJvmAfterJUnitStatement extends Statement {
     @Override
     public void evaluate() throws Throwable {
 
-        BusinessOrTechnicalIssue businessOrTechnicalIssue = BusinessOrTechnicalIssue.NONE;
+        BusinessOrTechnicalIssue businessOrTechnicalIssue = evaluateBusinessOrTechnicalIssue();
 
-        if (testExecutionContext.testExecutionUsesTwoJVMs()) {
-            newJvmTestLauncher.run( frameworkMethod.getMethod()
-                                  , testExecutionContext.getWorkingFolder()
-                                  , testExecutionContext.getJvmOptions()
-                                  , QuickPerfJunit4Core.class);
-            WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
-            businessOrTechnicalIssue = businessOrTechnicalIssueRepository.findFrom(workingFolder);
-        } else {
-            // Run test in same jvm
-            try {
-                junitAfters.evaluate();
-            } catch (Throwable throwable) {
-                businessOrTechnicalIssue = BusinessOrTechnicalIssue.buildFrom(throwable);
-            }
-        }
-
-        Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat = perfIssuesEvaluator.evaluatePerfIssues(testAnnotationConfigs, testExecutionContext);
+        Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat =
+                perfIssuesEvaluator.evaluatePerfIssues(testAnnotationConfigs
+                                                     , testExecutionContext);
 
         testExecutionContext.cleanResources();
 
@@ -85,6 +69,26 @@ public class MainJvmAfterJUnitStatement extends Statement {
                                , groupOfPerfIssuesToFormat
                                , testExecutionContext);
 
+    }
+
+    private BusinessOrTechnicalIssue evaluateBusinessOrTechnicalIssue() {
+        if (testExecutionContext.testExecutionUsesTwoJVMs()) {
+            Method testMethod = frameworkMethod.getMethod();
+            return newJvmTestLauncher.executeTestMethodInNewJwm(testMethod
+                                                              , testExecutionContext
+                                                              , QuickPerfJunit4Core.class);
+
+        }
+        return evaluateInSameJvm(junitAfters);
+    }
+
+    private BusinessOrTechnicalIssue evaluateInSameJvm(Statement junitAfters) {
+        try {
+            junitAfters.evaluate();
+            return BusinessOrTechnicalIssue.NONE;
+        } catch (Throwable throwable) {
+            return BusinessOrTechnicalIssue.buildFrom(throwable);
+        }
     }
 
 }

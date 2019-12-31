@@ -13,67 +13,17 @@
 
 package org.quickperf.junit4;
 
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Request;
-import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
-import org.quickperf.issue.BusinessOrTechnicalIssue;
-import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.quickperf.testlauncher.TestRunnerFromMain;
+import org.quickperf.testlauncher.TestRunnerFromMain.FrameworkTestRunner;
 
 public class QuickPerfJunit4Core {
 
-    public static void main(String... args) {
+    public static void main(String... args) throws ClassNotFoundException {
 
-        String className = args[0];
-        String methodName = args[1];
-        String workingFolderPath = args[2];
+        FrameworkTestRunner jUnit4TestRunner = new JUnit4TestRunner();
 
-        Result testResult = runTestMethod(className, methodName);
+        TestRunnerFromMain.INSTANCE.executeTestMethod(jUnit4TestRunner, args);
 
-        List<Failure> jUnit4Failures = testResult.getFailures();
-
-        List<Throwable> jUnit4failuresAsThrowables = convertJUnit4FailuresToThrowables(jUnit4Failures);
-
-        BusinessOrTechnicalIssue businessOrTechnicalIssue = BusinessOrTechnicalIssue.buildFrom(jUnit4failuresAsThrowables);
-
-        BusinessOrTechnicalIssueRepository businessOrTechnicalIssueRepository = BusinessOrTechnicalIssueRepository.INSTANCE;
-
-        businessOrTechnicalIssueRepository.save(businessOrTechnicalIssue, workingFolderPath);
-
-        // To be sure that tests using Tomcat
-        // or Jetty web server will stop
-        System.exit(0);
-
-    }
-
-    private static Result runTestMethod(String className, String methodName) {
-
-        Class<?> aClass = retrieveClassFrom(className);
-
-        Request junitRequestOfMethod = Request.method(aClass, methodName);
-
-        return new JUnitCore().run(junitRequestOfMethod);
-
-    }
-
-    private static Class<?> retrieveClassFrom(String className) {
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException(className + " class not found", e);
-        }
-    }
-
-    private static List<Throwable> convertJUnit4FailuresToThrowables(List<Failure> jUnit4Failures) {
-        List<Throwable> throwables = new ArrayList<>();
-        for (Failure failure : jUnit4Failures) {
-            Throwable throwable = failure.getException();
-            throwables.add(throwable);
-        }
-        return throwables;
     }
 
 }

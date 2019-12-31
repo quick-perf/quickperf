@@ -15,7 +15,10 @@ package org.quickperf.testlauncher;
 
 import org.apache.commons.io.IOUtils;
 import org.quickperf.SystemProperties;
+import org.quickperf.TestExecutionContext;
 import org.quickperf.WorkingFolder;
+import org.quickperf.issue.BusinessOrTechnicalIssue;
+import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,27 +31,36 @@ public class NewJvmTestLauncher {
 
     public static final NewJvmTestLauncher INSTANCE = new NewJvmTestLauncher();
 
+    private final BusinessOrTechnicalIssueRepository businessOrTechnicalIssueRepository = BusinessOrTechnicalIssueRepository.INSTANCE;
+
     private NewJvmTestLauncher() { }
 
-    public void run(Method testMethod
-                  , WorkingFolder workingFolder
-                  , AllJvmOptions jvmOptions
-                  , Class<?> mainClassToLaunchTestInANewJvm) {
+    public BusinessOrTechnicalIssue executeTestMethodInNewJwm( Method testMethod
+                                                             , TestExecutionContext testExecutionContext
+                                                             , Class<?> mainClassToLaunchTestInANewJvm) {
+        WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
+        AllJvmOptions jvmOptions = testExecutionContext.getJvmOptions();
 
-        String className = retrieveClassNameFrom(testMethod);
-        String methodName = testMethod.getName();
+        executeTestInNewJvm(testMethod, workingFolder, jvmOptions, mainClassToLaunchTestInANewJvm);
+
+        return businessOrTechnicalIssueRepository.findFrom(workingFolder);
+    }
+
+    private void executeTestInNewJvm(Method testMethod
+                                  , WorkingFolder workingFolder
+                                  , AllJvmOptions jvmOptions
+                                  , Class<?> mainClassToLaunchTestInANewJvm) {
+
+        MainClassArguments mainClassArguments = MainClassArguments.buildFrom(testMethod, workingFolder);
 
         List<String> jvmOptionsAsStrings = jvmOptions.asStrings(workingFolder);
 
-        List<String> jvmCommand
-                = buildCommandOfLaunchingJUnitCoreInANewJvm(
-                          className
-                        , methodName
-                        , jvmOptionsAsStrings
-                        , workingFolder.getPath()
-                        , mainClassToLaunchTestInANewJvm);
+        List<String> jvmCommand = buildCommand( mainClassArguments
+                                              , jvmOptionsAsStrings
+                                              , workingFolder.getPath()
+                                              , mainClassToLaunchTestInANewJvm);
 
-        CmdExecutionResult cmdExecutionResult  = tryWith(jvmCommand, workingFolder);
+        CmdExecutionResult cmdExecutionResult  = tryWith(jvmCommand);
 
         System.out.println(cmdExecutionResult.getMessage());
 
@@ -58,33 +70,25 @@ public class NewJvmTestLauncher {
 
     }
 
-    private static List<String> buildCommandOfLaunchingJUnitCoreInANewJvm(
-              String className
-            , String methodName
-            , List<String> jvmParamsAsString
-            , String workingFolderPath
-            , Class<?> mainClassToLaunchTest) {
+    private static List<String> buildCommand(MainClassArguments mainClassArguments
+                                           , List<String> jvmOptionsAsStrings
+                                           , String workingFolderPath
+                                           , Class<?> mainClassToLaunchTest) {
         List<String> command = new ArrayList<>();
         command.add(retrieveJavaExePath());
-        command.addAll(jvmParamsAsString);
+        command.addAll(jvmOptionsAsStrings);
         command.add(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM
-                                .buildForJvm("true")
+                                    .buildForJvm("true")
                    );
         command.add(SystemProperties.WORKING_FOLDER
-                                .buildForJvm(workingFolderPath)
+                                    .buildForJvm(workingFolderPath)
                    );
         command.add("-cp");
         command.add(retrieveCurrentClassPath());
         command.add(mainClassToLaunchTest.getCanonicalName());
-        command.add(className);
-        command.add(methodName);
-        command.add(workingFolderPath);
+        List<String> mainClassArgumentsAsStringList = mainClassArguments.buildMainClassArgumentsForJvmCommand();
+        command.addAll(mainClassArgumentsAsStringList);
         return command;
-    }
-
-    private static String retrieveClassNameFrom(Method method) {
-        Class<?> classOfTestMethod = method.getDeclaringClass();
-        return classOfTestMethod.getName();
     }
 
     private static String retrieveJavaExePath() {
@@ -126,7 +130,7 @@ public class NewJvmTestLauncher {
 
     }
 
-    private static CmdExecutionResult tryWith(List<String> cmd, WorkingFolder workingFolder) {
+    private static CmdExecutionResult tryWith(List<String> cmd) {
 
         try {
             final Process process = new ProcessBuilder(cmd).start();
