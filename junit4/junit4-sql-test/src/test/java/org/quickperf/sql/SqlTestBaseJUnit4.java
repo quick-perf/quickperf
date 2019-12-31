@@ -16,16 +16,17 @@ package org.quickperf.sql;
 import net.ttddyy.dsproxy.support.ProxyDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.junit.Before;
-import org.quickperf.sql.config.HibernateConfigBuilder;
-import org.quickperf.sql.config.PersistenceUnitInfoBuilder;
 import org.quickperf.sql.config.TestDataSourceBuilder;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.spi.PersistenceProvider;
 import javax.persistence.spi.PersistenceUnitInfo;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 import static org.quickperf.sql.config.HibernateConfigBuilder.anHibernateConfig;
 import static org.quickperf.sql.config.PersistenceUnitInfoBuilder.*;
@@ -51,8 +52,16 @@ public class SqlTestBaseJUnit4 {
                                           , Book.class);
     }
 
-    protected Properties getHibernateProperties() {
+    Properties getHibernateProperties() {
         return anHibernateConfig().build();
+    }
+
+    void executeInATransaction(Consumer<EntityManager> toExecuteInATransaction) {
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        toExecuteInATransaction.accept(entityManager);
+        transaction.commit();
     }
 
 }
