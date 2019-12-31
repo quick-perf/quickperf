@@ -27,6 +27,8 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Properties;
 
+import static org.quickperf.sql.config.HibernateConfigBuilder.anHibernateConfig;
+import static org.quickperf.sql.config.PersistenceUnitInfoBuilder.*;
 import static org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
 
 public class SqlTestBaseJUnit4 {
@@ -42,13 +44,15 @@ public class SqlTestBaseJUnit4 {
 
     private PersistenceUnitInfo buildPersistenceUnitInfo() {
         DataSource baseDataSource = TestDataSourceBuilder.aDataSource().build();
-        ProxyDataSource proxyDataSource = aDataSourceBuilder()
-                                          .buildProxy(baseDataSource);
-        Properties hibernateProperties = HibernateConfigBuilder.anHibernateConfig().build();
-        return PersistenceUnitInfoBuilder.aPersistenceUnitInfo()
-                                         .build(   proxyDataSource
-                                                 , hibernateProperties
-                                                 , Book.class);
+        ProxyDataSource proxyDataSource = aDataSourceBuilder().buildProxy(baseDataSource);
+        Properties hibernateProperties = getHibernateProperties();
+        return aPersistenceUnitInfo().build(proxyDataSource
+                                          , hibernateProperties
+                                          , Book.class);
+    }
+
+    protected Properties getHibernateProperties() {
+        return anHibernateConfig().build();
     }
 
 }

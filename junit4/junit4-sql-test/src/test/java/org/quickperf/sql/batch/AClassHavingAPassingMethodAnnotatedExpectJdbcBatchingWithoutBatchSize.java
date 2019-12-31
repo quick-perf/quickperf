@@ -13,54 +13,31 @@
 
 package org.quickperf.sql.batch;
 
-import net.ttddyy.dsproxy.support.ProxyDataSource;
-import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.annotations.HeapSize;
-import org.quickperf.sql.config.TestDataSourceBuilder;
-import org.quickperf.sql.annotation.ExpectJdbcBatching;
 import org.quickperf.sql.Book;
+import org.quickperf.sql.SqlTestBaseJUnit4;
+import org.quickperf.sql.annotation.ExpectJdbcBatching;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.spi.PersistenceProvider;
-import javax.persistence.spi.PersistenceUnitInfo;
-import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.Properties;
 
 import static org.quickperf.sql.config.HibernateConfigBuilder.anHibernateConfig;
-import static org.quickperf.sql.config.PersistenceUnitInfoBuilder.aPersistenceUnitInfo;
-import static org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
 
 @RunWith(QuickPerfJUnitRunner.class)
-public class AClassHavingAPassingMethodAnnotatedExpectJdbcBatchingWithoutBatchSize {
+public class AClassHavingAPassingMethodAnnotatedExpectJdbcBatchingWithoutBatchSize extends SqlTestBaseJUnit4 {
+
     private static final int BATCH_SIZE = 30;
 
-    private EntityManagerFactory emf;
-
-    @Before
-    public void before() {
-        PersistenceProvider persistenceProvider = new HibernatePersistenceProvider();
-        PersistenceUnitInfo info = buildPersistenceUnitInfo();
-        emf = persistenceProvider.createContainerEntityManagerFactory(info, new HashMap<>());
-    }
-
-    private PersistenceUnitInfo buildPersistenceUnitInfo() {
-        DataSource baseDataSource = TestDataSourceBuilder.aDataSource().build();
-        ProxyDataSource proxyDataSource = aDataSourceBuilder()
-                                         .buildProxy(baseDataSource);
-        Properties hibernateProperties = anHibernateConfig()
-                                        .withBatchSize(BATCH_SIZE)
-                                        .build();
-        return aPersistenceUnitInfo().build(  proxyDataSource
-                                            , hibernateProperties
-                                            , Book.class);
+    @Override
+    protected Properties getHibernateProperties() {
+        return   anHibernateConfig()
+                .withBatchSize(30)
+                .build();
     }
 
     @Test
