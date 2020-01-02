@@ -213,4 +213,44 @@ public class ExpectJdbcBatchingWithBatchSizeTest {
 
     }
 
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndWithBatchSizeDifferentFromTheExpectedOne extends SqlTestBase {
+
+        @Override
+        protected Properties getHibernateProperties() {
+            return   anHibernateConfig()
+                    .withBatchSize(20)
+                    .build();
+        }
+
+        @Test
+        @ExpectJdbcBatching(batchSize = 30)
+        public void execute_insert_queries_in_batch_mode_with_batchSize_a_multiple_of_rows_to_insert() {
+
+            executeInATransaction(entityManager -> {
+                for (int i = 0; i < 60; i++) {
+                    Book newBook = new Book();
+                    newBook.setTitle("new book");
+                    if (i % 20 == 0) {
+                        entityManager.flush();
+                        entityManager.clear();
+                    }
+                    entityManager.persist(newBook);
+                }
+            });
+
+        }
+    }
+
+    @Test public void
+    should_fail_if_batch_size_is_not_as_expected() {
+
+        Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndWithBatchSizeDifferentFromTheExpectedOne.class;
+
+        PrintableResult testResult = PrintableResult.testResult(testClass);
+
+        assertThat(testResult.failureCount()).isEqualTo(1);
+        assertThat(testResult.toString()).contains("Expected batch size <30> but is <20>");
+    }
+
 }

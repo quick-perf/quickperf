@@ -107,4 +107,68 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
     }
 
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingOneInsertNotBatched extends SqlTestBase {
+
+        @Test
+        @ExpectJdbcBatching()
+        public void execute_one_insert_not_batched() {
+
+            executeInATransaction(entityManager -> {
+                String firstInsertQueryAsString = "INSERT INTO Book (id, title) VALUES (1200, 'Book title')";
+                Query query = entityManager.createNativeQuery(firstInsertQueryAsString);
+                query.executeUpdate();
+            });
+
+        }
+
+    }
+
+    @Test public void
+    should_fail_with_one_insert_and_no_batch_mode() {
+
+        Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingOneInsertNotBatched.class;
+
+        PrintableResult testResult = PrintableResult.testResult(testClass);
+
+        assertThat(testResult.failureCount()).isEqualTo(1);
+        assertThat(testResult.toString()).contains("SQL executions were supposed to be batched");
+
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingOneInsertBatched extends SqlTestBase {
+
+        @Override
+        protected Properties getHibernateProperties() {
+            return   anHibernateConfig()
+                    .withBatchSize(30)
+                    .build();
+        }
+
+        @Test
+        @ExpectJdbcBatching()
+        public void execute_one_insert_in_batch_mode() {
+
+            executeInATransaction(entityManager -> {
+                Book newBook = new Book();
+                newBook.setTitle("new book");
+                entityManager.persist(newBook);
+            });
+
+        }
+
+    }
+
+    @Test public void
+    should_pass_with_one_insert_and_batch_mode() {
+
+        Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingOneInsertBatched.class;
+
+        PrintableResult testResult = PrintableResult.testResult(testClass);
+
+        assertThat(testResult.failureCount()).isEqualTo(0);
+
+    }
+
 }
