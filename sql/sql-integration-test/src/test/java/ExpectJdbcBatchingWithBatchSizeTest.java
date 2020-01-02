@@ -116,7 +116,7 @@ public class ExpectJdbcBatchingWithBatchSizeTest {
                 firstInsertQuery.executeUpdate();
 
                 String secondInsertQueryAsString = "INSERT INTO Book (id, title) VALUES (1300, 'Book title')";
-                Query secondInsertQuery = entityManager.createQuery(secondInsertQueryAsString);
+                Query secondInsertQuery = entityManager.createNativeQuery(secondInsertQueryAsString);
                 secondInsertQuery.executeUpdate();
             });
 
@@ -132,6 +132,7 @@ public class ExpectJdbcBatchingWithBatchSizeTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.toString()).contains("a performance property is not respected");
 
     }
 
