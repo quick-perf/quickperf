@@ -14,6 +14,7 @@
 package org.quickperf.testng.sql;
 
 import org.quickperf.annotation.DisableQuickPerf;
+import org.quickperf.sql.Book;
 import org.quickperf.sql.annotation.ExpectSelect;
 import org.testng.annotations.Test;
 

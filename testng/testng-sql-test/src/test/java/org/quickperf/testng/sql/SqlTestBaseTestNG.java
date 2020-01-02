@@ -15,10 +15,10 @@ package org.quickperf.testng.sql;
 
 import net.ttddyy.dsproxy.support.ProxyDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.quickperf.sql.Book;
 import org.quickperf.sql.config.HibernateConfigBuilder;
 import org.quickperf.sql.config.PersistenceUnitInfoBuilder;
 import org.quickperf.sql.config.TestDataSourceBuilder;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 
 import javax.persistence.EntityManagerFactory;

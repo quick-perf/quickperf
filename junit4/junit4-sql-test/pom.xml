@@ -53,18 +53,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback-classic.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>com.vmlens</groupId>
             <artifactId>concurrent-junit</artifactId>
             <version>1.0.2</version>
