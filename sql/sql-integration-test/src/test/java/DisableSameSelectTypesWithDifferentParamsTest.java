@@ -11,22 +11,22 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.sql;
-
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
+import org.quickperf.sql.Book;
 import org.quickperf.sql.annotation.DisableSameSelectTypesWithDifferentParams;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-public class DisableSameSelectTypeJUnit4Test {
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class DisableSameSelectTypesWithDifferentParamsTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableSameSelectTypeWithDifferentParams extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithDisableSameSelectTypeWithDifferentParams extends SqlTestBase {
 
         @Test
         @DisableSameSelectTypesWithDifferentParams
@@ -59,20 +59,15 @@ public class DisableSameSelectTypeJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
+        assertThat(printableResult.failureCount()).isEqualTo(1);
 
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("Same SELECT types with different parameters");
-
-        softAssertions.assertAll();
+        assertThat(printableResult.toString())
+                .contains("Same SELECT types with different parameters");
 
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingASameParamsMethodAnnotatedWithDisableSameSelectTypeWithDifferentParams extends SqlTestBaseJUnit4 {
+    public static class AClassHavingASameParamsMethodAnnotatedWithDisableSameSelectTypeWithDifferentParams extends SqlTestBase {
 
         @Test
         @DisableSameSelectTypesWithDifferentParams
@@ -80,7 +75,7 @@ public class DisableSameSelectTypeJUnit4Test {
             EntityManager em = emf.createEntityManager();
 
             String hqlQuery =   " FROM " + Book.class.getCanonicalName() + " b"
-                    + " WHERE b.id=:idParam";
+                              + " WHERE b.id=:idParam";
 
             Query query = em.createQuery(hqlQuery);
             query.setParameter("idParam", 2L);
@@ -104,9 +99,7 @@ public class DisableSameSelectTypeJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount()).isEqualTo(0);
-        softAssertions.assertAll();
+        assertThat(printableResult.failureCount()).isEqualTo(0);
 
     }
 

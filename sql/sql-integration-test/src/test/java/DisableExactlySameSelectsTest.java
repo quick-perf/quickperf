@@ -11,29 +11,30 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.sql;
-
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
+import org.quickperf.sql.Book;
 import org.quickperf.sql.annotation.DisableExactlySameSelects;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-public class DisableExactlySameSqlSelectJUnit4Test {
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class DisableExactlySameSelectsTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlForDifferentParamValues extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlForDifferentParamValues extends SqlTestBase {
 
         @Test
         @DisableExactlySameSelects
         public void execute_two_select_with_different_param_values() {
             EntityManager em = emf.createEntityManager();
 
-            String hqlQuery = "FROM " + Book.class.getCanonicalName() + " b WHERE b.id=:idParam AND b.title=:titleParam";
+            String hqlQuery = "FROM " + Book.class.getCanonicalName()
+                            + " b WHERE b.id=:idParam AND b.title=:titleParam";
 
             Query query1 = em.createQuery(hqlQuery);
             query1.setParameter("idParam", 3L);
@@ -49,7 +50,7 @@ public class DisableExactlySameSqlSelectJUnit4Test {
 
         @Test
         @DisableExactlySameSelects
-        public void execute_two_selects_with_different_params() {
+        public void execute_two_selects_with_different_param_names() {
 
             EntityManager em = emf.createEntityManager();
             String select = "FROM " + Book.class.getCanonicalName() + " b ";
@@ -76,15 +77,12 @@ public class DisableExactlySameSqlSelectJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(0);
-        softAssertions.assertAll();
+        assertThat(printableResult.failureCount()).isEqualTo(0);
 
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithSameParams extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithSameParams extends SqlTestBase {
 
         @Test
         @DisableExactlySameSelects
@@ -116,17 +114,15 @@ public class DisableExactlySameSqlSelectJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-        softAssertions.assertThat(printableResult.toString())
+        assertThat(printableResult.failureCount()).isEqualTo(1);
+
+        assertThat(printableResult.toString())
                       .contains("[PERF] Exactly same SELECT statements");
-        softAssertions.assertAll();
 
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithoutParams extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithoutParams extends SqlTestBase {
 
         @Test
         @DisableExactlySameSelects
@@ -154,17 +150,14 @@ public class DisableExactlySameSqlSelectJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("Exactly same SELECT statements");
-        softAssertions.assertAll();
+        assertThat(printableResult.failureCount()).isEqualTo(1);
+
+        assertThat(printableResult.toString()).contains("Exactly same SELECT statements");
 
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithInsertQueries extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithInsertQueries extends SqlTestBase {
 
         @Test
         @DisableExactlySameSelects
@@ -196,10 +189,7 @@ public class DisableExactlySameSqlSelectJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(0);
-        softAssertions.assertAll();
+        assertThat(printableResult.failureCount()).isEqualTo(0);
 
     }
 

@@ -18,39 +18,31 @@ import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
-import org.quickperf.sql.annotation.ExpectInsert;
+import org.quickperf.sql.SqlTestBaseJUnit4;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
-public class SqlInsertJUnit4Test {
+public class GlobalAnnotationJUnit4Test {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class SqlInsert extends SqlTestBaseJUnit4 {
+    public static class SqlCrossJoin extends SqlTestBaseJUnit4 {
 
-        @ExpectInsert(5)
         @Test
-        public void execute_one_insert_but_five_inserts_expected() {
-
-            EntityManager em = emf.createEntityManager();
-            em.getTransaction().begin();
-
-            Book effectiveJava = new Book();
-            effectiveJava.setIsbn("effectiveJavaIsbn");
-            effectiveJava.setTitle("Effective Java");
-
-            em.persist(effectiveJava);
-
-            em.getTransaction().commit();
-
+        public void execute_one_cross_join() {
+            EntityManager entityManager = emf.createEntityManager();
+            String nativeQuery = "SELECT b1.* FROM Book b1 CROSS JOIN Book b2";
+            Query query = entityManager.createNativeQuery(nativeQuery);
+            query.getResultList();
         }
 
     }
 
     @Test public void
-    should_fail_if_the_number_of_insert_statements_is_not_equal_to_the_number_expected() {
+    should_apply_global_annotation() {
 
         // GIVEN
-        Class<?> testClass = SqlInsert.class;
+        Class<SqlCrossJoin> testClass = SqlCrossJoin.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);
@@ -58,14 +50,13 @@ public class SqlInsertJUnit4Test {
         // THEN
         SoftAssertions softAssertions = new SoftAssertions();
 
-        softAssertions.assertThat(printableResult.failureCount()).isEqualTo(1);
+        softAssertions.assertThat(printableResult.failureCount())
+                      .isEqualTo(1);
 
         softAssertions.assertThat(printableResult.toString())
-                      .contains("Expected number of INSERT statements <5> but is <1>")
-                      .contains("insert")
-                      .contains("into")
-                      .contains("Book")
-                      .contains("isbn, title, id)");
+                      .contains("cross join detected")
+                      .contains("CROSS JOIN") //query cross join
+        ;
 
         softAssertions.assertAll();
 

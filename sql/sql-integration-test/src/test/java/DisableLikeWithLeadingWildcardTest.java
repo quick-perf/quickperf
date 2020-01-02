@@ -11,9 +11,6 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.sql;
-
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
@@ -23,10 +20,12 @@ import org.quickperf.sql.annotation.DisableLikeWithLeadingWildcard;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-public class SqlLikeJUnit4Test {
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class DisableLikeWithLeadingWildcardTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableLikeWithLeadingWildcardAndGeneratingLikePercentage extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithDisableLikeWithLeadingWildcardAndGeneratingLikePercentage extends SqlTestBase {
 
         @Test
         @DisableLikeWithLeadingWildcard
@@ -52,17 +51,15 @@ public class SqlLikeJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("Like with leading wildcard detected (% or _)");
-        softAssertions.assertAll();
+        assertThat(printableResult.failureCount()).isEqualTo(1);
+
+        assertThat(printableResult.toString())
+                .contains("Like with leading wildcard detected (% or _)");
 
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableLikeWithLeadingWildcardAndGeneratingLikeUnderscore extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithDisableLikeWithLeadingWildcardAndGeneratingLikeUnderscore extends SqlTestBase {
 
         @Test
         @DisableLikeWithLeadingWildcard
@@ -88,15 +85,10 @@ public class SqlLikeJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
+        assertThat(printableResult.failureCount()).isEqualTo(1);
 
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("Like with leading wildcard detected (% or _)");
-
-        softAssertions.assertAll();
+        assertThat(printableResult.toString())
+                .contains("Like with leading wildcard detected (% or _)");
 
     }
 

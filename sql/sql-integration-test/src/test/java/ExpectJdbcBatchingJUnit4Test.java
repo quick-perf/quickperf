@@ -11,14 +11,13 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.sql;
-
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.annotations.HeapSize;
+import org.quickperf.sql.Book;
 import org.quickperf.sql.annotation.ExpectJdbcBatching;
 
 import javax.persistence.Query;
@@ -30,7 +29,7 @@ import static org.quickperf.sql.config.HibernateConfigBuilder.anHibernateConfig;
 public class ExpectJdbcBatchingJUnit4Test {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithJdbcBatchAndWithBatchSizeAMultipleOfRowsToInsert extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithJdbcBatchAndWithBatchSizeAMultipleOfRowsToInsert extends SqlTestBase {
 
         private static final int BATCH_SIZE = 30;
 
@@ -73,7 +72,7 @@ public class ExpectJdbcBatchingJUnit4Test {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithJdbcBatchAndWithBatchSizeNOTAMultipleOfRowsToInsert extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithJdbcBatchAndWithBatchSizeNOTAMultipleOfRowsToInsert extends SqlTestBase {
 
         private static final int BATCH_SIZE = 30;
 
@@ -117,7 +116,7 @@ public class ExpectJdbcBatchingJUnit4Test {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingANotBatchedInsertInNewJvm extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingANotBatchedInsertInNewJvm extends SqlTestBase {
 
         private static final int BATCH_SIZE = 30;
 
@@ -155,7 +154,7 @@ public class ExpectJdbcBatchingJUnit4Test {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedExpectJdbcBatchingInNewJvm extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedExpectJdbcBatchingInNewJvm extends SqlTestBase {
 
         private static final int BATCH_SIZE = 30;
 
@@ -198,7 +197,7 @@ public class ExpectJdbcBatchingJUnit4Test {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingANotBatchedInsert extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingANotBatchedInsert extends SqlTestBase {
 
         private static final int BATCH_SIZE = 30;
 
@@ -237,7 +236,7 @@ public class ExpectJdbcBatchingJUnit4Test {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAPassingMethodAnnotatedExpectJdbcBatchingWithoutBatchSize extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAPassingMethodAnnotatedExpectJdbcBatchingWithoutBatchSize extends SqlTestBase {
 
         private static final int BATCH_SIZE = 30;
 
@@ -281,7 +280,7 @@ public class ExpectJdbcBatchingJUnit4Test {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAFailingMethodAnnotatedExpectJdbcBatchingWithoutBatchSize extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAFailingMethodAnnotatedExpectJdbcBatchingWithoutBatchSize extends SqlTestBase {
 
         @Override
         protected Properties getHibernateProperties() {

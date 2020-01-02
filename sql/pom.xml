@@ -29,6 +29,7 @@
     <modules>
         <module>sql-annotations</module>
         <module>sql-test-util</module>
+        <module>sql-integration-test</module>
     </modules>
 
 </project>

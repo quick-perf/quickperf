@@ -11,15 +11,13 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.sql;
-
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.annotations.Xmx;
+import org.quickperf.sql.Book;
 import org.quickperf.sql.annotation.ExpectMaxSelect;
 
 import javax.persistence.EntityManager;
@@ -27,10 +25,10 @@ import javax.persistence.Query;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MaxSqlSelectJUnit4Test {
+public class ExpectMaxSelectTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelect extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelect extends SqlTestBase {
 
         @ExpectMaxSelect(0)
         @Test
@@ -52,24 +50,19 @@ public class MaxSqlSelectJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
+        assertThat(printableResult.failureCount()).isEqualTo(1);
 
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("You may think that at most <0> select statement was sent to the database")
-                      .contains("But in fact <1>...")
-                      .contains("select")
-                      .contains("book0_.id as id1_0_");
-
-        softAssertions.assertAll();
+        assertThat(printableResult.toString())
+                .contains("You may think that at most <0> select statement was sent to the database")
+                .contains("But in fact <1>...")
+                .contains("select")
+                .contains("book0_.id as id1_0_");
 
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
     @ExpectMaxSelect(0)
-    public static class AClassAnnotatedWithExpectMaxSelect extends SqlTestBaseJUnit4 {
+    public static class AClassAnnotatedWithExpectMaxSelect extends SqlTestBase {
 
         @Test
         public void execute_one_select_but_no_select_expected() {
@@ -90,23 +83,18 @@ public class MaxSqlSelectJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
+        assertThat(printableResult.failureCount()).isEqualTo(1);
 
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("You may think that at most <0> select statement was sent to the database")
-                      .contains("But in fact <1>...")
-                      .contains("select")
-                      .contains("book0_.id as id1_0_");
-
-        softAssertions.assertAll();
+        assertThat(printableResult.toString())
+                .contains("You may think that at most <0> select statement was sent to the database")
+                .contains("But in fact <1>...")
+                .contains("select")
+                .contains("book0_.id as id1_0_");
 
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelectAndHavingNoPerfIssue extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelectAndHavingNoPerfIssue extends SqlTestBase {
 
         @ExpectMaxSelect(1)
         @Test
@@ -133,7 +121,7 @@ public class MaxSqlSelectJUnit4Test {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelectAndWithXmx extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelectAndWithXmx extends SqlTestBase {
 
         @Xmx(value = 20, unit = AllocationUnit.MEGA_BYTE)
         @ExpectMaxSelect(0)
@@ -156,17 +144,13 @@ public class MaxSqlSelectJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
+        assertThat(printableResult.failureCount()).isEqualTo(1);
 
-        softAssertions.assertThat(printableResult.failureCount()).isEqualTo(1);
-
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("You may think that at most <0> select statement was sent to the database")
-                      .contains("But in fact <1>...")
-                      .contains("select")
-                      .contains("book0_.id as id1_0");
-
-        softAssertions.assertAll();
+        assertThat(printableResult.toString())
+                .contains("You may think that at most <0> select statement was sent to the database")
+                .contains("But in fact <1>...")
+                .contains("select")
+                .contains("book0_.id as id1_0");
 
     }
 

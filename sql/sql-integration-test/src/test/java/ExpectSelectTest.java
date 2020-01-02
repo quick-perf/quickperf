@@ -11,22 +11,22 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-package org.quickperf.sql;
-
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
+import org.quickperf.sql.Book;
 import org.quickperf.sql.annotation.ExpectSelect;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-public class SqlExpectSelectJUnit4Test {
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class ExpectSelectTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectSelect extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithExpectSelect extends SqlTestBase {
 
         @ExpectSelect(5)
         @Test
@@ -48,23 +48,18 @@ public class SqlExpectSelectJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
+        assertThat(printableResult.failureCount()).isEqualTo(1);
 
-        softAssertions.assertThat(printableResult.failureCount())
-            .isEqualTo(1);
-
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("You may think that <5> select statements were sent to the database")
-                      .contains("But in fact <1>...")
-                      .contains("select")
-                      .contains("book0_.id as id1_0");
-
-        softAssertions.assertAll();
+        assertThat(printableResult.toString())
+                .contains("You may think that <5> select statements were sent to the database")
+                .contains("But in fact <1>...")
+                .contains("select")
+                .contains("book0_.id as id1_0");
 
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectSelectAndSelectsLessThanExpected extends SqlTestBaseJUnit4 {
+    public static class AClassHavingAMethodAnnotatedWithExpectSelectAndSelectsLessThanExpected extends SqlTestBase {
 
         @ExpectSelect(2)
         @Test
@@ -86,11 +81,8 @@ public class SqlExpectSelectJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.toString())
-                      .doesNotContain("server roundtrips")
-                      .doesNotContain("N+1");
-        softAssertions.assertAll();
+        assertThat(printableResult.toString()).doesNotContain("server roundtrips")
+                                              .doesNotContain("N+1");
 
     }
 
