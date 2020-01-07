@@ -30,8 +30,8 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <dependencies.max.jdk.version>8</dependencies.max.jdk.version>
-        <junit5.jupiter.version>5.6.0-SNAPSHOT</junit5.jupiter.version>
-        <junit5.platform.version>1.6.0-SNAPSHOT</junit5.platform.version>
+        <junit5.jupiter.version>5.6.0-RC1</junit5.jupiter.version>
+        <junit5.platform.version>1.6.0-RC1</junit5.platform.version>
     </properties>
 
     <modules>
