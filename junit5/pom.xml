@@ -41,13 +41,4 @@
         <module>junit5-sql-test</module>
     </modules>
 
-    <repositories>
-        <repository>
-            <name>junit-snapshot</name>
-            <id>junit-snapshot</id>
-            <snapshots/>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-    </repositories>
-
 </project>
