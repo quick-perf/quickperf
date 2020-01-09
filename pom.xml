@@ -164,6 +164,7 @@
                 <module>junit5</module>
                 <module>testng</module>
                 <module>spring</module>
+                <module>micronaut</module>
             </modules>
         </profile>
         <profile>

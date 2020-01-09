@@ -13,3 +13,4 @@ out
 
 # NetBeans
 .nbattrs
+micronaut/junit5-micronaut-test/dependency-reduced-pom.xml
