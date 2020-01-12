@@ -26,6 +26,7 @@
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
+        <spring5-version>5.1.8.RELEASE</spring5-version>
     </properties>
 
     <profiles>
@@ -35,6 +36,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
+                <module>sql-spring5</module>
                 <module>junit4-spring3</module>
                 <module>junit4-spring4</module>
                 <module>junit4-spring5</module>
