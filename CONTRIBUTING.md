@@ -42,11 +42,35 @@ To build:
 * Clone the repository: ```git clone https://github.com/quick-perf/quickperf.git```
 
 * Navigate to the *quickperf* repository
-* mvn clean install <br>
+* When Maven is installed locally Run the command mvn clean install <br>
   
   💡 To disable Spring Boot tests: ```mvn clean install -P -SpringBootTests```
   
   💡 To not build Spring modules: ```mvn clean install -P -default-spring,-SpringBootTests```
+
+But with a Maven Wrapper setup, you can instruct users to run wrapper
+scripts:
+
+on Mac and Linux run
+
+```bash
+./mvnw clean install
+```
+
+or on Windows run
+
+```bash
+mvnw.cmd clean install
+```
+
+A normal Maven build will be executed with the one important change that if the
+user doesn't have the necessary version of Maven specified in
+`.mvn/wrapper/maven-wrapper.properties` it will be downloaded for the user
+first, installed and then used.
+
+Subsequent uses of `mvn`/`mvnw.cmd` use the previously downloaded, specific
+version as needed.
+
 
 ## Test several JDK with Docker
 
