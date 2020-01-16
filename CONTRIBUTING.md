@@ -34,35 +34,41 @@ Please rebase your PR on master (no merge). We prefer integrating PR by squashin
 Need some help with Git or Github? Don't worry, you can watch [these videos](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github).
 
 ## Build QuickPerf
-You need the following setup:
-* Maven 3
-* JDK (OpenJDK, ...) >= 11 or Oracle JDK >= 1.8
 
-To build:
-* Clone the repository: ```git clone https://github.com/quick-perf/quickperf.git```
+### JDK requirements
+You need a JDK (OpenJDK, ...) >= 11 or an Oracle JDK >= 1.8.
 
-* Navigate to the *quickperf* repository
-* When Maven is installed locally Run the command mvn clean install <br>
-  
+### Steps to build QuickPerf
+1) Clone the repository
+ 
+   Execute ```git clone https://github.com/quick-perf/quickperf.git```.
+
+2) Navigate to the *quickperf* repository
+
+3) Build QuickPerf with Maven
+
+<<<<<<< HEAD
+=======
+    1. Use Maven installed locally
+    
+       You need Maven 3. 
+       
+       Execute ```mvn clean install```.
+   
+   2. Use a Maven wrapper
+   
+      The QuickPerf repository includes *Maven Wrapper* scripts (./mvnw or mvnw.bat) to build QuickPerf without having to install Maven locally.
+
+      On Mac or Linux run ```./mvnw clean install```.
+
+      On Windows run ```mvnw.cmd clean install```.
+        
+### Tips
   💡 To disable Spring Boot tests: ```mvn clean install -P -SpringBootTests```
   
   💡 To not build Spring modules: ```mvn clean install -P -default-spring,-SpringBootTests```
 
-But with a Maven Wrapper setup, you can instruct users to run wrapper
-scripts:
-
-on Mac and Linux run
-
-```bash
-./mvnw clean install
-```
-
-or on Windows run
-
-```bash
-mvnw.cmd clean install
-```
-
+>>>>>>> 96fe354661e138896d75ad2239a92809c4ea55ba
 ## Test several JDK with Docker
 
 To quickly test multiple linux openjdk locally, you can execute the following command line:
