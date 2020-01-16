@@ -63,15 +63,6 @@ or on Windows run
 mvnw.cmd clean install
 ```
 
-A normal Maven build will be executed with the one important change that if the
-user doesn't have the necessary version of Maven specified in
-`.mvn/wrapper/maven-wrapper.properties` it will be downloaded for the user
-first, installed and then used.
-
-Subsequent uses of `mvn`/`mvnw.cmd` use the previously downloaded, specific
-version as needed.
-
-
 ## Test several JDK with Docker
 
 To quickly test multiple linux openjdk locally, you can execute the following command line:
