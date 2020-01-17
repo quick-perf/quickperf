@@ -65,6 +65,10 @@ public class SqlExecution implements Externalizable {
 
     private long retrieveNumberOfReturnedColumns(ExecutionInfo executionInfo) {
         ResultSet resultSet = (ResultSet) executionInfo.getResult();
+        if(resultSet == null){
+            //FIXME this is needed for the prototype that uses P6spy
+            return 0;
+        }
         try {
             return resultSet.getMetaData().getColumnCount();
         } catch (SQLException e) {
