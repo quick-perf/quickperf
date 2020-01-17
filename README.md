@@ -79,7 +79,7 @@ Perhaps you are facing a N+1 select issue
 		@EntityGraph(attributePaths = { "..." }) on repository method.
 ```
 
-📙 [All the SQL annotations](https://github.com/quick-perf/doc/wiki/SQL-annotations) &nbsp;&nbsp; :mag_right: [QuickPerf in a Spring Boot project: repository, service, webservice](https://github.com/quick-perf/springboot-junit4-examples)
+📙 [All the SQL annotations](https://github.com/quick-perf/doc/wiki/SQL-annotations) &nbsp;&nbsp; :mag_right: [Spring Boot and Micronaut examples](https://github.com/quick-perf/quickperf-examples)
 
 ### View Devoxx Belgium talk
 [![Devoxx Belgium talk](https://github.com/quick-perf/doc/blob/master/doc/images/Devoxx-Belgium.jpg?raw=true)](https://youtu.be/cEkoJL09kKI?t=5)
