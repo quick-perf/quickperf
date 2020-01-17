@@ -47,7 +47,6 @@ You need a JDK (OpenJDK, ...) >= 11 or an Oracle JDK >= 1.8.
 
 3) Build QuickPerf with Maven
 
-<<<<<<< HEAD
 =======
     1. Use Maven installed locally
     
@@ -68,7 +67,6 @@ You need a JDK (OpenJDK, ...) >= 11 or an Oracle JDK >= 1.8.
   
   💡 To not build Spring modules: ```mvn clean install -P -default-spring,-SpringBootTests```
 
->>>>>>> 96fe354661e138896d75ad2239a92809c4ea55ba
 ## Test several JDK with Docker
 
 To quickly test multiple linux openjdk locally, you can execute the following command line:
