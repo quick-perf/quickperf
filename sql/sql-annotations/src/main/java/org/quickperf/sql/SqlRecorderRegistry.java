@@ -24,7 +24,7 @@ public class SqlRecorderRegistry {
 
     private final Collection<SqlRecorder> sqlRecordersOfTestJvm = new ArrayList<>();
 
-    private static final ThreadLocal<Collection<SqlRecorder>> SQL_RECORDERS_WHEN_ONE_JVM = new ThreadLocal<Collection<SqlRecorder>>() {
+    private static final InheritableThreadLocal<Collection<SqlRecorder>> SQL_RECORDERS_WHEN_ONE_JVM = new InheritableThreadLocal<Collection<SqlRecorder>>() {
         @Override
         protected Collection<SqlRecorder> initialValue() {
             return new ArrayList<>();
