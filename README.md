@@ -197,7 +197,16 @@ Many thanks to all our contributors!
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=gaurav9822" title="Tests">⚠</a>
-        </td>    
+        </td>
+        <td align="center">           
+            <a href="https://github.com/rdm100">
+                <img src="https://avatars2.githubusercontent.com/u/19872359?v=4" width="100px;" alt="rdm100"/>
+                <br/>
+                <sub><b>rdm100</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=rdm100" title="Documentation">📖</a>
+        </td>       
     </tr>
 </table>
 <a href = "https://allcontributors.org/docs/en/emoji-key">emoji key</a>
