@@ -38,7 +38,7 @@
         <dependency>
             <groupId>net.ttddyy</groupId>
             <artifactId>datasource-proxy</artifactId>
-            <version>1.4.10</version>
+            <version>1.6</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
