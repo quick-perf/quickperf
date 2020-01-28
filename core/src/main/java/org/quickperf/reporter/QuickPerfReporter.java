@@ -17,7 +17,10 @@ import org.quickperf.issue.BusinessOrTechnicalIssue;
 import org.quickperf.issue.PerfIssuesToFormat;
 import org.quickperf.TestExecutionContext;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class QuickPerfReporter {
 
@@ -36,7 +39,8 @@ public class QuickPerfReporter {
             consoleReporter.displayQuickPerfAnnotations(testExecutionContext.getPerfAnnotations());
         }
         if (testExecutionContext.isQuickPerfDebugMode()) {
-            consoleReporter.displayQuickPerfDebugInfos();
+            List<String> jvmOptions = testExecutionContext.getJvmOptions() == null ? new ArrayList<String>() : testExecutionContext.getJvmOptions().asStrings(testExecutionContext.getWorkingFolder());
+            consoleReporter.displayQuickPerfDebugInfos(jvmOptions);
         }
         issueThrower.throwIfNecessary(businessOrTechnicalIssue, groupOfPerfIssuesToFormat);
     }
