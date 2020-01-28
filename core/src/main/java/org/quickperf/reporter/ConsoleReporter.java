@@ -36,7 +36,7 @@ class ConsoleReporter {
 
     private static final AnnotationFormatter ANNOTATION_FORMATTER = AnnotationFormatter.INSTANCE;
 
-    void displayQuickPerfDebugInfos() {
+    void displayQuickPerfDebugInfos(List<String> jvmOptions) {
 
         ServiceLoader<QuickPerfConfigLoader> serviceLoader = ServiceLoader.load(QuickPerfConfigLoader.class);
         Iterator<QuickPerfConfigLoader> serviceIterator = serviceLoader.iterator();
@@ -54,6 +54,15 @@ class ConsoleReporter {
         }
 
         System.out.println("[QUICK PERF DEBUG] " + System.lineSeparator());
+
+        if(!jvmOptions.isEmpty()) {
+            System.out.println("JVM OPTIONS : ");
+
+            for (String jvmOption: jvmOptions) {
+                System.out.println(jvmOption);
+            }
+            System.out.println();
+        }
 
         System.out.println("PRIORITY OF RECORDERS EXECUTED BEFORE TEST METHOD");
         printExecutionOrders(executionOrderListBefore);
