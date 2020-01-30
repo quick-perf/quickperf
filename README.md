@@ -216,7 +216,16 @@ Many thanks to all our contributors!
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=ablanchard" title="Bug reports">🐛</a>
             <a href="https://github.com/quick-perf/quickperf/commits?author=ablanchard" title="Code">💻</a>
-        </td>                  
+        </td>
+		<td align="center">
+            <a href="https://github.com/Minh-Trieu">
+                <img src="https://avatars1.githubusercontent.com/u/12820973?v=4" width="100px;" alt="Minh-Trieu Ha"/>
+                <br/>
+                <sub><b>Minh-Trieu Ha</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=Minh-Trieu" title="Code">💻</a>
+        </td>                
     </tr>
 </table>
 <a href = "https://allcontributors.org/docs/en/emoji-key">emoji key</a>
