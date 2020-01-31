@@ -38,6 +38,26 @@ class ConsoleReporter {
 
     void displayQuickPerfDebugInfos(List<String> jvmOptions) {
 
+        System.out.println("[QUICK PERF DEBUG] " + System.lineSeparator());
+
+        printJvmOptions(jvmOptions);
+
+        printExecutionOrders();
+
+    }
+
+    private void printJvmOptions(List<String> jvmOptions) {
+        if(!jvmOptions.isEmpty()) {
+            System.out.println("JVM OPTIONS");
+
+            for (String jvmOption: jvmOptions) {
+                System.out.println(jvmOption);
+            }
+            System.out.println();
+        }
+    }
+
+    private void printExecutionOrders() {
         ServiceLoader<QuickPerfConfigLoader> serviceLoader = ServiceLoader.load(QuickPerfConfigLoader.class);
         Iterator<QuickPerfConfigLoader> serviceIterator = serviceLoader.iterator();
 
@@ -53,40 +73,12 @@ class ConsoleReporter {
             executionOrderListAfter.addAll(recorderExecutionOrdersAfter);
         }
 
-        System.out.println("[QUICK PERF DEBUG] " + System.lineSeparator());
-
-        if(!jvmOptions.isEmpty()) {
-            System.out.println("JVM OPTIONS : ");
-
-            for (String jvmOption: jvmOptions) {
-                System.out.println(jvmOption);
-            }
-            System.out.println();
-        }
-
         System.out.println("PRIORITY OF RECORDERS EXECUTED BEFORE TEST METHOD");
         printExecutionOrders(executionOrderListBefore);
 
         System.out.println();
         System.out.println("PRIORITY OF RECORDERS EXECUTED AFTER TEST METHOD");
         printExecutionOrders(executionOrderListAfter);
-    }
-
-    void displayQuickPerfAnnotations(Annotation[] perfAnnotations) {
-
-        List<Annotation> perfAnnotationsWithoutDisplayAppliedAnnotations =
-                removeDisplayAppliedAnnotations(perfAnnotations);
-
-        String perfAnnotationsAsString = buildPerfAnnotationAsString(perfAnnotationsWithoutDisplayAppliedAnnotations);
-
-        System.out.println("[QUICK PERF] Applied annotations: " + perfAnnotationsAsString);
-
-        SpecifiableGlobalAnnotations classSpecifyingGlobalAnnotations =
-                AnnotationsExtractor.INSTANCE.classSpecifyingGlobalAnnotation();
-        if(classSpecifyingGlobalAnnotations != null) {
-            String nameOfClassSpecifyingGlobalAnnotation = classSpecifyingGlobalAnnotations.getClass().getCanonicalName();
-            System.out.println("             Class specifying global annotations: " + nameOfClassSpecifyingGlobalAnnotation);
-        }
     }
 
     private void printExecutionOrders(List<RecorderExecutionOrder> executionOrderList) {
@@ -120,6 +112,23 @@ class ConsoleReporter {
             perfAnnotationsAsString += ANNOTATION_FORMATTER.format(perfAnnotation);
         }
         return perfAnnotationsAsString;
+    }
+
+    void displayQuickPerfAnnotations(Annotation[] perfAnnotations) {
+
+        List<Annotation> perfAnnotationsWithoutDisplayAppliedAnnotations =
+                removeDisplayAppliedAnnotations(perfAnnotations);
+
+        String perfAnnotationsAsString = buildPerfAnnotationAsString(perfAnnotationsWithoutDisplayAppliedAnnotations);
+
+        System.out.println("[QUICK PERF] Applied annotations: " + perfAnnotationsAsString);
+
+        SpecifiableGlobalAnnotations classSpecifyingGlobalAnnotations =
+                AnnotationsExtractor.INSTANCE.classSpecifyingGlobalAnnotation();
+        if(classSpecifyingGlobalAnnotations != null) {
+            String nameOfClassSpecifyingGlobalAnnotation = classSpecifyingGlobalAnnotations.getClass().getCanonicalName();
+            System.out.println("             Class specifying global annotations: " + nameOfClassSpecifyingGlobalAnnotation);
+        }
     }
 
 }
