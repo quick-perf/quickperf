@@ -13,6 +13,7 @@
 
 package org.quickperf.spring.sql;
 
+import net.ttddyy.dsproxy.support.ProxyDataSource;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder;
@@ -35,13 +36,17 @@ public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) {
-        if (bean instanceof DataSource) {
+        if (bean instanceof DataSource && !isProxyDataSourceBean(bean)) {
             final ProxyFactory factory = new ProxyFactory(bean);
             factory.setProxyTargetClass(true);
             factory.addAdvice(new ProxyDataSourceInterceptor((DataSource) bean));
             return factory.getProxy();
         }
         return bean;
+    }
+
+    private boolean isProxyDataSourceBean(Object bean) {
+        return bean.toString().contains(ProxyDataSource.class.getName());
     }
 
     private static class ProxyDataSourceInterceptor implements MethodInterceptor {
