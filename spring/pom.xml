@@ -31,7 +31,7 @@
 
     <profiles>
         <profile>
-            <id>default-spring</id>
+            <id>default</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -50,6 +50,15 @@
             </activation>
             <modules>
                 <module>junit4-spring-boot-test</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>release</id>
+            <modules>
+                <module>sql-spring5</module>
+                <module>junit4-spring3</module>
+                <module>junit4-spring4</module>
+                <module>junit4-spring5</module>
             </modules>
         </profile>
     </profiles>

@@ -33,12 +33,26 @@
         <dependencies.max.jdk.version>8</dependencies.max.jdk.version>
     </properties>
 
-    <modules>
-        <module>testng-listener</module>
-        <module>testng-test-util</module>
-        <module>testng-sql-test</module>
-        <module>testng-jvm-test</module>
-    </modules>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>testng-listener</module>
+                <module>testng-test-util</module>
+                <module>testng-sql-test</module>
+                <module>testng-jvm-test</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>release</id>
+            <modules>
+                <module>testng-listener</module>
+            </modules>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>

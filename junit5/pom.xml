@@ -34,11 +34,25 @@
         <junit5.platform.version>1.6.0</junit5.platform.version>
     </properties>
 
-    <modules>
-        <module>junit5-extension</module>
-        <module>junit5-test-util</module>
-        <module>junit5-jvm-test</module>
-        <module>junit5-sql-test</module>
-    </modules>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>junit5-extension</module>
+                <module>junit5-test-util</module>
+                <module>junit5-jvm-test</module>
+                <module>junit5-sql-test</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>release</id>
+            <modules>
+                <module>junit5-extension</module>
+            </modules>
+        </profile>
+    </profiles>
 
 </project>

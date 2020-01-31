@@ -170,15 +170,12 @@
             <id>release</id>
             <modules>
                 <module>core</module>
-                <module>jvm/jvm-annotations</module>
-                <module>sql/sql-annotations</module>
-                <module>junit4/junit4-runner</module>
-                <module>junit5/junit5-extension</module>
-                <module>testng/testng-listener</module>
-                <module>spring/sql-spring5</module>
-                <module>spring/junit4-spring3</module>
-                <module>spring/junit4-spring4</module>
-                <module>spring/junit4-spring5</module>
+                <module>jvm</module>
+                <module>sql</module>
+                <module>junit4</module>
+                <module>junit5</module>
+                <module>testng</module>
+                <module>spring</module>
             </modules>
             <build>
                 <plugins>
