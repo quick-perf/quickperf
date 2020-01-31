@@ -88,7 +88,8 @@ It will fail as soon as one mvn clean install fails.
 _Notice: Maven images are packaged only with openjdk not oraclejdk._
 
 ## Technical resources
-* [Git and Github](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github)
+* [The Ultimate Git Beginner Reference Guide](https://mukulrathi.com/git-beginner-cheatsheet)
+* [How to Contribute to an Open Source Project on GitHub](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github)
 * [Create an annotation](https://github.com/quick-perf/doc/wiki/Create-an-annotation)
 * Debug annotations with [@DebugQuickPerf](https://github.com/quick-perf/doc/wiki/Core-annotations#DebugQuickPerf)
 
