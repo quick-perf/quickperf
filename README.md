@@ -124,7 +124,7 @@ Many thanks to all our contributors!
             <a href="https://github.com/guiRagh">
                 <img src="https://avatars2.githubusercontent.com/u/47635364?v=4" width="100px;" alt="guiRagh"/>
                 <br/>
-                <sub><b>guiRagh</b></sub>
+                <sub><b>Guillaume Raghoumandan</b></sub>
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=guiRagh" title="Code">💻</a> 
@@ -134,7 +134,7 @@ Many thanks to all our contributors!
             <a href="https://github.com/pcavezzan">
                 <img src="https://avatars2.githubusercontent.com/u/3405916?v=4" width="100px;" alt="Patrice CAVEZZAN"/>
                 <br/>
-                <sub><b>Patrice CAVEZZAN</b></sub>
+                <sub><b>Patrice Cavezzan</b></sub>
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=pcavezzan" title="Code">💻</a>
@@ -176,7 +176,7 @@ Many thanks to all our contributors!
                 <sub><b>Loïc Mathieu</b></sub>
             </a>
             <br/>
-            <a href="https://github.com/quick-perf/quickperf/commits?author=loicmathieu" title="">💻</a>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=loicmathieu" title="Code">💻</a>
         </td>
     </tr>
     <tr>
@@ -225,6 +225,15 @@ Many thanks to all our contributors!
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=Minh-Trieu" title="Code">💻</a>
+        </td>  		
+        <td align="center">
+            <a href="https://github.com/dialaya">
+                <img src="https://avatars1.githubusercontent.com/u/254883?v=4" width="100px;" alt="Bakary Djiba"/>
+                <br/>
+                <sub><b>Bakary Djiba</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=dialaya" title="Code">💻</a>
         </td>                
     </tr>
 </table>
