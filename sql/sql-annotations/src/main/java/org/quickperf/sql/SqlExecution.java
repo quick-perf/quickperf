@@ -249,6 +249,10 @@ public class SqlExecution implements Externalizable {
     public long getColumnCount() {
         return columnCount;
     }
+    
+    public long getElapsedTime() {
+    	return executionInfo.getElapsedTime();
+    }
 
     @Override
     public String toString() {

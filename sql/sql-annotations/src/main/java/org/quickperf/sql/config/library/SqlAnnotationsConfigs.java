@@ -33,6 +33,8 @@ import org.quickperf.sql.select.columns.MaxSelectedColumnsPerMeasureExtractor;
 import org.quickperf.sql.select.columns.MaxSelectedColumnsPerfIssueVerifier;
 import org.quickperf.sql.select.columns.SelectedColumnNumberPerfIssueVerifier;
 import org.quickperf.sql.select.columns.SelectedColumnNumberPerfMeasureExtractor;
+import org.quickperf.sql.time.SqlQueryExecutionTimeExtractor;
+import org.quickperf.sql.time.SqlQueryMaxExecutionTimeVerifier;
 import org.quickperf.sql.update.UpdateCountMeasureExtractor;
 import org.quickperf.sql.update.UpdateNumberPerfIssueVerifier;
 import org.quickperf.sql.update.columns.MaxUpdatedColumnsPerMeasureExtractor;
@@ -142,5 +144,11 @@ class SqlAnnotationsConfigs {
     static final AnnotationConfig ENABLE_LIKE_STARTING_WITH_WILDCARD = new AnnotationConfig.Builder()
             .cancelBehaviorOf(DisableLikeWithLeadingWildcard.class)
             .build(EnableLikeWithLeadingWildcard.class);
+    
+    static final AnnotationConfig EXPECT_MAX_QUERY_EXECUTION_TIME = new AnnotationConfig.Builder()
+			.perfRecorderClass(PersistenceSqlRecorder.class)
+			.perfMeasureExtractor(SqlQueryExecutionTimeExtractor.INSTANCE)
+			.perfIssueVerifier(SqlQueryMaxExecutionTimeVerifier.INSTANCE)
+			.build(ExpectMaxQueryExecutionTime.class);
 
 }
