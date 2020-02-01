@@ -48,7 +48,7 @@ public class PersistenceSqlRecorder implements SqlRecorder<SqlExecutions> {
         sqlRepository.flush(workingFolder);
         if(datasourceProxyVerifier.hasQuickPerfBuiltSeveralDataSourceProxies()) {
             System.out.println();
-            System.out.println(DataSourceProxyVerifier.SEVERAL_PROXIES_WARNING);
+            System.err.println(DataSourceProxyVerifier.SEVERAL_PROXIES_WARNING);
         }
     }
 
