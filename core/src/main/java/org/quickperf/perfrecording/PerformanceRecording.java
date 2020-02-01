@@ -25,7 +25,8 @@ public class PerformanceRecording {
 
     public void start(TestExecutionContext testExecutionContext) {
         List<RecordablePerformance> perfRecordersToExecuteBeforeTestMethod = testExecutionContext.getPerfRecordersToExecuteBeforeTestMethod();
-        for (int i = 0; i < perfRecordersToExecuteBeforeTestMethod.size(); i++) {
+        int numberOfPerfRecordersToExecuteBeforeTestMethod = perfRecordersToExecuteBeforeTestMethod.size();
+        for (int i = 0; i < numberOfPerfRecordersToExecuteBeforeTestMethod; i++) {
             RecordablePerformance recordablePerformance = perfRecordersToExecuteBeforeTestMethod.get(i);
             recordablePerformance.startRecording(testExecutionContext);
         }
