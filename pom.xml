@@ -164,6 +164,7 @@
                 <module>junit5</module>
                 <module>testng</module>
                 <module>spring</module>
+                <module>bom</module>
             </modules>
         </profile>
         <profile>
@@ -176,6 +177,7 @@
                 <module>junit5</module>
                 <module>testng</module>
                 <module>spring</module>
+                <module>bom</module>
             </modules>
             <build>
                 <plugins>
