@@ -32,14 +32,12 @@ public class SqlQueryExecutionTimeExtractor implements ExtractablePerformanceMea
 		
 		for (SqlExecution execution : perfRecord) {
 
-
 			long executionTime = execution.getElapsedTime();
 
 			if(executionTime > maxExecutionTime) {
 				maxExecutionTime = executionTime;
 			}
-			
-			
+
 		}
 		
 		return new ExecutionTime(maxExecutionTime, TimeUnit.MILLISECONDS);
