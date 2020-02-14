@@ -22,6 +22,9 @@ import org.quickperf.jvm.annotations.*;
 import org.quickperf.jvm.jfr.JfrEventsRecorder;
 import org.quickperf.jvm.jmcrule.JmcRuleCountMeasureExtractor;
 import org.quickperf.jvm.jmcrule.JmcRulesPerfVerifier;
+import org.quickperf.jvm.rss.ExpectRssPerfVerifier;
+import org.quickperf.jvm.rss.MeasureRssPerfVerifier;
+import org.quickperf.jvm.rss.ProcessStatusRecorder;
 import org.quickperf.testlauncher.AnnotationToJvmOptionConverter;
 import org.quickperf.testlauncher.JvmOption;
 
@@ -94,5 +97,17 @@ class JvmAnnotationsConfigs {
     static final AnnotationConfig PROFILE_QUICK_PERF_WITH_JMC = new AnnotationConfig.Builder()
             .testHasToBeLaunchedInASpecificJvm(QuickPerfProfilingAnnotToJvmOptionConverter.INSTANCE)
             .build(ProfileQuickPerfInTestJvm.class);
+
+    static final AnnotationConfig DISPLAY_RSS_FROM_PROCESS_STATUS = new AnnotationConfig.Builder()
+            .perfRecorderClass(ProcessStatusRecorder.class)
+            .perfIssueVerifier(MeasureRssPerfVerifier.INSTANCE)
+            .testHasToBeLaunchedInASpecificJvm()
+            .build(MeasureRSS.class);
+
+    static final AnnotationConfig MAX_RSS_FROM_PROCESS_STATUS = new AnnotationConfig.Builder()
+            .perfRecorderClass(ProcessStatusRecorder.class)
+            .perfIssueVerifier(ExpectRssPerfVerifier.INSTANCE)
+            .testHasToBeLaunchedInASpecificJvm()
+            .build(ExpectMaxRSS.class);
 
 }

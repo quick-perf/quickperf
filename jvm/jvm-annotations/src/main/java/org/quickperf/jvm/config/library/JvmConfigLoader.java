@@ -18,6 +18,7 @@ import org.quickperf.RecorderExecutionOrder;
 import org.quickperf.config.library.AnnotationConfig;
 import org.quickperf.jvm.allocation.bytewatcher.ByteWatcherRecorder;
 import org.quickperf.jvm.jfr.JfrEventsRecorder;
+import org.quickperf.jvm.rss.ProcessStatusRecorder;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,13 +38,16 @@ public class JvmConfigLoader implements QuickPerfConfigLoader {
                 , JvmAnnotationsConfigs.CHECK_JVM
                 , JvmAnnotationsConfigs.PROFILE_QUICK_PERF_WITH_JMC
                 , JvmAnnotationsConfigs.PROFILE_JVM_WITH_JFR
+                , JvmAnnotationsConfigs.DISPLAY_RSS_FROM_PROCESS_STATUS
+                , JvmAnnotationsConfigs.MAX_RSS_FROM_PROCESS_STATUS
         );
     }
 
     @Override
     public Collection<RecorderExecutionOrder> loadRecorderExecutionOrdersBeforeTestMethod() {
         return Arrays.asList(
-                  new RecorderExecutionOrder(JfrEventsRecorder.class, 6000)
+                  new RecorderExecutionOrder(ProcessStatusRecorder.class, 5070)
+                , new RecorderExecutionOrder(JfrEventsRecorder.class, 6000)
                 , new RecorderExecutionOrder(ByteWatcherRecorder.class, 6030)
         );
     }
@@ -53,6 +57,7 @@ public class JvmConfigLoader implements QuickPerfConfigLoader {
         return Arrays.asList(
                   new RecorderExecutionOrder(ByteWatcherRecorder.class, 3000)
                 , new RecorderExecutionOrder(JfrEventsRecorder.class, 3030)
+                , new RecorderExecutionOrder(ProcessStatusRecorder.class, 3060)
         );
     }
 
