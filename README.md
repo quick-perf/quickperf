@@ -46,7 +46,7 @@
     }
 ```
 
-📙 [All the JVM annotations](https://github.com/quick-perf/doc/wiki/JVM-annotations) &nbsp;&nbsp; :mag_right: [Heap allocation of Apache Maven](https://github.com/quick-perf/maven-test-bench)
+📙 [All the JVM annotations](https://github.com/quick-perf/doc/wiki/JVM-annotations)  &nbsp;&nbsp; :mag_right: Examples with [JUnit4](https://github.com/quick-perf/quickperf-examples/blob/master/jvm-junit4/src/test/java/org/quickperf/jvm/JvmAnnotationsJunit4Test.java), [Junit5](https://github.com/quick-perf/quickperf-examples/blob/master/jvm-junit5/src/test/java/org/quickperf/jvm/JvmAnnotationsJunit5Test.java), [TestNG](https://github.com/quick-perf/quickperf-examples/blob/master/jvm-testng/src/test/java/org/quickperf/jvm/JvmAnnotationsTestNGTest.java) &nbsp;&nbsp; :mag_right: [Heap allocation of Apache Maven](https://github.com/quick-perf/maven-test-bench)
 
 ### **SQL annotations**
 
@@ -79,7 +79,7 @@ Perhaps you are facing a N+1 select issue
 		@EntityGraph(attributePaths = { "..." }) on repository method.
 ```
 
-📙 [All the SQL annotations](https://github.com/quick-perf/doc/wiki/SQL-annotations) &nbsp;&nbsp; :mag_right: [Spring Boot and Micronaut examples](https://github.com/quick-perf/quickperf-examples)
+📙 [All the SQL annotations](https://github.com/quick-perf/doc/wiki/SQL-annotations)  &nbsp;&nbsp; :mag_right: [Spring Boot & JUnit 4](https://github.com/quick-perf/quickperf-examples/tree/master/springboot-junit4) &nbsp;&nbsp; :mag_right: [Spring Boot & JUnit 5](https://github.com/quick-perf/quickperf-examples/tree/master/springboot-junit5)
 
 ### View Devoxx Belgium talk
 [![Devoxx Belgium talk](https://github.com/quick-perf/doc/blob/master/doc/images/Devoxx-Belgium.jpg?raw=true)](https://youtu.be/cEkoJL09kKI?t=5)
