@@ -16,6 +16,8 @@ import org.quickperf.sql.PersistenceSqlRecorder;
 import org.quickperf.sql.annotation.*;
 import org.quickperf.sql.batch.SqlStatementBatchRecorder;
 import org.quickperf.sql.batch.SqlStatementBatchVerifier;
+import org.quickperf.sql.bindparams.AllParametersAreBoundExtractor;
+import org.quickperf.sql.bindparams.DisableQueriesWithoutBindParametersVerifier;
 import org.quickperf.sql.crossjoin.HasSqlCrossJoinPerfMeasureExtractor;
 import org.quickperf.sql.crossjoin.NoSqlCrossJoinPerfIssueVerifier;
 import org.quickperf.sql.delete.DeleteCountMeasureExtractor;
@@ -150,11 +152,20 @@ class SqlAnnotationsConfigs {
 			.perfMeasureExtractor(SqlQueryExecutionTimeExtractor.INSTANCE)
 			.perfIssueVerifier(SqlQueryMaxExecutionTimeVerifier.INSTANCE)
 			.build(ExpectMaxQueryExecutionTime.class);
-    
+
     static final AnnotationConfig EXPECT_UPDATED_COLUMN = new AnnotationConfig.Builder()
     		.perfRecorderClass(PersistenceSqlRecorder.class)
     		.perfMeasureExtractor(UpdatedColumnsMeasureExtractor.INSTANCE)
     		.perfIssueVerifier(UpdatedColumnsPerfIssueVerifier.INSTANCE)
     		.build(ExpectUpdatedColumn.class);
 
+    static final AnnotationConfig ENABLE_QUERIES_WITHOUT_BIND_PARAMETERS = new AnnotationConfig.Builder()
+			.cancelBehaviorOf(DisableQueriesWithoutBindParameters.class)
+			.build(EnableQueriesWithoutBindParameters.class);
+
+	static final AnnotationConfig DISABLE_QUERIES_WITHOUT_BIND_PARAMETERS = new AnnotationConfig.Builder()
+			.perfRecorderClass(PersistenceSqlRecorder.class)
+			.perfMeasureExtractor(AllParametersAreBoundExtractor.INSTANCE)
+			.perfIssueVerifier(DisableQueriesWithoutBindParametersVerifier.INSTANCE)
+			.build(DisableQueriesWithoutBindParameters.class);
 }
