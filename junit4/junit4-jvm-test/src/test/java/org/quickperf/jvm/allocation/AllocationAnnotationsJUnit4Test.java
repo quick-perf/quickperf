@@ -13,7 +13,6 @@
 
 package org.quickperf.jvm.allocation;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
@@ -52,12 +51,10 @@ public class AllocationAnnotationsJUnit4Test {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("Expected allocation to be less than 439.0 bytes but is 440.0 bytes.");
-        softAssertions.assertAll();
+        assertThat(printableResult.failureCount()).isOne();
+
+        assertThat(printableResult.toString()).contains(
+                "Expected allocation to be less than 439.0 bytes but is 440.0 bytes.");
 
     }
 
@@ -84,12 +81,10 @@ public class AllocationAnnotationsJUnit4Test {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-        softAssertions.assertThat(printableResult.toString())
+        assertThat(printableResult.failureCount()).isOne();
+
+        assertThat(printableResult.toString())
                       .contains("Expected allocation to be 0 but is 440.0 bytes.");
-        softAssertions.assertAll();
 
     }
 
@@ -115,7 +110,7 @@ public class AllocationAnnotationsJUnit4Test {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(0);
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 

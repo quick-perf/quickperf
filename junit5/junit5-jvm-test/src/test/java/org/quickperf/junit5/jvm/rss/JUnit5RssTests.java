@@ -50,7 +50,7 @@ public class JUnit5RssTests {
         JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(0);
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isZero();
 
     }
 

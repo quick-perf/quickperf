@@ -34,7 +34,7 @@ public class QuickPerfTestNGTest {
         TestNGTestsResult testsResult = testNGTests.run();
 
         // THEN
-        assertThat(testsResult.getNumberOfFailedTest()).isEqualTo(1);
+        assertThat(testsResult.getNumberOfFailedTest()).isOne();
 
         Throwable errorReport = testsResult.getThrowableOfFirstTest();
         assertThat(errorReport).hasMessageContaining("expected [false] but found [true]");
@@ -52,7 +52,7 @@ public class QuickPerfTestNGTest {
         TestNGTestsResult testsResult = testNGTests.run();
 
         // THEN
-        assertThat(testsResult.getNumberOfFailedTest()).isEqualTo(1);
+        assertThat(testsResult.getNumberOfFailedTest()).isOne();
 
         Throwable errorReport = testsResult.getThrowableOfFirstTest();
         assertThat(errorReport).hasMessageContaining("expected [false] but found [true]");

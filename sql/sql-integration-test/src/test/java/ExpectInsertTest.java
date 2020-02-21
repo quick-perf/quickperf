@@ -56,7 +56,7 @@ public class ExpectInsertTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
                 .contains("Expected number of INSERT statements <5> but is <1>")

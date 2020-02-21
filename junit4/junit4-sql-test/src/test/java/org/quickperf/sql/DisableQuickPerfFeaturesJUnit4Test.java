@@ -52,7 +52,7 @@ public class DisableQuickPerfFeaturesJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(0);
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 
@@ -80,7 +80,7 @@ public class DisableQuickPerfFeaturesJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(0);
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 

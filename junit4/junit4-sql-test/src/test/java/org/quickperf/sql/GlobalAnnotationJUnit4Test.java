@@ -13,15 +13,15 @@
 
 package org.quickperf.sql;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
-import org.quickperf.sql.SqlTestBaseJUnit4;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GlobalAnnotationJUnit4Test {
 
@@ -48,17 +48,12 @@ public class GlobalAnnotationJUnit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
+        assertThat(printableResult.failureCount()).isOne();
 
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-
-        softAssertions.assertThat(printableResult.toString())
+        assertThat(printableResult.toString())
                       .contains("cross join detected")
                       .contains("CROSS JOIN") //query cross join
         ;
-
-        softAssertions.assertAll();
 
     }
 

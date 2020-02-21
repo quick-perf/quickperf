@@ -32,7 +32,7 @@ public class QuickPerfTestNGSqlTest {
         TestNGTestsResult testsResult = testNGTests.run();
 
         // THEN
-        assertThat(testsResult.getNumberOfFailedTest()).isEqualTo(1);
+        assertThat(testsResult.getNumberOfFailedTest()).isOne();
 
         Throwable errorReport = testsResult.getThrowableOfFirstTest(); ;
         assertThat(errorReport).hasMessageContaining("a performance property is not respected")

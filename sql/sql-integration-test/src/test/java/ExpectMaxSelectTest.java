@@ -50,7 +50,7 @@ public class ExpectMaxSelectTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
                 .contains("You may think that at most <0> select statement was sent to the database")
@@ -83,7 +83,7 @@ public class ExpectMaxSelectTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
                 .contains("You may think that at most <0> select statement was sent to the database")
@@ -116,7 +116,7 @@ public class ExpectMaxSelectTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(0);
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 
@@ -144,7 +144,7 @@ public class ExpectMaxSelectTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
                 .contains("You may think that at most <0> select statement was sent to the database")

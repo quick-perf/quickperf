@@ -31,7 +31,7 @@ public class JmcTestNGTests {
         TestNGTests.TestNGTestsResult testsResult = testNGTests.run();
 
         // THEN
-        assertThat(testsResult.getNumberOfFailedTest()).isEqualTo(1);
+        assertThat(testsResult.getNumberOfFailedTest()).isOne();
 
         Throwable errorReport = testsResult.getThrowableOfFirstTest();
         assertThat(errorReport).hasMessageContaining("JMC rules are expected to have score less than <50>.")

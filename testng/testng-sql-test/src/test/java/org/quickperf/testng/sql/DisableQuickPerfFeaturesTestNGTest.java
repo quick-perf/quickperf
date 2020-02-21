@@ -31,7 +31,7 @@ public class DisableQuickPerfFeaturesTestNGTest extends SqlTestBaseTestNG {
         TestNGTests.TestNGTestsResult testsResult = testNGTests.run();
 
         // THEN
-        assertThat(testsResult.getNumberOfPassedTest()).isEqualTo(1);
+        assertThat(testsResult.getNumberOfPassedTest()).isOne();
 
     }
 

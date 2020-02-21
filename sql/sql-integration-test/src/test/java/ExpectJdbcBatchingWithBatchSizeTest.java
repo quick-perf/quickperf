@@ -54,7 +54,7 @@ public class ExpectJdbcBatchingWithBatchSizeTest {
 
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
-        assertThat(printableResult.failureCount()).isEqualTo(0);
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 
@@ -98,7 +98,7 @@ public class ExpectJdbcBatchingWithBatchSizeTest {
 
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
-        assertThat(printableResult.failureCount()).isEqualTo(0);
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 
@@ -131,8 +131,10 @@ public class ExpectJdbcBatchingWithBatchSizeTest {
 
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
-        assertThat(printableResult.failureCount()).isEqualTo(1);
-        assertThat(printableResult.toString()).contains("a performance property is not respected");
+        assertThat(printableResult.failureCount()).isOne();
+
+        assertThat(printableResult.toString()).contains(
+                "a performance property is not respected");
 
     }
 
@@ -175,7 +177,7 @@ public class ExpectJdbcBatchingWithBatchSizeTest {
 
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
-        assertThat(printableResult.failureCount()).isEqualTo(0);
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 
@@ -208,7 +210,8 @@ public class ExpectJdbcBatchingWithBatchSizeTest {
 
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
+
         assertThat(printableResult.toString())
                 .contains("[PERF] Expected batch size <30> but is <0>.");
 
@@ -250,7 +253,8 @@ public class ExpectJdbcBatchingWithBatchSizeTest {
 
         PrintableResult testResult = PrintableResult.testResult(testClass);
 
-        assertThat(testResult.failureCount()).isEqualTo(1);
+        assertThat(testResult.failureCount()).isOne();
+
         assertThat(testResult.toString()).contains("Expected batch size <30> but is <20>");
     }
 

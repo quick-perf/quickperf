@@ -13,7 +13,6 @@
 
 package org.quickperf.jvm.jmc;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
@@ -25,6 +24,7 @@ import org.quickperf.jvm.annotations.HeapSize;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class JmcJUnit4Tests {
@@ -67,14 +67,12 @@ public class JmcJUnit4Tests {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("JMC rules are expected to have score less than <50>.")
-                      .contains("Rule: Primitive To Object Conversion");
-        softAssertions.assertAll();
+        assertThat(printableResult.failureCount()).isOne();
 
+        assertThat(printableResult.toString())
+                      .contains("JMC rules are expected to have score less than <50>.")
+                      .contains("Rule: Primitive" +
+                              " To Object Conversion");
     }
 
 }

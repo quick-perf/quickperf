@@ -48,7 +48,7 @@ public class ExpectSelectTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
                 .contains("You may think that <5> select statements were sent to the database")

@@ -59,7 +59,7 @@ public class DisableSameSelectTypesWithDifferentParamsTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
                 .contains("Same SELECT types with different parameters");
@@ -99,7 +99,7 @@ public class DisableSameSelectTypesWithDifferentParamsTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(0);
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 

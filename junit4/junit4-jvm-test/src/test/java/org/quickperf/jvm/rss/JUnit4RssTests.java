@@ -13,7 +13,6 @@
 
 package org.quickperf.jvm.rss;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
@@ -25,6 +24,7 @@ import org.quickperf.jvm.annotations.MeasureRSS;
 
 import java.util.Locale;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.experimental.results.PrintableResult.testResult;
 
@@ -75,10 +75,7 @@ public class JUnit4RssTests {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount())
-                .isEqualTo(0);
-        softAssertions.assertAll();
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 }

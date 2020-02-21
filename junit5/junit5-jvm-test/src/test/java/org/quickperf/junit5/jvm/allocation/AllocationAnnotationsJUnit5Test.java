@@ -52,7 +52,7 @@ public class AllocationAnnotationsJUnit5Test {
         JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(1);
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isOne();
 
         String errorReport = jUnit5TestsResult.getErrorReport();
         assertThat(errorReport).contains("Expected allocation to be less than 439.0 bytes but is 440.0 bytes");
@@ -83,7 +83,7 @@ public class AllocationAnnotationsJUnit5Test {
         JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(1);
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isOne();
 
         String errorReport = jUnit5TestsResult.getErrorReport();
         assertThat(errorReport).contains("Expected allocation to be 0 but is 440.0 bytes");
@@ -112,7 +112,7 @@ public class AllocationAnnotationsJUnit5Test {
         JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(0);
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isZero();
 
     }
 

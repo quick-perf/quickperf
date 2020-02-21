@@ -51,7 +51,7 @@ public class DisableLikeWithLeadingWildcardTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
                 .contains("Like with leading wildcard detected (% or _)");
@@ -85,7 +85,7 @@ public class DisableLikeWithLeadingWildcardTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
                 .contains("Like with leading wildcard detected (% or _)");

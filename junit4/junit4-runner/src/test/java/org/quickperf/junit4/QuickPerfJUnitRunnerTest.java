@@ -13,7 +13,6 @@
 
 package org.quickperf.junit4;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
@@ -44,12 +43,10 @@ public class QuickPerfJUnitRunnerTest {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
 
-        softAssertions.assertThat(printableResult.toString()).contains("expected:<[tru]e> but was:<[fals]e>");
-
-        softAssertions.assertAll();
+        assertThat(printableResult.toString()).contains(
+                "expected:<[tru]e> but was:<[fals]e>");
 
     }
 
@@ -74,11 +71,10 @@ public class QuickPerfJUnitRunnerTest {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount()).isEqualTo(1);
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("Performance and functional properties not respected");
-        softAssertions.assertAll();
+        assertThat(printableResult.failureCount()).isOne();
+
+        assertThat(printableResult.toString()).contains(
+                "Performance and functional properties not respected");
 
     }
 

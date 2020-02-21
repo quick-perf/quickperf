@@ -51,7 +51,7 @@ public class ExpectSelectedColumnTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
                 .contains("You may think that <2> columns were selected")
@@ -82,7 +82,8 @@ public class ExpectSelectedColumnTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
+
         assertThat(printableResult.toString())
                 .contains("Maximum expected number of selected columns <2> but is <3>.");
 
@@ -112,7 +113,7 @@ public class ExpectSelectedColumnTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
                 .contains("Maximum expected number of selected columns <2> but is <3>.");

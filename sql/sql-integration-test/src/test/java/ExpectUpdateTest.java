@@ -58,7 +58,7 @@ public class ExpectUpdateTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
                 .contains("Expected number of UPDATE statements <5> but is <1>")

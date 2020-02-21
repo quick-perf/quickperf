@@ -49,7 +49,7 @@ public class SqlConcurrencyJUnit4Test {
 
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
-        assertThat(printableResult.failureCount()).isEqualTo(0);
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 

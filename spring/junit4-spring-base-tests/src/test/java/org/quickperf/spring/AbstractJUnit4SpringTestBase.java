@@ -32,18 +32,13 @@ public abstract class AbstractJUnit4SpringTestBase {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
+        assertThat(printableResult.failureCount()).isOne();
 
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-
-        softAssertions.assertThat(printableResult.toString())
+        assertThat(printableResult.toString())
                       .contains("java.lang.AssertionError: Performance and functional properties not respected")
                       .contains("PERFORMANCE PROPERTIES(S)")
                       .contains("FUNCTIONAL PROPERTY")
                       .contains("Failing assertion !");
-
-        softAssertions.assertAll();
 
     }
 
@@ -59,19 +54,14 @@ public abstract class AbstractJUnit4SpringTestBase {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
+        assertThat(printableResult.failureCount()).isOne();
 
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-
-        softAssertions.assertThat(printableResult.toString())
+        assertThat(printableResult.toString())
                       .contains("java.lang.AssertionError: Performance and functional properties not respected")
                       .contains("PERFORMANCE PROPERTIES(S)")
                       .contains("Expected allocation to be 0 but is")
                       .contains("FUNCTIONAL PROPERTY")
                       .contains("Failing assertion !");
-
-        softAssertions.assertAll();
 
     }
 
@@ -87,7 +77,7 @@ public abstract class AbstractJUnit4SpringTestBase {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(0);
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 
@@ -103,15 +93,11 @@ public abstract class AbstractJUnit4SpringTestBase {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
+        assertThat(printableResult.failureCount()).isOne();
 
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
+        assertThat(printableResult.toString()).contains(
+                "a performance property is not respected");
 
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("a performance property is not respected");
-
-        softAssertions.assertAll();
 
     }
 
@@ -127,7 +113,7 @@ public abstract class AbstractJUnit4SpringTestBase {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(0);
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 
@@ -143,7 +129,7 @@ public abstract class AbstractJUnit4SpringTestBase {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(0);
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 
@@ -159,15 +145,10 @@ public abstract class AbstractJUnit4SpringTestBase {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
+        assertThat(printableResult.failureCount()).isOne();
 
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("java.lang.AssertionError: a performance property is not respected");
-
-        softAssertions.assertAll();
+        assertThat(printableResult.toString()).contains(
+                "java.lang.AssertionError: a performance property is not respected");
 
     }
 
@@ -207,16 +188,12 @@ public abstract class AbstractJUnit4SpringTestBase {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
+        assertThat(printableResult.failureCount()).isOne();
 
-        softAssertions.assertThat(printableResult.failureCount()).isEqualTo(1);
-
-        softAssertions.assertThat(printableResult.toString())
+        assertThat(printableResult.toString())
                       .contains("java.lang.AssertionError: a performance property is not respected")
                       .contains("insert")
                       .contains("into");
-
-        softAssertions.assertAll();
 
     }
 

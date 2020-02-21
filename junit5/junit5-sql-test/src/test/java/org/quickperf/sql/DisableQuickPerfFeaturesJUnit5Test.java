@@ -40,7 +40,7 @@ public class DisableQuickPerfFeaturesJUnit5Test {
         JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(0);
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isZero();
 
     }
 
@@ -70,7 +70,7 @@ public class DisableQuickPerfFeaturesJUnit5Test {
         JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(0);
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isZero();
 
     }
 

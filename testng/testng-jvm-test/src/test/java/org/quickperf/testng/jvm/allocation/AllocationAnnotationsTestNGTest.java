@@ -32,7 +32,7 @@ public class AllocationAnnotationsTestNGTest {
         TestNGTestsResult testsResult = testNGTests.run();
 
         // THEN
-        assertThat(testsResult.getNumberOfFailedTest()).isEqualTo(1);
+        assertThat(testsResult.getNumberOfFailedTest()).isOne();
 
         Throwable errorReport = testsResult.getThrowableOfFirstTest();
         assertThat(errorReport).hasMessageContaining(
@@ -51,7 +51,7 @@ public class AllocationAnnotationsTestNGTest {
         TestNGTestsResult testsResult = testNGTests.run();
 
         // THEN
-        assertThat(testsResult.getNumberOfFailedTest()).isEqualTo(1);
+        assertThat(testsResult.getNumberOfFailedTest()).isOne();
 
         assertThat(testsResult.getThrowableOfFirstTest()).hasMessageContaining(
                 "Expected allocation to be 0 but is 440.0 bytes");
@@ -69,7 +69,7 @@ public class AllocationAnnotationsTestNGTest {
         TestNGTestsResult testsResult = testNGTests.run();
 
         // THEN
-        assertThat(testsResult.getNumberOfPassedTest()).isEqualTo(1);
+        assertThat(testsResult.getNumberOfPassedTest()).isOne();
 
     }
 

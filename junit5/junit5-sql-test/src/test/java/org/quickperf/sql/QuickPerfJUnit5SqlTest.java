@@ -50,7 +50,7 @@ public class QuickPerfJUnit5SqlTest {
         JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(1);
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isOne();
 
         String errorReport = jUnit5TestsResult.getErrorReport();
         assertThat(errorReport).contains("You may think that <5> select statements were sent to the database")

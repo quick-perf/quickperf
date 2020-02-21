@@ -11,11 +11,12 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.quickperf.spring.springboottest.controller.DetectionOfNPlusOneSelectInWebService;
 import org.quickperf.spring.springboottest.service.DetectionOfNPlusOneSelectInService;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SpringBootJunit4Test {
 
@@ -29,16 +30,11 @@ public class SpringBootJunit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
+        assertThat(printableResult.failureCount()).isOne();
 
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-
-        softAssertions.assertThat(printableResult.toString())
+        assertThat(printableResult.toString())
                       .contains("You may think that <1> select statement was sent to the database")
                       .contains("With Spring Data JPA, you may fix it by");
-
-        softAssertions.assertAll();
 
     }
 
@@ -52,16 +48,11 @@ public class SpringBootJunit4Test {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
+        assertThat(printableResult.failureCount()).isOne();
 
-        softAssertions.assertThat(printableResult.failureCount())
-                      .isEqualTo(1);
-
-        softAssertions.assertThat(printableResult.toString())
+        assertThat(printableResult.toString())
                       .contains("You may think that <1> select statement was sent to the database")
                       .contains("With Spring Data JPA, you may fix it by");
-
-        softAssertions.assertAll();
 
     }
 

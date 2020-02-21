@@ -13,7 +13,6 @@
 
 package org.quickperf.sql;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
@@ -23,6 +22,7 @@ import org.quickperf.sql.annotation.EnableCrossJoin;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class DisableAnnotationTest {
@@ -52,9 +52,7 @@ public class DisableAnnotationTest {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount()).isEqualTo(0);
-        softAssertions.assertAll();
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 

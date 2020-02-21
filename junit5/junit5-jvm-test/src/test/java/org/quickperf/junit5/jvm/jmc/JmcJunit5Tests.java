@@ -67,7 +67,7 @@ public class JmcJunit5Tests {
         JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(1);
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isOne();
 
         String errorReport = jUnit5TestsResult.getErrorReport();
         assertThat(errorReport).contains("JMC rules are expected to have score less than <50>.")

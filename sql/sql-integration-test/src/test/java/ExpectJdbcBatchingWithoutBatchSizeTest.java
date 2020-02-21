@@ -68,7 +68,7 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
-        assertThat(printableResult.failureCount()).isEqualTo(0);
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 
@@ -101,7 +101,8 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
+
         assertThat(printableResult.toString())
                 .contains("[PERF] SQL executions were supposed to be batched.");
 
@@ -131,7 +132,8 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
         PrintableResult testResult = PrintableResult.testResult(testClass);
 
-        assertThat(testResult.failureCount()).isEqualTo(1);
+        assertThat(testResult.failureCount()).isOne();
+
         assertThat(testResult.toString()).contains("SQL executions were supposed to be batched");
 
     }
@@ -167,7 +169,7 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
         PrintableResult testResult = PrintableResult.testResult(testClass);
 
-        assertThat(testResult.failureCount()).isEqualTo(0);
+        assertThat(testResult.failureCount()).isZero();
 
     }
 

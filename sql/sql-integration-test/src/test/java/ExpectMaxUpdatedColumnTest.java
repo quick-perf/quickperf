@@ -11,7 +11,6 @@
  * Copyright 2019-2019 the original author or authors.
  */
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
@@ -53,7 +52,7 @@ public class ExpectMaxUpdatedColumnTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(0);
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 
@@ -84,18 +83,17 @@ public class ExpectMaxUpdatedColumnTest {
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.failureCount()).isOne();
 
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount()).isEqualTo(1);
-        softAssertions.assertThat(printableResult.toString()).contains("Maximum expected number of updated columns <1> but is <2>.");
-        softAssertions.assertThat(printableResult.toString().toLowerCase())
+        assertThat(printableResult.toString()).contains(
+                "Maximum expected number of updated columns <1> but is <2>.");
+
+        assertThat(printableResult.toString().toLowerCase())
                       .contains("update")
                       .contains("book")
                       .contains("set")
                       .contains("isbn = ?")
                       .contains("title = ?");
-        softAssertions.assertAll();
 
     }
 

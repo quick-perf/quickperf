@@ -30,7 +30,7 @@ public class JUnit5ExtensionTest {
         JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(1);
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isOne();
 
         String errorReport = jUnit5TestsResult.getErrorReport();
         assertThat(errorReport).contains("Expecting:")
@@ -62,7 +62,7 @@ public class JUnit5ExtensionTest {
         JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(1);
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isOne();
 
         String errorReport = jUnit5TestsResult.getErrorReport();
         assertThat(errorReport).contains("Expecting:")
