@@ -49,12 +49,14 @@
         <mockito.core.version>2.25.0</mockito.core.version>
         <h2.version>1.4.198</h2.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
-        <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <logback-classic.version>1.1.0</logback-classic.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
         <javadoc-subpackages />
         <javadoc-sourceFileIncludes>**\/\*.java</javadoc-sourceFileIncludes>
+        <project.build.outputTimestamp>2020-02-25T08:00:00Z</project.build.outputTimestamp>
+        <jar.skipIfEmpty>true</jar.skipIfEmpty>
     </properties>
 
     <dependencies>
@@ -70,6 +72,14 @@
 
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                    <configuration>
+                        <skipIfEmpty>${jar.skipIfEmpty}</skipIfEmpty>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>se.ayoy.maven-plugins</groupId>
                     <artifactId>ayoy-license-verifier-maven-plugin</artifactId>
@@ -240,7 +250,7 @@
                     </plugin>
                     <plugin>
                         <artifactId>maven-release-plugin</artifactId>
-                        <version>2.5.3</version>
+                        <version>3.0.0-M1</version>
                         <configuration>
                             <allowTimestampedSnapshots>true</allowTimestampedSnapshots> <!--Because of junit4-spring-base-tests-->
                             <autoVersionSubmodules>true</autoVersionSubmodules>
