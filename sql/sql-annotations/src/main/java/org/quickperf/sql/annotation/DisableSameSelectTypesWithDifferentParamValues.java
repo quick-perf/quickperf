@@ -20,8 +20,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
-public @interface EnableSameSelectTypesWithDifferentParams {
-
-    String comment() default "";
-
+public @interface DisableSameSelectTypesWithDifferentParamValues {
 }

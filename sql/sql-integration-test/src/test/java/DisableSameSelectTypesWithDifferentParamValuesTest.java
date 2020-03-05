@@ -16,20 +16,20 @@ import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.sql.Book;
-import org.quickperf.sql.annotation.DisableSameSelectTypesWithDifferentParams;
+import org.quickperf.sql.annotation.DisableSameSelectTypesWithDifferentParamValues;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DisableSameSelectTypesWithDifferentParamsTest {
+public class DisableSameSelectTypesWithDifferentParamValuesTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
     public static class AClassHavingAMethodAnnotatedWithDisableSameSelectTypeWithDifferentParams extends SqlTestBase {
 
         @Test
-        @DisableSameSelectTypesWithDifferentParams
+        @DisableSameSelectTypesWithDifferentParamValues
         public void execute_two_same_select_types_with_two_diff_params() {
 
             EntityManager em = emf.createEntityManager();
@@ -62,7 +62,7 @@ public class DisableSameSelectTypesWithDifferentParamsTest {
         assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
-                .contains("Same SELECT types with different parameters");
+                .contains("Same SELECT types with different parameter values");
 
     }
 
@@ -70,7 +70,7 @@ public class DisableSameSelectTypesWithDifferentParamsTest {
     public static class AClassHavingASameParamsMethodAnnotatedWithDisableSameSelectTypeWithDifferentParams extends SqlTestBase {
 
         @Test
-        @DisableSameSelectTypesWithDifferentParams
+        @DisableSameSelectTypesWithDifferentParamValues
         public void execute_two_same_select_with_two_same_params() {
             EntityManager em = emf.createEntityManager();
 

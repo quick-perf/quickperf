@@ -38,11 +38,11 @@ public class SqlAnnotationBuilder {
         };
     }
 
-    public static DisableSameSelectTypesWithDifferentParams disableSameSelectTypesWithDifferentParams() {
-        return new DisableSameSelectTypesWithDifferentParams() {
+    public static DisableSameSelectTypesWithDifferentParamValues disableSameSelectTypesWithDifferentParams() {
+        return new DisableSameSelectTypesWithDifferentParamValues() {
             @Override
             public Class<? extends Annotation> annotationType() {
-                return DisableSameSelectTypesWithDifferentParams.class;
+                return DisableSameSelectTypesWithDifferentParamValues.class;
             }
         };
     }

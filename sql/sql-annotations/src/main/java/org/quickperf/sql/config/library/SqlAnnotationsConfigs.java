@@ -77,12 +77,12 @@ class SqlAnnotationsConfigs {
 	static final AnnotationConfig DISABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS = new AnnotationConfig.Builder()
 			.perfRecorderClass(PersistenceSqlRecorder.class)
 			.perfMeasureExtractor(HasSameSelectTypesWithDiffParamsExtractor.INSTANCE)
-			.perfIssueVerifier(HasSameSelectTypesWithDiffParamsVerifier.INSTANCE)
-			.build(DisableSameSelectTypesWithDifferentParams.class);
+			.perfIssueVerifier(HasSameSelectTypesWithDiffParamValuesVerifier.INSTANCE)
+			.build(DisableSameSelectTypesWithDifferentParamValues.class);
 
 	static final AnnotationConfig ENABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS = new AnnotationConfig.Builder()
-			.cancelBehaviorOf(DisableSameSelectTypesWithDifferentParams.class)
-			.build(EnableSameSelectTypesWithDifferentParams.class);
+			.cancelBehaviorOf(DisableSameSelectTypesWithDifferentParamValues.class)
+			.build(EnableSameSelectTypesWithDifferentParamValues.class);
 
     static final AnnotationConfig NUMBER_OF_SQL_INSERT = new AnnotationConfig.Builder()
             .perfRecorderClass(PersistenceSqlRecorder.class)
