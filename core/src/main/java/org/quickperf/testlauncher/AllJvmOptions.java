@@ -60,7 +60,7 @@ public class AllJvmOptions {
     private List<String> toStringList(List<JvmOption> jvmOptions) {
         List<String> jvmParamsAsStrings = new ArrayList<>();
         for (JvmOption jvmOption : jvmOptions) {
-            jvmParamsAsStrings.add(jvmOption.getValueAsString());
+            jvmParamsAsStrings.add(jvmOption.asString());
         }
         return jvmParamsAsStrings;
     }

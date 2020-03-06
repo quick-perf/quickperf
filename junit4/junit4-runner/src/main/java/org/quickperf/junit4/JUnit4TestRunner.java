@@ -15,7 +15,7 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
-import org.quickperf.issue.BusinessOrTechnicalIssue;
+import org.quickperf.issue.TestIssue;
 import org.quickperf.testlauncher.TestRunnerFromMain;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import java.util.List;
 class JUnit4TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
 
     @Override
-    public BusinessOrTechnicalIssue executeTestMethod(Class<?> testClass, String methodName) {
+    public TestIssue executeTestMethod(Class<?> testClass, String methodName) {
 
         Request junitRequestOfMethod = Request.method(testClass, methodName);
 
@@ -34,7 +34,7 @@ class JUnit4TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
 
         List<Throwable> jUnit4failuresAsThrowables = convertJUnit4FailuresToThrowables(jUnit4Failures);
 
-        return  BusinessOrTechnicalIssue.buildFrom(jUnit4failuresAsThrowables);
+        return  TestIssue.buildFrom(jUnit4failuresAsThrowables);
 
     }
 

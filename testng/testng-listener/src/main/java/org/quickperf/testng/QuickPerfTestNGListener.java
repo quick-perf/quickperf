@@ -16,7 +16,8 @@ import org.quickperf.TestExecutionContext;
 import org.quickperf.config.library.QuickPerfConfigs;
 import org.quickperf.config.library.QuickPerfConfigsLoader;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
-import org.quickperf.issue.BusinessOrTechnicalIssue;
+import org.quickperf.issue.JvmOrTestIssue;
+import org.quickperf.issue.TestIssue;
 import org.quickperf.issue.PerfIssuesEvaluator;
 import org.quickperf.issue.PerfIssuesToFormat;
 import org.quickperf.jvm.JvmVersion;
@@ -56,16 +57,18 @@ public class QuickPerfTestNGListener implements IHookable {
             return;
         }
 
-        BusinessOrTechnicalIssue businessOrTechnicalIssue =
+        JvmOrTestIssue jvmOrTestIssue =
                 executeTestMethodAndRecordPerformance(hookCallBack, testResult, testExecutionContext);
 
         SetOfAnnotationConfigs testAnnotationConfigs = quickPerfConfigs.getTestAnnotationConfigs();
-        Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat = perfIssuesEvaluator.evaluatePerfIssues(testAnnotationConfigs, testExecutionContext);
+        Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat = perfIssuesEvaluator.evaluatePerfIssuesIfNoJvmIssue(testAnnotationConfigs
+                                                                                                                    , testExecutionContext
+                                                                                                                    , jvmOrTestIssue);
 
         testExecutionContext.cleanResources();
 
         try {
-            quickPerfReporter.report(businessOrTechnicalIssue, groupOfPerfIssuesToFormat, testExecutionContext);
+            quickPerfReporter.report(jvmOrTestIssue, groupOfPerfIssuesToFormat, testExecutionContext);
         } catch (Throwable throwable) {
             testResult.setThrowable(throwable);
             testResult.setStatus(ITestResult.FAILURE);
@@ -111,17 +114,19 @@ public class QuickPerfTestNGListener implements IHookable {
 
     }
 
-    private BusinessOrTechnicalIssue executeTestMethodAndRecordPerformance(IHookCallBack hookCallBack
+    private JvmOrTestIssue executeTestMethodAndRecordPerformance(IHookCallBack hookCallBack
                                                                          , ITestResult testResult
                                                                          , TestExecutionContext testExecutionContext) {
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
             Method testMethod = extractTestMethod(testResult);
             return executeTestMethodInNewJwm(testMethod, testExecutionContext);
         }
-        return executeTestMethodAndRecordPerformanceInSameJvm(hookCallBack, testResult, testExecutionContext);
+
+        TestIssue testIssue = executeTestMethodAndRecordPerformanceInSameJvm(hookCallBack, testResult, testExecutionContext);
+        return JvmOrTestIssue.buildFrom(testIssue);
     }
 
-    private BusinessOrTechnicalIssue executeTestMethodInNewJwm(Method testMethod
+    private JvmOrTestIssue executeTestMethodInNewJwm(Method testMethod
                                                              , TestExecutionContext testExecutionContext) {
         NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
         return newJvmTestLauncher.executeTestMethodInNewJwm(testMethod
@@ -129,13 +134,13 @@ public class QuickPerfTestNGListener implements IHookable {
                                                           , QuickPerfTestNGCore.class);
     }
 
-    private BusinessOrTechnicalIssue executeTestMethodAndRecordPerformanceInSameJvm(IHookCallBack hookCallBack, ITestResult testResult, TestExecutionContext testExecutionContext) {
+    private TestIssue executeTestMethodAndRecordPerformanceInSameJvm(IHookCallBack hookCallBack, ITestResult testResult, TestExecutionContext testExecutionContext) {
         performanceRecording.start(testExecutionContext);
         try {
             hookCallBack.runTestMethod(testResult);
-            return BusinessOrTechnicalIssue.NONE;
+            return TestIssue.NONE;
         } catch (Throwable throwable) {
-            return BusinessOrTechnicalIssue.buildFrom(throwable);
+            return TestIssue.buildFrom(throwable);
         } finally {
             performanceRecording.stop(testExecutionContext);
         }

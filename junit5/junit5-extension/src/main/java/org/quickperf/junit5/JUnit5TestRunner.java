@@ -17,7 +17,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
-import org.quickperf.issue.BusinessOrTechnicalIssue;
+import org.quickperf.issue.TestIssue;
 import org.quickperf.testlauncher.TestRunnerFromMain;
 
 import java.util.List;
@@ -29,14 +29,14 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
 
     @Override
-    public BusinessOrTechnicalIssue executeTestMethod(Class<?> testClass, String methodName) {
+    public TestIssue executeTestMethod(Class<?> testClass, String methodName) {
         TestExecutionSummary testResult = runTestMethod(testClass, methodName);
 
         List<TestExecutionSummary.Failure> failures = testResult.getFailures();
 
         List<Throwable> jUnit5failuresAsThrowables = convertToThrowables(failures);
 
-        return BusinessOrTechnicalIssue.buildFrom(jUnit5failuresAsThrowables);
+        return TestIssue.buildFrom(jUnit5failuresAsThrowables);
     }
 
     private List<Throwable> convertToThrowables(List<TestExecutionSummary.Failure> failures) {

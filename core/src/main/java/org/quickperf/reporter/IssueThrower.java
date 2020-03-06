@@ -11,7 +11,9 @@
 
 package org.quickperf.reporter;
 
-import org.quickperf.issue.BusinessOrTechnicalIssue;
+import org.quickperf.issue.JvmIssue;
+import org.quickperf.issue.JvmOrTestIssue;
+import org.quickperf.issue.TestIssue;
 import org.quickperf.issue.PerfIssuesToFormat;
 
 import java.util.Collection;
@@ -22,35 +24,42 @@ class IssueThrower {
 
     private IssueThrower() {}
 
-    void throwIfNecessary( BusinessOrTechnicalIssue businessOrTechnicalIssue
-                                , Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat
+    void throwIfNecessary( JvmOrTestIssue jvmOrTestIssue
+                         , Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat
     ) throws Throwable {
 
-        if (onlyBusinessIssue(businessOrTechnicalIssue, groupOfPerfIssuesToFormat)) {
-            throw businessOrTechnicalIssue.getThrowable();
+        if(jvmOrTestIssue.hasJvmIssue()) {
+            JvmIssue jvmIssue = jvmOrTestIssue.getJvmIssue();
+            throw jvmIssue.asThrowable();
         }
 
-        if (onlyPerfIssues(businessOrTechnicalIssue, groupOfPerfIssuesToFormat)) {
+        TestIssue testIssue = jvmOrTestIssue.getTestIssue();
+
+        if (onlyBusinessIssue(testIssue, groupOfPerfIssuesToFormat)) {
+            throw testIssue.asThrowable();
+        }
+
+        if (onlyPerfIssues(testIssue, groupOfPerfIssuesToFormat)) {
             throw ThrowableBuilder.buildPerfIssuesAssertionError(groupOfPerfIssuesToFormat);
         }
 
-        if (businessIssue(businessOrTechnicalIssue) && atLeastOnePerfIssue(groupOfPerfIssuesToFormat)) {
-            throw ThrowableBuilder.buildFunctionalIssueAndPerfIssuesAssertionError(businessOrTechnicalIssue
+        if (businessIssue(testIssue) && atLeastOnePerfIssue(groupOfPerfIssuesToFormat)) {
+            throw ThrowableBuilder.buildFunctionalIssueAndPerfIssuesAssertionError(testIssue
                                                                                  , groupOfPerfIssuesToFormat);
         }
 
     }
 
-    private boolean onlyBusinessIssue(BusinessOrTechnicalIssue businessOrTechnicalIssue, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
-        return businessIssue(businessOrTechnicalIssue) && !atLeastOnePerfIssue(groupOfPerfIssuesToFormat);
+    private boolean onlyBusinessIssue(TestIssue testIssue, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
+        return businessIssue(testIssue) && !atLeastOnePerfIssue(groupOfPerfIssuesToFormat);
     }
 
-    private boolean businessIssue(BusinessOrTechnicalIssue businessOrTechnicalIssue) {
-        return !businessOrTechnicalIssue.isNone();
+    private boolean businessIssue(TestIssue testIssue) {
+        return !testIssue.isNone();
     }
 
-    private boolean onlyPerfIssues(BusinessOrTechnicalIssue businessOrTechnicalIssue, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
-        return !businessIssue(businessOrTechnicalIssue) && atLeastOnePerfIssue(groupOfPerfIssuesToFormat);
+    private boolean onlyPerfIssues(TestIssue testIssue, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
+        return !businessIssue(testIssue) && atLeastOnePerfIssue(groupOfPerfIssuesToFormat);
     }
 
     private boolean atLeastOnePerfIssue(Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {

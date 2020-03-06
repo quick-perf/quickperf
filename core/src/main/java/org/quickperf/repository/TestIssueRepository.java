@@ -11,33 +11,33 @@
 
 package org.quickperf.repository;
 
-import org.quickperf.issue.BusinessOrTechnicalIssue;
+import org.quickperf.issue.TestIssue;
 import org.quickperf.WorkingFolder;
 
 import java.io.File;
 
-public class BusinessOrTechnicalIssueRepository {
+public class TestIssueRepository {
 
-    public static final BusinessOrTechnicalIssueRepository INSTANCE = new BusinessOrTechnicalIssueRepository();
+    public static final TestIssueRepository INSTANCE = new TestIssueRepository();
 
-    private final String fileName = "businessOrTechnicalIssue.ser";
+    private final String fileName = "testIssue.ser";
 
     private final ObjectFileRepository objectFileRepository = ObjectFileRepository.INSTANCE;
 
-    private BusinessOrTechnicalIssueRepository() {}
+    private TestIssueRepository() {}
 
-    public void save(BusinessOrTechnicalIssue businessOrTechnicalIssue, String workingFolderPath) {
-        if(businessOrTechnicalIssue.isNone()) {
+    public void save(TestIssue testIssue, String workingFolderPath) {
+        if(testIssue.isNone()) {
            return;
         }
-        objectFileRepository.save(workingFolderPath, fileName, businessOrTechnicalIssue);
+        objectFileRepository.save(workingFolderPath, fileName, testIssue);
     }
 
-    public BusinessOrTechnicalIssue findFrom(WorkingFolder workingFolder) {
+    public TestIssue findFrom(WorkingFolder workingFolder) {
         if(serializationFileExists(workingFolder)) {
-            return (BusinessOrTechnicalIssue) objectFileRepository.find(workingFolder.getPath(), fileName);
+            return (TestIssue) objectFileRepository.find(workingFolder.getPath(), fileName);
         }
-        return BusinessOrTechnicalIssue.NONE;
+        return TestIssue.NONE;
     }
 
     private boolean serializationFileExists(WorkingFolder workingFolder) {

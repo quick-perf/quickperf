@@ -15,8 +15,10 @@ import org.apache.commons.io.IOUtils;
 import org.quickperf.SystemProperties;
 import org.quickperf.TestExecutionContext;
 import org.quickperf.WorkingFolder;
-import org.quickperf.issue.BusinessOrTechnicalIssue;
-import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
+import org.quickperf.issue.JvmIssue;
+import org.quickperf.issue.TestIssue;
+import org.quickperf.issue.JvmOrTestIssue;
+import org.quickperf.repository.TestIssueRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,27 +31,36 @@ public class NewJvmTestLauncher {
 
     public static final NewJvmTestLauncher INSTANCE = new NewJvmTestLauncher();
 
-    private final BusinessOrTechnicalIssueRepository businessOrTechnicalIssueRepository = BusinessOrTechnicalIssueRepository.INSTANCE;
+    private final TestIssueRepository testIssueRepository = TestIssueRepository.INSTANCE;
 
     private NewJvmTestLauncher() { }
 
-    public BusinessOrTechnicalIssue executeTestMethodInNewJwm( Method testMethod
+    public JvmOrTestIssue executeTestMethodInNewJwm(Method testMethod
                                                              , TestExecutionContext testExecutionContext
                                                              , Class<?> mainClassToLaunchTestInANewJvm) {
+
+        JvmIssue jvmIssue = executeTestInNewJvm(testMethod
+                                              , testExecutionContext
+                                              , mainClassToLaunchTestInANewJvm);
+        if (!jvmIssue.isNone()) {
+            return JvmOrTestIssue.buildFrom(jvmIssue);
+        }
+
         WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
-        AllJvmOptions jvmOptions = testExecutionContext.getJvmOptions();
+        TestIssue testIssue = testIssueRepository.findFrom(workingFolder);
 
-        executeTestInNewJvm(testMethod, workingFolder, jvmOptions, mainClassToLaunchTestInANewJvm);
+        return JvmOrTestIssue.buildFrom(testIssue);
 
-        return businessOrTechnicalIssueRepository.findFrom(workingFolder);
     }
 
-    private void executeTestInNewJvm(Method testMethod
-                                  , WorkingFolder workingFolder
-                                  , AllJvmOptions jvmOptions
-                                  , Class<?> mainClassToLaunchTestInANewJvm) {
+    private JvmIssue executeTestInNewJvm(Method testMethod
+                                       , TestExecutionContext testExecutionContext
+                                       , Class<?> mainClassToLaunchTestInANewJvm) {
 
+        WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
         MainClassArguments mainClassArguments = MainClassArguments.buildFrom(testMethod, workingFolder);
+
+        AllJvmOptions jvmOptions = testExecutionContext.getJvmOptions();
 
         List<String> jvmOptionsAsStrings = jvmOptions.asStrings(workingFolder);
 
@@ -58,20 +69,14 @@ public class NewJvmTestLauncher {
                                               , workingFolder.getPath()
                                               , mainClassToLaunchTestInANewJvm);
 
-        CmdExecutionResult cmdExecutionResult  = tryWith(jvmCommand);
-
-        System.out.println(cmdExecutionResult.getMessage());
-
-        if(!cmdExecutionResult.isCommandSuccessful()) {
-            System.err.println("Unable to run test in a new JMV: " + cmdExecutionResult.getErrorMessage());
-        }
+        return execute(jvmCommand);
 
     }
 
-    private static List<String> buildCommand(MainClassArguments mainClassArguments
-                                           , List<String> jvmOptionsAsStrings
-                                           , String workingFolderPath
-                                           , Class<?> mainClassToLaunchTest) {
+    private List<String> buildCommand(MainClassArguments mainClassArguments
+                                    , List<String> jvmOptionsAsStrings
+                                    , String workingFolderPath
+                                    , Class<?> mainClassToLaunchTest) {
         List<String> command = new ArrayList<>();
         command.add(retrieveJavaExePath());
         command.addAll(jvmOptionsAsStrings);
@@ -89,46 +94,18 @@ public class NewJvmTestLauncher {
         return command;
     }
 
-    private static String retrieveJavaExePath() {
+    private String retrieveJavaExePath() {
         String javaHomeDirectoryPath = System.getProperty("java.home");
         return    javaHomeDirectoryPath
                 + File.separator + "bin"
                 + File.separator + "java";
     }
 
-    private static String retrieveCurrentClassPath() {
+    private String retrieveCurrentClassPath() {
         return System.getProperty("java.class.path");
     }
 
-    private static class CmdExecutionResult {
-
-        private final boolean isCommandSuccessful;
-
-        private final String message;
-
-        private final String errorMessage;
-
-        private CmdExecutionResult(boolean isCommandSuccessful, String message, String errorMessage) {
-            this.isCommandSuccessful = isCommandSuccessful;
-            this.message = message;
-            this.errorMessage = errorMessage;
-        }
-
-        private boolean isCommandSuccessful() {
-            return isCommandSuccessful;
-        }
-
-        private String getMessage() {
-            return message;
-        }
-
-        private String getErrorMessage() {
-            return errorMessage;
-        }
-
-    }
-
-    private static CmdExecutionResult tryWith(List<String> cmd) {
+    private JvmIssue execute(List<String> cmd) {
 
         try {
             final Process process = new ProcessBuilder(cmd).start();
@@ -164,13 +141,21 @@ public class NewJvmTestLauncher {
 
             if (err != 0) {
                 String errorMessage = errorWriter.toString();
-                return new CmdExecutionResult(false, "", errorMessage);
+                if(errorMessage.isEmpty()) {
+                    errorMessage = messageWriter.toString();
+                }
+                return JvmIssue.buildFrom(errorMessage);
             }
 
             String message = messageWriter.toString();
-            return new CmdExecutionResult(true, message, "");
-        } catch (IOException | InterruptedException ex) {
-            return new CmdExecutionResult(false, "", ex.getMessage());
+            if(!message.isEmpty()) {
+                System.out.println(message);
+            }
+
+            return JvmIssue.NONE;
+
+        } catch (IOException | InterruptedException e) {
+            return JvmIssue.buildFrom(e);
         }
 
     }

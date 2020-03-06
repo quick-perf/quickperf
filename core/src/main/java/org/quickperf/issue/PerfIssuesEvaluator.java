@@ -17,27 +17,35 @@ import org.quickperf.measure.PerfMeasure;
 import org.quickperf.perfrecording.PerfRecord;
 import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.perfrecording.ViewablePerfRecordIfPerfIssue;
-import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
+import org.quickperf.repository.TestIssueRepository;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
 
 public class PerfIssuesEvaluator {
 
-    private final BusinessOrTechnicalIssueRepository businessOrTechnicalIssueRepository = BusinessOrTechnicalIssueRepository.INSTANCE;
+    private final TestIssueRepository testIssueRepository = TestIssueRepository.INSTANCE;
 
     private PerfIssuesEvaluator() {}
 
     public static final PerfIssuesEvaluator INSTANCE = new PerfIssuesEvaluator();
 
-    public Collection<PerfIssuesToFormat> evaluatePerfIssues(SetOfAnnotationConfigs testAnnotationConfigs, TestExecutionContext testExecutionContext) {
+    public Collection<PerfIssuesToFormat> evaluatePerfIssuesIfNoJvmIssue(SetOfAnnotationConfigs annotationConfigs
+                                                                       , TestExecutionContext testExecutionContext
+                                                                       , JvmOrTestIssue jvmOrTestIssue) {
+
+        if(jvmOrTestIssue.hasJvmIssue()) {
+            return Collections.emptyList();
+        }
+
         Map<Annotation, PerfRecord> perfRecordByAnnotation
-                = buildPerfRecordByAnnotation(testAnnotationConfigs, testExecutionContext);
+                = buildPerfRecordByAnnotation(annotationConfigs, testExecutionContext);
 
         Map<Annotation, PerfIssue> perfIssuesByAnnotation
-                = evaluatePerfIssuesByAnnotation(perfRecordByAnnotation, testExecutionContext, testAnnotationConfigs);
+                = evaluatePerfIssuesByAnnotation(perfRecordByAnnotation, testExecutionContext, annotationConfigs);
 
         return perfIssuesToFormatGroup(perfRecordByAnnotation, perfIssuesByAnnotation);
+
     }
 
     private Map<Annotation, PerfIssue> evaluatePerfIssuesByAnnotation(Map<Annotation, PerfRecord> perfRecordByAnnotation, TestExecutionContext testExecutionContext, SetOfAnnotationConfigs testAnnotationConfigs) {
@@ -66,9 +74,9 @@ public class PerfIssuesEvaluator {
             return perfRecorder.findRecord(testExecutionContext);
         } catch (Exception e) {
             WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
-            BusinessOrTechnicalIssue businessOrTechnicalIssueFromTestJvm = businessOrTechnicalIssueRepository.findFrom(workingFolder);
-            if (!businessOrTechnicalIssueFromTestJvm.isNone()) {
-                Throwable throwable = businessOrTechnicalIssueFromTestJvm.getThrowable();
+            TestIssue testIssue = testIssueRepository.findFrom(workingFolder);
+            if (!testIssue.isNone()) {
+                Throwable throwable = testIssue.asThrowable();
                 e.addSuppressed(throwable);
             }
             throw e;

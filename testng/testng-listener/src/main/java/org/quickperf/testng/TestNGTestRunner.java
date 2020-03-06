@@ -11,7 +11,7 @@
 
 package org.quickperf.testng;
 
-import org.quickperf.issue.BusinessOrTechnicalIssue;
+import org.quickperf.issue.TestIssue;
 import org.quickperf.testlauncher.TestRunnerFromMain;
 import org.testng.*;
 
@@ -47,7 +47,7 @@ class TestNGTestRunner implements TestRunnerFromMain.FrameworkTestRunner {
     }
 
     @Override
-    public BusinessOrTechnicalIssue executeTestMethod(Class<?> testClass, String methodName) {
+    public TestIssue executeTestMethod(Class<?> testClass, String methodName) {
         TestNG testNG = createTestNGInstance(testClass, methodName);
 
         TestListenerAdapter testListenerAdapter = new TestListenerAdapter();
@@ -59,7 +59,7 @@ class TestNGTestRunner implements TestRunnerFromMain.FrameworkTestRunner {
 
         List<Throwable> failuresAsThrowables = convertToThrowables(failedTests);
 
-        return BusinessOrTechnicalIssue.buildFrom(failuresAsThrowables);
+        return TestIssue.buildFrom(failuresAsThrowables);
     }
 
     private static TestNG createTestNGInstance(Class<?> testClass, String methodName) {

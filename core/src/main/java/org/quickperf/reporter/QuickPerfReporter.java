@@ -11,13 +11,12 @@
 
 package org.quickperf.reporter;
 
-import org.quickperf.issue.BusinessOrTechnicalIssue;
+import org.quickperf.issue.JvmOrTestIssue;
 import org.quickperf.issue.PerfIssuesToFormat;
 import org.quickperf.TestExecutionContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class QuickPerfReporter {
@@ -30,17 +29,21 @@ public class QuickPerfReporter {
 
     private QuickPerfReporter() { }
 
-    public void report(BusinessOrTechnicalIssue businessOrTechnicalIssue
+    public void report(JvmOrTestIssue jvmOrTestIssue
                      , Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat
                      , TestExecutionContext testExecutionContext) throws Throwable {
+
         if(testExecutionContext.areQuickPerfAnnotationsToBeDisplayed()) {
             consoleReporter.displayQuickPerfAnnotations(testExecutionContext.getPerfAnnotations());
         }
+
         if (testExecutionContext.isQuickPerfDebugMode()) {
             List<String> jvmOptions = testExecutionContext.getJvmOptions() == null ? new ArrayList<String>() : testExecutionContext.getJvmOptions().asStrings(testExecutionContext.getWorkingFolder());
             consoleReporter.displayQuickPerfDebugInfos(jvmOptions);
         }
-        issueThrower.throwIfNecessary(businessOrTechnicalIssue, groupOfPerfIssuesToFormat);
+
+        issueThrower.throwIfNecessary(jvmOrTestIssue, groupOfPerfIssuesToFormat);
+
     }
 
 }

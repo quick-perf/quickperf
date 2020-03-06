@@ -9,20 +9,20 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.testng.jvm.jmc;
+package org.quickperf.testng.jvm;
 
 import org.quickperf.testng.TestNGTests;
 import org.testng.annotations.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
-public class JmcTestNGTests {
+public class JvmIssueTestNGTest {
 
     @Test public void
-    jmc_rules_having_score_greater_than_expected() {
+    should_report_jvm_issue() {
 
         // GIVEN
-        Class<?> testClass = TestNGClassWithFailingJmcRules.class;
+        Class<JvmIssue> testClass = JvmIssue.class;
         TestNGTests testNGTests = TestNGTests.createInstance(testClass);
 
         // WHEN
@@ -32,8 +32,8 @@ public class JmcTestNGTests {
         assertThat(testsResult.getNumberOfFailedTest()).isOne();
 
         Throwable errorReport = testsResult.getThrowableOfFirstTest();
-        assertThat(errorReport).hasMessageContaining("JMC rules are expected to have score less than <50>.")
-                               .hasMessageContaining("Rule: Primitive To Object Conversion");
+        assertThat(errorReport).hasMessageContaining(
+                "Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread \"main\"");
 
     }
 

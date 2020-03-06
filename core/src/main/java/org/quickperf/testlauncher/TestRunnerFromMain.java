@@ -11,8 +11,8 @@
 
 package org.quickperf.testlauncher;
 
-import org.quickperf.issue.BusinessOrTechnicalIssue;
-import org.quickperf.repository.BusinessOrTechnicalIssueRepository;
+import org.quickperf.issue.TestIssue;
+import org.quickperf.repository.TestIssueRepository;
 
 public class TestRunnerFromMain {
 
@@ -22,7 +22,7 @@ public class TestRunnerFromMain {
 
     public interface FrameworkTestRunner {
 
-        BusinessOrTechnicalIssue executeTestMethod(Class<?> testClass, String methodName);
+        TestIssue executeTestMethod(Class<?> testClass, String methodName);
 
     }
 
@@ -30,12 +30,12 @@ public class TestRunnerFromMain {
 
         MainClassArguments mainClassArguments = MainClassArguments.buildFromMainArguments(mainArgs);
 
-        BusinessOrTechnicalIssue businessOrTechnicalIssue = executeTestMethod(frameworkTestRunner, mainClassArguments);
+        TestIssue testIssue = executeTestMethod(frameworkTestRunner, mainClassArguments);
 
-        BusinessOrTechnicalIssueRepository businessOrTechnicalIssueRepository = BusinessOrTechnicalIssueRepository.INSTANCE;
+        TestIssueRepository testIssueRepository = TestIssueRepository.INSTANCE;
 
         String workingFolderPath = mainClassArguments.getWorkingFolderPath();
-        businessOrTechnicalIssueRepository.save(businessOrTechnicalIssue
+        testIssueRepository.save(testIssue
                                               , workingFolderPath);
 
         // To be sure that Tomcat or Jetty web server will stop
@@ -43,7 +43,7 @@ public class TestRunnerFromMain {
 
     }
 
-    private BusinessOrTechnicalIssue executeTestMethod(FrameworkTestRunner frameworkTestRunner, MainClassArguments mainClassArguments) throws ClassNotFoundException {
+    private TestIssue executeTestMethod(FrameworkTestRunner frameworkTestRunner, MainClassArguments mainClassArguments) throws ClassNotFoundException {
         String className = mainClassArguments.getClassName();
         Class<?> testClass = Class.forName(className);
 

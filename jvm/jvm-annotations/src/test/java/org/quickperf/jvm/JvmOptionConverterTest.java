@@ -40,11 +40,11 @@ public class JvmOptionConverterTest {
         softAssertions.assertThat(jvmOptions).hasSize(2);
 
         JvmOption firstJvmOption = jvmOptions.get(0);
-        softAssertions.assertThat(firstJvmOption.getValueAsString())
+        softAssertions.assertThat(firstJvmOption.asString())
                       .isEqualTo("-XX:+UseCompressedOops");
 
         JvmOption secondJvmOption = jvmOptions.get(1);
-        softAssertions.assertThat(secondJvmOption.getValueAsString())
+        softAssertions.assertThat(secondJvmOption.asString())
                       .isEqualTo("-XX:+UseCompressedClassPointers");
 
         softAssertions.assertAll();

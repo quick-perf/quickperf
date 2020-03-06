@@ -15,6 +15,8 @@ import java.util.Objects;
 
 public class JvmOption {
 
+    public static JvmOption NONE = new JvmOption("");
+
     private final String valueAsString;
 
     public JvmOption(String valueAsString) {
@@ -26,7 +28,7 @@ public class JvmOption {
         return valueAsString;
     }
 
-    public String getValueAsString() {
+    public String asString() {
         return valueAsString;
     }
 

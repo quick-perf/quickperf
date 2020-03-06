@@ -11,7 +11,7 @@
 
 package org.quickperf.reporter;
 
-import org.quickperf.issue.BusinessOrTechnicalIssue;
+import org.quickperf.issue.TestIssue;
 import org.quickperf.issue.PerfIssuesToFormat;
 
 import java.util.Collection;
@@ -54,9 +54,9 @@ class ThrowableBuilder {
         return sb.toString();
     }
 
-    static AssertionError buildFunctionalIssueAndPerfIssuesAssertionError(BusinessOrTechnicalIssue businessOrTechnicalIssue, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
+    static AssertionError buildFunctionalIssueAndPerfIssuesAssertionError(TestIssue testIssue, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
 
-        Throwable throwable = businessOrTechnicalIssue.getThrowable();
+        Throwable throwable = testIssue.asThrowable();
 
         String message = buildBusinessIssueAndPerfIssuesMessage(throwable, groupOfPerfIssuesToFormat);
 

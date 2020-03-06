@@ -14,33 +14,33 @@ package org.quickperf.issue;
 import java.io.Serializable;
 import java.util.List;
 
-public class BusinessOrTechnicalIssue implements Serializable {
+public class TestIssue implements Serializable {
 
-    public static final BusinessOrTechnicalIssue NONE = new BusinessOrTechnicalIssue(null);
+    public static final TestIssue NONE = new TestIssue(null);
 
     private final Throwable throwable;
 
-    private BusinessOrTechnicalIssue(Throwable throwable) {
+    private TestIssue(Throwable throwable) {
         this.throwable = throwable;
     }
 
-    public Throwable getThrowable() {
+    public Throwable asThrowable() {
         return throwable;
     }
 
-    public static BusinessOrTechnicalIssue buildFrom(Throwable throwable) {
-        return new BusinessOrTechnicalIssue(throwable);
+    public static TestIssue buildFrom(Throwable throwable) {
+        return new TestIssue(throwable);
     }
 
-    public static BusinessOrTechnicalIssue buildFrom(List<Throwable> throwables) {
+    public static TestIssue buildFrom(List<Throwable> throwables) {
 
         if (noThrowables(throwables)) {
-            return BusinessOrTechnicalIssue.NONE;
+            return TestIssue.NONE;
         }
 
         if(throwables.size() == 1) {
             Throwable throwable = throwables.get(0);
-            return new BusinessOrTechnicalIssue(throwable);
+            return new TestIssue(throwable);
         }
 
         return convertThrowablesIntoToBusinessOrTechnicalIssue(throwables);
@@ -51,7 +51,7 @@ public class BusinessOrTechnicalIssue implements Serializable {
         return throwables == null || throwables.isEmpty();
     }
 
-    private static BusinessOrTechnicalIssue convertThrowablesIntoToBusinessOrTechnicalIssue(List<Throwable> throwables) {
+    private static TestIssue convertThrowablesIntoToBusinessOrTechnicalIssue(List<Throwable> throwables) {
         Throwable firstThrowable = throwables.get(0);
 
         for (int i = 2; i < throwables.size(); i++) {
@@ -59,7 +59,7 @@ public class BusinessOrTechnicalIssue implements Serializable {
             firstThrowable.addSuppressed(throwable);
         }
 
-        return new BusinessOrTechnicalIssue(firstThrowable);
+        return new TestIssue(firstThrowable);
     }
 
     public boolean isNone() {

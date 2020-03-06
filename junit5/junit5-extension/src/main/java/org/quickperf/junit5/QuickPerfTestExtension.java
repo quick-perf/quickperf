@@ -20,7 +20,8 @@ import org.quickperf.TestExecutionContext;
 import org.quickperf.config.library.QuickPerfConfigs;
 import org.quickperf.config.library.QuickPerfConfigsLoader;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
-import org.quickperf.issue.BusinessOrTechnicalIssue;
+import org.quickperf.issue.TestIssue;
+import org.quickperf.issue.JvmOrTestIssue;
 import org.quickperf.issue.PerfIssuesEvaluator;
 import org.quickperf.issue.PerfIssuesToFormat;
 import org.quickperf.perfrecording.PerformanceRecording;
@@ -66,15 +67,18 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
             return;
         }
 
-        BusinessOrTechnicalIssue businessOrTechnicalIssue =
+        JvmOrTestIssue jvmOrTestIssue =
                 executeTestMethodAndRecordPerformance(invocation, invocationContext);
 
         SetOfAnnotationConfigs testAnnotationConfigs = quickPerfConfigs.getTestAnnotationConfigs();
-        Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat = perfIssuesEvaluator.evaluatePerfIssues(testAnnotationConfigs, testExecutionContext);
 
+        Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat
+                    = perfIssuesEvaluator.evaluatePerfIssuesIfNoJvmIssue(testAnnotationConfigs
+                                                                       , testExecutionContext
+                                                                       , jvmOrTestIssue);
         testExecutionContext.cleanResources();
 
-        quickPerfReporter.report(businessOrTechnicalIssue
+        quickPerfReporter.report(jvmOrTestIssue
                                , groupOfPerfIssuesToFormat
                                , testExecutionContext);
 
@@ -104,33 +108,34 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         return executable;
     }
 
-    private BusinessOrTechnicalIssue executeTestMethodAndRecordPerformance(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext) {
+    private JvmOrTestIssue executeTestMethodAndRecordPerformance(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext) {
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
             Method testMethod = invocationContext.getExecutable();
-            BusinessOrTechnicalIssue businessOrTechnicalIssue = executeTestMethodInNewJwm(testMethod);
+            JvmOrTestIssue jvmOrTestIssue = executeTestMethodInNewJwm(testMethod);
 
             //skip the invocation as the test method is invoked directly inside the 'newJvmTestLauncher'
             invocation.skip();
 
-            return businessOrTechnicalIssue;
+            return jvmOrTestIssue;
         }
-        return executeTestMethodAndRecordPerformanceInSameJvm(invocation);
+        TestIssue testIssue = executeTestMethodAndRecordPerformanceInSameJvm(invocation);
+        return JvmOrTestIssue.buildFrom(testIssue);
     }
 
-    private BusinessOrTechnicalIssue executeTestMethodInNewJwm(Method testMethod) {
+    private JvmOrTestIssue executeTestMethodInNewJwm(Method testMethod) {
         NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
         return newJvmTestLauncher.executeTestMethodInNewJwm(testMethod
                                                           , testExecutionContext
                                                           , QuickPerfJunit5Core.class);
     }
 
-    private BusinessOrTechnicalIssue executeTestMethodAndRecordPerformanceInSameJvm(Invocation<Void> invocation) {
+    private TestIssue executeTestMethodAndRecordPerformanceInSameJvm(Invocation<Void> invocation) {
         performanceRecording.start(testExecutionContext);
         try {
             invocation.proceed();
-            return BusinessOrTechnicalIssue.NONE;
+            return TestIssue.NONE;
         } catch (Throwable throwable) {
-            return BusinessOrTechnicalIssue.buildFrom(throwable);
+            return TestIssue.buildFrom(throwable);
         } finally {
             performanceRecording.stop(testExecutionContext);
         }
