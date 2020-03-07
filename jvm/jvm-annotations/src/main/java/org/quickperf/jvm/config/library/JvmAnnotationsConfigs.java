@@ -17,6 +17,7 @@ import org.quickperf.jvm.allocation.MaxHeapAllocationPerfVerifier;
 import org.quickperf.jvm.allocation.NoHeapAllocationPerfVerifier;
 import org.quickperf.jvm.allocation.bytewatcher.ByteWatcherRecorder;
 import org.quickperf.jvm.annotations.*;
+import org.quickperf.jvm.gc.UseGcAnnotToJvmOptionConverter;
 import org.quickperf.jvm.jfr.JfrEventsRecorder;
 import org.quickperf.jvm.jmcrule.JmcRuleCountMeasureExtractor;
 import org.quickperf.jvm.jmcrule.JmcRulesPerfVerifier;
@@ -61,6 +62,10 @@ class JvmAnnotationsConfigs {
     static final AnnotationConfig JVM_OPTIONS = new AnnotationConfig.Builder()
             .testHasToBeLaunchedInASpecificJvm(JvmOptionsAnnotToJvmOptionConverter.INSTANCE)
             .build(JvmOptions.class);
+
+    static final AnnotationConfig USE_GC = new AnnotationConfig.Builder()
+            .testHasToBeLaunchedInASpecificJvm(UseGcAnnotToJvmOptionConverter.INSTANCE)
+            .build(UseGC.class);
 
     static final AnnotationConfig DISPLAY_ALLOCATION_BY_BYTE_WATCHER = new AnnotationConfig.Builder()
             .perfRecorderClass(ByteWatcherRecorder.class)

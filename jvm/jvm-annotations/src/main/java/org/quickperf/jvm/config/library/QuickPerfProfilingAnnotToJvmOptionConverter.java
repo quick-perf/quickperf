@@ -22,6 +22,8 @@ class QuickPerfProfilingAnnotToJvmOptionConverter implements AnnotationToJvmOpti
 
     static final AnnotationToJvmOptionConverter INSTANCE = new QuickPerfProfilingAnnotToJvmOptionConverter();
 
+    private QuickPerfProfilingAnnotToJvmOptionConverter() { }
+
     private static final List<JvmOption> PROFILING_OPTIONS = buildProfilingOptions();
 
     private static List<JvmOption> buildProfilingOptions() {

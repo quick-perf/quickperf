@@ -9,20 +9,23 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.testng.jvm;
+package org.quickperf.jvm.gc;
 
-import org.quickperf.jvm.allocation.AllocationUnit;
-import org.quickperf.jvm.annotations.HeapSize;
-import org.testng.annotations.Test;
+import org.quickperf.jvm.annotations.UseGC;
+import org.quickperf.testlauncher.AnnotationToJvmOptionConverter;
+import org.quickperf.testlauncher.JvmOption;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class JvmIssue {
+public class UseGcAnnotToJvmOptionConverter implements AnnotationToJvmOptionConverter<UseGC> {
 
-    @HeapSize(value = 2, unit = AllocationUnit.MEGA_BYTE)
-    @Test
-    public void test_method_with_oom() {
-        ArrayList<Object> data = new ArrayList<>(1000);
+    public static UseGcAnnotToJvmOptionConverter INSTANCE = new UseGcAnnotToJvmOptionConverter();
+
+    private UseGcAnnotToJvmOptionConverter() { }
+
+    @Override
+    public List<JvmOption> convertToJvmOptions(UseGC useGcAnnotation) {
+        return useGcAnnotation.value().getJvmOptions();
     }
 
 }
