@@ -122,13 +122,21 @@ public class TestExecutionContext {
 
         testExecutionContext.perfAnnotations = perfAnnotations;
 
-        if(isTestMethodToBeLaunchedInASpecificJvm) {
-            testExecutionContext.jvmOptions = testAnnotationConfigs.retrieveJvmOptionsFor(perfAnnotations);
-            testExecutionContext.runnerAllocationOffset = runnerAllocationOffset;
+        WorkingFolder workingFolder = WorkingFolder.createOrRetrieveWorkingFolder(isTestMethodToBeLaunchedInASpecificJvm);
+        testExecutionContext.workingFolder = workingFolder;
+
+        testExecutionContext.testMethodToBeLaunchedInASpecificJvm = isTestMethodToBeLaunchedInASpecificJvm;
+
+        Boolean testCodeIsExecutingInNewJvm = SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate();
+
+        if (isTestMethodToBeLaunchedInASpecificJvm && !testCodeIsExecutingInNewJvm) {
+            testExecutionContext.jvmOptions =
+                    testAnnotationConfigs.retrieveJvmOptionsFor(perfAnnotations, workingFolder);
         }
 
-        testExecutionContext.workingFolder = WorkingFolder.createOrRetrieveWorkingFolder(isTestMethodToBeLaunchedInASpecificJvm);
-        testExecutionContext.testMethodToBeLaunchedInASpecificJvm = isTestMethodToBeLaunchedInASpecificJvm;
+        if(testCodeIsExecutingInNewJvm) {
+            testExecutionContext.runnerAllocationOffset = runnerAllocationOffset;
+        }
 
         ExecutionOrderOfPerfRecorders executionOrderOfPerfRecorders = quickPerfConfigs.getExecutionOrderOfPerfRecorders();
 

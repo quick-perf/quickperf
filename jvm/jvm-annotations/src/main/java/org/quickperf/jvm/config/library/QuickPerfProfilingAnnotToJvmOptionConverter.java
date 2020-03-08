@@ -11,6 +11,7 @@
 
 package org.quickperf.jvm.config.library;
 
+import org.quickperf.WorkingFolder;
 import org.quickperf.testlauncher.AnnotationToJvmOptionConverter;
 import org.quickperf.testlauncher.JvmOption;
 import org.quickperf.jvm.annotations.ProfileQuickPerfInTestJvm;
@@ -38,7 +39,7 @@ class QuickPerfProfilingAnnotToJvmOptionConverter implements AnnotationToJvmOpti
     }
 
     @Override
-    public List<JvmOption> convertToJvmOptions(ProfileQuickPerfInTestJvm annotation) {
+    public List<JvmOption> convertToJvmOptions(ProfileQuickPerfInTestJvm annotation, WorkingFolder workingFolder) {
         return PROFILING_OPTIONS;
     }
 

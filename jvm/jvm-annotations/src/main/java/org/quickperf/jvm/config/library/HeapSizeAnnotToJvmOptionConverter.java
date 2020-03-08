@@ -11,6 +11,7 @@
 
 package org.quickperf.jvm.config.library;
 
+import org.quickperf.WorkingFolder;
 import org.quickperf.jvm.allocation.JvmAllocationUnitFormatter;
 import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.annotations.HeapSize;
@@ -29,7 +30,7 @@ class HeapSizeAnnotToJvmOptionConverter implements AnnotationToJvmOptionConverte
     private HeapSizeAnnotToJvmOptionConverter() {}
 
     @Override
-    public List<JvmOption> convertToJvmOptions(HeapSize heapSize) {
+    public List<JvmOption> convertToJvmOptions(HeapSize heapSize, WorkingFolder workingFolder) {
 
         List<JvmOption> jvmOptions = new ArrayList<>(2);
         AllocationUnit allocationUnit = heapSize.unit();

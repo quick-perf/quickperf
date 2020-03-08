@@ -11,6 +11,7 @@
 
 package org.quickperf.jvm.gc;
 
+import org.quickperf.WorkingFolder;
 import org.quickperf.jvm.annotations.UseGC;
 import org.quickperf.testlauncher.AnnotationToJvmOptionConverter;
 import org.quickperf.testlauncher.JvmOption;
@@ -24,7 +25,7 @@ public class UseGcAnnotToJvmOptionConverter implements AnnotationToJvmOptionConv
     private UseGcAnnotToJvmOptionConverter() { }
 
     @Override
-    public List<JvmOption> convertToJvmOptions(UseGC useGcAnnotation) {
+    public List<JvmOption> convertToJvmOptions(UseGC useGcAnnotation, WorkingFolder workingFolder) {
         return useGcAnnotation.value().getJvmOptions();
     }
 

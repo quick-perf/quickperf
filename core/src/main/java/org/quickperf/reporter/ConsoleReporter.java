@@ -36,6 +36,8 @@ class ConsoleReporter {
 
     void displayQuickPerfDebugInfos(List<String> jvmOptions) {
 
+        System.out.println();
+
         System.out.println("[QUICK PERF DEBUG] " + System.lineSeparator());
 
         printJvmOptions(jvmOptions);

@@ -31,6 +31,7 @@ public class JvmConfigLoader implements QuickPerfConfigLoader {
                 , JvmAnnotationsConfigs.HEAP_SIZE
                 , JvmAnnotationsConfigs.JVM_OPTIONS
                 , JvmAnnotationsConfigs.USE_GC
+                , JvmAnnotationsConfigs.ENABLE_GC_LOGGING
                 , JvmAnnotationsConfigs.DISPLAY_ALLOCATION_BY_BYTE_WATCHER
                 , JvmAnnotationsConfigs.MAX_ALLOCATION_BY_BYTE_WATCHER
                 , JvmAnnotationsConfigs.NO_ALLOCATION_BY_BYTE_WATCHER

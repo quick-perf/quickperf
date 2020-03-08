@@ -12,6 +12,7 @@
 package org.quickperf.config.library;
 
 import org.quickperf.ExtractablePerformanceMeasure;
+import org.quickperf.WorkingFolder;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.annotation.DisableQuickPerf;
 import org.quickperf.perfrecording.RecordablePerformance;
@@ -101,14 +102,14 @@ public class SetOfAnnotationConfigs {
         return perfIssueVerifier;
     }
 
-    public AllJvmOptions retrieveJvmOptionsFor(Annotation[] annotations) {
+    public AllJvmOptions retrieveJvmOptionsFor(Annotation[] annotations, WorkingFolder workingFolder) {
         AllJvmOptions.Builder allJvmsParamsBuilder = new AllJvmOptions.Builder();
         for(Annotation annotation : annotations) {
             Class<? extends Annotation> clazz = annotation.annotationType();
             AnnotationToJvmOptionConverter annotationToJvmOptionConverter = annotationToJvmParamConverterByAnnotationClass.get(clazz);
             if(annotationToJvmOptionConverter != null) {
                 @SuppressWarnings("unchecked") //For each annotation a converter is retrieved
-                List<JvmOption> jvmOptions = annotationToJvmOptionConverter.convertToJvmOptions(annotation);
+                List<JvmOption> jvmOptions = annotationToJvmOptionConverter.convertToJvmOptions(annotation, workingFolder);
                 allJvmsParamsBuilder.addOptions(jvmOptions);
             }
         }

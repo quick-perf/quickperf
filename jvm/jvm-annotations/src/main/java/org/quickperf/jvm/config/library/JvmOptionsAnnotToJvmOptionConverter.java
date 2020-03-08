@@ -11,6 +11,7 @@
 
 package org.quickperf.jvm.config.library;
 
+import org.quickperf.WorkingFolder;
 import org.quickperf.jvm.annotations.JvmOptions;
 import org.quickperf.testlauncher.AnnotationToJvmOptionConverter;
 import org.quickperf.testlauncher.JvmOption;
@@ -27,7 +28,7 @@ class JvmOptionsAnnotToJvmOptionConverter implements AnnotationToJvmOptionConver
     private JvmOptionsAnnotToJvmOptionConverter() {}
 
     @Override
-    public List<JvmOption> convertToJvmOptions(JvmOptions jvmOptions) {
+    public List<JvmOption> convertToJvmOptions(JvmOptions jvmOptions, WorkingFolder workingFolder) {
         return jvmOptionConverter.jvmOptionFrom(jvmOptions);
     }
 }

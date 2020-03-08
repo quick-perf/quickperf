@@ -11,6 +11,7 @@
 
 package org.quickperf.jvm.config.library;
 
+import org.quickperf.WorkingFolder;
 import org.quickperf.jvm.allocation.JvmAllocationUnitFormatter;
 import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.annotations.Xmx;
@@ -29,7 +30,7 @@ class XmxAnnotToJvmOptionConverter implements AnnotationToJvmOptionConverter<Xmx
     private final JvmAllocationUnitFormatter jvmAllocationUnitFormatter = JvmAllocationUnitFormatter.INSTANCE;
 
     @Override
-    public List<JvmOption> convertToJvmOptions(Xmx xmx) {
+    public List<JvmOption> convertToJvmOptions(Xmx xmx, WorkingFolder workingFolder) {
         AllocationUnit allocationUnit = xmx.unit();
         String jvmParamOption = "-Xmx" + xmx.value() + jvmAllocationUnitFormatter.format(allocationUnit);
         JvmOption jvmOption = new JvmOption(jvmParamOption);

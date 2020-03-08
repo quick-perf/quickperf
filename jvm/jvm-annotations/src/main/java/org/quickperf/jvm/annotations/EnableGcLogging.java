@@ -9,23 +9,14 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.testlauncher;
+package org.quickperf.jvm.annotations;
 
-import org.quickperf.WorkingFolder;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.lang.annotation.Annotation;
-import java.util.Collections;
-import java.util.List;
-
-public interface AnnotationToJvmOptionConverter<A extends Annotation> {
-
-    AnnotationToJvmOptionConverter NONE = new AnnotationToJvmOptionConverter() {
-        @Override
-        public List<JvmOption> convertToJvmOptions(Annotation annotation, WorkingFolder workingFolder) {
-            return Collections.emptyList();
-        }
-    };
-
-    List<JvmOption> convertToJvmOptions(A annotation, WorkingFolder workingFolder);
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.TYPE})
+public @interface EnableGcLogging {
 }

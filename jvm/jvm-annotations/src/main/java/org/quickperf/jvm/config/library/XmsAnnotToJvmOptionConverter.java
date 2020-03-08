@@ -11,6 +11,7 @@
 
 package org.quickperf.jvm.config.library;
 
+import org.quickperf.WorkingFolder;
 import org.quickperf.jvm.allocation.JvmAllocationUnitFormatter;
 import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.testlauncher.AnnotationToJvmOptionConverter;
@@ -29,7 +30,7 @@ class XmsAnnotToJvmOptionConverter implements AnnotationToJvmOptionConverter<Xms
     private final JvmAllocationUnitFormatter jvmAllocationUnitFormatter = JvmAllocationUnitFormatter.INSTANCE;
 
     @Override
-    public List<JvmOption> convertToJvmOptions(Xms xms) {
+    public List<JvmOption> convertToJvmOptions(Xms xms, WorkingFolder workingFolder) {
         AllocationUnit allocationUnit = xms.unit();
         String jvmOptionAsString = "-Xms" + xms.value() + jvmAllocationUnitFormatter.format(allocationUnit);
         JvmOption jvmOption = new JvmOption(jvmOptionAsString);

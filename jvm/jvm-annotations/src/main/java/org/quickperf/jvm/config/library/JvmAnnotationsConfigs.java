@@ -11,12 +11,14 @@
 
 package org.quickperf.jvm.config.library;
 
+import org.quickperf.WorkingFolder;
 import org.quickperf.config.library.AnnotationConfig;
 import org.quickperf.jvm.allocation.MeasureHeapAllocationPerfVerifier;
 import org.quickperf.jvm.allocation.MaxHeapAllocationPerfVerifier;
 import org.quickperf.jvm.allocation.NoHeapAllocationPerfVerifier;
 import org.quickperf.jvm.allocation.bytewatcher.ByteWatcherRecorder;
 import org.quickperf.jvm.annotations.*;
+import org.quickperf.jvm.gc.EnableGcLoggingAnnotToJvmOptionConverter;
 import org.quickperf.jvm.gc.UseGcAnnotToJvmOptionConverter;
 import org.quickperf.jvm.jfr.JfrEventsRecorder;
 import org.quickperf.jvm.jmcrule.JmcRuleCountMeasureExtractor;
@@ -41,7 +43,7 @@ class JvmAnnotationsConfigs {
         private JfrAnnotationToJvmOptionConverter() { }
 
         @Override
-        public List<JvmOption> convertToJvmOptions(Annotation annotation) {
+        public List<JvmOption> convertToJvmOptions(Annotation annotation, WorkingFolder workingFolder) {
             return JfrJvmOptions.INSTANCE.getValues();
         }
 
@@ -66,6 +68,10 @@ class JvmAnnotationsConfigs {
     static final AnnotationConfig USE_GC = new AnnotationConfig.Builder()
             .testHasToBeLaunchedInASpecificJvm(UseGcAnnotToJvmOptionConverter.INSTANCE)
             .build(UseGC.class);
+
+    static final AnnotationConfig ENABLE_GC_LOGGING = new AnnotationConfig.Builder()
+            .testHasToBeLaunchedInASpecificJvm(EnableGcLoggingAnnotToJvmOptionConverter.INSTANCE)
+            .build(EnableGcLogging.class);
 
     static final AnnotationConfig DISPLAY_ALLOCATION_BY_BYTE_WATCHER = new AnnotationConfig.Builder()
             .perfRecorderClass(ByteWatcherRecorder.class)
