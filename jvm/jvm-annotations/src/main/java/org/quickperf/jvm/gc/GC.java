@@ -28,7 +28,7 @@ public enum GC {
                        )
                 )
 
-    , Z_GC(asList( JvmOption.UNLOCK_EXPERIMENTAL_VM_OPTIONS
+    , ZGC(asList( JvmOption.UNLOCK_EXPERIMENTAL_VM_OPTIONS
                  , new JvmOption("-XX:+UseZGC")
                  )
           )
