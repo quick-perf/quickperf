@@ -62,13 +62,13 @@
 [PERF] You may think that <1> select statement was sent to the database
        But in fact <10>...
 
-💣  You may have even more select statements with production data.
+💣 You may have even more select statements with production data.
 Be careful with the cost of JDBC server roundtrips: https://blog.jooq.org/2017/12/18/the-cost-of-jdbc-server-roundtrips/
 ```
 
 Auto-detection of Hibernate and Spring Data JPA:
 ```
-Perhaps you are facing a N+1 select issue
+💡 Perhaps you are facing a N+1 select issue
 	* With Hibernate, you may fix it by using JOIN FETCH
 	                                       or LEFT JOIN FETCH
 	                                       or FetchType.LAZY
