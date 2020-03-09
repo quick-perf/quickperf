@@ -41,11 +41,15 @@ class JFREventsLoader {
         try {
             File jfrFile = new File(jfrFilePath);
             IItemCollection jfrEvents = JfrLoaderToolkit.loadEvents(jfrFile);
+            String pointingRight = "\uD83D\uDC49";
             System.out.println("[QUICK PERF] JVM was profiled with Java Flight Recorder (JFR)."
                               + System.lineSeparator()
                               + "The recording file is available here: "
-                              + jfrFilePath + System.lineSeparator()
+                              + jfrFilePath
+                              + System.lineSeparator()
                               + "You can open it with Java Mission Control (JMC)."
+                              + System.lineSeparator()
+                              + "Where to find Java Mission Control? " + pointingRight + " https://tinyurl.com/find-jmc"
                                )
                               ;
             return jfrEvents;
