@@ -37,6 +37,8 @@ import org.quickperf.sql.update.UpdateCountMeasureExtractor;
 import org.quickperf.sql.update.UpdateNumberPerfIssueVerifier;
 import org.quickperf.sql.update.columns.MaxUpdatedColumnsPerMeasureExtractor;
 import org.quickperf.sql.update.columns.MaxUpdatedColumnsPerfIssueVerifier;
+import org.quickperf.sql.update.columns.UpdatedColumnsMeasureExtractor;
+import org.quickperf.sql.update.columns.UpdatedColumnsPerfIssueVerifier;
 
 class SqlAnnotationsConfigs {
 
@@ -148,5 +150,11 @@ class SqlAnnotationsConfigs {
 			.perfMeasureExtractor(SqlQueryExecutionTimeExtractor.INSTANCE)
 			.perfIssueVerifier(SqlQueryMaxExecutionTimeVerifier.INSTANCE)
 			.build(ExpectMaxQueryExecutionTime.class);
+    
+    static final AnnotationConfig EXPECT_UPDATED_COLUMN = new AnnotationConfig.Builder()
+    		.perfRecorderClass(PersistenceSqlRecorder.class)
+    		.perfMeasureExtractor(UpdatedColumnsMeasureExtractor.INSTANCE)
+    		.perfIssueVerifier(UpdatedColumnsPerfIssueVerifier.INSTANCE)
+    		.build(ExpectUpdatedColumn.class);
 
 }

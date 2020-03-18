@@ -235,6 +235,15 @@ Many thanks to all our contributors!
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=dialaya" title="Code">💻</a>
         </td>                
+        <td align="center">
+            <a href="https://github.com/fabfas">
+                <img src="https://avatars.githubusercontent.com/fabfas" width="100px;" alt="C Faisal"/>
+                <br/>
+                <sub><b>C Faisal</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=fabfas" title="Code">💻</a>
+        </td>                
     </tr>
 </table>
 <a href = "https://allcontributors.org/docs/en/emoji-key">emoji key</a>

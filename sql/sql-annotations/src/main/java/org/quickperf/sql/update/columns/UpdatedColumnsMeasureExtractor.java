@@ -13,19 +13,17 @@ package org.quickperf.sql.update.columns;
 
 import org.quickperf.ExtractablePerformanceMeasure;
 import org.quickperf.sql.SqlExecutions;
-import org.quickperf.unit.Count;
 
-public class MaxUpdatedColumnsPerMeasureExtractor implements ExtractablePerformanceMeasure<SqlExecutions, Count> {
+public class UpdatedColumnsMeasureExtractor implements ExtractablePerformanceMeasure<SqlExecutions, NumberOfUpdatedColumnsStatisticsMeasure> {
 
-    public static final MaxUpdatedColumnsPerMeasureExtractor INSTANCE = new MaxUpdatedColumnsPerMeasureExtractor();
+    public static final UpdatedColumnsMeasureExtractor INSTANCE = new UpdatedColumnsMeasureExtractor();
 
-    private MaxUpdatedColumnsPerMeasureExtractor() {}
+    private UpdatedColumnsMeasureExtractor() { }
 
     @Override
-    public Count extractPerfMeasureFrom(SqlExecutions perfRecord) {
-        NumberOfUpdatedColumnsStatistics updatedColumnsStatistics = perfRecord.getUpdatedColumnsStatistics();
-        long maxUpdatedColumns = updatedColumnsStatistics.getMax();
-        return new Count(maxUpdatedColumns);
+    public NumberOfUpdatedColumnsStatisticsMeasure extractPerfMeasureFrom(SqlExecutions sqlExecutions) {
+        return new NumberOfUpdatedColumnsStatisticsMeasure(sqlExecutions.getUpdatedColumnsStatistics()
+                                                         , sqlExecutions.toString());
     }
 
 }
