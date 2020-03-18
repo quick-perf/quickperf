@@ -219,4 +219,16 @@ public class SqlAnnotationBuilder {
         };
     }
 
+    public static ExpectUpdatedColumn expectUpdatedColumn(final int value) {
+        return new ExpectUpdatedColumn() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ExpectUpdatedColumn.class;
+            }
+            @Override
+            public int value() {
+                return value;
+            }
+        };
+    }
 }

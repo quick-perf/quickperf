@@ -17,6 +17,7 @@ import net.ttddyy.dsproxy.QueryType;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.PerfIssuesFormat;
 import org.quickperf.perfrecording.ViewablePerfRecordIfPerfIssue;
+import org.quickperf.sql.update.columns.NumberOfUpdatedColumnsStatistics;
 
 import java.io.Serializable;
 import java.util.*;
@@ -69,20 +70,28 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
         return queryNumber;
     }
 
-    public long getMaxNumberOfUpdatedColumn() {
-        QueryTypeRetriever queryTypeRetriever = QueryTypeRetriever.INSTANCE;
-        long maxColumnCount = 0L;
+    public NumberOfUpdatedColumnsStatistics getUpdatedColumnsStatistics() {
+
+        long minColumnCount = 0;
+        long maxColumnCount = 0;
+
         for (SqlExecution sqlExecution : sqlExecutions) {
             for (QueryInfo query : sqlExecution.getQueries()) {
+                QueryTypeRetriever queryTypeRetriever = QueryTypeRetriever.INSTANCE;
                 if (queryTypeRetriever.typeOf(query) == QueryType.UPDATE) {
                     long updatedColumnCount = countUpdatedColumn(query.getQuery());
+                    if(minColumnCount == 0 || updatedColumnCount < minColumnCount) {
+                        minColumnCount = updatedColumnCount;
+                    }
                     if (updatedColumnCount > maxColumnCount) {
                         maxColumnCount = updatedColumnCount;
                     }
                 }
             }
         }
-        return maxColumnCount;
+
+        return new NumberOfUpdatedColumnsStatistics(minColumnCount, maxColumnCount);
+
     }
 
     private long countUpdatedColumn(String sql) {
