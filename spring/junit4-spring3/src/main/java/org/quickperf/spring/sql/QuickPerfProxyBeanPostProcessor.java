@@ -49,7 +49,7 @@ public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor {
 
     private static class ProxyDataSourceInterceptor implements MethodInterceptor {
 
-        private DataSource datasourceProxy;
+        private final DataSource datasourceProxy;
 
         public ProxyDataSourceInterceptor(final DataSource dataSource) {
             this.datasourceProxy =

@@ -20,7 +20,7 @@ import java.util.List;
 
 public class UseGcAnnotToJvmOptionConverter implements AnnotationToJvmOptionConverter<UseGC> {
 
-    public static UseGcAnnotToJvmOptionConverter INSTANCE = new UseGcAnnotToJvmOptionConverter();
+    public static final UseGcAnnotToJvmOptionConverter INSTANCE = new UseGcAnnotToJvmOptionConverter();
 
     private UseGcAnnotToJvmOptionConverter() { }
 

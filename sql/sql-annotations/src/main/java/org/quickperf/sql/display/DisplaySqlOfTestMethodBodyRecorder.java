@@ -25,7 +25,7 @@ import java.util.List;
 
 public class DisplaySqlOfTestMethodBodyRecorder implements SqlRecorder<SqlExecutions> {
 
-    private DataSourceProxyVerifier datasourceProxyVerifier = new DataSourceProxyVerifier();
+    private final DataSourceProxyVerifier datasourceProxyVerifier = new DataSourceProxyVerifier();
 
     @Override
     public void startRecording(TestExecutionContext testExecutionContext) {

@@ -15,12 +15,12 @@ import java.util.Objects;
 
 public class JvmOption {
 
-    public static JvmOption NONE = new JvmOption("");
+    public static final JvmOption NONE = new JvmOption("");
 
-    public static JvmOption UNLOCK_EXPERIMENTAL_VM_OPTIONS =
+    public static final JvmOption UNLOCK_EXPERIMENTAL_VM_OPTIONS =
             new JvmOption("-XX:+UnlockExperimentalVMOptions");
 
-    public static JvmOption ALWAYS_PRE_TOUCH = new JvmOption("-XX:+AlwaysPreTouch");
+    public static final JvmOption ALWAYS_PRE_TOUCH = new JvmOption("-XX:+AlwaysPreTouch");
     
     private final String valueAsString;
 

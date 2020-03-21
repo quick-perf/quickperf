@@ -42,11 +42,6 @@ public interface PerfMeasure<V, U> extends PerfRecord {
         }
 
         @Override
-        public int hashCode() {
-            return super.hashCode();
-        }
-
-        @Override
         public String toString() {
             return "No perf measure.";
         }

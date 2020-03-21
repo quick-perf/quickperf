@@ -18,7 +18,7 @@ import java.util.*;
 
 public class QuickPerfConfigsLoader {
 
-    public static QuickPerfConfigsLoader INSTANCE = new QuickPerfConfigsLoader();
+    public static final QuickPerfConfigsLoader INSTANCE = new QuickPerfConfigsLoader();
 
     private QuickPerfConfigsLoader() { }
 

@@ -23,7 +23,7 @@ import java.util.List;
 
 public class EnableGcLoggingAnnotToJvmOptionConverter implements AnnotationToJvmOptionConverter<EnableGcLogging> {
 
-    public static EnableGcLoggingAnnotToJvmOptionConverter INSTANCE = new EnableGcLoggingAnnotToJvmOptionConverter();
+    public static final EnableGcLoggingAnnotToJvmOptionConverter INSTANCE = new EnableGcLoggingAnnotToJvmOptionConverter();
 
     private EnableGcLoggingAnnotToJvmOptionConverter() { }
 

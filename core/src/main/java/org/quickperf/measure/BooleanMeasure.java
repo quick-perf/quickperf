@@ -13,9 +13,9 @@ package org.quickperf.measure;
 
 public class BooleanMeasure extends AbstractComparablePerfMeasure<BooleanMeasure> {
 
-    public static BooleanMeasure TRUE = new BooleanMeasure(true);
+    public static final BooleanMeasure TRUE = new BooleanMeasure(true);
 
-    public static BooleanMeasure FALSE = new BooleanMeasure(false);
+    public static final BooleanMeasure FALSE = new BooleanMeasure(false);
 
     private static final String NO_COMMENT = "";
 
@@ -26,11 +26,6 @@ public class BooleanMeasure extends AbstractComparablePerfMeasure<BooleanMeasure
     public BooleanMeasure(Boolean value) {
         this.value = value;
         this.comment = NO_COMMENT;
-    }
-
-    public BooleanMeasure(Boolean value, String comment) {
-        this.value = value;
-        this.comment = comment;
     }
 
     @Override

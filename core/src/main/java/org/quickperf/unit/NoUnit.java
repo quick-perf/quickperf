@@ -13,7 +13,7 @@ package org.quickperf.unit;
 
 public class NoUnit {
 
-    public static NoUnit INSTANCE = new NoUnit();
+    public static final NoUnit INSTANCE = new NoUnit();
 
     private NoUnit() { }
 

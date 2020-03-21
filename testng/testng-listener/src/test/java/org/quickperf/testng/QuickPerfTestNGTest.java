@@ -14,9 +14,6 @@ package org.quickperf.testng;
 import org.quickperf.testng.TestNGTests.TestNGTestsResult;
 import org.testng.annotations.Test;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class QuickPerfTestNGTest {

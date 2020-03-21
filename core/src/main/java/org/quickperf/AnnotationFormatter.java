@@ -23,9 +23,9 @@ public class AnnotationFormatter {
 
     private AnnotationFormatter() {}
 
-    private Set<String> proxyMethodNames = retrieveMethodNamesOf(Proxy.class);
+    private final Set<String> proxyMethodNames = retrieveMethodNamesOf(Proxy.class);
 
-    private Set<String> annotationMethodNames = retrieveMethodNamesOf(Annotation.class);
+    private final Set<String> annotationMethodNames = retrieveMethodNamesOf(Annotation.class);
 
     private Set<String> retrieveMethodNamesOf(Class<?> clazz) {
         Set<String> annotationMethodNames = new HashSet<>();

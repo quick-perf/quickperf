@@ -32,7 +32,7 @@ public class AllJvmOptions {
 
     public static class Builder {
 
-        private Set<JvmOption> allJvmOptions = new LinkedHashSet<>();
+        private final Set<JvmOption> allJvmOptions = new LinkedHashSet<>();
 
         public Builder addOptions(List<JvmOption> jvmOptions) {
             allJvmOptions.addAll(jvmOptions);

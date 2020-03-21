@@ -13,7 +13,6 @@ package org.quickperf.sql.select;
 
 import net.ttddyy.dsproxy.QueryInfo;
 import net.ttddyy.dsproxy.QueryType;
-import net.ttddyy.dsproxy.proxy.ParameterSetOperation;
 import org.quickperf.ExtractablePerformanceMeasure;
 import org.quickperf.measure.BooleanMeasure;
 import org.quickperf.sql.QueryTypeRetriever;

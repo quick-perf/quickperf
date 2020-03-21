@@ -12,7 +12,6 @@
 package org.quickperf.jvm.allocation.bytewatcher;
 
 import org.quickperf.TestExecutionContext;
-import org.quickperf.jvm.JvmVersion;
 import org.quickperf.jvm.allocation.Allocation;
 import org.quickperf.jvm.allocation.AllocationRepository;
 import org.quickperf.perfrecording.RecordablePerformance;

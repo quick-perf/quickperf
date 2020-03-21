@@ -35,7 +35,7 @@ public class AnnotationsMergerTest {
 
     private @interface PerfAnnotation3 {}
 
-    private DisableGlobalAnnotations disableGlobalAnnotations = new DisableGlobalAnnotations() {
+    private final DisableGlobalAnnotations disableGlobalAnnotations = new DisableGlobalAnnotations() {
         @Override
         public String comment() {
             return "";

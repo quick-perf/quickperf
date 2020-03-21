@@ -15,11 +15,11 @@ import java.io.Serializable;
 
 public class PlayerWithTeamName implements Serializable {
 
-    private String firstName;
+    private final String firstName;
 
-    private String lastName;
+    private final String lastName;
 
-    private String team;
+    private final String team;
 
     public PlayerWithTeamName(String firstName, String lastName, String team) {
         this.firstName = firstName;

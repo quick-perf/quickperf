@@ -127,11 +127,10 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
             return QUICK_PERF_SPRING_RUNNER_FOR_SPECIFIC_JVM.withAfters(frameworkMethod, testInstance, statement);
         }
         if(testMethodToBeLaunchedInASpecificJvm) {
-            Statement junitAfters = NO_STATEMENT;
             return new MainJvmAfterJUnitStatement(frameworkMethod
                                                 , testExecutionContext
                                                 , quickPerfConfigs
-                                                , junitAfters);
+                                                , NO_STATEMENT);
         }
         // The test method is not executed in a specific JVM and performance properties
         // are evaluated
@@ -479,9 +478,6 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
     protected Statement classBlock(RunNotifier notifier) {
         if (SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
             return QUICK_PERF_SPRING_RUNNER_FOR_SPECIFIC_JVM.classBlock(notifier);
-        }
-        if(quickPerfFeaturesAreDisabled) {
-            return super.classBlock(notifier);
         }
         return super.classBlock(notifier);
     }

@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * unintended allocation.
  */
 public class ByteWatcherSingleThread {
+
   private static final String ALLOCATED = " allocated ";
   private static final String GET_THREAD_ALLOCATED_BYTES =
       "getThreadAllocatedBytes";
@@ -112,9 +113,7 @@ public class ByteWatcherSingleThread {
    */
   public long calculateAllocations() {
     checkThreadSafety();
-    long mark1 = ((threadAllocatedBytes() -
-        MEASURING_COST_IN_BYTES) - allocated.get());
-    return mark1;
+    return threadAllocatedBytes() - MEASURING_COST_IN_BYTES - allocated.get();
   }
 
   private void checkThreadSafety() {

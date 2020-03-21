@@ -16,9 +16,6 @@ import org.quickperf.jvm.allocation.Allocation;
 import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.allocation.ByteAllocationMeasureFormatter;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ByteAllocationMeasureFormatterTest {

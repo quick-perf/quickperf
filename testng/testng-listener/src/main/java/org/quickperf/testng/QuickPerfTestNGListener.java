@@ -40,7 +40,7 @@ public class QuickPerfTestNGListener implements IHookable {
 
     private final PerformanceRecording performanceRecording = PerformanceRecording.INSTANCE;
 
-    private QuickPerfReporter quickPerfReporter = QuickPerfReporter.INSTANCE;
+    private final QuickPerfReporter quickPerfReporter = QuickPerfReporter.INSTANCE;
 
     @Override
     public void run(IHookCallBack hookCallBack, ITestResult testResult) {

@@ -16,7 +16,7 @@ import java.io.*;
 
 class ObjectOutputStreamBuilder {
 
-    static ObjectOutputStreamBuilder INSTANCE = new ObjectOutputStreamBuilder();
+    static final ObjectOutputStreamBuilder INSTANCE = new ObjectOutputStreamBuilder();
 
     static ObjectOutputStreamBuilder getInstance() {
         return INSTANCE;

@@ -16,7 +16,6 @@ import org.quickperf.measure.AbstractComparablePerfMeasure;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.util.List;
 
 class ProcessStatus extends AbstractComparablePerfMeasure<ProcessStatus> {

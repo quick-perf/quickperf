@@ -43,7 +43,9 @@ public class JmcRuleCountMeasureExtractor implements ExtractablePerformanceMeasu
         List<Count> jmcRules = buildJmcRuleCountsFrom(ruleEvaluations);
 
         return new JmcRulesMeasure(jmcRules);
+
     }
+
     private List<Result> evaluateJmcRules(IItemCollection jfrEvents) {
         List<Result> ruleEvaluations = new ArrayList<>();
         for (IRule rule : RuleRegistry.getRules()) {
