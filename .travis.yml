@@ -24,6 +24,8 @@ matrix:
     - os: osx
       jdk: oraclejdk13
     - os: osx
+      jdk: oraclejdk14
+    - os: osx
       jdk: openjdk12
     - os: osx
       jdk: openjdk13
@@ -34,6 +36,7 @@ jdk:
   - oraclejdk11
   - oraclejdk12
   - oraclejdk13
+  - oraclejdk14
   - openjdk11
   - openjdk12
   - openjdk13
