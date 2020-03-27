@@ -9,17 +9,21 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.jvm.annotations;
+package org.quickperf.perfrecording;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.Annotation;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE})
-public @interface JvmOptions {
+public interface ExtractablePerfRecorderParametersFromAnnotation<A extends Annotation> {
 
-    String value() default "";
+    ExtractablePerfRecorderParametersFromAnnotation NONE = new ExtractablePerfRecorderParametersFromAnnotation() {
+
+        @Override
+        public PerfRecorderParameters extractFrom(Annotation annotation) {
+            return PerfRecorderParameters.NONE;
+        }
+
+    };
+
+    PerfRecorderParameters extractFrom(A annotation);
 
 }

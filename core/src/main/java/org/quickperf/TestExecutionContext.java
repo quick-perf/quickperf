@@ -18,17 +18,17 @@ import org.quickperf.annotation.FunctionalIteration;
 import org.quickperf.config.library.QuickPerfConfigs;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
 import org.quickperf.perfrecording.ExecutionOrderOfPerfRecorders;
+import org.quickperf.perfrecording.ExtractablePerfRecorderParametersFromAnnotation;
+import org.quickperf.perfrecording.PerfRecorderParameters;
 import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.testlauncher.AllJvmOptions;
 import org.quickperf.testlauncher.JvmOption;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class TestExecutionContext {
 
@@ -138,16 +138,67 @@ public class TestExecutionContext {
             testExecutionContext.runnerAllocationOffset = runnerAllocationOffset;
         }
 
+        List<RecordablePerformance> perfRecordersToExecute = buildPerfRecordersToExecute(testAnnotationConfigs, perfAnnotations);
+
         ExecutionOrderOfPerfRecorders executionOrderOfPerfRecorders = quickPerfConfigs.getExecutionOrderOfPerfRecorders();
-
-        Set<Class<? extends RecordablePerformance>> perfRecorderClasses = testAnnotationConfigs.retrievePerfRecorderClassesFor(perfAnnotations);
-
-        List<RecordablePerformance> perfRecordersToExecute = buildPerfRecorderInstances(perfRecorderClasses);
 
         testExecutionContext.perfRecordersToExecuteBeforeTestMethod = executionOrderOfPerfRecorders.sortPerfRecordersBeforeTestMethod(perfRecordersToExecute);
         testExecutionContext.perfRecordersToExecuteAfterTestMethod = executionOrderOfPerfRecorders.sortPerfRecordersAfterTestMethod(perfRecordersToExecute);
 
         return testExecutionContext;
+    }
+
+    private static List<RecordablePerformance> buildPerfRecordersToExecute(SetOfAnnotationConfigs testAnnotationConfigs, Annotation[] perfAnnotations) {
+        List<RecordablePerformance> perfRecordersToExecute = new ArrayList<>();
+        Set<Class<? extends RecordablePerformance>> perfRecorderClasses = new HashSet<>();
+        for (Annotation perfAnnotation : perfAnnotations) {
+            Class<? extends RecordablePerformance> perfRecorderClass = testAnnotationConfigs.retrievePerfRecorderClassFor(perfAnnotation);
+            if(perfRecorderClass!= null && !perfRecorderClasses.contains(perfRecorderClass)) {
+                RecordablePerformance perfRecorder = buildPerfRecorder(perfAnnotation
+                                                                     , perfRecorderClass
+                                                                     , testAnnotationConfigs
+                                                                      );
+                perfRecordersToExecute.add(perfRecorder);
+            }
+        }
+        return perfRecordersToExecute;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static RecordablePerformance buildPerfRecorder(Annotation perfAnnotation
+                                                         , Class<? extends RecordablePerformance> perfRecorderClass
+                                                         , SetOfAnnotationConfigs testAnnotationConfigs) {
+        ExtractablePerfRecorderParametersFromAnnotation perfRecorderParamExtractor
+                = testAnnotationConfigs.retrievePerfRecorderParamExtractorFor(perfAnnotation);
+        if(perfRecorderParamExtractor != null) {
+            PerfRecorderParameters perfRecorderParameters = perfRecorderParamExtractor.extractFrom(perfAnnotation);
+            return instantiatePerfRecorderFrom(perfRecorderClass, perfRecorderParameters);
+        } else {
+            return instantiatePerfRecorderFrom(perfRecorderClass);
+        }
+    }
+
+    private static RecordablePerformance instantiatePerfRecorderFrom(Class<? extends RecordablePerformance> perfRecorderClass
+                                                                   , PerfRecorderParameters perfRecorderParameters) {
+        try {
+            Constructor<? extends RecordablePerformance> declaredConstructor = perfRecorderClass.getDeclaredConstructor(PerfRecorderParameters.class);
+            return declaredConstructor.newInstance(perfRecorderParameters);
+        } catch (InstantiationException | IllegalAccessException
+                | NoSuchMethodException | InvocationTargetException e) {
+            e.printStackTrace();
+            return RecordablePerformance.NONE;
+        }
+    }
+
+    private static RecordablePerformance instantiatePerfRecorderFrom(Class<? extends RecordablePerformance> perfRecorderClass) {
+        try {
+            Constructor<? extends RecordablePerformance> declaredConstructor = perfRecorderClass.getDeclaredConstructor();
+            return declaredConstructor.newInstance();
+        } catch (InstantiationException | IllegalAccessException
+                | NoSuchMethodException | InvocationTargetException e) {
+            e.printStackTrace();
+            return RecordablePerformance.NONE;
+        }
     }
 
     private static boolean haveQuickPerfAnnotationsToBeDisplayed(Annotation[] perfAnnotations) {
@@ -183,27 +234,6 @@ public class TestExecutionContext {
     private static boolean annotationDisablingQuickPerf(Annotation perfAnnotation) {
         return     perfAnnotation.annotationType().equals(DisableQuickPerf.class)
                 || perfAnnotation.annotationType().equals(FunctionalIteration.class);
-    }
-
-    private static List<RecordablePerformance> buildPerfRecorderInstances(Set<Class<? extends RecordablePerformance>> perfRecorderClasses) {
-        List<RecordablePerformance> perfRecorders = new ArrayList<>();
-        for (Class<? extends RecordablePerformance> perfRecorderClass : perfRecorderClasses) {
-            RecordablePerformance perfRecorder = instantiatePerfRecorderFrom(perfRecorderClass);
-            if(perfRecorder != RecordablePerformance.NONE) {
-                perfRecorders.add(perfRecorder);
-            }
-        }
-        return perfRecorders;
-    }
-
-    private static RecordablePerformance instantiatePerfRecorderFrom(Class<? extends RecordablePerformance> perfRecorderClass) {
-        try {
-            return perfRecorderClass.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException
-                | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
-            return RecordablePerformance.NONE;
-        }
     }
 
     public boolean testExecutionUsesTwoJVMs() {

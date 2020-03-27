@@ -13,6 +13,7 @@ package org.quickperf.config.library;
 
 import org.quickperf.ExtractablePerformanceMeasure;
 import org.quickperf.issue.VerifiablePerformanceIssue;
+import org.quickperf.perfrecording.ExtractablePerfRecorderParametersFromAnnotation;
 import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.testlauncher.AnnotationToJvmOptionConverter;
 
@@ -35,6 +36,8 @@ public class AnnotationConfig {
     private Class<? extends Annotation> classOfAnnotationToDisable;
 
     private AnnotationToJvmOptionConverter annotationToJvmOptionConverter;
+
+    private ExtractablePerfRecorderParametersFromAnnotation perfRecorderParamsExtractorFromAnnot;
 
     public Class<? extends Annotation> getClazz() {
         return clazz;
@@ -60,6 +63,10 @@ public class AnnotationConfig {
         return annotationToJvmOptionConverter;
     }
 
+    public ExtractablePerfRecorderParametersFromAnnotation getPerfRecorderParamsExtractorFromAnnot() {
+        return perfRecorderParamsExtractorFromAnnot;
+    }
+
     Class<? extends Annotation> getClassOfAnnotationToDisable() {
         return classOfAnnotationToDisable;
     }
@@ -78,6 +85,8 @@ public class AnnotationConfig {
                 = AnnotationToJvmOptionConverter.NONE;
 
         private ExtractablePerformanceMeasure perfMeasureExtractor;
+
+        private ExtractablePerfRecorderParametersFromAnnotation perfRecorderParamsExtractorFromAnnot;
 
         public Builder perfRecorderClass(Class<? extends RecordablePerformance> recordablePerformance) {
             this.perfRecorderClass = recordablePerformance;
@@ -111,6 +120,11 @@ public class AnnotationConfig {
             return this;
         }
 
+        public Builder perfRecorderParamsExtractorFromAnnot(ExtractablePerfRecorderParametersFromAnnotation perfRecorderParamsExtractor) {
+            this.perfRecorderParamsExtractorFromAnnot = perfRecorderParamsExtractor;
+            return this;
+        }
+
         public AnnotationConfig build(Class<? extends Annotation> clazz) {
             AnnotationConfig annotationConfig = new AnnotationConfig();
             annotationConfig.clazz = clazz;
@@ -129,6 +143,7 @@ public class AnnotationConfig {
             annotationConfig.testHasToBeLaunchedInASpecificJvm = testHasToBeLaunchedInASpecificJvm;
             annotationConfig.annotationToJvmOptionConverter = annotationToJvmOptionConverter;
             annotationConfig.classOfAnnotationToDisable = classOfAnnotationToDisable;
+            annotationConfig.perfRecorderParamsExtractorFromAnnot = perfRecorderParamsExtractorFromAnnot;
             return annotationConfig;
         }
 

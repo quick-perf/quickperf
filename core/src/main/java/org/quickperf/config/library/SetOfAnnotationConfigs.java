@@ -15,6 +15,7 @@ import org.quickperf.ExtractablePerformanceMeasure;
 import org.quickperf.WorkingFolder;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.annotation.DisableQuickPerf;
+import org.quickperf.perfrecording.ExtractablePerfRecorderParametersFromAnnotation;
 import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.testlauncher.AllJvmOptions;
 import org.quickperf.testlauncher.AnnotationToJvmOptionConverter;
@@ -36,6 +37,8 @@ public class SetOfAnnotationConfigs {
     private final Map<Class<? extends Annotation>, AnnotationToJvmOptionConverter> annotationToJvmParamConverterByAnnotationClass = new HashMap<>();
 
     private final Map<Class<? extends Annotation>, Class<? extends Annotation>> classOfAnnotationToDisableByAnnotationClass = new HashMap<>();
+
+    private final Map<Class<? extends Annotation>, ExtractablePerfRecorderParametersFromAnnotation> perfRecorderParamsExtractorFromAnnotByAnnotationClass = new HashMap<>();
 
     public SetOfAnnotationConfigs(Collection<AnnotationConfig> annotationConfigs) {
         for (AnnotationConfig annotationConfig : annotationConfigs) {
@@ -66,22 +69,15 @@ public class SetOfAnnotationConfigs {
         AnnotationToJvmOptionConverter annotationToJvmOptionConverter = annotationConfig.getAnnotationToJvmOptionConverter();
         annotationToJvmParamConverterByAnnotationClass.put(annotationClass, annotationToJvmOptionConverter);
 
+        ExtractablePerfRecorderParametersFromAnnotation perfRecorderParamsExtractorFromAnnot =
+                annotationConfig.getPerfRecorderParamsExtractorFromAnnot();
+        perfRecorderParamsExtractorFromAnnotByAnnotationClass.put(annotationClass, perfRecorderParamsExtractorFromAnnot);
+
     }
 
     public Class<? extends RecordablePerformance> retrievePerfRecorderClassFor(Annotation annotation) {
         Class<? extends Annotation> clazz = annotation.annotationType();
         return perfRecorderClassByAnnotationClass.get(clazz);
-    }
-
-    public Set<Class<? extends RecordablePerformance>> retrievePerfRecorderClassesFor(Annotation[] annotations) {
-        Set<Class<? extends RecordablePerformance>> perfRecorderClasses = new HashSet<>();
-        for (Annotation annotation : annotations) {
-            Class<? extends RecordablePerformance> perfRecorderClass = retrievePerfRecorderClassFor(annotation);
-           if(perfRecorderClass != null) {
-               perfRecorderClasses.add(perfRecorderClass);
-           }
-        }
-        return perfRecorderClasses;
     }
 
     public ExtractablePerformanceMeasure retrievePerfMeasureExtractorFor(Annotation annotation) {
@@ -191,6 +187,10 @@ public class SetOfAnnotationConfigs {
     private boolean isQuickPerfPerformanceAnnotation(Annotation annotation) {
         Set<Class<? extends Annotation>> classesOfPerformanceAnnotations = perfRecorderClassByAnnotationClass.keySet();
         return classesOfPerformanceAnnotations.contains(annotation.annotationType());
+    }
+
+    public ExtractablePerfRecorderParametersFromAnnotation retrievePerfRecorderParamExtractorFor(Annotation perfAnnotation) {
+        return perfRecorderParamsExtractorFromAnnotByAnnotationClass.get(perfAnnotation.annotationType());
     }
 
 }
