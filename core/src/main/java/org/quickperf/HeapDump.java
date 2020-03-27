@@ -13,6 +13,6 @@ package org.quickperf;
 
 public class HeapDump {
 
-    public static final String HEAP_DUMP_NAME = "heapDump.hprof";
+    public static final String HEAP_DUMP_NAME = "heap-dump.hprof";
 
 }

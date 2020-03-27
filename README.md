@@ -4,7 +4,7 @@
 
 <div>
 <blockquote>
-<p><h3>QuickPerf is a testing library for Java providing annotations to quickly evaluate some performance properties.</h3></p>
+<p><h3>QuickPerf is a testing library to quickly evaluate some performance properties.</h3></p>
 </blockquote>
 </div>
 
