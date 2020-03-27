@@ -38,7 +38,7 @@ class ConsoleReporter {
 
         System.out.println();
 
-        System.out.println("[QUICK PERF DEBUG] " + System.lineSeparator());
+        System.out.println("[QUICK PERF] [DEBUG] " + System.lineSeparator());
 
         printJvmOptions(jvmOptions);
 

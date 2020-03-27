@@ -23,7 +23,7 @@ public class MeasureRssPerfVerifier implements VerifiablePerformanceIssue<Measur
 
     @Override
     public PerfIssue verifyPerfIssue(MeasureRSS annotation, ProcessStatus measure) {
-        System.out.println("Measured RSS " + measure.getRssInKb() + " kb for process " + measure.getPid());
+        System.out.println("[QUICK PERF] Measured RSS " + measure.getRssInKb() + " kb for process " + measure.getPid());
         return PerfIssue.NONE;
     }
 }

@@ -31,7 +31,7 @@ public class NoHeapAllocationPerfVerifier implements VerifiablePerformanceIssue<
 
         if(!ZERO_ALLOCATION.isEqualTo(measuredAllocation)) {
             String assertionMessage =
-                    "Expected allocation to be 0 but is " + byteAllocationMeasureFormatter.format(measuredAllocation) + ".";
+                    "Expected allocation (test method thread) to be 0 but is " + byteAllocationMeasureFormatter.format(measuredAllocation) + ".";
             String description = assertionMessage + System.lineSeparator() + measuredAllocation.getComment();
             return new PerfIssue(description);
         }

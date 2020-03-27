@@ -18,13 +18,13 @@ import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.allocation.ByteAllocationMeasureFormatter;
 import org.quickperf.jvm.annotations.ExpectMaxRSS;
 
-public class ExpectRssPerfVerifier implements VerifiablePerformanceIssue<ExpectMaxRSS, ProcessStatus> {
+public class ExpectMaxRssPerfVerifier implements VerifiablePerformanceIssue<ExpectMaxRSS, ProcessStatus> {
 
-    public static final VerifiablePerformanceIssue INSTANCE = new ExpectRssPerfVerifier();
+    public static final VerifiablePerformanceIssue INSTANCE = new ExpectMaxRssPerfVerifier();
 
     private final ByteAllocationMeasureFormatter byteAllocationMeasureFormatter = ByteAllocationMeasureFormatter.INSTANCE;
 
-    private ExpectRssPerfVerifier() { }
+    private ExpectMaxRssPerfVerifier() { }
 
     @Override
     public PerfIssue verifyPerfIssue(ExpectMaxRSS annotation, ProcessStatus processStatus) {

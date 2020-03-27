@@ -57,7 +57,7 @@ public abstract class AbstractJUnit4SpringTestBase {
         assertThat(printableResult.toString())
                       .contains("java.lang.AssertionError: Performance and functional properties not respected")
                       .contains("PERFORMANCE PROPERTIES(S)")
-                      .contains("Expected allocation to be 0 but is")
+                      .contains("Expected allocation (test method thread) to be 0 but is")
                       .contains("FUNCTIONAL PROPERTY")
                       .contains("Failing assertion !");
 

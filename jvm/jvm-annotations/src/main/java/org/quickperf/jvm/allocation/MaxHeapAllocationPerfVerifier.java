@@ -31,7 +31,7 @@ public class MaxHeapAllocationPerfVerifier implements VerifiablePerformanceIssue
         if(maxExpectedAllocation.isLessThan(measuredAllocation)) {
 
             String assertionMessage =
-                      "Expected allocation to be less than "
+                      "Expected allocation (test method thread) to be less than "
                     + byteAllocationMeasureFormatter.format(maxExpectedAllocation)
                     + " but is " + byteAllocationMeasureFormatter.format(measuredAllocation) + ".";
             String description = assertionMessage + System.lineSeparator() + measuredAllocation.getComment();
