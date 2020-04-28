@@ -11,54 +11,91 @@
 
 package org.quickperf.jvm.jmc.value;
 
-import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
-import org.quickperf.jvm.annotations.DisplayJvmProfilingValue;
+import org.quickperf.jvm.annotations.ProfileJvm;
 
-public class DisplayJvmProfilingValueVerifier implements VerifiablePerformanceIssue<DisplayJvmProfilingValue, JfrEventsMeasure>  {
+import static org.quickperf.jvm.jmc.value.ProfilingInfo.*;
+
+public class DisplayJvmProfilingValueVerifier implements VerifiablePerformanceIssue<ProfileJvm, JfrEventsMeasure> {
 
     public static DisplayJvmProfilingValueVerifier INSTANCE = new DisplayJvmProfilingValueVerifier();
 
-    private DisplayJvmProfilingValueVerifier() { }
+    private static final String LINE_SEPARATOR = System.lineSeparator();
 
-    @SuppressWarnings("unchecked")
+    private static final String LINE = "-----------------------------------------------------------------------------" + LINE_SEPARATOR;
+
+
+    private DisplayJvmProfilingValueVerifier() {
+    }
+
     @Override
-    public PerfIssue verifyPerfIssue(DisplayJvmProfilingValue annotation, JfrEventsMeasure jfrEventsMeasure) {
+    public PerfIssue verifyPerfIssue(ProfileJvm annotation, JfrEventsMeasure jfrEventsMeasure) {
 
         IItemCollection jfrEvents = jfrEventsMeasure.getValue();
 
-        ProfilingValueType[] profilingValueTypes = annotation.valueType();
-
-        if (all(profilingValueTypes)) {
-            profilingValueTypes = ProfilingValueType.getValuesWithoutAll();
-        }
-
         System.out.println();
-        System.out.println("[QUICK PERF] JVM profiling values");
 
-        for (ProfilingValueType profilingValueType : profilingValueTypes) {
+        String allocationTotal = ALLOCATION_TOTAL.formatAsString(jfrEvents);
+        String insideTlabSum = ALLOC_INSIDE_TLAB_SUM.formatAsString(jfrEvents);
+        String outsideTlabSum = ALLOC_OUTSIDE_TLAB_SUM.formatAsString(jfrEvents);
 
-            IAggregator aggregator = profilingValueType.getAggregator();
+        String totalGcPause = TOTAL_GC_PAUSE.formatAsString(jfrEvents);
+        String gcPause = LONGEST_GC_PAUSE.formatAsString(jfrEvents);
 
-            Object aggregate = jfrEvents.getAggregate(aggregator);
+        String exceptionsCount = EXCEPTIONS_COUNT.formatAsString(jfrEvents);
 
-            System.out.println("\t * " + profilingValueType.formatAggregate(aggregate));
+        String longestCompilation = LONGEST_COMPILATION.formatAsString(jfrEvents);
 
-        }
+        String errorCount = ERROR_COUNT.formatAsString(jfrEvents);
+        String throwablesCount = THROWABLES_COUNT.formatAsString(jfrEvents);
+
+        String compilationsCount = COMPILATIONS_COUNT.formatAsString(jfrEvents);
+        String codeCacheFullCount = CODE_CACHE_FULL_COUNT.getLabel() + ": " + CODE_CACHE_FULL_COUNT.formatAsString(jfrEvents);
+
+        String jvmName = JVM_NAME.formatAsString(jfrEvents);
+        String jvmVersion = JVM_VERSION.formatAsString(jfrEvents);
+        String jvmArguments = JVM_ARGUMENTS.formatAsString(jfrEvents);
+
+        String minHwThreads = MIN_HW_THREADS.formatAsString(jfrEvents);
+        String minNumberOfCores = MIN_NUMBER_OF_CORES.formatAsString(jfrEvents);
+        String minNumberOfSockets = MIN_NUMBER_OF_SOCKETS.formatAsString(jfrEvents);
+        String cpuDescription = CPU_DESCRIPTION.formatAsString(jfrEvents);
+
+        String osVersion = OS_VERSION.formatAsString(jfrEvents);
+
+        String text =
+                  LINE
+                + " ALLOCATION (estimations)" + "  |   " + "GARBAGE COLLECTION"                     + "           |  "   +   "THROWABLE"  + LINE_SEPARATOR
+                + " Total:        " + allocationTotal + "    |   " + "Total pause: " + totalGcPause + "      | Exception: "  + exceptionsCount +LINE_SEPARATOR
+                + " Inside TLAB:  " + insideTlabSum + "    |   " + "Longest GC pause: " + gcPause + " | Error: " + errorCount + LINE_SEPARATOR
+                + " Outside TLAB: " + outsideTlabSum + "    |   " + "                             | Throwable: " +throwablesCount + LINE_SEPARATOR
+                + LINE
+                + " COMPILATION" + "              | " + "CODE CACHE" + LINE_SEPARATOR
+                + " Number: " + compilationsCount + "        |   "+  codeCacheFullCount + LINE_SEPARATOR
+                + " Longest: " + longestCompilation + "    |   "+ LINE_SEPARATOR
+                + LINE
+                + " " + "JVM" + LINE_SEPARATOR
+                + " Name: " + jvmName + LINE_SEPARATOR
+                + " Version: " + jvmVersion + LINE_SEPARATOR
+                + " Arguments: " + jvmArguments + LINE_SEPARATOR
+                + LINE
+                + " " + "HARDWARE" + LINE_SEPARATOR
+                + " Hardware threads: " + minHwThreads + LINE_SEPARATOR
+                + " Cores: " + minNumberOfCores + LINE_SEPARATOR
+                + " Sockets: " + minNumberOfSockets + LINE_SEPARATOR
+                + " CPU: " + LINE_SEPARATOR
+                + cpuDescription + LINE_SEPARATOR
+                + LINE
+                + " OS:" + LINE_SEPARATOR
+                + osVersion + LINE_SEPARATOR
+                + LINE;
+
+        System.out.println(text);
 
         return PerfIssue.NONE;
 
-    }
-
-    private boolean all(ProfilingValueType[] profilingValueTypes) {
-        for (ProfilingValueType profilingValueType : profilingValueTypes) {
-            if(profilingValueType.equals(ProfilingValueType.ALL)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }

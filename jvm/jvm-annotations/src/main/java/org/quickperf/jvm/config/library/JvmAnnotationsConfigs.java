@@ -95,6 +95,8 @@ class JvmAnnotationsConfigs {
 
     static final AnnotationConfig PROFILE_JVM_WITH_JFR = new AnnotationConfig.Builder()
             .perfRecorderClass(JfrEventsRecorder.class)
+            .perfMeasureExtractor(JfrEventsMeasureExtractor.INSTANCE)
+            .perfIssueVerifier(DisplayJvmProfilingValueVerifier.INSTANCE)
             .testHasToBeLaunchedInASpecificJvm(JfrAnnotationToJvmOptionConverter.INSTANCE)
             .build(ProfileJvm.class);
 
@@ -104,13 +106,6 @@ class JvmAnnotationsConfigs {
             .perfIssueVerifier(JmcRulesPerfVerifier.INSTANCE)
             .testHasToBeLaunchedInASpecificJvm(JfrAnnotationToJvmOptionConverter.INSTANCE)
             .build(ExpectNoJvmIssue.class);
-
-    static final AnnotationConfig DISPLAY_JVM_PROFILING_VALUE = new AnnotationConfig.Builder()
-            .perfRecorderClass(JfrEventsRecorder.class)
-            .perfMeasureExtractor(JfrEventsMeasureExtractor.INSTANCE)
-            .perfIssueVerifier(DisplayJvmProfilingValueVerifier.INSTANCE)
-            .testHasToBeLaunchedInASpecificJvm(JfrAnnotationToJvmOptionConverter.INSTANCE)
-            .build(DisplayJvmProfilingValue.class);
 
     static final AnnotationConfig PROFILE_QUICK_PERF_WITH_JFR = new AnnotationConfig.Builder()
             .perfRecorderClass(JfrEventsRecorder.class)

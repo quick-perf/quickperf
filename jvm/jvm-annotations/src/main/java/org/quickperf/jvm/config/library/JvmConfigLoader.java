@@ -37,7 +37,6 @@ public class JvmConfigLoader implements QuickPerfConfigLoader {
                 , JvmAnnotationsConfigs.NO_ALLOCATION_BY_BYTE_WATCHER
                 , JvmAnnotationsConfigs.PROFILE_JVM_WITH_JFR
                 , JvmAnnotationsConfigs.CHECK_JVM
-                , JvmAnnotationsConfigs.DISPLAY_JVM_PROFILING_VALUE
                 , JvmAnnotationsConfigs.PROFILE_QUICK_PERF_WITH_JFR
                 , JvmAnnotationsConfigs.DISPLAY_RSS_FROM_PROCESS_STATUS
                 , JvmAnnotationsConfigs.MAX_RSS_FROM_PROCESS_STATUS
