@@ -27,8 +27,7 @@ public class DisplayJvmProfilingValueVerifier implements VerifiablePerformanceIs
     private static final String LINE = "-----------------------------------------------------------------------------" + LINE_SEPARATOR;
 
 
-    private DisplayJvmProfilingValueVerifier() {
-    }
+    private DisplayJvmProfilingValueVerifier() { }
 
     @Override
     public PerfIssue verifyPerfIssue(ProfileJvm annotation, JfrEventsMeasure jfrEventsMeasure) {
@@ -65,16 +64,22 @@ public class DisplayJvmProfilingValueVerifier implements VerifiablePerformanceIs
 
         String osVersion = OS_VERSION.formatAsString(jfrEvents);
 
+        StringWidthAdapter thirteen = new StringWidthAdapter(13);
+
+        StringWidthAdapter twentyNineLength = new StringWidthAdapter(29);
+
+        StringWidthAdapter twentyEightLength = new StringWidthAdapter(28);
+
         String text =
                   LINE
-                + " ALLOCATION (estimations)" + "  |   " + "GARBAGE COLLECTION"                     + "           |  "   +   "THROWABLE"  + LINE_SEPARATOR
-                + " Total:        " + allocationTotal + "    |   " + "Total pause: " + totalGcPause + "      | Exception: "  + exceptionsCount +LINE_SEPARATOR
-                + " Inside TLAB:  " + insideTlabSum + "    |   " + "Longest GC pause: " + gcPause + " | Error: " + errorCount + LINE_SEPARATOR
-                + " Outside TLAB: " + outsideTlabSum + "    |   " + "                             | Throwable: " +throwablesCount + LINE_SEPARATOR
+                + " ALLOCATION (estimations)"                      + "   |   " + "GARBAGE COLLECTION           "                              + "|  THROWABLE"  + LINE_SEPARATOR
+                + " Total       : " + thirteen.adapt(allocationTotal) + "|   " + twentyNineLength.adapt("Total pause: " + totalGcPause ) + "|  Exception: "  + exceptionsCount +LINE_SEPARATOR
+                + " Inside TLAB : " + thirteen.adapt(insideTlabSum)   + "|   " + twentyNineLength.adapt("Longest GC pause: " + gcPause)  + "|  Error: " + errorCount + LINE_SEPARATOR
+                + " Outside TLAB: " + thirteen.adapt(outsideTlabSum)  + "|   " + twentyNineLength.adapt("")                              + "|  Throwable: " +throwablesCount + LINE_SEPARATOR
                 + LINE
-                + " COMPILATION" + "              | " + "CODE CACHE" + LINE_SEPARATOR
-                + " Number: " + compilationsCount + "        |   "+  codeCacheFullCount + LINE_SEPARATOR
-                + " Longest: " + longestCompilation + "    |   "+ LINE_SEPARATOR
+                +  twentyEightLength.adapt(" COMPILATION")                    + "|   " + "CODE CACHE" + LINE_SEPARATOR
+                +  twentyEightLength.adapt(" Number: " + compilationsCount)   + "|   " +  codeCacheFullCount + LINE_SEPARATOR
+                +  twentyEightLength.adapt(" Longest: " + longestCompilation) + "|   " + LINE_SEPARATOR
                 + LINE
                 + " " + "JVM" + LINE_SEPARATOR
                 + " Name: " + jvmName + LINE_SEPARATOR
