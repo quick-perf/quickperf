@@ -112,14 +112,20 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
             Method testMethod = invocationContext.getExecutable();
             JvmOrTestIssue jvmOrTestIssue = executeTestMethodInNewJwm(testMethod);
-
-            //skip the invocation as the test method is invoked directly inside the 'newJvmTestLauncher'
-            invocation.skip();
-
+            tryToSkipInvocation(invocation); // because the test method is invoked directly inside the 'newJvmTestLauncher'
             return jvmOrTestIssue;
         }
         TestIssue testIssue = executeTestMethodAndRecordPerformanceInSameJvm(invocation);
         return JvmOrTestIssue.buildFrom(testIssue);
+    }
+
+    private void tryToSkipInvocation(Invocation<Void> invocation) {
+        try {
+            invocation.skip();
+        } catch(NoSuchMethodError noSuchMethodError) {
+            System.err.println("[QUICK PERF] A JUnit 5 version equal to or greater than 5.6.0 is required.");
+            throw noSuchMethodError;
+        }
     }
 
     private JvmOrTestIssue executeTestMethodInNewJwm(Method testMethod) {
