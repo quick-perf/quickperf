@@ -15,6 +15,8 @@ import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.jvm.annotations.MeasureHeapAllocation;
 
+import java.io.PrintWriter;
+
 public class MeasureHeapAllocationPerfVerifier implements VerifiablePerformanceIssue<MeasureHeapAllocation, Allocation> {
 
     public static final VerifiablePerformanceIssue INSTANCE = new MeasureHeapAllocationPerfVerifier();
@@ -26,7 +28,8 @@ public class MeasureHeapAllocationPerfVerifier implements VerifiablePerformanceI
     @Override
     public PerfIssue verifyPerfIssue(MeasureHeapAllocation annotation, Allocation measuredAllocation) {
         String allocationAsString = byteAllocationMeasureFormatter.format(measuredAllocation);
-        System.out.println("[QUICK PERF] Measured heap allocation (test method thread): " + allocationAsString);
+        PrintWriter pw = new PrintWriter(System.out);
+        pw.printf(annotation.format(), allocationAsString);
         return PerfIssue.NONE;
     }
 
