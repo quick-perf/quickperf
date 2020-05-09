@@ -28,9 +28,11 @@ public class MeasureHeapAllocationPerfVerifier implements VerifiablePerformanceI
     @Override
     public PerfIssue verifyPerfIssue(MeasureHeapAllocation annotation, Allocation measuredAllocation) {
         String allocationAsString = byteAllocationMeasureFormatter.format(measuredAllocation);
-        try (PrintWriter pw = new PrintWriter(System.out);) {
-            pw.printf(annotation.format(), allocationAsString);
-        }
+        PrintWriter pw = new PrintWriter(System.out);
+        pw.printf(annotation.format(), allocationAsString);
+        // do not call close on pw since it will call close on System.out
+        // thus preventing any further printing on the console
+        pw.flush();
         return PerfIssue.NONE;
     }
 
