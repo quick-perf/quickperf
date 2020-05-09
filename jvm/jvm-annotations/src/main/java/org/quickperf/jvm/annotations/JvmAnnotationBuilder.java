@@ -95,6 +95,11 @@ public class JvmAnnotationBuilder {
     public static MeasureHeapAllocation measureHeapAllocation() {
         return new MeasureHeapAllocation() {
             @Override
+            public String format() {
+                return "[QUICK PERF] Measured heap allocation (test method thread): %s\n";
+            }
+
+            @Override
             public Class<? extends Annotation> annotationType() {
                 return MeasureHeapAllocation.class;
             }

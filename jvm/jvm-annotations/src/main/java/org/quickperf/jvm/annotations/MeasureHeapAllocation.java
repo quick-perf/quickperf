@@ -20,4 +20,14 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface MeasureHeapAllocation {
 
+    /**
+     * Provides the format used to print the measured heap allocation on the console. This format
+     * will be called with a preformatted allocation as a String. So the only element you can
+     * use in this format is <code>%s</code>.
+     *
+     * The default value is <code>[QUICK PERF] Measured heap allocation (test method thread): %s</code>
+     *
+     * @return
+     */
+    String format() default "[QUICK PERF] Measured heap allocation (test method thread): %s\n";
 }
