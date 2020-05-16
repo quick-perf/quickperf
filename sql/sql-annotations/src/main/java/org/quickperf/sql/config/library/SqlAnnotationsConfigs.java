@@ -26,6 +26,7 @@ import org.quickperf.sql.display.DisplaySqlOfTestMethodBodyRecorder;
 import org.quickperf.sql.display.DisplaySqlRecorder;
 import org.quickperf.sql.insert.InsertCountMeasureExtractor;
 import org.quickperf.sql.insert.InsertNumberPerfIssueVerifier;
+import org.quickperf.sql.insert.MaxOfInsertsPerfIssueVerifier;
 import org.quickperf.sql.like.ContainsLikeWithLeadingWildcardExtractor;
 import org.quickperf.sql.like.HasLikeWithLeadingWildcardVerifier;
 import org.quickperf.sql.select.*;
@@ -67,6 +68,12 @@ class SqlAnnotationsConfigs {
             .perfMeasureExtractor(SelectCountMeasureExtractor.INSTANCE)
             .perfIssueVerifier(MaxOfSelectsPerfIssueVerifier.INSTANCE)
             .build(ExpectMaxSelect.class);
+
+    static final AnnotationConfig MAX_SQL_INSERT = new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(InsertCountMeasureExtractor.INSTANCE)
+            .perfIssueVerifier(MaxOfInsertsPerfIssueVerifier.INSTANCE)
+            .build(ExpectMaxInsert.class);
 
     static final AnnotationConfig DISPLAY_ALL_SQL = new AnnotationConfig.Builder()
             .perfRecorderClass(DisplaySqlRecorder.class)
