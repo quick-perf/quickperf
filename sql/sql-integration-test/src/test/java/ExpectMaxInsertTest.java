@@ -27,8 +27,8 @@ public class ExpectMaxInsertTest {
     @RunWith(QuickPerfJUnitRunner.class)
     public static class AClassHavingAMethodAnnotatedWithExpectMaxInsert extends SqlTestBase {
 
-        @ExpectMaxInsert(0)
         @Test
+        @ExpectMaxInsert(0)
         public void execute_one_insert_but_no_insert_expected() {
             EntityManager em = emf.createEntityManager();
             em.getTransaction().begin();
@@ -58,9 +58,7 @@ public class ExpectMaxInsertTest {
 
         assertThat(printableResult.toString())
                 .contains("You may think that at most <0> insert statement was sent to the database")
-                .contains("But in fact <1>...")
-                .contains("insert")
-                .contains("book0_.id as id1_0_");
+                .contains("But in fact <1>...");
 
     }
 
@@ -97,9 +95,7 @@ public class ExpectMaxInsertTest {
 
         assertThat(printableResult.toString())
                 .contains("You may think that at most <0> insert statement was sent to the database")
-                .contains("But in fact <1>...")
-                .contains("insert")
-                .contains("book0_.id as id1_0_");
+                .contains("But in fact <1>...");
 
     }
 
@@ -172,10 +168,7 @@ public class ExpectMaxInsertTest {
 
         assertThat(printableResult.toString())
                 .contains("You may think that at most <0> insert statement was sent to the database")
-                .contains("But in fact <1>...")
-                .contains("insert")
-                .contains("book0_.id as id1_0");
-
+                .contains("But in fact <1>...");
     }
 
 }
