@@ -30,6 +30,7 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                   SqlAnnotationsConfigs.NUMBER_OF_SQL_SELECT
                 , SqlAnnotationsConfigs.MAX_SQL_SELECT
                 , SqlAnnotationsConfigs.NUMBER_OF_SQL_INSERT
+                , SqlAnnotationsConfigs.MAX_SQL_INSERT
                 , SqlAnnotationsConfigs.NUMBER_OF_SQL_DELETE
                 , SqlAnnotationsConfigs.NUMBER_OF_SQL_UPDATE
                 , SqlAnnotationsConfigs.MAX_SELECTED_COLUMNS

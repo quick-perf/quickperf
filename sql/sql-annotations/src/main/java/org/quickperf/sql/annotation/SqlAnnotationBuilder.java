@@ -106,6 +106,19 @@ public class SqlAnnotationBuilder {
         };
     }
 
+    public static ExpectMaxInsert expectMaxInsert(final int value) {
+        return new ExpectMaxInsert() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ExpectMaxInsert.class;
+            }
+            @Override
+            public int value() {
+                return value;
+            }
+        };
+    }
+
     public static ExpectMaxSelect expectMaxSelect(final int value) {
         return new ExpectMaxSelect() {
             @Override
