@@ -12,6 +12,9 @@
 package org.quickperf.jvm.jmc.value;
 
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.IItemFilter;
+import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.common.item.ItemFilters;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.jvm.annotations.ProfileJvm;
@@ -42,6 +45,8 @@ public class DisplayJvmProfilingValueVerifier implements VerifiablePerformanceIs
 
         String totalGcPause = TOTAL_GC_PAUSE.formatAsString(jfrEvents);
         String gcPause = LONGEST_GC_PAUSE.formatAsString(jfrEvents);
+
+        String youngGcCollection = String.valueOf(getYoungGcCount(jfrEvents));
 
         String exceptionsCount = EXCEPTIONS_COUNT.formatAsString(jfrEvents);
 
@@ -75,7 +80,7 @@ public class DisplayJvmProfilingValueVerifier implements VerifiablePerformanceIs
                 + " ALLOCATION (estimations)"                      + "   |   " + "GARBAGE COLLECTION           "                              + "|  THROWABLE"  + LINE_SEPARATOR
                 + " Total       : " + thirteen.adapt(allocationTotal) + "|   " + twentyNineLength.adapt("Total pause: " + totalGcPause ) + "|  Exception: "  + exceptionsCount +LINE_SEPARATOR
                 + " Inside TLAB : " + thirteen.adapt(insideTlabSum)   + "|   " + twentyNineLength.adapt("Longest GC pause: " + gcPause)  + "|  Error: " + errorCount + LINE_SEPARATOR
-                + " Outside TLAB: " + thirteen.adapt(outsideTlabSum)  + "|   " + twentyNineLength.adapt("")                              + "|  Throwable: " +throwablesCount + LINE_SEPARATOR
+                + " Outside TLAB: " + thirteen.adapt(outsideTlabSum)  + "|   " + twentyNineLength.adapt("Young: " + youngGcCollection)   + "|  Throwable: " +throwablesCount + LINE_SEPARATOR
                 + LINE
                 +  twentyEightLength.adapt(" COMPILATION")                    + "|   " + "CODE CACHE" + LINE_SEPARATOR
                 +  twentyEightLength.adapt(" Number: " + compilationsCount)   + "|   " +  codeCacheFullCount + LINE_SEPARATOR
@@ -101,6 +106,16 @@ public class DisplayJvmProfilingValueVerifier implements VerifiablePerformanceIs
 
         return PerfIssue.NONE;
 
+    }
+
+    private static int getYoungGcCount(IItemCollection jfrEvents) {
+        IItemFilter youngGC = ItemFilters.type("jdk.YoungGarbageCollection");
+        IItemCollection youngGcItemCollection = jfrEvents.apply(youngGC);
+        int youngGcCount = 0;
+        for (IItemIterable items : youngGcItemCollection) {
+            youngGcCount += items.getItemCount();
+        }
+        return youngGcCount;
     }
 
 }
