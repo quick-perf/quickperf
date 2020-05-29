@@ -25,13 +25,12 @@ public class NoHeapAllocationPerfVerifier implements VerifiablePerformanceIssue<
 
     private final ByteAllocationMeasureFormatter byteAllocationMeasureFormatter = ByteAllocationMeasureFormatter.INSTANCE;
 
-
     @Override
     public PerfIssue verifyPerfIssue(ExpectNoHeapAllocation annotation, Allocation measuredAllocation) {
 
         if(!ZERO_ALLOCATION.isEqualTo(measuredAllocation)) {
             String assertionMessage =
-                    "Expected allocation (test method thread) to be 0 but is " + byteAllocationMeasureFormatter.format(measuredAllocation) + ".";
+                    "Expected allocation (test method thread) to be 0 but is " + byteAllocationMeasureFormatter.formatWithAllocationInBytes(measuredAllocation) + ".";
             String description = assertionMessage + System.lineSeparator() + measuredAllocation.getComment();
             return new PerfIssue(description);
         }
@@ -39,4 +38,5 @@ public class NoHeapAllocationPerfVerifier implements VerifiablePerformanceIssue<
         return PerfIssue.NONE;
 
     }
+
 }
