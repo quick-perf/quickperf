@@ -21,20 +21,44 @@ public class ByteAllocationMeasureFormatter {
 
     private ByteAllocationMeasureFormatter() {}
 
-    public String format(Allocation allocation) {
+    public String formatWithAllocationInBytes(Allocation allocation) {
 
         if(isByteOrderOfMagnitude(allocation)) {
             return formatAllocationInBytes(allocation);
-        } else if(isKiloByteOrderOfMagnitude(allocation)) {
-            String formattedAllocation = formatAllocationInKiloBytes(allocation);
-            return formatByteSuffixAllocationValue(formattedAllocation, allocation);
-        } else if(isMegaByteOrderOfMagnitude(allocation)) {
-            String formattedAllocation = formatAllocationInMegaBytes(allocation);
-            return formatByteSuffixAllocationValue(formattedAllocation, allocation);
+        }
+        if(isKiloByteOrderOfMagnitude(allocation)) {
+            return    formatAllocationInKiloBytes(allocation)
+                    + formatInByteAllocationBetweenParentheses(allocation);
+        }
+        if(isMegaByteOrderOfMagnitude(allocation)) {
+            return    formatAllocationInMegaBytes(allocation)
+                    + formatInByteAllocationBetweenParentheses(allocation);
         }
 
-        String formattedAllocation = formatAllocationInGigaBytes(allocation);
-        return formatByteSuffixAllocationValue(formattedAllocation, allocation);
+        return    formatAllocationInGigaBytes(allocation)
+                + formatInByteAllocationBetweenParentheses(allocation);
+
+    }
+
+    public String shortFormat(double allocationInBytes) {
+
+        if(allocationInBytes < 1024) {
+            return "" + allocationInBytes + " " + AllocationUnit.BYTE.shortFormat();
+        }
+        if(allocationInBytes < 1024 * 1024) {
+            double kiloByteValue = allocationInBytes / 1024;
+            String formattedAllocationValue = formatAllocationValue(kiloByteValue);
+            return formattedAllocationValue + " "  + AllocationUnit.KILO_BYTE.shortFormat();
+        }
+        if(allocationInBytes < Math.pow(1024, 3)) {
+            double megaByteValue = allocationInBytes / Math.pow(1024, 2);
+            String formattedAllocationValue = formatAllocationValue(megaByteValue);
+            return formattedAllocationValue + " " + AllocationUnit.MEGA_BYTE.shortFormat();
+        }
+
+        double gigaByteValue = allocationInBytes / Math.pow(1024, 3);
+        String formattedAllocationValue = formatAllocationValue(gigaByteValue);
+        return formattedAllocationValue + " " + AllocationUnit.GIGA_BYTE.shortFormat();
 
     }
 
@@ -98,11 +122,6 @@ public class ByteAllocationMeasureFormatter {
 
         return integerPartAsString + "." + truncatedDecimalPartAsString;
 
-    }
-
-    private String formatByteSuffixAllocationValue(String prefix, Allocation allocationValue)
-    {
-        return prefix + formatInByteAllocationBetweenParentheses(allocationValue);
     }
 
     private String formatInByteAllocationBetweenParentheses(Allocation allocationValue) {
