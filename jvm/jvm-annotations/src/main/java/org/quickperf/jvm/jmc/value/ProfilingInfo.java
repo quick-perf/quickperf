@@ -16,6 +16,9 @@ import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
+import org.quickperf.jvm.jmc.value.allocationrate.AllocationRate;
+import org.quickperf.jvm.jmc.value.allocationrate.AllocationRateFormatter;
+import org.quickperf.jvm.jmc.value.allocationrate.AllocationRateRetriever;
 
 public enum ProfilingInfo {
 
@@ -271,7 +274,6 @@ public enum ProfilingInfo {
     }
     ,
     OS_VERSION {
-
         @Override
         public String formatAsString(IItemCollection jfrEvents) {
             return formatAsString(jfrEvents, JdkAggregators.OS_VERSION, String.class);
@@ -282,8 +284,24 @@ public enum ProfilingInfo {
             return getLabel(JdkAggregators.OS_VERSION, String.class);
         }
 
-    }
-    ;
+    },
+    ALLOCATION_RATE {
+        @Override
+        public String formatAsString(IItemCollection jfrEvents) {
+
+
+            AllocationRate allocationRate = AllocationRateRetriever.INSTANCE
+                                           .retrieveAllocationRateFrom(jfrEvents);
+
+            return AllocationRateFormatter.INSTANCE.format(allocationRate);
+
+        }
+
+        @Override
+        public String getLabel() {
+            return "Allocation Rate";
+        }
+    };
 
     public abstract String formatAsString(IItemCollection jfrEvents);
 
@@ -292,7 +310,7 @@ public enum ProfilingInfo {
     @SuppressWarnings("unchecked")
     String getLabel(IAggregator aggregator, Class<?> type) {
 
-        if(type.isAssignableFrom(IQuantity.class)) {
+        if (type.isAssignableFrom(IQuantity.class)) {
             return getLabelFrom(aggregator);
         }
 

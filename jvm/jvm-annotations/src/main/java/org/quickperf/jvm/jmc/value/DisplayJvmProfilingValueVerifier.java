@@ -21,16 +21,18 @@ import org.quickperf.jvm.annotations.ProfileJvm;
 
 import static org.quickperf.jvm.jmc.value.ProfilingInfo.*;
 
-public class DisplayJvmProfilingValueVerifier implements VerifiablePerformanceIssue<ProfileJvm, JfrEventsMeasure> {
+public class DisplayJvmProfilingValueVerifier implements
+    VerifiablePerformanceIssue<ProfileJvm, JfrEventsMeasure> {
 
     public static DisplayJvmProfilingValueVerifier INSTANCE = new DisplayJvmProfilingValueVerifier();
 
     private static final String LINE_SEPARATOR = System.lineSeparator();
 
-    private static final String LINE = "-----------------------------------------------------------------------------" + LINE_SEPARATOR;
+    private static final String LINE = "------------------------------------------------------------------------------" + LINE_SEPARATOR;
 
 
-    private DisplayJvmProfilingValueVerifier() { }
+    private DisplayJvmProfilingValueVerifier() {
+    }
 
     @Override
     public PerfIssue verifyPerfIssue(ProfileJvm annotation, JfrEventsMeasure jfrEventsMeasure) {
@@ -42,6 +44,7 @@ public class DisplayJvmProfilingValueVerifier implements VerifiablePerformanceIs
         String allocationTotal = ALLOCATION_TOTAL.formatAsString(jfrEvents);
         String insideTlabSum = ALLOC_INSIDE_TLAB_SUM.formatAsString(jfrEvents);
         String outsideTlabSum = ALLOC_OUTSIDE_TLAB_SUM.formatAsString(jfrEvents);
+        String allocationRate = ALLOCATION_RATE.formatAsString(jfrEvents);
 
         String totalGcPause = TOTAL_GC_PAUSE.formatAsString(jfrEvents);
         String gcPause = LONGEST_GC_PAUSE.formatAsString(jfrEvents);
@@ -68,39 +71,42 @@ public class DisplayJvmProfilingValueVerifier implements VerifiablePerformanceIs
 
         String osVersion = OS_VERSION.formatAsString(jfrEvents);
 
-        StringWidthAdapter thirteen = new StringWidthAdapter(13);
+        StringWidthAdapter twelveLength = new StringWidthAdapter(12);
+
+        StringWidthAdapter fifteenLength = new StringWidthAdapter(15);
 
         StringWidthAdapter twentyNineLength = new StringWidthAdapter(29);
 
-        StringWidthAdapter twentyEightLength = new StringWidthAdapter(28);
+        StringWidthAdapter thirtyLength = new StringWidthAdapter(30);
 
         String text =
-                  LINE
-                + " ALLOCATION (estimations)"                      + "   |   " + "GARBAGE COLLECTION           "                              + "|  THROWABLE"  + LINE_SEPARATOR
-                + " Total       : " + thirteen.adapt(allocationTotal) + "|   " + twentyNineLength.adapt("Total pause: " + totalGcPause ) + "|  Exception: "  + exceptionsCount +LINE_SEPARATOR
-                + " Inside TLAB : " + thirteen.adapt(insideTlabSum)   + "|   " + twentyNineLength.adapt("Longest GC pause: " + gcPause)  + "|  Error: " + errorCount + LINE_SEPARATOR
-                + " Outside TLAB: " + thirteen.adapt(outsideTlabSum)  + "|   " + twentyNineLength.adapt("Old: " + oldGcCollection)       + "|  Throwable: " +throwablesCount + LINE_SEPARATOR
-                + LINE
-                +  twentyEightLength.adapt(" COMPILATION")                    + "|   " + "CODE CACHE" + LINE_SEPARATOR
-                +  twentyEightLength.adapt(" Number: " + compilationsCount)   + "|   " +  codeCacheFullCount + LINE_SEPARATOR
-                +  twentyEightLength.adapt(" Longest: " + longestCompilation) + "|   " + LINE_SEPARATOR
-                + LINE
-                + " " + "JVM" + LINE_SEPARATOR
-                + " Name: " + jvmName + LINE_SEPARATOR
-                + " Version: " + jvmVersion + LINE_SEPARATOR
-                + " Arguments: " + jvmArguments + LINE_SEPARATOR
-                + LINE
-                + " " + "HARDWARE" + LINE_SEPARATOR
-                + " Hardware threads: " + minHwThreads + LINE_SEPARATOR
-                + " Cores: " + minNumberOfCores + LINE_SEPARATOR
-                + " Sockets: " + minNumberOfSockets + LINE_SEPARATOR
-                + " CPU: " + LINE_SEPARATOR
-                + cpuDescription + LINE_SEPARATOR
-                + LINE
-                + " OS:" + LINE_SEPARATOR
-                + osVersion + LINE_SEPARATOR
-                + LINE;
-
+            LINE
+            + " ALLOCATION (estimations)"                          + "     |   " + "GARBAGE COLLECTION           "                               + "|  THROWABLE" + LINE_SEPARATOR
+            + " Total       : " + fifteenLength.adapt(allocationTotal)  + "|   " + twentyNineLength.adapt("Total pause: " + totalGcPause) + "|  Exception: " + exceptionsCount + LINE_SEPARATOR
+            + " Inside TLAB : " + fifteenLength.adapt(insideTlabSum)    + "|   " + twentyNineLength.adapt("Longest GC pause: " + gcPause) + "|  Error: " + errorCount + LINE_SEPARATOR
+            + " Outside TLAB: " + fifteenLength.adapt(outsideTlabSum)   + "|   " + twentyNineLength.adapt("Old: " + oldGcCollection)      + "|  Throwable: " + throwablesCount + LINE_SEPARATOR
+            + " Allocation rate: " + twelveLength.adapt(allocationRate) + "|   " + twentyNineLength.adapt("")                             + "|" + LINE_SEPARATOR
+            + LINE
+            + thirtyLength.adapt(" COMPILATION")                    + "|   " + "CODE CACHE" + LINE_SEPARATOR
+            + thirtyLength.adapt(" Number: " + compilationsCount)   + "|   " + codeCacheFullCount + LINE_SEPARATOR
+            + thirtyLength.adapt(" Longest: " + longestCompilation) + "|   " + LINE_SEPARATOR
+            + LINE
+            + " " + "JVM" + LINE_SEPARATOR
+            + " Name: " + jvmName + LINE_SEPARATOR
+            + " Version: " + jvmVersion + LINE_SEPARATOR
+            + " Arguments: " + jvmArguments + LINE_SEPARATOR
+            + LINE
+            + " " + "HARDWARE" + LINE_SEPARATOR
+            + " Hardware threads: " + minHwThreads + LINE_SEPARATOR
+            + " Cores: " + minNumberOfCores + LINE_SEPARATOR
+            + " Sockets: " + minNumberOfSockets + LINE_SEPARATOR
+            + " CPU: " + LINE_SEPARATOR
+            + cpuDescription + LINE_SEPARATOR
+            + LINE
+            + " OS:" + LINE_SEPARATOR
+            + osVersion + LINE_SEPARATOR
+            + LINE;
+      
         System.out.println(text);
 
         return PerfIssue.NONE;
