@@ -12,9 +12,6 @@
 package org.quickperf.jvm.jmc.value;
 
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.common.item.IItemFilter;
-import org.openjdk.jmc.common.item.IItemIterable;
-import org.openjdk.jmc.common.item.ItemFilters;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.jvm.annotations.ProfileJvm;
@@ -30,8 +27,7 @@ public class DisplayJvmProfilingValueVerifier implements VerifiablePerformanceIs
     private static final String LINE = "-----------------------------------------------------------------------------" + LINE_SEPARATOR;
 
 
-    private DisplayJvmProfilingValueVerifier() {
-    }
+    private DisplayJvmProfilingValueVerifier() { }
 
     @Override
     public PerfIssue verifyPerfIssue(ProfileJvm annotation, JfrEventsMeasure jfrEventsMeasure) {
@@ -46,8 +42,6 @@ public class DisplayJvmProfilingValueVerifier implements VerifiablePerformanceIs
 
         String totalGcPause = TOTAL_GC_PAUSE.formatAsString(jfrEvents);
         String gcPause = LONGEST_GC_PAUSE.formatAsString(jfrEvents);
-
-        String oldGcCollections = String.valueOf(getOldGcCount(jfrEvents));
 
         String exceptionsCount = EXCEPTIONS_COUNT.formatAsString(jfrEvents);
 
@@ -77,47 +71,36 @@ public class DisplayJvmProfilingValueVerifier implements VerifiablePerformanceIs
         StringWidthAdapter twentyEightLength = new StringWidthAdapter(28);
 
         String text =
-                LINE
-                        + " ALLOCATION (estimations)" + "   |   " + "GARBAGE COLLECTION           " + "|  THROWABLE" + LINE_SEPARATOR
-                        + " Total       : " + thirteen.adapt(allocationTotal) + "|   " + twentyNineLength.adapt("Total pause: " + totalGcPause) + "|  Exception: " + exceptionsCount + LINE_SEPARATOR
-                        + " Inside TLAB : " + thirteen.adapt(insideTlabSum) + "|   " + twentyNineLength.adapt("Longest GC pause: " + gcPause) + "|  Error: " + errorCount + LINE_SEPARATOR
-                        + " Outside TLAB: " + thirteen.adapt(outsideTlabSum) + "|   " + twentyNineLength.adapt("Old: " + oldGcCollections) + "|  Throwable: " + throwablesCount + LINE_SEPARATOR
-                        + LINE
-                        + twentyEightLength.adapt(" COMPILATION") + "|   " + "CODE CACHE" + LINE_SEPARATOR
-                        + twentyEightLength.adapt(" Number: " + compilationsCount) + "|   " + codeCacheFullCount + LINE_SEPARATOR
-                        + twentyEightLength.adapt(" Longest: " + longestCompilation) + "|   " + LINE_SEPARATOR
-                        + LINE
-                        + " " + "JVM" + LINE_SEPARATOR
-                        + " Name: " + jvmName + LINE_SEPARATOR
-                        + " Version: " + jvmVersion + LINE_SEPARATOR
-                        + " Arguments: " + jvmArguments + LINE_SEPARATOR
-                        + LINE
-                        + " " + "HARDWARE" + LINE_SEPARATOR
-                        + " Hardware threads: " + minHwThreads + LINE_SEPARATOR
-                        + " Cores: " + minNumberOfCores + LINE_SEPARATOR
-                        + " Sockets: " + minNumberOfSockets + LINE_SEPARATOR
-                        + " CPU: " + LINE_SEPARATOR
-                        + cpuDescription + LINE_SEPARATOR
-                        + LINE
-                        + " OS:" + LINE_SEPARATOR
-                        + osVersion + LINE_SEPARATOR
-                        + LINE;
+                  LINE
+                + " ALLOCATION (estimations)"                      + "   |   " + "GARBAGE COLLECTION           "                              + "|  THROWABLE"  + LINE_SEPARATOR
+                + " Total       : " + thirteen.adapt(allocationTotal) + "|   " + twentyNineLength.adapt("Total pause: " + totalGcPause ) + "|  Exception: "  + exceptionsCount +LINE_SEPARATOR
+                + " Inside TLAB : " + thirteen.adapt(insideTlabSum)   + "|   " + twentyNineLength.adapt("Longest GC pause: " + gcPause)  + "|  Error: " + errorCount + LINE_SEPARATOR
+                + " Outside TLAB: " + thirteen.adapt(outsideTlabSum)  + "|   " + twentyNineLength.adapt("")                              + "|  Throwable: " +throwablesCount + LINE_SEPARATOR
+                + LINE
+                +  twentyEightLength.adapt(" COMPILATION")                    + "|   " + "CODE CACHE" + LINE_SEPARATOR
+                +  twentyEightLength.adapt(" Number: " + compilationsCount)   + "|   " +  codeCacheFullCount + LINE_SEPARATOR
+                +  twentyEightLength.adapt(" Longest: " + longestCompilation) + "|   " + LINE_SEPARATOR
+                + LINE
+                + " " + "JVM" + LINE_SEPARATOR
+                + " Name: " + jvmName + LINE_SEPARATOR
+                + " Version: " + jvmVersion + LINE_SEPARATOR
+                + " Arguments: " + jvmArguments + LINE_SEPARATOR
+                + LINE
+                + " " + "HARDWARE" + LINE_SEPARATOR
+                + " Hardware threads: " + minHwThreads + LINE_SEPARATOR
+                + " Cores: " + minNumberOfCores + LINE_SEPARATOR
+                + " Sockets: " + minNumberOfSockets + LINE_SEPARATOR
+                + " CPU: " + LINE_SEPARATOR
+                + cpuDescription + LINE_SEPARATOR
+                + LINE
+                + " OS:" + LINE_SEPARATOR
+                + osVersion + LINE_SEPARATOR
+                + LINE;
 
         System.out.println(text);
 
         return PerfIssue.NONE;
 
-    }
-
-    private static int getOldGcCount(IItemCollection jfrEvents) {
-        IItemFilter oldGC = ItemFilters.type("jdk.OldGarbageCollection");
-        IItemCollection oldGcItemCollection = jfrEvents.apply(oldGC);
-
-        int oldGcCount = 0;
-        for (IItemIterable items : oldGcItemCollection) {
-            oldGcCount += items.getItemCount();
-        }
-        return oldGcCount;
     }
 
 }
