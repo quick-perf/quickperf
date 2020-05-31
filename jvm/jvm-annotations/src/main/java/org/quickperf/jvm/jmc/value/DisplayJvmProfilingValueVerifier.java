@@ -49,6 +49,7 @@ public class DisplayJvmProfilingValueVerifier implements
         String totalGcPause = TOTAL_GC_PAUSE.formatAsString(jfrEvents);
         String gcPause = LONGEST_GC_PAUSE.formatAsString(jfrEvents);
         String oldGcCollection = String.valueOf(getOldGcCount(jfrEvents));
+        String youngGcCollection = String.valueOf(getYoungGcCount(jfrEvents));
 
         String exceptionsCount = EXCEPTIONS_COUNT.formatAsString(jfrEvents);
 
@@ -85,7 +86,7 @@ public class DisplayJvmProfilingValueVerifier implements
             + " Total       : " + fifteenLength.adapt(allocationTotal)  + "|   " + twentyNineLength.adapt("Total pause: " + totalGcPause) + "|  Exception: " + exceptionsCount + LINE_SEPARATOR
             + " Inside TLAB : " + fifteenLength.adapt(insideTlabSum)    + "|   " + twentyNineLength.adapt("Longest GC pause: " + gcPause) + "|  Error: " + errorCount + LINE_SEPARATOR
             + " Outside TLAB: " + fifteenLength.adapt(outsideTlabSum)   + "|   " + twentyNineLength.adapt("Old: " + oldGcCollection)      + "|  Throwable: " + throwablesCount + LINE_SEPARATOR
-            + " Allocation rate: " + twelveLength.adapt(allocationRate) + "|   " + twentyNineLength.adapt("")                             + "|" + LINE_SEPARATOR
+            + " Allocation rate: " + twelveLength.adapt(allocationRate) + "|   " + twentyNineLength.adapt("Young: " + youngGcCollection)  + "|" + LINE_SEPARATOR
             + LINE
             + thirtyLength.adapt(" COMPILATION")                    + "|   " + "CODE CACHE" + LINE_SEPARATOR
             + thirtyLength.adapt(" Number: " + compilationsCount)   + "|   " + codeCacheFullCount + LINE_SEPARATOR
@@ -123,4 +124,13 @@ public class DisplayJvmProfilingValueVerifier implements
         return  oldGcCount;
     }
 
+    private static int getYoungGcCount(IItemCollection jfrEvents) {
+        IItemFilter youngGC = ItemFilters.type("jdk.YoungGarbageCollection");
+        IItemCollection youngGcItemCollection = jfrEvents.apply(youngGC);
+        int youngGcCount = 0;
+        for (IItemIterable items : youngGcItemCollection) {
+            youngGcCount += items.getItemCount();
+        }
+        return youngGcCount;
+    }
 }
