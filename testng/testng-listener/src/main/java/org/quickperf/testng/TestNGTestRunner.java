@@ -59,7 +59,7 @@ class TestNGTestRunner implements TestRunnerFromMain.FrameworkTestRunner {
 
         List<Throwable> failuresAsThrowables = convertToThrowables(failedTests);
 
-        return TestIssue.buildFrom(failuresAsThrowables);
+        return TestIssue.buildInNewJvmFrom(failuresAsThrowables);
     }
 
     private static TestNG createTestNGInstance(Class<?> testClass, String methodName) {

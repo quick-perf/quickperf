@@ -49,7 +49,7 @@ public class QuickPerfJUnitRunnerTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class ClassWithFuntionalIssueInNewJvmAndPerfIssue {
+    public static class ClassWithFunctionalAndPerfIssuesInNew {
 
         @ExpectNoHeapAllocation
         @Test public void
@@ -63,7 +63,7 @@ public class QuickPerfJUnitRunnerTest {
     a_test_with_failing_business_code_and_a_performance_issue_in_a_specific_jvm() {
 
         // GIVEN
-        Class<?> testClass = ClassWithFuntionalIssueInNewJvmAndPerfIssue.class;
+        Class<?> testClass = ClassWithFunctionalAndPerfIssuesInNew.class;
 
         // WHEN
         PrintableResult printableResult = testResult(testClass);
@@ -71,8 +71,16 @@ public class QuickPerfJUnitRunnerTest {
         // THEN
         assertThat(printableResult.failureCount()).isOne();
 
-        assertThat(printableResult.toString()).contains(
+        String report = printableResult.toString();
+
+        assertThat(report).contains(
                 "Performance and functional properties not respected");
+
+        assertThat(report).contains("Functional issue !");
+
+        String functionalIssueReportPart = report.split("Functional issue !")[1];
+        // Does not contain org.quickperf stack trace:
+        assertThat(functionalIssueReportPart).doesNotContain("org.quickperf");
 
     }
 

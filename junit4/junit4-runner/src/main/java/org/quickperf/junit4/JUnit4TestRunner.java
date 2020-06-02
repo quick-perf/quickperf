@@ -34,7 +34,7 @@ class JUnit4TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
 
         List<Throwable> jUnit4failuresAsThrowables = convertJUnit4FailuresToThrowables(jUnit4Failures);
 
-        return  TestIssue.buildFrom(jUnit4failuresAsThrowables);
+        return  TestIssue.buildInNewJvmFrom(jUnit4failuresAsThrowables);
 
     }
 

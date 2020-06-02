@@ -36,7 +36,7 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
 
         List<Throwable> jUnit5failuresAsThrowables = convertToThrowables(failures);
 
-        return TestIssue.buildFrom(jUnit5failuresAsThrowables);
+        return TestIssue.buildInNewJvmFrom(jUnit5failuresAsThrowables);
     }
 
     private List<Throwable> convertToThrowables(List<TestExecutionSummary.Failure> failures) {
