@@ -42,7 +42,7 @@ public class TestIssue implements Serializable {
             Throwable throwable = throwables.get(0);
             Throwable cause = searchRootCauseOf(throwable);
             resetStackTraceOf(cause);
-            return new TestIssue(throwable);
+            return new TestIssue(cause);
         }
 
         return convertThrowablesIntoToBusinessOrTechnicalIssue(throwables);
