@@ -82,29 +82,29 @@ public class DisplayJvmProfilingValueVerifier implements
 
         String text =
             LINE
-            + " ALLOCATION (estimations)"                          + "     |   " + "GARBAGE COLLECTION           "                               + "|  THROWABLE" + LINE_SEPARATOR
-            + " Total       : " + fifteenLength.adapt(allocationTotal)  + "|   " + twentyNineLength.adapt("Total pause: " + totalGcPause) + "|  Exception: " + exceptionsCount + LINE_SEPARATOR
-            + " Inside TLAB : " + fifteenLength.adapt(insideTlabSum)    + "|   " + twentyNineLength.adapt("Longest GC pause: " + gcPause) + "|  Error: " + errorCount + LINE_SEPARATOR
-            + " Outside TLAB: " + fifteenLength.adapt(outsideTlabSum)   + "|   " + twentyNineLength.adapt("Old: " + oldGcCollection)      + "|  Throwable: " + throwablesCount + LINE_SEPARATOR
-            + " Allocation rate: " + twelveLength.adapt(allocationRate) + "|   " + twentyNineLength.adapt("Young: " + youngGcCollection)  + "|" + LINE_SEPARATOR
+            + " ALLOCATION (estimations)"                           + "     |   " + "GARBAGE COLLECTION           "                             + "|  THROWABLE" + LINE_SEPARATOR
+            + " Total       : " + fifteenLength.adapt(allocationTotal)   + "|   " + twentyNineLength.adapt("Total pause     : " + totalGcPause) + "|  Exception: " + exceptionsCount + LINE_SEPARATOR
+            + " Inside TLAB : " + fifteenLength.adapt(insideTlabSum)     + "|   " + twentyNineLength.adapt("Longest GC pause: " + gcPause)      + "|  Error    : " + errorCount + LINE_SEPARATOR
+            + " Outside TLAB: " + fifteenLength.adapt(outsideTlabSum)    + "|   " + twentyNineLength.adapt("Young: " + youngGcCollection)       + "|  Throwable: " + throwablesCount + LINE_SEPARATOR
+            + " Allocation rate: " + twelveLength.adapt(allocationRate)  + "|   " + twentyNineLength.adapt("Old  : " + oldGcCollection)         + "|" + LINE_SEPARATOR
             + LINE
             + thirtyLength.adapt(" COMPILATION")                    + "|   " + "CODE CACHE" + LINE_SEPARATOR
-            + thirtyLength.adapt(" Number: " + compilationsCount)   + "|   " + codeCacheFullCount + LINE_SEPARATOR
+            + thirtyLength.adapt(" Number : " + compilationsCount)  + "|   " + codeCacheFullCount + LINE_SEPARATOR
             + thirtyLength.adapt(" Longest: " + longestCompilation) + "|   " + LINE_SEPARATOR
             + LINE
             + " " + "JVM" + LINE_SEPARATOR
-            + " Name: " + jvmName + LINE_SEPARATOR
-            + " Version: " + jvmVersion + LINE_SEPARATOR
+            + " Name     : " + jvmName      + LINE_SEPARATOR
+            + " Version  : " + jvmVersion   + LINE_SEPARATOR
             + " Arguments: " + jvmArguments + LINE_SEPARATOR
             + LINE
             + " " + "HARDWARE" + LINE_SEPARATOR
-            + " Hardware threads: " + minHwThreads + LINE_SEPARATOR
-            + " Cores: " + minNumberOfCores + LINE_SEPARATOR
-            + " Sockets: " + minNumberOfSockets + LINE_SEPARATOR
-            + " CPU: " + LINE_SEPARATOR
+            + " Hardware threads: " + minHwThreads       + LINE_SEPARATOR
+            + " Cores           : " + minNumberOfCores   + LINE_SEPARATOR
+            + " Sockets         : " + minNumberOfSockets + LINE_SEPARATOR
+            + " CPU" + LINE_SEPARATOR
             + cpuDescription + LINE_SEPARATOR
             + LINE
-            + " OS:" + LINE_SEPARATOR
+            + " OS" + LINE_SEPARATOR
             + osVersion + LINE_SEPARATOR
             + LINE;
       

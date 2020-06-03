@@ -342,14 +342,7 @@ public enum ProfilingInfo {
 
         if(type.isAssignableFrom(String.class)) {
             String stringValue = (String) aggregateAsObject;
-
-            String[] descriptionLines = splitInLines(stringValue);
-
-            boolean oneLine = descriptionLines.length == 1;
-
-            return   (oneLine ? ": " : "")
-                    + formatDescription(stringValue);
-
+            return formatDescription(stringValue);
         }
 
         throw new IllegalStateException(type + " type is not managed.");
