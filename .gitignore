@@ -13,3 +13,6 @@ out
 
 # NetBeans
 .nbattrs
+
+# log files for heap measure tests
+junit4/junit4-jvm-test/files/

@@ -11,6 +11,9 @@
 
 package org.quickperf.jvm.annotations;
 
+import org.quickperf.jvm.allocation.DefaultWriterFactory;
+import org.quickperf.jvm.allocation.WriterFactory;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -30,4 +33,21 @@ public @interface MeasureHeapAllocation {
      * @return
      */
     String format() default "[QUICK PERF] Measured heap allocation (test method thread): %s\n";
+
+    /**
+     * Allows you to provide a way to build a <code>Writer</code> instance to print your messages.
+     * The <code>WriterFactory</code> class is used to built this <code>Writer</code>.
+     * </p>
+     * This <code>WriterFactory</code> class is constructed using reflection, so it should have an empty
+     * constructor. If it does not an exception will be raised and the default <code>Writer</code> will be used.
+     * </p>
+     * The default value <code>DefaultWriterFactory</code> builds a <code>Writer</code> that writes to
+     * <code>System.out</code>. In case an exception is raised in the use of a provided factory, the system
+     * falls back on this default value.
+     *
+     * @return a class that implements the <code>WriterFactory</code> interface
+     * @see WriterFactory
+     */
+    Class<? extends WriterFactory> writerFactory()
+            default DefaultWriterFactory.class;
 }
