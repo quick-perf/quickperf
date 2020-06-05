@@ -1,4 +1,4 @@
-package org.quickperf.jvm.allocation;
+package org.quickperf.writer;
 
 import java.io.PrintWriter;
 import java.io.Writer;

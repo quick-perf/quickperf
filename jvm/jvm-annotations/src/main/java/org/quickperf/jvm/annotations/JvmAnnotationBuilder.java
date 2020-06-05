@@ -12,6 +12,8 @@
 package org.quickperf.jvm.annotations;
 
 import org.quickperf.jvm.allocation.AllocationUnit;
+import org.quickperf.writer.DefaultWriterFactory;
+import org.quickperf.writer.WriterFactory;
 
 import java.lang.annotation.Annotation;
 
@@ -96,7 +98,12 @@ public class JvmAnnotationBuilder {
         return new MeasureHeapAllocation() {
             @Override
             public String format() {
-                return "[QUICK PERF] Measured heap allocation (test method thread): %s\n";
+                return QUICK_PERF_MEASURED_HEAP_ALLOCATION_DEFAULT_FORMAT;
+            }
+
+            @Override
+            public Class<? extends WriterFactory> writerFactory() {
+                return DefaultWriterFactory.class;
             }
 
             @Override

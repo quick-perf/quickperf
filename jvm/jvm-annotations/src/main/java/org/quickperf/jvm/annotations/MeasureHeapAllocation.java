@@ -11,8 +11,8 @@
 
 package org.quickperf.jvm.annotations;
 
-import org.quickperf.jvm.allocation.DefaultWriterFactory;
-import org.quickperf.jvm.allocation.WriterFactory;
+import org.quickperf.writer.DefaultWriterFactory;
+import org.quickperf.writer.WriterFactory;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,6 +23,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface MeasureHeapAllocation {
 
+    String QUICK_PERF_MEASURED_HEAP_ALLOCATION_DEFAULT_FORMAT = "[QUICK PERF] Measured heap allocation (test method thread): %s\n";
+
     /**
      * Provides the format used to print the measured heap allocation on the console. This format
      * will be called with a preformatted allocation as a String. So the only element you can
@@ -32,7 +34,7 @@ public @interface MeasureHeapAllocation {
      *
      * @return
      */
-    String format() default "[QUICK PERF] Measured heap allocation (test method thread): %s\n";
+    String format() default QUICK_PERF_MEASURED_HEAP_ALLOCATION_DEFAULT_FORMAT;
 
     /**
      * Allows you to provide a way to build a <code>Writer</code> instance to print your messages.

@@ -14,6 +14,8 @@ package org.quickperf.jvm.allocation;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.jvm.annotations.MeasureHeapAllocation;
+import org.quickperf.writer.DefaultWriterFactory;
+import org.quickperf.writer.WriterFactory;
 
 import java.io.PrintWriter;
 import java.io.Writer;
