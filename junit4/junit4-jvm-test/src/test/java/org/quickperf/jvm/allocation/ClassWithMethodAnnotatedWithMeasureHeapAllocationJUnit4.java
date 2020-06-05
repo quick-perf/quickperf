@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.jvm.annotations.JvmOptions;
 import org.quickperf.jvm.annotations.MeasureHeapAllocation;
+import org.quickperf.writer.WriterFactory;
 
 import java.io.FileWriter;
 import java.io.IOException;
