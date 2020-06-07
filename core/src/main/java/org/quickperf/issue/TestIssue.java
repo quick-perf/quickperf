@@ -65,6 +65,20 @@ public class TestIssue implements Serializable {
         cause.setStackTrace(new StackTraceElement[0]);
     }
 
+    public static TestIssue buildSerializableTestIssueFrom(TestIssue testIssue) {
+
+        Throwable nonSerializableThrowable = testIssue.asThrowable();
+
+        Throwable cause = searchRootCauseOf(nonSerializableThrowable);
+
+        String causeMessage = cause.getMessage();
+
+        TestException testException = TestException.buildFrom(causeMessage);
+
+        return new TestIssue(testException);
+
+    }
+
     private static TestIssue convertThrowablesIntoToBusinessOrTechnicalIssue(List<Throwable> throwables) {
         Throwable firstThrowable = throwables.get(0);
 
