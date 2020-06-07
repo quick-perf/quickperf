@@ -25,9 +25,9 @@ public class TestIssueRepositoryTest {
         Path targetDirectory = Paths.get("target");
         String workingFolderPath = targetDirectory.toFile().getAbsolutePath();
 
-        Throwable nonSerializableThrowable = new NotSerializableThrowable();
+        Throwable notSerializableThrowable = new NotSerializableThrowable();
 
-        TestIssue testIssueWithNonSerializableThrowable = TestIssue.buildFrom(nonSerializableThrowable);
+        TestIssue testIssueWithNonSerializableThrowable = TestIssue.buildFrom(notSerializableThrowable);
 
         TestIssueRepository.INSTANCE.save(testIssueWithNonSerializableThrowable
                                         , workingFolderPath);
