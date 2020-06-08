@@ -12,6 +12,7 @@
 package org.quickperf.jvm.annotations;
 
 import org.quickperf.jvm.allocation.AllocationUnit;
+import org.quickperf.jvm.gc.GC;
 import org.quickperf.writer.DefaultWriterFactory;
 import org.quickperf.writer.WriterFactory;
 
@@ -77,6 +78,28 @@ public class JvmAnnotationBuilder {
         };
     }
 
+    public static UseGC useGC(final GC gc) {
+        return new UseGC() {
+            @Override
+            public GC value() {
+                return gc;
+            }
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return UseGC.class;
+            }
+        };
+    }
+
+    public static EnableGcLogging enableGcLogging() {
+        return new EnableGcLogging(){
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return EnableGcLogging.class;
+            }
+        };
+    }
+
     public static ExpectMaxHeapAllocation expectMaxHeapAllocation(final int value, final AllocationUnit unit) {
         return new ExpectMaxHeapAllocation() {
             @Override
@@ -94,16 +117,18 @@ public class JvmAnnotationBuilder {
         };
     }
 
-    public static MeasureHeapAllocation measureHeapAllocation() {
+    public static MeasureHeapAllocation measureHeapAllocation(
+              final String format
+            , final Class<? extends WriterFactory> writerFactoryClass) {
         return new MeasureHeapAllocation() {
             @Override
             public String format() {
-                return QUICK_PERF_MEASURED_HEAP_ALLOCATION_DEFAULT_FORMAT;
+                return format;
             }
 
             @Override
             public Class<? extends WriterFactory> writerFactory() {
-                return DefaultWriterFactory.class;
+                return writerFactoryClass;
             }
 
             @Override
@@ -111,6 +136,18 @@ public class JvmAnnotationBuilder {
                 return MeasureHeapAllocation.class;
             }
         };
+    }
+
+    public static MeasureHeapAllocation measureHeapAllocation() {
+        return measureHeapAllocation(MeasureHeapAllocation.QUICK_PERF_MEASURED_HEAP_ALLOCATION_DEFAULT_FORMAT, DefaultWriterFactory.class);
+    }
+
+    public static MeasureHeapAllocation measureHeapAllocation(final String format) {
+        return measureHeapAllocation(format, DefaultWriterFactory.class);
+    }
+
+    public static MeasureHeapAllocation measureHeapAllocation(final Class<? extends WriterFactory> writerFactoryClass) {
+        return measureHeapAllocation(MeasureHeapAllocation.QUICK_PERF_MEASURED_HEAP_ALLOCATION_DEFAULT_FORMAT, writerFactoryClass);
     }
 
     public static MeasureRSS measureRSS(){
