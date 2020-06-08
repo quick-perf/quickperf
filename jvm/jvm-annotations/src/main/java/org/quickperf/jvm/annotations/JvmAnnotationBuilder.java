@@ -117,20 +117,6 @@ public class JvmAnnotationBuilder {
         };
     }
 
-
-    public static ExpectMaxInsert expectMaxInsert(final int value) {
-        return new ExpectMaxInsert(){
-            @Override
-            public int value() {
-                return value;
-            }
-            @Override
-            public Class<? extends Annotation> annotationType() {
-                return ExpectMaxInsert.class;
-            }
-        };
-    }
-
     public static MeasureHeapAllocation measureHeapAllocation(
               final String format
             , final Class<? extends WriterFactory> writerFactoryClass) {
