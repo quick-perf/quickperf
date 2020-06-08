@@ -14,8 +14,11 @@ package org.quickperf.jvm.allocation;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.jvm.annotations.MeasureHeapAllocation;
+import org.quickperf.writer.DefaultWriterFactory;
+import org.quickperf.writer.WriterFactory;
 
 import java.io.PrintWriter;
+import java.io.Writer;
 
 public class MeasureHeapAllocationPerfVerifier implements VerifiablePerformanceIssue<MeasureHeapAllocation, Allocation> {
 
@@ -23,17 +26,32 @@ public class MeasureHeapAllocationPerfVerifier implements VerifiablePerformanceI
 
     private final ByteAllocationMeasureFormatter byteAllocationMeasureFormatter = ByteAllocationMeasureFormatter.INSTANCE;
 
-    private MeasureHeapAllocationPerfVerifier() { }
+    private MeasureHeapAllocationPerfVerifier() {
+    }
 
     @Override
     public PerfIssue verifyPerfIssue(MeasureHeapAllocation annotation, Allocation measuredAllocation) {
-        String allocationAsString = byteAllocationMeasureFormatter.format(measuredAllocation);
-        PrintWriter pw = new PrintWriter(System.out);
-        pw.printf(annotation.format(), allocationAsString);
-        // do not call close on pw since it will call close on System.out
-        // thus preventing any further printing on the console
-        pw.flush();
+        String allocationAsString = byteAllocationMeasureFormatter.formatWithAllocationInBytes(measuredAllocation);
+        Class<? extends WriterFactory> writerFactoryClass = annotation.writerFactory();
+        try (PrintWriter pw = buildPrintWriterFrom(writerFactoryClass);) {
+            pw.printf(annotation.format(), allocationAsString);
+        }
         return PerfIssue.NONE;
+    }
+
+    private PrintWriter buildPrintWriterFrom(Class<? extends WriterFactory> writerFactoryClass) {
+        PrintWriter pw;
+        try {
+            WriterFactory writerFactory = writerFactoryClass.getConstructor().newInstance();
+            Writer writer = writerFactory.buildWriter();
+            pw = new PrintWriter(writer);
+        } catch (Exception e) {
+            System.out.printf("Unexpected exception while building the writer factory [%s]\n", writerFactoryClass.getName());
+            e.printStackTrace(System.out);
+            System.out.println("Messages will be sent to System.out");
+            pw = DefaultWriterFactory.SystemOutPrintWriterInstance.INSTANCE.getSystemOutPrintWriter();
+        }
+        return pw;
     }
 
 }

@@ -11,10 +11,11 @@
 
 package org.quickperf.repository;
 
-import org.quickperf.issue.TestIssue;
 import org.quickperf.WorkingFolder;
+import org.quickperf.issue.TestIssue;
 
 import java.io.File;
+import java.io.NotSerializableException;
 
 public class TestIssueRepository {
 
@@ -27,10 +28,26 @@ public class TestIssueRepository {
     private TestIssueRepository() {}
 
     public void save(TestIssue testIssue, String workingFolderPath) {
+
         if(testIssue.isNone()) {
            return;
         }
-        objectFileRepository.save(workingFolderPath, fileName, testIssue);
+
+        try {
+            objectFileRepository.save(workingFolderPath, fileName, testIssue);
+        } catch (IllegalStateException illegalStateException) {
+
+            Throwable cause = illegalStateException.getCause();
+            if (cause instanceof NotSerializableException) {
+                TestIssue serializableTestIssue =
+                        TestIssue.buildSerializableTestIssueFrom(testIssue);
+                save(serializableTestIssue, workingFolderPath);
+            } else {
+                throw illegalStateException;
+            }
+
+        }
+
     }
 
     public TestIssue findFrom(WorkingFolder workingFolder) {

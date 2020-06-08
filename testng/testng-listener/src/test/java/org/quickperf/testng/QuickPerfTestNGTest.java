@@ -14,6 +14,9 @@ package org.quickperf.testng;
 import org.quickperf.testng.TestNGTests.TestNGTestsResult;
 import org.testng.annotations.Test;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class QuickPerfTestNGTest {
@@ -50,9 +53,21 @@ public class QuickPerfTestNGTest {
         assertThat(testsResult.getNumberOfFailedTest()).isOne();
 
         Throwable errorReport = testsResult.getThrowableOfFirstTest();
+
         assertThat(errorReport).hasMessageContaining("expected [false] but found [true]");
+
         assertThat(errorReport.getCause()).isNull();
 
+        String stackTraceAsString = extractStackTraceAsStringOf(errorReport);
+        assertThat(stackTraceAsString).doesNotContain("org.quickperf");
+
+    }
+
+    private String extractStackTraceAsStringOf(Throwable errorReport) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        errorReport.printStackTrace(printWriter);
+        return stringWriter.toString();
     }
 
 }

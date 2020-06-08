@@ -254,7 +254,34 @@ Many thanks to all our contributors!
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=archyoshi" title="Code">💻</a>
-        </td>    
+        </td>
+        <td align="center">
+            <a href="https://github.com/JosePaumard">
+                <img src="https://avatars.githubusercontent.com/JosePaumard" width="100px;" alt="José Paumard"/>
+                <br/>
+                <sub><b>José Paumard</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=JosePaumard" title="Code">💻</a>
+        </td>         
+        <td align="center">
+            <a href="https://github.com/edwardrose946">
+                <img src="https://avatars.githubusercontent.com/edwardrose946" width="100px;" alt="Edward Rose"/>
+                <br/>
+                <sub><b>Edward Rose</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=edwardrose946" title="Code">💻</a>
+        </td>        
+        <td align="center">
+            <a href="https://github.com/UbaidurRehman1">
+                <img src="https://avatars.githubusercontent.com/UbaidurRehman1" width="100px;" alt="Ubaid ur Rehman"/>
+                <br/>
+                <sub><b>Ubaid ur Rehman</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=UbaidurRehman1" title="Code">💻</a>
+        </td>              
     </tr>
 </table>
 <a href = "https://allcontributors.org/docs/en/emoji-key">emoji key</a>

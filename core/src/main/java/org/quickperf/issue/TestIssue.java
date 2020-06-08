@@ -32,7 +32,7 @@ public class TestIssue implements Serializable {
         return new TestIssue(throwable);
     }
 
-    public static TestIssue buildFrom(List<Throwable> throwables) {
+    public static TestIssue buildInNewJvmFrom(List<Throwable> throwables) {
 
         if (noThrowables(throwables)) {
             return TestIssue.NONE;
@@ -40,7 +40,9 @@ public class TestIssue implements Serializable {
 
         if(throwables.size() == 1) {
             Throwable throwable = throwables.get(0);
-            return new TestIssue(throwable);
+            Throwable cause = searchRootCauseOf(throwable);
+            resetStackTraceOf(cause);
+            return new TestIssue(cause);
         }
 
         return convertThrowablesIntoToBusinessOrTechnicalIssue(throwables);
@@ -49,6 +51,32 @@ public class TestIssue implements Serializable {
 
     private static boolean noThrowables(List<Throwable> throwables) {
         return throwables == null || throwables.isEmpty();
+    }
+
+    private static Throwable searchRootCauseOf(Throwable throwable) {
+        Throwable cause = throwable;
+        while(cause.getCause() != null) {
+            cause = cause.getCause();
+        }
+        return cause;
+    }
+
+    private static void resetStackTraceOf(Throwable cause) {
+        cause.setStackTrace(new StackTraceElement[0]);
+    }
+
+    public static TestIssue buildSerializableTestIssueFrom(TestIssue testIssue) {
+
+        Throwable nonSerializableThrowable = testIssue.asThrowable();
+
+        Throwable cause = searchRootCauseOf(nonSerializableThrowable);
+
+        String causeMessage = cause.getMessage();
+
+        TestException testException = TestException.buildFrom(causeMessage);
+
+        return new TestIssue(testException);
+
     }
 
     private static TestIssue convertThrowablesIntoToBusinessOrTechnicalIssue(List<Throwable> throwables) {
