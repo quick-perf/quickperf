@@ -13,8 +13,6 @@ import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
-import org.quickperf.jvm.allocation.AllocationUnit;
-import org.quickperf.jvm.annotations.Xmx;
 import org.quickperf.sql.Book;
 import org.quickperf.sql.annotation.ExpectMaxInsert;
 

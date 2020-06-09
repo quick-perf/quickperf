@@ -53,7 +53,8 @@ public enum HibernateSuggestion implements QuickPerfSuggestion {
         @Override
         public String getMessage() {
             String lightBulb = "\uD83D\uDCA1";
-            String message =  System.lineSeparator()
+
+            return System.lineSeparator()
                     + lightBulb + " Perhaps you may think that JDBC batching is enabled."
                     + System.lineSeparator()
                     + "\t* You can verify it using @ExpectJdbcBatching"
@@ -62,13 +63,14 @@ public enum HibernateSuggestion implements QuickPerfSuggestion {
                     + System.lineSeparator()
                     + "\t Some examples: https://abramsm.wordpress.com/2008/04/23/hibernate-batch-processing-why-you-may-not-be-using-it-even-if-you-think-you-are/"
                     + System.lineSeparator()
-                    + "\t                https://stackoverflow.com/questions/27697810/hibernate-disabled-insert-batching-when-using-an-identity-identifier";
-            if(SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa() && SqlFrameworksInClassPath.INSTANCE.containsSpringBoot()) {
-                message +=  SpringDataJpaSpringBootSuggestion.BATCHING.getMessage();
-            }
-            return message;
+                    + "\t                https://stackoverflow.com/questions/27697810/hibernate-disabled-insert-batching-when-using-an-identity-identifier"
+                    + System.lineSeparator()
+                    + System.lineSeparator()
+                    + "\tYou may want to look at the hibernate configuration file and check the following property:"
+                    + System.lineSeparator()
+                    + "\thibernate.jdbc.batch_size=\"...\""
+                    + System.lineSeparator();
         }
-
     },
 
     SESSION() {

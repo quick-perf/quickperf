@@ -15,7 +15,7 @@ import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectMaxInsert;
 import org.quickperf.sql.framework.HibernateSuggestion;
-import org.quickperf.sql.framework.JdbcSuggestion;
+import org.quickperf.sql.framework.SpringDataJpaSpringBootSuggestion;
 import org.quickperf.sql.framework.SqlFrameworksInClassPath;
 import org.quickperf.unit.Count;
 
@@ -52,6 +52,10 @@ public class MaxOfInsertsPerfIssueVerifier implements VerifiablePerformanceIssue
         if(SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
             String nPlusOneInsertMessage = HibernateSuggestion.BATCHING.getMessage();
             description += nPlusOneInsertMessage;
+        }
+
+        if(SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa() && SqlFrameworksInClassPath.INSTANCE.containsSpringBoot()) {
+            description +=  SpringDataJpaSpringBootSuggestion.BATCHING.getMessage();
         }
 
         return new PerfIssue(description);
