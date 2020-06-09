@@ -49,13 +49,17 @@ public class MaxOfInsertsPerfIssueVerifier implements VerifiablePerformanceIssue
                            + System.lineSeparator()
                            ;
 
-        if(SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
-            String nPlusOneInsertMessage = HibernateSuggestion.BATCHING.getMessage();
-            description += nPlusOneInsertMessage;
-        }
+        if(!expectedCount.isEqualTo(new Count(0))) {
 
-        if(SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa() && SqlFrameworksInClassPath.INSTANCE.containsSpringBoot()) {
-            description +=  SpringDataJpaSpringBootSuggestion.BATCHING.getMessage();
+            if (SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
+                String nPlusOneInsertMessage = HibernateSuggestion.BATCHING.getMessage();
+                description += nPlusOneInsertMessage;
+            }
+
+            if (SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa() && SqlFrameworksInClassPath.INSTANCE.containsSpringBoot()) {
+                description += SpringDataJpaSpringBootSuggestion.BATCHING.getMessage();
+            }
+
         }
 
         return new PerfIssue(description);
