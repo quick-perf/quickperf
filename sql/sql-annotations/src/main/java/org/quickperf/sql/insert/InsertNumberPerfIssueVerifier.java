@@ -33,8 +33,8 @@ public class InsertNumberPerfIssueVerifier implements VerifiablePerformanceIssue
 
         if (!measuredCount.isEqualTo(expectedCount)) {
             return aSqlPerfIssue().buildNotEqualNumberOfStatements(measuredCount
-                                       , expectedCount
-                                       , INSERT);
+                                                                 , expectedCount
+                                                                 , INSERT);
         }
 
         return PerfIssue.NONE;

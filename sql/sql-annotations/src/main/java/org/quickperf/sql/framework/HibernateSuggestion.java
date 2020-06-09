@@ -59,17 +59,24 @@ public enum HibernateSuggestion implements QuickPerfSuggestion {
                     + System.lineSeparator()
                     + "\t* You can verify it using @ExpectJdbcBatching"
                     + System.lineSeparator()
-                    + "\t Sometimes you may think that you are using it but in fact not"
+                    + "\t Sometimes you may think that JDBC is enabled but in fact not:"
                     + System.lineSeparator()
-                    + "\t Some examples: https://abramsm.wordpress.com/2008/04/23/hibernate-batch-processing-why-you-may-not-be-using-it-even-if-you-think-you-are/"
+                    + "\t https://abramsm.wordpress.com/2008/04/23/hibernate-batch-processing-why-you-may-not-be-using-it-even-if-you-think-you-are/"
                     + System.lineSeparator()
-                    + "\t                https://stackoverflow.com/questions/27697810/hibernate-disabled-insert-batching-when-using-an-identity-identifier"
+                    + "\t https://stackoverflow.com/questions/27697810/hibernate-disabled-insert-batching-when-using-an-identity-identifier"
                     + System.lineSeparator()
                     + System.lineSeparator()
-                    + "\tYou may want to look at the hibernate configuration file and check the following property:"
+                    + "\tYou should check that you project has the following Hibernate properties"
                     + System.lineSeparator()
-                    + "\thibernate.jdbc.batch_size=\"...\""
-                    + System.lineSeparator();
+                    + "\thibernate.jdbc.batch_size => positive value"
+                    + System.lineSeparator()
+                    + "\thibernate.order_inserts => true"
+                    + System.lineSeparator()
+                    + "\thibernate.order_updates => true"
+                    + System.lineSeparator()
+                    + "\tIn case of versioned entities, you should also check"
+                    + "\thibernate.jdbc.batch_versioned_data => true"
+                    ;
         }
     },
 
