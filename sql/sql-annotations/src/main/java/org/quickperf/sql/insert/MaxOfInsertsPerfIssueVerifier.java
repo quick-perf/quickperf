@@ -52,11 +52,11 @@ public class MaxOfInsertsPerfIssueVerifier implements VerifiablePerformanceIssue
         if(!expectedCount.isEqualTo(new Count(0))) {
 
             if (SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
-                String nPlusOneInsertMessage = HibernateSuggestion.BATCHING.getMessage();
-                description += nPlusOneInsertMessage;
+                description += HibernateSuggestion.BATCHING.getMessage();
             }
 
-            if (SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa() && SqlFrameworksInClassPath.INSTANCE.containsSpringBoot()) {
+            if ( SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa()
+              && SqlFrameworksInClassPath.INSTANCE.containsSpringBoot()) {
                 description += SpringDataJpaSpringBootSuggestion.BATCHING.getMessage();
             }
 
