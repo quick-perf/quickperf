@@ -17,7 +17,7 @@ import org.quickperf.jvm.allocation.AllocationUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AllocationTest {
+public class AllocationComparisonTest {
     
     @Test public void
     one_kilo_byte_allocation_should_be_greater_than_one_byte_allocation() {
