@@ -48,7 +48,7 @@ public enum HibernateSuggestion implements QuickPerfSuggestion {
 
     },
 
-    N_PLUS_ONE_INSERT() {
+    BATCHING() {
 
         @Override
         public String getMessage() {
@@ -56,21 +56,15 @@ public enum HibernateSuggestion implements QuickPerfSuggestion {
             String message =  System.lineSeparator()
                     + lightBulb + " Perhaps you may think that JDBC batching is enabled."
                     + System.lineSeparator()
-                    + "\t* With Hibernate, you can check it using @ExpectJdbcBatching"
+                    + "\t* You can verify it using @ExpectJdbcBatching"
                     + System.lineSeparator()
-                    + "\t You may sometimes think that you are using JDBC batching but in fact not"
+                    + "\t Sometimes you may think that you are using it but in fact not"
                     + System.lineSeparator()
-                    + "\t  Some examples: https://abramsm.wordpress.com/2008/04/23/hibernate-batch-processing-why-you-may-not-be-using-it-even-if-you-think-you-are/"
+                    + "\t Some examples: https://abramsm.wordpress.com/2008/04/23/hibernate-batch-processing-why-you-may-not-be-using-it-even-if-you-think-you-are/"
                     + System.lineSeparator()
-                    + "\t                 https://stackoverflow.com/questions/27697810/hibernate-disabled-insert-batching-when-using-an-identity-identifier";
+                    + "\t                https://stackoverflow.com/questions/27697810/hibernate-disabled-insert-batching-when-using-an-identity-identifier";
             if(SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa() && SqlFrameworksInClassPath.INSTANCE.containsSpringBoot()) {
-                message +=  System.lineSeparator()
-                        + System.lineSeparator()
-                        + "\t* With Spring Boot and Spring Data JPA, you may fix it by adding"
-                        + System.lineSeparator()
-                        + "\tspring.jpa.properties.hibernate.jdbc.batch_size=\"...\" on your application.properties file."
-                        + System.lineSeparator()
-                        + "\thttps://docs.spring.io/spring-boot/docs/current/reference/html/howto.html#howto-configure-jpa-properties";
+                message +=  SpringDataJpaSpringBootSuggestion.BATCHING.getMessage();
             }
             return message;
         }

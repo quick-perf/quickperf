@@ -1,4 +1,3 @@
-
 /*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  *
@@ -9,6 +8,7 @@
  *
  * Copyright 2019-2020 the original author or authors.
  */
+
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
@@ -131,44 +131,6 @@ public class ExpectMaxInsertTest {
         // THEN
         assertThat(printableResult.failureCount()).isZero();
 
-    }
-
-    @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectMaxInsertAndWithXmx extends SqlTestBase {
-
-        @Xmx(value = 20, unit = AllocationUnit.MEGA_BYTE)
-        @ExpectMaxInsert(0)
-        @Test
-        public void execute_one_insert_but_no_insert_expected() {
-            EntityManager em = emf.createEntityManager();
-            em.getTransaction().begin();
-
-            Book effectiveJava = new Book();
-            effectiveJava.setIsbn("effectiveJavaIsbn");
-            effectiveJava.setTitle("Effective Java");
-
-            em.persist(effectiveJava);
-
-            em.getTransaction().commit();
-        }
-
-    }
-
-    @Test public void
-    should_fail_if_the_number_of_sql_statements_is_greater_than_the_number_expected_and_test_method_annotated_with_xmx() {
-
-        // GIVEN
-        Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectMaxInsertAndWithXmx.class;
-
-        // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
-
-        // THEN
-        assertThat(printableResult.failureCount()).isOne();
-
-        assertThat(printableResult.toString())
-                .contains("You may think that at most <0> insert statement was sent to the database")
-                .contains("But in fact <1>...");
     }
 
 }
