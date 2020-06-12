@@ -34,7 +34,7 @@ public class AllocationAnnotationsTestNGTest {
 
         Throwable errorReport = testsResult.getThrowableOfFirstTest();
         assertThat(errorReport).hasMessageContaining(
-                "Expected allocation (test method thread) to be less than 439.0 bytes but is 440.0 bytes");
+                "Expected heap allocation (test method thread) to be less than 439 bytes but is 440 bytes");
 
     }
 
@@ -52,7 +52,7 @@ public class AllocationAnnotationsTestNGTest {
         assertThat(testsResult.getNumberOfFailedTest()).isOne();
 
         assertThat(testsResult.getThrowableOfFirstTest()).hasMessageContaining(
-                "Expected allocation (test method thread) to be 0 but is 440.0 bytes");
+                "Expected no heap allocation (test method thread) but is 440 bytes.");
 
     }
 

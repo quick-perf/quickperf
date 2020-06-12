@@ -30,7 +30,7 @@ public class AllocationRepository {
         LongRepository longRepository = LongRepositoryFactory.getLongRepository(testExecutionContext);
         WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
         long allocationInBytes = longRepository.find(workingFolder.getPath(), BYTE_WATCHER_FILE_NAME);
-        return new Allocation((double)(allocationInBytes), AllocationUnit.BYTE);
+        return Allocation.ofBytes(allocationInBytes);
     }
 
 }

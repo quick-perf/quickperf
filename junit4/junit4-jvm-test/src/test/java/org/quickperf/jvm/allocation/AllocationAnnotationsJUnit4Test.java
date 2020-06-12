@@ -52,7 +52,7 @@ public class AllocationAnnotationsJUnit4Test {
         assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString()).contains(
-                "Expected allocation (test method thread) to be less than 439.0 bytes but is 440.0 bytes.");
+                "Expected heap allocation (test method thread) to be less than 439 bytes but is 440 bytes");
 
     }
 
@@ -82,7 +82,7 @@ public class AllocationAnnotationsJUnit4Test {
         assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
-                      .contains("Expected allocation (test method thread) to be 0 but is 440.0 bytes.");
+                      .contains("Expected no heap allocation (test method thread) but is 440 bytes.");
 
     }
 

@@ -53,7 +53,7 @@ public class AllocationAnnotationsJUnit5Test {
         assertThat(jUnit5TestsResult.getNumberOfFailures()).isOne();
 
         String errorReport = jUnit5TestsResult.getErrorReport();
-        assertThat(errorReport).contains("Expected allocation (test method thread) to be less than 439.0 bytes but is 440.0 bytes");
+        assertThat(errorReport).contains("Expected heap allocation (test method thread) to be less than 439 bytes but is 440 bytes");
 
     }
 
@@ -84,7 +84,7 @@ public class AllocationAnnotationsJUnit5Test {
         assertThat(jUnit5TestsResult.getNumberOfFailures()).isOne();
 
         String errorReport = jUnit5TestsResult.getErrorReport();
-        assertThat(errorReport).contains("Expected allocation (test method thread) to be 0 but is 440.0 bytes");
+        assertThat(errorReport).contains("Expected no heap allocation (test method thread) but is 440 bytes.");
 
     }
 

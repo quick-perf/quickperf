@@ -27,9 +27,9 @@ public class AllocationRateFormatter {
             return " ";
         }
 
-        double allocationRateInBytesPerSecond = allocationRate.getValueInBytesBySecond();
+        long allocationRateInBytesPerSecond = (long) allocationRate.getValueInBytesBySecond();
 
-        return byteAllocationMeasureFormatter.shortFormat(allocationRateInBytesPerSecond) + "/s";
+        return byteAllocationMeasureFormatter.shortFormat(allocationRateInBytesPerSecond, 0) + "/s";
 
     }
 

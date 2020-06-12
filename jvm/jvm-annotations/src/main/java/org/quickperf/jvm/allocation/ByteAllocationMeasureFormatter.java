@@ -13,6 +13,7 @@ package org.quickperf.jvm.allocation;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.Locale;
 
 public class ByteAllocationMeasureFormatter {
@@ -21,115 +22,92 @@ public class ByteAllocationMeasureFormatter {
 
     private ByteAllocationMeasureFormatter() {}
 
-    public String formatWithAllocationInBytes(Allocation allocation) {
+    public String format(Allocation allocation) {
+        long valueInBytes = allocation.getValueInBytes();
+        return format(valueInBytes, false);
+    }
 
-        if(isByteOrderOfMagnitude(allocation)) {
-            return formatAllocationInBytes(allocation);
-        }
-        if(isKiloByteOrderOfMagnitude(allocation)) {
-            return    formatAllocationInKiloBytes(allocation)
-                    + formatInByteAllocationBetweenParentheses(allocation);
-        }
-        if(isMegaByteOrderOfMagnitude(allocation)) {
-            return    formatAllocationInMegaBytes(allocation)
-                    + formatInByteAllocationBetweenParentheses(allocation);
+    public String formatAndAppendAllocationInBytes(Allocation allocation) {
+
+        long valueInBytes = allocation.getValueInBytes();
+
+        String formattedValue = format(valueInBytes, false);
+
+        if (isBytesOrder(valueInBytes)) {
+            return formattedValue;
         }
 
-        return    formatAllocationInGigaBytes(allocation)
-                + formatInByteAllocationBetweenParentheses(allocation);
+        return formattedValue + formatInByteAllocationBetweenParentheses(allocation);
 
     }
 
-    public String shortFormat(double allocationInBytes) {
+    public String shortFormat(long allocationInBytes, int numberOfDigits) {
+        return format(allocationInBytes, numberOfDigits, true);
+    }
 
-        if(allocationInBytes < 1024) {
-            return "" + allocationInBytes + " " + AllocationUnit.BYTE.shortFormat();
+    private String format(long allocationInBytes, boolean isShortFormat) {
+        int numberOfDigits = 2;
+        return format(allocationInBytes, numberOfDigits, isShortFormat);
+    }
+
+    private String format(long allocationInBytes, int numberOfDigits, boolean isShortFormat) {
+        AllocationUnit allocationUnit = findMaxAllocationUnit(allocationInBytes);
+        String allocationUnitAsString = isShortFormat ? allocationUnit.toShortString()
+                                                      : allocationUnit.toString();
+        return    reduceAllocationValue(allocationInBytes, numberOfDigits)
+                + " " + allocationUnitAsString;
+    }
+
+    private String reduceAllocationValue(long allocationInBytes, int numberOfDigits) {
+
+        if(isBytesOrder(allocationInBytes)) {
+            int noDigit = 0;
+            return formatAllocationValue(allocationInBytes, noDigit);
         }
         if(allocationInBytes < 1024 * 1024) {
-            double kiloByteValue = allocationInBytes / 1024;
-            String formattedAllocationValue = formatAllocationValue(kiloByteValue);
-            return formattedAllocationValue + " "  + AllocationUnit.KILO_BYTE.shortFormat();
+            double kiloByteValue = (double)(allocationInBytes) / 1024;
+            return formatAllocationValue(kiloByteValue, numberOfDigits);
         }
         if(allocationInBytes < Math.pow(1024, 3)) {
             double megaByteValue = allocationInBytes / Math.pow(1024, 2);
-            String formattedAllocationValue = formatAllocationValue(megaByteValue);
-            return formattedAllocationValue + " " + AllocationUnit.MEGA_BYTE.shortFormat();
+            return formatAllocationValue(megaByteValue, numberOfDigits);
         }
 
         double gigaByteValue = allocationInBytes / Math.pow(1024, 3);
-        String formattedAllocationValue = formatAllocationValue(gigaByteValue);
-        return formattedAllocationValue + " " + AllocationUnit.GIGA_BYTE.shortFormat();
-
+        return formatAllocationValue(gigaByteValue, numberOfDigits);
     }
 
-    private boolean isByteOrderOfMagnitude(Allocation allocation) {
-        return allocation.getValue() < 1024;
+    private AllocationUnit findMaxAllocationUnit(double allocationInBytes) {
+        if(isBytesOrder(allocationInBytes)) {
+            return AllocationUnit.BYTE;
+        }
+        if(allocationInBytes < 1024 * 1024) {
+            return AllocationUnit.KILO_BYTE;
+        }
+        if(allocationInBytes < Math.pow(1024, 3)) {
+            return AllocationUnit.MEGA_BYTE;
+        }
+        return AllocationUnit.GIGA_BYTE;
     }
 
-    private String formatAllocationInBytes(Allocation allocation) {
-        return "" + allocation.getValue() + " " + allocation.getUnit();
+    private boolean isBytesOrder(double allocationInBytes) {
+        return allocationInBytes < 1024;
     }
 
-    private boolean isKiloByteOrderOfMagnitude(Allocation allocation) {
-        return allocation.getValue() < 1024 * 1024;
-    }
-
-    private String formatAllocationInKiloBytes(Allocation allocation) {
-
-        double kiloByteValue = allocation.getValue() / 1024;
-
-        String formattedAllocationValue = formatAllocationValue(kiloByteValue);
-
-        return formattedAllocationValue + " "  + AllocationUnit.KILO_BYTE;
-
-    }
-
-    private boolean isMegaByteOrderOfMagnitude(Allocation allocation) {
-        return allocation.getValue() < Math.pow(1024, 3);
-    }
-
-    private String formatAllocationInMegaBytes(Allocation allocation) {
-
-        double megaByteValue = allocation.getValue() / Math.pow(1024, 2);
-
-        String formattedAllocationValue = formatAllocationValue(megaByteValue);
-
-        return formattedAllocationValue + " " + AllocationUnit.MEGA_BYTE;
-
-    }
-
-    private String formatAllocationInGigaBytes(Allocation allocation) {
-
-        double gigaByteValue = allocation.getValue() / Math.pow(1024, 3);
-
-        String formattedAllocationValue = formatAllocationValue(gigaByteValue);
-
-        return formattedAllocationValue + " " + AllocationUnit.GIGA_BYTE;
-
-    }
-
-    private String formatAllocationValue(double allocationValue) {
-
-        String allocationValueAsString = "" + allocationValue;
-
-        String[] splittedAllocationValue = allocationValueAsString.split("\\.");
-
-        String integerPartAsString = splittedAllocationValue[0];
-
-        String decimalPartAsString = splittedAllocationValue[1];
-
-        String truncatedDecimalPartAsString = decimalPartAsString.substring(0, 1);
-
-        return integerPartAsString + "." + truncatedDecimalPartAsString;
-
+    private String formatAllocationValue(double allocationValue, int numberOfDigits) {
+        NumberFormat numberFormat = DecimalFormat.getInstance(Locale.US);
+        numberFormat.setMinimumFractionDigits(numberOfDigits);
+        numberFormat.setMaximumFractionDigits(numberOfDigits);
+        numberFormat.setGroupingUsed(false);
+        return numberFormat.format(allocationValue);
     }
 
     private String formatInByteAllocationBetweenParentheses(Allocation allocationValue) {
-        DecimalFormat decimalFormat = buildBytePrefixFormatter();
-        return " (" + decimalFormat.format(allocationValue.getValue()) + " bytes)";
+        DecimalFormat format = buildAllocationValueInBytesFormat();
+        return " (" + format.format(allocationValue.getValueInBytes()) + " " + AllocationUnit.BYTE +  ")";
     }
 
-    private DecimalFormat buildBytePrefixFormatter() {
+    private DecimalFormat buildAllocationValueInBytesFormat() {
         DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat.getInstance(Locale.ENGLISH);
         DecimalFormatSymbols symbols = decimalFormat.getDecimalFormatSymbols();
         symbols.setGroupingSeparator(' ');

@@ -70,7 +70,7 @@ public class AllocationWriterTest {
 
         // THEN
         assertThat(testResult.failureCount()).isZero();
-        assertThat(new File(FILE_PATH)).hasContent("[QUICK PERF LOCAL TEST] Measured heap allocation for ArrayList: 440.0 bytes");
+        assertThat(new File(FILE_PATH)).hasContent("[QUICK PERF LOCAL TEST] Measured heap allocation for ArrayList: 440 bytes");
 
     }
 

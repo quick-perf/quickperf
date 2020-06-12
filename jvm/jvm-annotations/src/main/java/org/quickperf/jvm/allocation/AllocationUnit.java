@@ -15,8 +15,8 @@ public enum AllocationUnit {
 
       BYTE(1) {
           @Override
-          public String shortFormat() {
-              return "bytes";
+          public String toShortString() {
+              return "B";
           }
           @Override
           public String toString() {
@@ -25,7 +25,7 @@ public enum AllocationUnit {
       }
     , KILO_BYTE(1024) {
         @Override
-        public String shortFormat() {
+        public String toShortString() {
             return "KiB";
         }
         @Override
@@ -35,7 +35,7 @@ public enum AllocationUnit {
     }
     , MEGA_BYTE(1024 * 1024) {
         @Override
-        public String shortFormat() {
+        public String toShortString() {
             return "MiB";
         }
         @Override
@@ -45,7 +45,7 @@ public enum AllocationUnit {
     }
     , GIGA_BYTE(1024 * 1024 * 1024) {
         @Override
-        public String shortFormat() {
+        public String toShortString() {
             return "GiB";
         }
         @Override
@@ -53,7 +53,6 @@ public enum AllocationUnit {
             return "Giga bytes";
         }
     }
-
     ;
 
     private final int valueInBytes;
@@ -66,6 +65,6 @@ public enum AllocationUnit {
         return valueInBytes;
     }
 
-    public abstract String shortFormat();
+    public abstract String toShortString();
 
 }
