@@ -16,9 +16,10 @@ import org.quickperf.measure.AbstractComparablePerfMeasure;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
-class ProcessStatus extends AbstractComparablePerfMeasure<ProcessStatus> {
+class ProcessStatus extends AbstractComparablePerfMeasure<ProcessStatus> implements Serializable {
     private static ProcessStatus record;
     private long rssInKb;
     private String pid;

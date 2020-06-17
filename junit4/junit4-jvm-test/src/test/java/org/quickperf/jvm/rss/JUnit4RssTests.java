@@ -63,8 +63,7 @@ public class JUnit4RssTests {
     }
 
     @Test
-    public void
-    rss_measure_expecting_10m() {
+    public void rss_measure_expecting_10m() {
 
         // GIVEN
         Class<?> testClass = ClassWithRssAnnotations.class;
@@ -73,7 +72,9 @@ public class JUnit4RssTests {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        assertThat(printableResult.failureCount()).isZero();
+        System.out.println(printableResult.toString());
+        assertThat(printableResult.failureCount()).isEqualTo(1);
+        assertThat(printableResult.toString()).contains("[PERF] Expected RSS to be less than 10.00 Mega bytes");
 
     }
 }
