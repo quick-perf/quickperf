@@ -48,8 +48,9 @@ public class JUnit5RssTests {
         JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
 
         // THEN
-        assertThat(jUnit5TestsResult.getNumberOfFailures()).isZero();
-
+        System.out.println(jUnit5TestsResult.getErrorReport());
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(1);
+        assertThat(jUnit5TestsResult.getErrorReport()).contains("[PERF] Expected RSS to be less than 10.00 Mega bytes");
     }
 
 }

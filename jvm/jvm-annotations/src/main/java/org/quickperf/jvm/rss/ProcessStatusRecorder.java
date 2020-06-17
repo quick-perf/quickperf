@@ -15,19 +15,23 @@ import org.quickperf.TestExecutionContext;
 import org.quickperf.perfrecording.RecordablePerformance;
 
 public class ProcessStatusRecorder implements RecordablePerformance<ProcessStatus> {
+    ProcessStatusRepository processStatusRepository = new ProcessStatusRepository();
+
     @Override
     public void startRecording(TestExecutionContext testExecutionContext) {
-        //nothing to do : only record the process status at the end of the test
+        // nothing here, recording is done when stoping the recorder
     }
 
     @Override
     public void stopRecording(TestExecutionContext testExecutionContext) {
         ProcessStatus.record();
+        processStatusRepository.save(ProcessStatus.getRecord(), testExecutionContext);
     }
 
     @Override
     public ProcessStatus findRecord(TestExecutionContext testExecutionContext) {
-        return ProcessStatus.getRecord();
+        processStatusRepository = new ProcessStatusRepository();
+        return processStatusRepository.find(testExecutionContext);
     }
 
     @Override
