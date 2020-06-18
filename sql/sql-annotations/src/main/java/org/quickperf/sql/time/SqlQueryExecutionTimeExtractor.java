@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import org.quickperf.ExtractablePerformanceMeasure;
 import org.quickperf.sql.SqlExecution;
 import org.quickperf.sql.SqlExecutions;
+import org.quickperf.time.ExecutionTime;
 
 public class SqlQueryExecutionTimeExtractor implements ExtractablePerformanceMeasure<SqlExecutions, ExecutionTime> {
 

@@ -11,16 +11,17 @@
 
 package org.quickperf.sql.time;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-
-import java.lang.annotation.Annotation;
-import java.util.concurrent.TimeUnit;
-
 import org.junit.Test;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectMaxQueryExecutionTime;
+import org.quickperf.sql.annotation.SqlAnnotationBuilder;
+import org.quickperf.time.ExecutionTime;
+
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class SqlQueryMaxExecutionTimeVerifierTest {
 	
@@ -28,24 +29,8 @@ public class SqlQueryMaxExecutionTimeVerifierTest {
 	public void should_return_a_perf_issue_if_query_execution_time_is_greater_than_expected () {
 		
 		VerifiablePerformanceIssue<ExpectMaxQueryExecutionTime, ExecutionTime> verifier = SqlQueryMaxExecutionTimeVerifier.INSTANCE;
-		
-		ExpectMaxQueryExecutionTime expectedMaxExecutionTime = new ExpectMaxQueryExecutionTime() {
-			
-			@Override
-			public Class<? extends Annotation> annotationType() {
-				return ExpectMaxQueryExecutionTime.class;
-			}
-			
-			@Override
-			public long value() {
-				return 10L;
-			}
-			
-			@Override
-			public TimeUnit unit() {
-				return TimeUnit.MILLISECONDS;
-			}
-		};
+
+		ExpectMaxQueryExecutionTime expectedMaxExecutionTime = SqlAnnotationBuilder.expectMaxQueryExecutionTime(10, TimeUnit.MILLISECONDS);
 		
 		ExecutionTime sqlExecTime = new ExecutionTime(50L, TimeUnit.MILLISECONDS);
 		
@@ -54,61 +39,33 @@ public class SqlQueryMaxExecutionTimeVerifierTest {
 		assertNotEquals(PerfIssue.NONE.getDescription(), perfIssue.getDescription());
 		
 		assertNotEquals(PerfIssue.NONE, perfIssue);
+
 	}
 
 	@Test
 	public void should_return_no_perf_issue_if_query_execution_time_is_less_than_expected () {
+
 		VerifiablePerformanceIssue<ExpectMaxQueryExecutionTime, ExecutionTime> verifier = SqlQueryMaxExecutionTimeVerifier.INSTANCE;
 		
-		ExpectMaxQueryExecutionTime expectedMaxExecutionTime = new ExpectMaxQueryExecutionTime() {
-			
-			@Override
-			public Class<? extends Annotation> annotationType() {
-				return ExpectMaxQueryExecutionTime.class;
-			}
-			
-			@Override
-			public long value() {
-				return 1L;
-			}
-			
-			@Override
-			public TimeUnit unit() {
-				return TimeUnit.MILLISECONDS;
-			}
-		};
+		ExpectMaxQueryExecutionTime expectedMaxExecutionTime = SqlAnnotationBuilder.expectMaxQueryExecutionTime(1, TimeUnit.MILLISECONDS);
 		
-		ExecutionTime sqlExecTime = new ExecutionTime(5L, TimeUnit.NANOSECONDS);
+		ExecutionTime sqlExecTime = new ExecutionTime(5, TimeUnit.NANOSECONDS);
 		
 		PerfIssue perfIssue = verifier.verifyPerfIssue(expectedMaxExecutionTime, sqlExecTime);
 		
 		assertEquals(PerfIssue.NONE, perfIssue);
 		
 		assertEquals(PerfIssue.NONE.getDescription(), perfIssue.getDescription());
+
 	}
 	
 	@Test
 	public void should_return_no_perf_issue_if_query_execution_time_is_same_as_expected () {
+
 		VerifiablePerformanceIssue<ExpectMaxQueryExecutionTime, ExecutionTime> verifier = SqlQueryMaxExecutionTimeVerifier.INSTANCE;
-		
-		ExpectMaxQueryExecutionTime expectedMaxExecutionTime = new ExpectMaxQueryExecutionTime() {
-			
-			@Override
-			public Class<? extends Annotation> annotationType() {
-				return ExpectMaxQueryExecutionTime.class;
-			}
-			
-			@Override
-			public long value() {
-				return 1L;
-			}
-			
-			@Override
-			public TimeUnit unit() {
-				return TimeUnit.SECONDS;
-			}
-		};
-		
+
+		ExpectMaxQueryExecutionTime expectedMaxExecutionTime = SqlAnnotationBuilder.expectMaxQueryExecutionTime(1, TimeUnit.SECONDS);
+
 		ExecutionTime sqlExecTime = new ExecutionTime(1000L, TimeUnit.MILLISECONDS);
 		
 		PerfIssue perfIssue = verifier.verifyPerfIssue(expectedMaxExecutionTime, sqlExecTime);
@@ -116,6 +73,7 @@ public class SqlQueryMaxExecutionTimeVerifierTest {
 		assertEquals(PerfIssue.NONE.getDescription(), perfIssue.getDescription());
 		
 		assertEquals(PerfIssue.NONE, perfIssue);
+
 	}
 
 }

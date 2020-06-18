@@ -13,21 +13,21 @@ package org.quickperf.jvm.allocation;
 
 import org.quickperf.TestExecutionContext;
 import org.quickperf.WorkingFolder;
+import org.quickperf.repository.LongFileRepository;
 import org.quickperf.repository.LongRepository;
-import org.quickperf.repository.LongRepositoryFactory;
 
 public class AllocationRepository {
 
     private static final String BYTE_WATCHER_FILE_NAME = "allocation.ser";
 
     public void saveAllocationInBytes(long allocation, TestExecutionContext testExecutionContext) {
-        LongRepository longRepository = LongRepositoryFactory.getLongRepository(testExecutionContext);
+        LongRepository longRepository = new LongFileRepository();
         WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
         longRepository.save(allocation, workingFolder.getPath(), BYTE_WATCHER_FILE_NAME);
     }
 
     public Allocation findAllocation(TestExecutionContext testExecutionContext) {
-        LongRepository longRepository = LongRepositoryFactory.getLongRepository(testExecutionContext);
+        LongRepository longRepository = new LongFileRepository();
         WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
         long allocationInBytes = longRepository.find(workingFolder.getPath(), BYTE_WATCHER_FILE_NAME);
         return Allocation.ofBytes(allocationInBytes);

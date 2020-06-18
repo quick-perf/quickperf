@@ -17,8 +17,6 @@ import java.io.ObjectOutputStream;
 
 public class LongFileRepository implements LongRepository {
 
-    private final LongMemoryRepository longMemoryRepository = new LongMemoryRepository();
-
     private final ObjectInputStreamBuilder objectInputStreamBuilder = ObjectInputStreamBuilder.INSTANCE;
 
     private final ObjectOutputStreamBuilder objectOutputStreamBuilder = ObjectOutputStreamBuilder.INSTANCE;
@@ -36,16 +34,7 @@ public class LongFileRepository implements LongRepository {
 
     @Override
     public Long find(String workingFolderPath, String fileName) {
-
-        Long longValueFromMemory = longMemoryRepository.find(workingFolderPath, fileName);
-
-        if(longValueFromMemory == null) {
-            Long longValueFromFile = retrieveLongValueFromFile(workingFolderPath, fileName);
-            longMemoryRepository.save(longValueFromFile, workingFolderPath, fileName);
-            return longValueFromFile;
-        }
-
-        return longValueFromMemory;
+        return retrieveLongValueFromFile(workingFolderPath, fileName);
     }
 
     private Long retrieveLongValueFromFile(String workingFolderPath, String fileName) {

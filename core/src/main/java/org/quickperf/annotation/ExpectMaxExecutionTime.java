@@ -9,20 +9,27 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.repository;
+package org.quickperf.annotation;
 
-import org.quickperf.TestExecutionContext;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class LongRepositoryFactory {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.TYPE})
+public @interface ExpectMaxExecutionTime {
 
-    private LongRepositoryFactory() {
-    }
+    int hours() default 0;
 
-    public static LongRepository getLongRepository(TestExecutionContext testExecutionContext) {
-        if (testExecutionContext.testExecutionUsesTwoJVMs()) {
-            return new LongFileRepository();
-        }
-        return new LongMemoryRepository();
-    }
+    int minutes() default 0;
+
+    int seconds() default 0;
+
+    int milliSeconds() default 0;
+
+    long microSeconds() default 0;
+
+    long nanoSeconds() default 0;
 
 }

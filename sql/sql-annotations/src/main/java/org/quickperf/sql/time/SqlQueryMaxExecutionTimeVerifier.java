@@ -14,6 +14,7 @@ package org.quickperf.sql.time;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectMaxQueryExecutionTime;
+import org.quickperf.time.ExecutionTime;
 
 public class SqlQueryMaxExecutionTimeVerifier implements VerifiablePerformanceIssue<ExpectMaxQueryExecutionTime, ExecutionTime> {
 	

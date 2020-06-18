@@ -54,13 +54,7 @@ public class Allocation extends AbstractComparablePerfMeasure<Allocation> {
     public int compareTo(Allocation otherAllocation) {
         long valueInBytes = getValueInBytes();
         long otherValueInBytes = otherAllocation.getValueInBytes();
-        if(valueInBytes == otherValueInBytes) {
-            return 0;
-        }
-        if(valueInBytes > otherValueInBytes) {
-            return 1;
-        }
-        return -1;
+        return Long.compare(valueInBytes, otherValueInBytes);
     }
 
     public long getValueInBytes() {
