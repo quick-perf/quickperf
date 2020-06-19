@@ -75,8 +75,8 @@ Auto-detection of Hibernate and Spring Data JPA:
 	                                       or ...
 ```
 ```
-	* With Spring Data JPA, you may fix it by adding
-		@EntityGraph(attributePaths = { "..." }) on repository method.
+	* With Spring Data JPA, you may fix it by adding @EntityGraph(attributePaths = { "..." })
+      	  on repository method: https://docs.spring.io/spring-data/jpa/docs/current/reference/ht
 ```
 
 📙 [All the SQL annotations](https://github.com/quick-perf/doc/wiki/SQL-annotations)  &nbsp;&nbsp; :mag_right: [Spring Boot & JUnit 4](https://github.com/quick-perf/quickperf-examples/tree/master/springboot-junit4) &nbsp;&nbsp; :mag_right: [Spring Boot & JUnit 5](https://github.com/quick-perf/quickperf-examples/tree/master/springboot-junit5)

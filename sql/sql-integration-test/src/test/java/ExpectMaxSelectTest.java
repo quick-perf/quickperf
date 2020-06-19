@@ -49,12 +49,13 @@ public class ExpectMaxSelectTest {
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
-
         assertThat(printableResult.toString())
                 .contains("You may think that at most <0> select statement was sent to the database")
+                .doesNotContain("N+1 select") // Less than 2 SELECT executed
                 .contains("But in fact <1>...")
                 .contains("select")
                 .contains("book0_.id as id1_0_");
+
 
     }
 
@@ -85,6 +86,7 @@ public class ExpectMaxSelectTest {
 
         assertThat(printableResult.toString())
                 .contains("You may think that at most <0> select statement was sent to the database")
+                .doesNotContain("N+1 select") // Less than 2 SELECT executed
                 .contains("But in fact <1>...")
                 .contains("select")
                 .contains("book0_.id as id1_0_");
@@ -146,6 +148,7 @@ public class ExpectMaxSelectTest {
 
         assertThat(printableResult.toString())
                 .contains("You may think that at most <0> select statement was sent to the database")
+                .doesNotContain("N+1 select") // Less than 2 SELECT executed
                 .contains("But in fact <1>...")
                 .contains("select")
                 .contains("book0_.id as id1_0");

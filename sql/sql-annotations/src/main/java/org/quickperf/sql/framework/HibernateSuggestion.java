@@ -36,12 +36,10 @@ public enum HibernateSuggestion implements QuickPerfSuggestion {
                     + "\t                 https://thoughts-on-java.org/jpa-21-entity-graph-part-1-named-entity/";
             if(SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa()) {
                 message +=  System.lineSeparator()
-                        + System.lineSeparator()
-                        + "\t* With Spring Data JPA, you may fix it by adding"
-                        + System.lineSeparator()
-                        + "\t@EntityGraph(attributePaths = { \"...\" }) on repository method."
-                        + System.lineSeparator()
-                        + "\thttps://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.entity-graph";
+                        +   System.lineSeparator()
+                        +   "\t* With Spring Data JPA, you may fix it by adding @EntityGraph(attributePaths = { \"...\" })"
+                        +   System.lineSeparator()
+                        +   "\t  on repository method: " + "https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.entity-graph";
             }
             return message;
         }

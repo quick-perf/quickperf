@@ -19,6 +19,8 @@ import org.quickperf.sql.framework.JdbcSuggestion;
 import org.quickperf.sql.framework.SqlFrameworksInClassPath;
 import org.quickperf.unit.Count;
 
+import static org.quickperf.unit.Count.*;
+
 public class SelectNumberPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectSelect, Count> {
 
     public static final SelectNumberPerfIssueVerifier INSTANCE = new SelectNumberPerfIssueVerifier();
@@ -40,16 +42,28 @@ public class SelectNumberPerfIssueVerifier implements VerifiablePerformanceIssue
 
     private PerfIssue buildPerfIssue(Count measuredCount, Count expectedCount) {
 
-        String description = "You may think that <" + expectedCount.getValue() + "> select statement"
-                           + (expectedCount.getValue() > 1 ? "s were" : " was" )
-                           + " sent to the database"
-                           + System.lineSeparator()
-                           + "       " + "But in fact <" + measuredCount.getValue() + ">..."
-                           ;
-
-        if(measuredCount.isLessThan(expectedCount)) {
+        if(measuredCount.isGreaterThan(expectedCount) && measuredCount.isGreaterThan(ONE)) {
+            String description = buildDescriptionWithRoundTripsAndPossiblyNPlusOneSelect(measuredCount
+                                                                                       , expectedCount);
             return new PerfIssue(description);
         }
+
+        String description = buildBaseDescription(measuredCount, expectedCount);
+        return new PerfIssue(description);
+
+    }
+
+    private String buildBaseDescription(Count measuredCount, Count expectedCount) {
+        return "You may think that <" + expectedCount.getValue() + "> select statement"
+               + (expectedCount.getValue() > 1 ? "s were" : " was" )
+               + " sent to the database"
+               + System.lineSeparator()
+               + "       " + "But in fact <" + measuredCount.getValue() + ">...";
+    }
+
+    private String buildDescriptionWithRoundTripsAndPossiblyNPlusOneSelect(Count measuredCount, Count expectedCount) {
+        
+        String description = buildBaseDescription(measuredCount, expectedCount);
 
         description += System.lineSeparator()
                      + System.lineSeparator()
@@ -58,12 +72,11 @@ public class SelectNumberPerfIssueVerifier implements VerifiablePerformanceIssue
         if(SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
             String nPlusOneSelectMessage = HibernateSuggestion.N_PLUS_ONE_SELECT
                                           .getMessage();
-            description += System.lineSeparator()
-                         + nPlusOneSelectMessage;
+            description += System.lineSeparator() + nPlusOneSelectMessage;
         }
-
-        return new PerfIssue(description);
-
+        
+        return description;
+    
     }
 
 }
