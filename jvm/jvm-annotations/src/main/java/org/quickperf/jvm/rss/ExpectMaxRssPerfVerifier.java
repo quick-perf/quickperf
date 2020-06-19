@@ -41,6 +41,7 @@ public class ExpectMaxRssPerfVerifier implements VerifiablePerformanceIssue<Expe
             String description = assertionMessage + System.lineSeparator() + measuredRss.getComment();
 
             return new PerfIssue(description);
+
         }
 
         return PerfIssue.NONE;
