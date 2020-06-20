@@ -15,13 +15,13 @@
     <parent>
         <groupId>org.quickperf</groupId>
         <artifactId>quick-perf</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0-RC7</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>quick-perf-bom</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-RC7</version>
     <packaging>pom</packaging>
 
     <dependencyManagement>
@@ -29,42 +29,42 @@
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-sql-annotations</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-RC7</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-junit4</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-RC7</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-junit5</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-RC7</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-testng</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-RC7</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-sql-spring5</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-RC7</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-junit4-spring3</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-RC7</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-junit4-spring4</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-RC7</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-junit4-spring5</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-RC7</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

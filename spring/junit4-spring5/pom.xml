@@ -14,12 +14,12 @@
     <parent>
         <groupId>org.quickperf</groupId>
         <artifactId>quick-perf-spring</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0-RC7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>quick-perf-junit4-spring5</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-RC7</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -32,13 +32,13 @@
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-junit4</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0-RC7</version>
         </dependency>
 
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-sql-spring5</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0-RC7</version>
         </dependency>
 
         <dependency>
