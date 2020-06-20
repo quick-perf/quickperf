@@ -72,8 +72,11 @@ public class TestIssue implements Serializable {
         Throwable cause = searchRootCauseOf(nonSerializableThrowable);
 
         String causeMessage = cause.getMessage();
+        String className = nonSerializableThrowable.getClass().getCanonicalName();
 
-        TestException testException = TestException.buildFrom(causeMessage);
+        String message = className + ": " + causeMessage;
+
+        TestException testException = TestException.buildFrom(message);
 
         return new TestIssue(testException);
 
