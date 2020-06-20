@@ -35,8 +35,7 @@ public class TestRunnerFromMain {
         TestIssueRepository testIssueRepository = TestIssueRepository.INSTANCE;
 
         String workingFolderPath = mainClassArguments.getWorkingFolderPath();
-        testIssueRepository.save(testIssue
-                                              , workingFolderPath);
+        testIssueRepository.save(testIssue, workingFolderPath);
 
         // To be sure that Tomcat or Jetty web server will stop
         System.exit(0);
