@@ -49,7 +49,7 @@ public class QuickPerfJUnitRunnerTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class ClassWithFunctionalAndPerfIssuesInNew {
+    public static class ClassWithFunctionalAndPerfIssuesInDedicatedJvm {
 
         @ExpectNoHeapAllocation
         @Test public void
@@ -60,10 +60,10 @@ public class QuickPerfJUnitRunnerTest {
     }
 
     @Test public void
-    a_test_with_failing_business_code_and_a_performance_issue_in_a_specific_jvm() {
+    a_test_with_failing_business_code_and_a_performance_issue_in_a_dedicated_jvm() {
 
         // GIVEN
-        Class<?> testClass = ClassWithFunctionalAndPerfIssuesInNew.class;
+        Class<?> testClass = ClassWithFunctionalAndPerfIssuesInDedicatedJvm.class;
 
         // WHEN
         PrintableResult printableResult = testResult(testClass);

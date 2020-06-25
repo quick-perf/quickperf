@@ -13,17 +13,25 @@ package org.quickperf.jvm.rss;
 
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
+import org.quickperf.jvm.allocation.Allocation;
+import org.quickperf.jvm.allocation.AllocationUnit;
+import org.quickperf.jvm.allocation.ByteAllocationMeasureFormatter;
 import org.quickperf.jvm.annotations.MeasureRSS;
 
 public class MeasureRssPerfVerifier implements VerifiablePerformanceIssue<MeasureRSS, ProcessStatus> {
+
     public static final VerifiablePerformanceIssue INSTANCE = new MeasureRssPerfVerifier();
+
+    private final ByteAllocationMeasureFormatter formatter = ByteAllocationMeasureFormatter.INSTANCE;
 
     private MeasureRssPerfVerifier(){
     }
 
     @Override
     public PerfIssue verifyPerfIssue(MeasureRSS annotation, ProcessStatus measure) {
-        System.out.println("[QUICK PERF] Measured RSS " + measure.getRssInKb() + " kb for process " + measure.getPid());
+        Allocation allocation = new Allocation(Double.valueOf(measure.getRssInKb()), AllocationUnit.KILO_BYTE);
+        System.out.println("[QUICK PERF] Measured RSS (process " + measure.getPid() + "): " + formatter.formatAndAppendAllocationInBytes(allocation));
         return PerfIssue.NONE;
     }
+
 }

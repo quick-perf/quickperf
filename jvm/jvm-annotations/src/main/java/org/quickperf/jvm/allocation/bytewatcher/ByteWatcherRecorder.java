@@ -18,13 +18,12 @@ import org.quickperf.perfrecording.RecordablePerformance;
 
 public class ByteWatcherRecorder implements RecordablePerformance<Allocation> {
 
-    private AllocationRepository allocationRepository;
+    private AllocationRepository allocationRepository = new AllocationRepository();
 
     private ByteWatcherSingleThread byteWatcher;
 
     @Override
     public void startRecording(TestExecutionContext testExecutionContext) {
-        allocationRepository = new AllocationRepository();
         byteWatcher = new ByteWatcherSingleThread(Thread.currentThread());
         byteWatcher.reset();
     }

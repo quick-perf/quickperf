@@ -100,7 +100,7 @@ public class JvmAnnotationBuilder {
         };
     }
 
-    public static ExpectMaxHeapAllocation expectMaxHeapAllocation(final int value, final AllocationUnit unit) {
+    public static ExpectMaxHeapAllocation expectMaxHeapAllocation(final double value, final AllocationUnit unit) {
         return new ExpectMaxHeapAllocation() {
             @Override
             public Class<? extends Annotation> annotationType() {
@@ -160,7 +160,7 @@ public class JvmAnnotationBuilder {
         };
     }
 
-    public static ExpectMaxRSS expectMaxRSS(final int value, final AllocationUnit unit) {
+    public static ExpectMaxRSS expectMaxRSS(final double value, final AllocationUnit unit) {
         return new ExpectMaxRSS() {
             @Override
             public Class<? extends Annotation> annotationType() {

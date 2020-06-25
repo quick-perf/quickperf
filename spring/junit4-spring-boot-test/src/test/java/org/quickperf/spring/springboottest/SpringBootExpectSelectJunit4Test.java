@@ -8,15 +8,16 @@
  *
  * Copyright 2019-2020 the original author or authors.
  */
+package org.quickperf.spring.springboottest;
 
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.quickperf.spring.springboottest.controller.DetectionOfNPlusOneSelectInWebService;
-import org.quickperf.spring.springboottest.service.DetectionOfNPlusOneSelectInService;
+import org.quickperf.spring.springboottest.service.DetectionOfNPlusOneSelectInServiceWithExpectSelect;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SpringBootJunit4Test {
+public class SpringBootExpectSelectJunit4Test {
 
     @Test
     public void should_fail_if_select_number_is_greater_than_expected_from_web_service_and_with_test_launched_in_a_dedicated_jvm() {
@@ -32,6 +33,8 @@ public class SpringBootJunit4Test {
 
         assertThat(printableResult.toString())
                       .contains("You may think that <1> select statement was sent to the database")
+                      .contains("Perhaps you are facing a N+1 select issue")
+                      .contains("With Hibernate, you may fix it by")
                       .contains("With Spring Data JPA, you may fix it by");
 
     }
@@ -40,7 +43,7 @@ public class SpringBootJunit4Test {
     public void should_fail_if_select_number_is_greater_than_expected_from_spring_service() {
 
         // GIVEN
-        Class<?> testClass = DetectionOfNPlusOneSelectInService.class;
+        Class<?> testClass = DetectionOfNPlusOneSelectInServiceWithExpectSelect.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);
@@ -50,6 +53,8 @@ public class SpringBootJunit4Test {
 
         assertThat(printableResult.toString())
                       .contains("You may think that <1> select statement was sent to the database")
+                      .contains("Perhaps you are facing a N+1 select issue")
+                      .contains("With Hibernate, you may fix it by")
                       .contains("With Spring Data JPA, you may fix it by");
 
     }

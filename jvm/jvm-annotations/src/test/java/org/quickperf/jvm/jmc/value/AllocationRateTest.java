@@ -136,7 +136,7 @@ public class AllocationRateTest {
     when(mockedTotalAlloc.longValue()).thenReturn(1024L);
 
     assertThat(ProfilingInfo.ALLOCATION_RATE.formatAsString(mockedJfrEvents))
-            .isEqualTo("102.4 bytes/s");
+            .isEqualTo("102 B/s");
 
   }
 
@@ -149,7 +149,7 @@ public class AllocationRateTest {
     when(mockedTotalAlloc.longValue()).thenReturn(1024L * 1024L);
 
     assertThat(ProfilingInfo.ALLOCATION_RATE.formatAsString(mockedJfrEvents))
-            .isEqualTo("102.4 KiB/s");
+            .isEqualTo("102 KiB/s");
 
   }
 
@@ -162,7 +162,7 @@ public class AllocationRateTest {
     when(mockedTotalAlloc.longValue()).thenReturn((long) Math.pow(1024L, 3));
 
     assertThat(ProfilingInfo.ALLOCATION_RATE.formatAsString(mockedJfrEvents))
-            .isEqualTo("102.4 MiB/s");
+            .isEqualTo("102 MiB/s");
 
   }
 
@@ -175,7 +175,7 @@ public class AllocationRateTest {
     when(mockedTotalAlloc.longValue()).thenReturn((long) Math.pow(1024, 4));
 
     assertThat(ProfilingInfo.ALLOCATION_RATE.formatAsString(mockedJfrEvents))
-            .isEqualTo("102.4 GiB/s");
+            .isEqualTo("102 GiB/s");
 
   }
 

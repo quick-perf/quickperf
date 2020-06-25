@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(QuickPerfSpringRunner.class)
 @SpringBootTest(classes = {FootballApplication.class})
-public class DetectionOfNPlusOneSelectInService {
+public class DetectionOfNPlusOneSelectInServiceWithExpectSelect {
 
     @Autowired
     private PlayerService playerService;

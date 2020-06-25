@@ -40,25 +40,41 @@ public class MaxOfSelectsPerfIssueVerifier implements VerifiablePerformanceIssue
 
     private PerfIssue buildPerfIssue(Count measuredCount, Count expectedCount) {
 
-        String description = "You may think that at most <" + expectedCount.getValue() + "> select statement"
-                           + (expectedCount.getValue() > 1 ? "s were" : " was" )
-                           + " sent to the database"
-                           + System.lineSeparator()
-                           + "       " + "But in fact <" + measuredCount.getValue() + ">..."
-                           + System.lineSeparator()
-                           + System.lineSeparator()
-                           + JdbcSuggestion.SERVER_ROUND_TRIPS.getMessage()
-                           + System.lineSeparator()
-                           ;
+        if(measuredCount.isGreaterThan(Count.ONE)) {
+            String description = buildDescriptionWithRoundTripsAndPossiblyNPlusOneSelect(measuredCount, expectedCount);
+            return new PerfIssue(description);
+        }
 
-        if(SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
+        String baseDescription = buildBaseDescription(measuredCount, expectedCount);
+        return new PerfIssue(baseDescription);
+
+    }
+
+    private String buildDescriptionWithRoundTripsAndPossiblyNPlusOneSelect(Count measuredCount, Count expectedCount) {
+
+        String description =
+                  buildBaseDescription(measuredCount, expectedCount)
+                + System.lineSeparator()
+                + System.lineSeparator()
+                + JdbcSuggestion.SERVER_ROUND_TRIPS.getMessage()
+                + System.lineSeparator();
+
+        if (SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
             String nPlusOneSelectMessage = HibernateSuggestion.N_PLUS_ONE_SELECT
-                                                              .getMessage();
+                                          .getMessage();
             description += nPlusOneSelectMessage;
         }
 
-        return new PerfIssue(description);
+        return description;
 
+    }
+
+    private String buildBaseDescription(Count measuredCount, Count expectedCount) {
+        return  "You may think that at most <" + expectedCount.getValue() + "> select statement"
+              + (expectedCount.getValue() > 1 ? "s were" : " was")
+              + " sent to the database"
+              + System.lineSeparator()
+              + "       " + "But in fact <" + measuredCount.getValue() + ">...";
     }
 
 }

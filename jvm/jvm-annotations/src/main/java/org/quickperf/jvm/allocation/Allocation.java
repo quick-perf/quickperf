@@ -15,6 +15,8 @@ import org.quickperf.measure.AbstractComparablePerfMeasure;
 
 public class Allocation extends AbstractComparablePerfMeasure<Allocation> {
 
+    public static final Allocation ZERO = Allocation.ofBytes(0);
+
     private static final String NO_COMMENT = "";
 
     private final Double value;
@@ -29,10 +31,8 @@ public class Allocation extends AbstractComparablePerfMeasure<Allocation> {
         this.comment = NO_COMMENT;
     }
 
-    public Allocation(Double value, AllocationUnit unit, String comment) {
-        this.value = value;
-        this.unit = unit;
-        this.comment = comment;
+    public static Allocation ofBytes(long numberOfBytes) {
+        return new Allocation(Double.valueOf(numberOfBytes), AllocationUnit.BYTE);
     }
 
     @Override
@@ -52,15 +52,13 @@ public class Allocation extends AbstractComparablePerfMeasure<Allocation> {
 
     @Override
     public int compareTo(Allocation otherAllocation) {
+        long valueInBytes = getValueInBytes();
+        long otherValueInBytes = otherAllocation.getValueInBytes();
+        return Long.compare(valueInBytes, otherValueInBytes);
+    }
 
-        AllocationUnit unitOfOtherMeasure = otherAllocation.getUnit();
-        Double valueOfOtherMeasure = otherAllocation.getValue();
-
-        double valueInBytes = value * unit.getValueInBytes();
-        double valueInBytesOfOtherMeasure = valueOfOtherMeasure * unitOfOtherMeasure.getValueInBytes();
-
-        return (int) (valueInBytes - valueInBytesOfOtherMeasure);
-
+    public long getValueInBytes() {
+        return (long) (value * unit.getValueInBytes());
     }
 
 }

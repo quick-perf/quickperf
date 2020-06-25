@@ -84,4 +84,36 @@ public class ExpectSelectTest {
 
     }
 
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class OneSelectAndExpectZero extends SqlTestBase {
+
+        @ExpectSelect(0)
+        @Test
+        public void execute_one_select() {
+            EntityManager em = emf.createEntityManager();
+            Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+            query.getResultList();
+        }
+
+    }
+
+    @Test public void
+    should_not_display_round_trip_and_n_plus_one_select_messages_if_less_than_two_selects() {
+
+        // GIVEN
+        Class<?> testClass = OneSelectAndExpectZero.class;
+
+        // WHEN
+        PrintableResult printableResult = PrintableResult.testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isOne();
+
+        String testResult = printableResult.toString();
+        assertThat(testResult).contains("You may think that <0> select statement was sent to the database");
+        assertThat(testResult).doesNotContain("server roundtrips")
+                              .doesNotContain("N+1");
+
+    }
+
 }

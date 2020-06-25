@@ -30,17 +30,18 @@ public class ExpectMaxRssPerfVerifier implements VerifiablePerformanceIssue<Expe
     public PerfIssue verifyPerfIssue(ExpectMaxRSS annotation, ProcessStatus processStatus) {
 
         Allocation maxExpectedRss = new Allocation(annotation.value(), annotation.unit());
-        Allocation measuredRss = new Allocation((double) processStatus.getRssInKb() * 1024, AllocationUnit.BYTE);
+        Allocation measuredRss = new Allocation(Double.valueOf(processStatus.getRssInKb()), AllocationUnit.KILO_BYTE);
 
         if (maxExpectedRss.isLessThan(measuredRss)) {
 
             String assertionMessage =
                               "Expected RSS to be less than "
-                            + byteAllocationMeasureFormatter.formatWithAllocationInBytes(maxExpectedRss)
-                            + " but is " + byteAllocationMeasureFormatter.formatWithAllocationInBytes(measuredRss) + ".";
+                            + byteAllocationMeasureFormatter.format(maxExpectedRss)
+                            + " but is " + byteAllocationMeasureFormatter.formatAndAppendAllocationInBytes(measuredRss) + ".";
             String description = assertionMessage + System.lineSeparator() + measuredRss.getComment();
 
             return new PerfIssue(description);
+
         }
 
         return PerfIssue.NONE;

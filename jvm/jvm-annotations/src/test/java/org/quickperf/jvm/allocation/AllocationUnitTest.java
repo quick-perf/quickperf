@@ -9,20 +9,19 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.repository;
+package org.quickperf.jvm.allocation;
 
-import org.quickperf.TestExecutionContext;
+import org.junit.Test;
 
-public class LongRepositoryFactory {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    private LongRepositoryFactory() {
-    }
+public class AllocationUnitTest {
 
-    public static LongRepository getLongRepository(TestExecutionContext testExecutionContext) {
-        if (testExecutionContext.testExecutionUsesTwoJVMs()) {
-            return new LongFileRepository();
-        }
-        return new LongMemoryRepository();
+    @Test public void
+    should_get_value_in_bytes() {
+        long numberOfBytesInGigabytes = AllocationUnit.GIGA_BYTE.getValueInBytes();
+        long expected = 1073741824;
+        assertThat(numberOfBytesInGigabytes).isEqualTo(expected);
     }
 
 }

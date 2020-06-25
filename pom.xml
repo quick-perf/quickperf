@@ -53,7 +53,7 @@
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
         <javadoc-subpackages />
         <javadoc-sourceFileIncludes>**\/\*.java</javadoc-sourceFileIncludes>
-        <project.build.outputTimestamp>2020-02-25T08:00:00Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2020-06-20T22:19:36Z</project.build.outputTimestamp>
         <jar.skipIfEmpty>true</jar.skipIfEmpty>
     </properties>
 

@@ -9,58 +9,72 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.jvm;
+package org.quickperf.jvm.allocation;
 
 import org.junit.Test;
-import org.quickperf.jvm.allocation.Allocation;
-import org.quickperf.jvm.allocation.AllocationUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AllocationTest {
+public class AllocationComparisonTest {
     
     @Test public void
     one_kilo_byte_allocation_should_be_greater_than_one_byte_allocation() {
 
-        // GIVEN
-        Allocation oneByte = new Allocation(1D, AllocationUnit.BYTE);
+        Allocation oneByte = Allocation.ofBytes(1);
         Allocation oneKiloByte = new Allocation(1D, AllocationUnit.KILO_BYTE);
-        
-        // WHEN
-        int oneKiloByteComparedToOneByte = oneKiloByte.compareTo(oneByte);
 
-        // THEN
-        assertThat(oneKiloByteComparedToOneByte).isPositive();
+        assertThat(oneKiloByte.compareTo(oneByte)).isPositive();
 
     }
 
     @Test public void
     one_mega_byte_allocation_should_be_greater_than_one_kilo_byte_allocation() {
 
-        // GIVEN
         Allocation oneByte = new Allocation(1D, AllocationUnit.KILO_BYTE);
         Allocation oneKiloByte = new Allocation(1D, AllocationUnit.MEGA_BYTE);
 
-        // WHEN
-        int oneKiloByteComparedToOneByte = oneKiloByte.compareTo(oneByte);
-
-        // THEN
-        assertThat(oneKiloByteComparedToOneByte).isPositive();
+        assertThat(oneKiloByte.compareTo(oneByte)).isPositive();
 
     }
 
     @Test public void
     two_thousand_mega_byte_allocation_should_be_greater_than_one_giga_byte_allocation() {
 
-        // GIVEN
         Allocation oneGigaByte = new Allocation(1D, AllocationUnit.GIGA_BYTE);
         Allocation twoThousandMegaByte = new Allocation(2000D, AllocationUnit.MEGA_BYTE);
 
-        // WHEN
-        int twoThousandMegaByteComparedToOneGigaByte = twoThousandMegaByte.compareTo(oneGigaByte);
+        assertThat(twoThousandMegaByte.compareTo(oneGigaByte)).isPositive();
 
-        // THEN
-        assertThat(twoThousandMegaByteComparedToOneGigaByte).isPositive();
+    }
+
+    @Test public void
+    one_hundred_giga_bytes_should_be_greater_than_one_byte() {
+
+        Allocation oneHundredGigaByte = new Allocation(100D, AllocationUnit.GIGA_BYTE);
+        Allocation oneByte = Allocation.ofBytes(1);
+
+        assertThat(oneHundredGigaByte.compareTo(oneByte)).isPositive();
+
+    }
+
+    @Test public void
+    one_byte_should_be_less_than_hundred_giga_bytes() {
+
+        Allocation oneHundredGigaByte = new Allocation(100D, AllocationUnit.GIGA_BYTE);
+        Allocation oneByte = Allocation.ofBytes(1);
+
+        assertThat(oneByte.compareTo(oneHundredGigaByte)).isNegative();
+
+    }
+
+    @Test public void
+    same_allocation() {
+
+        Allocation oneByte1 = Allocation.ofBytes(1);
+        Allocation oneByte2 = new Allocation(1D, AllocationUnit.BYTE);
+
+        assertThat(oneByte1.compareTo(oneByte2)).isZero();
+        assertThat(oneByte2.compareTo(oneByte1)).isZero();
 
     }
 

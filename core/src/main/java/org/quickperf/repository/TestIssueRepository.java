@@ -36,18 +36,20 @@ public class TestIssueRepository {
         try {
             objectFileRepository.save(workingFolderPath, fileName, testIssue);
         } catch (IllegalStateException illegalStateException) {
-
-            Throwable cause = illegalStateException.getCause();
-            if (cause instanceof NotSerializableException) {
-                TestIssue serializableTestIssue =
-                        TestIssue.buildSerializableTestIssueFrom(testIssue);
-                save(serializableTestIssue, workingFolderPath);
-            } else {
-                throw illegalStateException;
-            }
-
+            manageSavingIssue(testIssue, workingFolderPath, illegalStateException);
         }
 
+    }
+
+    private void manageSavingIssue(TestIssue testIssue, String workingFolderPath, IllegalStateException illegalStateException) {
+        Throwable cause = illegalStateException.getCause();
+        if (cause instanceof NotSerializableException) {
+            TestIssue serializableTestIssue =
+                    TestIssue.buildSerializableTestIssueFrom(testIssue);
+            save(serializableTestIssue, workingFolderPath);
+        } else {
+            throw illegalStateException;
+        }
     }
 
     public TestIssue findFrom(WorkingFolder workingFolder) {

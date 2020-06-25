@@ -289,7 +289,6 @@ public enum ProfilingInfo {
         @Override
         public String formatAsString(IItemCollection jfrEvents) {
 
-
             AllocationRate allocationRate = AllocationRateRetriever.INSTANCE
                                            .retrieveAllocationRateFrom(jfrEvents);
 

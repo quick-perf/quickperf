@@ -9,44 +9,47 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.sql.time;
-
-import java.util.concurrent.TimeUnit;
+package org.quickperf.time;
 
 import org.quickperf.measure.AbstractComparablePerfMeasure;
+
+import java.util.concurrent.TimeUnit;
 
 public class ExecutionTime extends AbstractComparablePerfMeasure<ExecutionTime> {
 	
 	private final Long value;
 	
 	private final TimeUnit unit;
-	
-	private static final String NO_COMMENT = "";
-	
-	public ExecutionTime(Long expectedTimeValue, TimeUnit timeUnit) {
-		this.value = expectedTimeValue;
+
+	public ExecutionTime(Long value, TimeUnit timeUnit) {
+		this.value = value;
 		this.unit = timeUnit;
+	}
+
+	public ExecutionTime(int value, TimeUnit unit) {
+		this.value = (long) value;
+		this.unit = unit;
 	}
 	
 	@Override
 	public String getComment() {
-		return NO_COMMENT;
+		return "";
 	}
 	
 	@Override
-	public Object getUnit() {
+	public TimeUnit getUnit() {
 		return this.unit;
 	}
 	
 	@Override
-	public Object getValue() {
+	public Long getValue() {
 		return this.value;
 	}
 	
 	@Override
-	public int compareTo(ExecutionTime o) {
+	public int compareTo(ExecutionTime other) {
 		long currentTimeInNanos =  TimeUnit.NANOSECONDS.convert(value, unit);
-		long otherTimeInNanos = TimeUnit.NANOSECONDS.convert(o.value, o.unit);
+		long otherTimeInNanos = TimeUnit.NANOSECONDS.convert(other.value, other.unit);
 		return Long.compare(currentTimeInNanos, otherTimeInNanos);
 	}
 	

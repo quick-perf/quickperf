@@ -10,6 +10,7 @@
  */
 
 package org.quickperf.config.library;
+
 import org.quickperf.RecorderExecutionOrder;
 import org.quickperf.perfrecording.ExecutionOrderOfPerfRecorders;
 import org.quickperf.perfrecording.RecordablePerformance;
@@ -26,33 +27,26 @@ public class QuickPerfConfigsLoader {
 
         List<AnnotationConfig> loadedAnnotationConfigs = new ArrayList<>();
 
-        ServiceLoader<QuickPerfConfigLoader> loadedServices = ServiceLoader.load(QuickPerfConfigLoader.class);
-
-        Iterator<QuickPerfConfigLoader> configLoaderIterator = loadedServices.iterator();
-
         List<RecorderExecutionOrder> executionOrderOfPerfRecordersBeforeTestMethod
                 = new ArrayList<>();
         List<RecorderExecutionOrder> executionOrderOfPerfRecordersAfterTestMethod
                 = new ArrayList<>();
-        while(configLoaderIterator.hasNext()) {
-            QuickPerfConfigLoader quickPerfConfigLoader = configLoaderIterator.next();
-            Collection<AnnotationConfig> annotationConfigs = quickPerfConfigLoader.loadAnnotationConfigs();
-            loadedAnnotationConfigs.addAll(annotationConfigs);
-            executionOrderOfPerfRecordersBeforeTestMethod.addAll(quickPerfConfigLoader.loadRecorderExecutionOrdersBeforeTestMethod());
-            executionOrderOfPerfRecordersAfterTestMethod.addAll(quickPerfConfigLoader.loadRecorderExecutionOrdersAfterTestMethod());
-        }
+
+        // JVM, SQL, ...
+        addLibrariesConfigurations(loadedAnnotationConfigs, executionOrderOfPerfRecordersBeforeTestMethod, executionOrderOfPerfRecordersAfterTestMethod);
+
+        addQuickPerfCoreConfigurations(loadedAnnotationConfigs
+                                     , executionOrderOfPerfRecordersBeforeTestMethod
+                                     , executionOrderOfPerfRecordersAfterTestMethod);
 
         Collections.sort(executionOrderOfPerfRecordersBeforeTestMethod);
         Collections.sort(executionOrderOfPerfRecordersAfterTestMethod);
-
-        SetOfAnnotationConfigs testAnnotationConfigs = new SetOfAnnotationConfigs(loadedAnnotationConfigs);
 
         List<Class<? extends RecordablePerformance>> perfRecordersOrderBeforeTestMethod = new ArrayList<>();
         for (RecorderExecutionOrder recorderExecutionOrder : executionOrderOfPerfRecordersBeforeTestMethod) {
             Class<? extends RecordablePerformance> perfRecorderClass = recorderExecutionOrder.getPerfRecorderClass();
             perfRecordersOrderBeforeTestMethod.add(perfRecorderClass);
         }
-
 
         List<Class<? extends RecordablePerformance>> perfRecordersOrderAfterTestMethod = new ArrayList<>();
         for (RecorderExecutionOrder recorderExecutionOrder : executionOrderOfPerfRecordersAfterTestMethod) {
@@ -64,7 +58,27 @@ public class QuickPerfConfigsLoader {
                 = new ExecutionOrderOfPerfRecorders(perfRecordersOrderBeforeTestMethod,
                                                     perfRecordersOrderAfterTestMethod);
 
+        SetOfAnnotationConfigs testAnnotationConfigs = new SetOfAnnotationConfigs(loadedAnnotationConfigs);
         return new QuickPerfConfigs(testAnnotationConfigs, execOrderForPerfRecorders);
+    }
+
+    private void addLibrariesConfigurations(List<AnnotationConfig> loadedAnnotationConfigs, List<RecorderExecutionOrder> executionOrderOfPerfRecordersBeforeTestMethod, List<RecorderExecutionOrder> executionOrderOfPerfRecordersAfterTestMethod) {
+        ServiceLoader<QuickPerfConfigLoader> loadedServices = ServiceLoader.load(QuickPerfConfigLoader.class);
+        Iterator<QuickPerfConfigLoader> configLoaderIterator = loadedServices.iterator();
+        while(configLoaderIterator.hasNext()) {
+            QuickPerfConfigLoader quickPerfConfigLoader = configLoaderIterator.next();
+            Collection<AnnotationConfig> annotationConfigs = quickPerfConfigLoader.loadAnnotationConfigs();
+            loadedAnnotationConfigs.addAll(annotationConfigs);
+            executionOrderOfPerfRecordersBeforeTestMethod.addAll(quickPerfConfigLoader.loadRecorderExecutionOrdersBeforeTestMethod());
+            executionOrderOfPerfRecordersAfterTestMethod.addAll(quickPerfConfigLoader.loadRecorderExecutionOrdersAfterTestMethod());
+        }
+    }
+
+    private void addQuickPerfCoreConfigurations(List<AnnotationConfig> loadedAnnotationConfigs, List<RecorderExecutionOrder> executionOrderOfPerfRecordersBeforeTestMethod, List<RecorderExecutionOrder> executionOrderOfPerfRecordersAfterTestMethod) {
+        CoreConfigLoader coreConfigLoader = CoreConfigLoader.INSTANCE;
+        loadedAnnotationConfigs.addAll(coreConfigLoader.loadAnnotationConfigs());
+        executionOrderOfPerfRecordersBeforeTestMethod.addAll(coreConfigLoader.loadRecorderExecutionOrdersBeforeTestMethod());
+        executionOrderOfPerfRecordersAfterTestMethod.addAll(coreConfigLoader.loadRecorderExecutionOrdersAfterTestMethod());
     }
 
 }

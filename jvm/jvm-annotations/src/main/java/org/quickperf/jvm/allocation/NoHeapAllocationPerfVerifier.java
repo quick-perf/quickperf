@@ -17,8 +17,6 @@ import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
 
 public class NoHeapAllocationPerfVerifier implements VerifiablePerformanceIssue<ExpectNoHeapAllocation, Allocation> {
 
-    private static final Allocation ZERO_ALLOCATION = new Allocation(0D, AllocationUnit.BYTE);
-
     public static final NoHeapAllocationPerfVerifier INSTANCE = new NoHeapAllocationPerfVerifier();
 
     private NoHeapAllocationPerfVerifier() {}
@@ -28,9 +26,9 @@ public class NoHeapAllocationPerfVerifier implements VerifiablePerformanceIssue<
     @Override
     public PerfIssue verifyPerfIssue(ExpectNoHeapAllocation annotation, Allocation measuredAllocation) {
 
-        if(!ZERO_ALLOCATION.isEqualTo(measuredAllocation)) {
+        if(!Allocation.ZERO.isEqualTo(measuredAllocation)) {
             String assertionMessage =
-                    "Expected allocation (test method thread) to be 0 but is " + byteAllocationMeasureFormatter.formatWithAllocationInBytes(measuredAllocation) + ".";
+                    "Expected no heap allocation (test method thread) but is " + byteAllocationMeasureFormatter.formatAndAppendAllocationInBytes(measuredAllocation) + ".";
             String description = assertionMessage + System.lineSeparator() + measuredAllocation.getComment();
             return new PerfIssue(description);
         }
