@@ -120,6 +120,7 @@ public class JvmAnnotationBuilder {
     public static MeasureHeapAllocation measureHeapAllocation(
               final String format
             , final Class<? extends WriterFactory> writerFactoryClass) {
+
         return new MeasureHeapAllocation() {
             @Override
             public String format() {
