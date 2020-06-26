@@ -281,6 +281,15 @@ Many thanks to all our contributors!
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=UbaidurRehman1" title="Code">💻</a>
+        </td> 
+        <td align="center">
+            <a href="https://github.com/MrSnix">
+                <img src="https://avatars.githubusercontent.com/MrSnix" width="100px;" alt="Giuseppe B."/>
+                <br/>
+                <sub><b>Giuseppe B.</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=MrSnix" title="Code">💻</a>
         </td>              
     </tr>
 </table>
