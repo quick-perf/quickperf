@@ -290,6 +290,15 @@ Many thanks to all our contributors!
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=MrSnix" title="Code">💻</a>
+        </td>         
+         <td align="center">
+            <a href="https://github.com/FTarfasse">
+                <img src="https://avatars.githubusercontent.com/FTarfasse" width="100px;" alt="Fabrice"/>
+                <br/>
+                <sub><b>Fabrice</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=FTarfasse" title="Code">💻</a>
         </td>              
     </tr>
 </table>
