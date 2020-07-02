@@ -32,9 +32,9 @@ public class ExpectMaxUpdateTest {
             EntityManager em = emf.createEntityManager();
             em.getTransaction().begin();
             Query nativeQuery = em.createNativeQuery("UPDATE book SET isbn = :isbn, title = :title WHERE id = :id")
-                    .setParameter("isbn", 42)
-                    .setParameter("title", "Tristan")
-                    .setParameter("id", 40);
+                               .setParameter("isbn", 42)
+                               .setParameter("title", "Tristan")
+                               .setParameter("id", 40);
             nativeQuery.executeUpdate();
             em.getTransaction().commit();
 
@@ -70,9 +70,9 @@ public class ExpectMaxUpdateTest {
             EntityManager em = emf.createEntityManager();
             em.getTransaction().begin();
             Query nativeQuery = em.createNativeQuery("UPDATE book SET isbn = :isbn, title = :title WHERE id = :id")
-                    .setParameter("isbn", 42)
-                    .setParameter("title", "Tristan")
-                    .setParameter("id", 40);
+                               .setParameter("isbn", 42)
+                               .setParameter("title", "Tristan")
+                               .setParameter("id", 40);
             nativeQuery.executeUpdate();
             em.getTransaction().commit();
         }
@@ -107,9 +107,9 @@ public class ExpectMaxUpdateTest {
             EntityManager em = emf.createEntityManager();
             em.getTransaction().begin();
             Query nativeQuery = em.createNativeQuery("UPDATE book SET isbn = :isbn, title = :title WHERE id = :id")
-                    .setParameter("isbn", 42)
-                    .setParameter("title", "Tristan")
-                    .setParameter("id", 40);
+                               .setParameter("isbn", 42)
+                               .setParameter("title", "Tristan")
+                               .setParameter("id", 40);
             nativeQuery.executeUpdate();
             em.getTransaction().commit();
         }
@@ -130,4 +130,5 @@ public class ExpectMaxUpdateTest {
         assertThat(printableResult.failureCount()).isZero();
 
     }
+
 }

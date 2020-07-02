@@ -22,6 +22,19 @@ public enum JdbcSuggestion implements QuickPerfSuggestion {
                     + "Be careful with the cost of JDBC server roundtrips: "
                     + "https://blog.jooq.org/2017/12/18/the-cost-of-jdbc-server-roundtrips/";
         }
+    },
+
+    BATCHING {
+        @Override
+        public String getMessage() {
+            if (  SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa()
+               && SqlFrameworksInClassPath.INSTANCE.containsSpringBoot() ) {
+                return SpringDataJpaSpringBootSuggestion.BATCHING.getMessage();
+            } else if (SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
+                return HibernateSuggestion.BATCHING.getMessage();
+            }
+            return "";
+        }
     }
 
 }

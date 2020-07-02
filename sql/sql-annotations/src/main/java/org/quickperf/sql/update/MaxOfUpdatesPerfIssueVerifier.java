@@ -14,17 +14,14 @@ package org.quickperf.sql.update;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectMaxUpdate;
-import org.quickperf.sql.framework.HibernateSuggestion;
-import org.quickperf.sql.framework.SpringDataJpaSpringBootSuggestion;
-import org.quickperf.sql.framework.SqlFrameworksInClassPath;
+import org.quickperf.sql.framework.JdbcSuggestion;
 import org.quickperf.unit.Count;
 
 public class MaxOfUpdatesPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectMaxUpdate, Count> {
 
     public static final MaxOfUpdatesPerfIssueVerifier INSTANCE = new MaxOfUpdatesPerfIssueVerifier();
 
-    private MaxOfUpdatesPerfIssueVerifier() {
-    }
+    private MaxOfUpdatesPerfIssueVerifier() { }
 
     @Override
     public PerfIssue verifyPerfIssue(ExpectMaxUpdate annotation, Count measuredCount) {
@@ -48,13 +45,8 @@ public class MaxOfUpdatesPerfIssueVerifier implements VerifiablePerformanceIssue
                 + System.lineSeparator()
                 + System.lineSeparator();
 
-        if (SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
-            description += HibernateSuggestion.BATCHING.getMessage();
-        }
-
-        if (SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa()
-                && SqlFrameworksInClassPath.INSTANCE.containsSpringBoot()) {
-            description += SpringDataJpaSpringBootSuggestion.BATCHING.getMessage();
+        if(!expectedCount.isEqualTo(Count.ZERO)) {
+            description += JdbcSuggestion.BATCHING.getMessage();
         }
 
         return new PerfIssue(description);

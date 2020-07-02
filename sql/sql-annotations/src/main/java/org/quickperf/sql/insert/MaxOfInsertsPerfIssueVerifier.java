@@ -14,9 +14,7 @@ package org.quickperf.sql.insert;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectMaxInsert;
-import org.quickperf.sql.framework.HibernateSuggestion;
-import org.quickperf.sql.framework.SpringDataJpaSpringBootSuggestion;
-import org.quickperf.sql.framework.SqlFrameworksInClassPath;
+import org.quickperf.sql.framework.JdbcSuggestion;
 import org.quickperf.unit.Count;
 
 public class MaxOfInsertsPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectMaxInsert, Count> {
@@ -49,21 +47,8 @@ public class MaxOfInsertsPerfIssueVerifier implements VerifiablePerformanceIssue
                            + System.lineSeparator()
                            ;
 
-        if(!expectedCount.isEqualTo(new Count(0))) {
-
-            if (SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
-                description += HibernateSuggestion.BATCHING.getMessage();
-            }
-
-            if ( SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa()
-              && SqlFrameworksInClassPath.INSTANCE.containsSpringBoot()) {
-                description += SpringDataJpaSpringBootSuggestion.BATCHING.getMessage();
-            }
-
-        }
-
-        if(SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa() && SqlFrameworksInClassPath.INSTANCE.containsSpringBoot()) {
-            description +=  SpringDataJpaSpringBootSuggestion.BATCHING.getMessage();
+        if(!expectedCount.isEqualTo(Count.ZERO)) {
+            description += JdbcSuggestion.BATCHING.getMessage();
         }
 
         return new PerfIssue(description);
