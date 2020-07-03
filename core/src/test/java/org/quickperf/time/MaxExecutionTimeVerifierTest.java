@@ -80,7 +80,7 @@ public class MaxExecutionTimeVerifierTest {
         assertThat(perfIssue).isNotEqualTo(PerfIssue.NONE);
 
         String description = perfIssue.getDescription();
-        assertThat(description).isEqualTo("Execution time of test method expected to be less than <2 h 3 m 4 s 5 ms 6 µs 7 ns> but is <3 h 8 m 0 s (11 280 000 000 000 ns)>");
+        assertThat(description).startsWith("Execution time of test method expected to be less than <2 h 3 m 4 s 5 ms 6 µs 7 ns> but is <3 h 8 m 0 s (11 280 000 000 000 ns)>");
 
     }
 

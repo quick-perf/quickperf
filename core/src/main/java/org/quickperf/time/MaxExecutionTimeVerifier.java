@@ -38,6 +38,8 @@ public class MaxExecutionTimeVerifier implements VerifiablePerformanceIssue<Expe
                       "Execution time of test method expected to be less than"
                     + " " + "<" + annotationFormatter.format(annotation) + ">"
                     + " but is " + "<" + executionTimeFormatter.formatAndAppendNanoSeconds(measuredExecutionTime) + ">"
+                    + System.lineSeparator()
+                    + ExecutionTimeWarning.INSTANCE.toString()
                     ;
             
             return new PerfIssue(description);
