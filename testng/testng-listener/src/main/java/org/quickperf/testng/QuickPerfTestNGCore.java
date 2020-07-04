@@ -13,7 +13,7 @@ package org.quickperf.testng;
 
 import org.quickperf.testlauncher.TestRunnerFromMain;
 
-public class QuickPerfTestNGCore {
+class QuickPerfTestNGCore {
 
     public static void main(String[] args) throws ClassNotFoundException {
 

@@ -13,7 +13,7 @@ package org.quickperf.junit5;
 
 import org.quickperf.testlauncher.TestRunnerFromMain;
 
-public class QuickPerfJunit5Core {
+class QuickPerfJunit5Core {
 
     public static void main(String... args) throws ClassNotFoundException {
 

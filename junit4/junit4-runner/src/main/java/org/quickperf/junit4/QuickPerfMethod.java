@@ -18,7 +18,7 @@ import org.quickperf.perfrecording.PerformanceRecording;
 
 import java.lang.reflect.Method;
 
-public class QuickPerfMethod extends FrameworkMethod {
+class QuickPerfMethod extends FrameworkMethod {
 
     private final Method method;
 

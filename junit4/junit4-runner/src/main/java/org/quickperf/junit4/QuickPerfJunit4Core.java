@@ -14,7 +14,7 @@ package org.quickperf.junit4;
 import org.quickperf.testlauncher.TestRunnerFromMain;
 import org.quickperf.testlauncher.TestRunnerFromMain.FrameworkTestRunner;
 
-public class QuickPerfJunit4Core {
+class QuickPerfJunit4Core {
 
     public static void main(String... args) throws ClassNotFoundException {
 
