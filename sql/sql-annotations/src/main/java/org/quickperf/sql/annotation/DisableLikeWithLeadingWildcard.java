@@ -16,6 +16,26 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>DisableLikeWithLeadingWildcard</code> annotation verifies that SQL statements do not contain LIKE with
+ * leading wildcard (% or _). If so, the test will fail.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;DisableLikeWithLeadingWildcard</b>
+ *      public void execute_select_who_started_with_like_wildcard() {
+ *          <code>..</code>
+ *      }
+ * </pre>
+ * <h4>Note:</h4>
+ * <a href="https://use-the-index-luke.com/sql/where-clause/searching-for-ranges/like-performance-tuning"><u>This
+ * article</u></a>
+ * explains why LIKE with leading wildcard could be a bad idea in term of performance. A code sent to the database with
+ * a like operator with leading wildcard may be fast in a test having a few data but very slow with the data volume of a
+ * production environment.
+ * @see EnableLikeWithLeadingWildcard
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DisableLikeWithLeadingWildcard {

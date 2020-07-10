@@ -16,6 +16,31 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>DisableQueriesWithoutBindParameters</code> annotation ensures the executed queries use bind parameters. The
+ * test will fail if parameters are not bind.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;DisableQueriesWithoutBindParameters</b>
+ *      public void execute_query_without_bind_parameter() {
+ *          <code>..</code>
+ *      }
+ * </pre>
+ * <h4>Note:</h4>
+ * Keep in mind that bind parameters is an essential feature to prevent SQL injections and can help improve performance:
+ * <p>
+ * - <a href="https://blogs.oracle.com/sql/improve-sql-query-performance-by-using-bind-variables">Improve SQL query by
+ * using bind variables (Oracle blog)</a>,
+ * <p>
+ * - <a href="https://use-the-index-luke.com/sql/where-clause/bind-parameters">Use the index Luke: parametrized
+ * queries</a>.
+ * <p>
+ * - <a href="https://dzone.com/articles/why-sql-bind-variables-are-important-for-performan">Why SQL bind variables are important for performance</a>
+ *
+ * @see EnableQueriesWithoutBindParameters
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DisableQueriesWithoutBindParameters {

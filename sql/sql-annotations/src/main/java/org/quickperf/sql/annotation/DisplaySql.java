@@ -16,7 +16,26 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>DisplaySql</code> annotation displays the SQL statements in the console during the
+ * execution of the test method body.
+ * <p>
+ * Compared to {@link DisplaySqlOfTestMethodBody}, this annotation also displays SQL statements
+ * before (JUnit 4: &#064;Before, &#064;BeforeClass) and after (JUnit 4: &#064;After, &#064;AfterClass) the execution of the test method
+ * body. <br>
+ * <p>
+ * It is not recommended to commit your test with this annotation. Indeed, the SQL statements would pollute the logs
+ * and may slow down the continuous integration build.
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;DisplaySql</b>
+ *      public void sql_batch_execution() {
+ *          <code>..</code>
+ *      }
+ * </pre>
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD,ElementType.TYPE})
+@Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DisplaySql {
 }

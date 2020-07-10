@@ -16,9 +16,27 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>ExpectDelete</code> annotation verifies the number of executed delete statements corresponds to the
+ * specified value.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;ExpectDelete(3)</b>
+ *      public void execute_three_delete() {
+ *          <code>..</code>
+ *      }
+ * </pre>
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface ExpectDelete {
+
+    /**
+     * Specifies a <code>value</code> (integer) to cause test method to fail if the number of delete
+     * statements is not equal. Note that if left empty, the assumed value will be zero.
+     */
 
     int value() default 0;
 

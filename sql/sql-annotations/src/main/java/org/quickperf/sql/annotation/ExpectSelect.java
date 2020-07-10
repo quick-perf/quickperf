@@ -16,9 +16,27 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>ExpectSelect</code> annotation verifies the number of executed select statements corresponds to the
+ * specified value.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;ExpectSelect(2)</b>
+ *      public void execute_two_select() {
+ *          <code>..</code>
+ *      }
+ * </pre>
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectSelect {
+
+    /**
+     * Specifies a <code>value</code> (integer) to cause test method to fail if the number of select
+     * statements is not equal. Note that if left empty, the assumed value will be zero.
+     */
 
     int value() default 0;
 

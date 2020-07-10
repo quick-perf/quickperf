@@ -16,9 +16,27 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>ExpectSelectedColumn</code> annotation verifies the number of updated columns corresponds to the
+ * specified value.
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;ExpectSelectedColumn(5)</b>
+ *      public void select_on_five_columns() {
+ *          <code>..</code>
+ *      }
+ * </pre>
+ * @see <a href="https://github.com/quick-perf/doc/wiki/Why-limit-the-number-of-selected-columns">Why limit the number of selected columns ?</a>
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectSelectedColumn {
+
+    /**
+     * Specifies a <code>value</code> (integer) to cause test method to fail if the number of selected
+     * columns is not equal. Note that if left empty, the assumed value will be zero.
+     */
 
     int value() default 0;
 
