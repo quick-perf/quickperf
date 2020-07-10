@@ -16,9 +16,27 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>ExpectMaxSelect</code> annotation verifies the number of executed select statements is not greater than
+ * the specified value. If so, the test will fail.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;ExpectMaxSelect(5)</b>
+ *      public void execute_two_select() {
+ *          <code>..</code>
+ *      }
+ * </pre>
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectMaxSelect {
+
+    /**
+     * Specifies a <code>value</code> (integer) to cause test method to fail if the number of select
+     * statements is greater. Note that if left empty, the assumed value will be zero.
+     */
 
     int value() default 0;
 

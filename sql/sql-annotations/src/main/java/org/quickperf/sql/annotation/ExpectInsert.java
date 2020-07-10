@@ -16,9 +16,27 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>ExpectInsert</code> annotation verifies the number of executed insert statements corresponds to the
+ * specified value.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;ExpectInsert(6)</b>
+ *      public void execute_six_insert() {
+ *          <code>..</code>
+ *      }
+ * </pre>
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface ExpectInsert {
+
+    /**
+     * Specifies a <code>value</code> (integer) to cause test method to fail if the number of insert
+     * statements is not equal. Note that if left empty, the assumed value will be zero.
+     */
 
     int value() default 0;
 

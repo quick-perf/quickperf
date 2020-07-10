@@ -18,12 +18,33 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The <code>ExpectMaxQueryExecutionTime</code> annotation verifies the query execution time is not greater than the
+ * specified value. If so, the test will fail.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;ExpectMaxQueryExecutionTime(value = 20, unit = TimeUnit.MILLISECONDS)</b>
+ *      public void execute() {
+ *          <code>..</code>
+ *      }
+ * </pre>
+ */
+
 @Retention(RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectMaxQueryExecutionTime {
-	
+
+	/**
+	 * Max query execution time.
+	 */
+
 	long value();
-	
+
+	/**
+	 * Time unit. Possible values are listed in {@link java.util.concurrent.TimeUnit }.
+	 */
+
 	TimeUnit unit();
 
 }
