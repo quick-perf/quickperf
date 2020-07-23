@@ -11,6 +11,7 @@
 
 package org.quickperf.sql.time;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
@@ -20,60 +21,60 @@ import org.quickperf.time.ExecutionTime;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-
 public class SqlQueryMaxExecutionTimeVerifierTest {
-	
-	@Test
-	public void should_return_a_perf_issue_if_query_execution_time_is_greater_than_expected () {
-		
-		VerifiablePerformanceIssue<ExpectMaxQueryExecutionTime, ExecutionTime> verifier = SqlQueryMaxExecutionTimeVerifier.INSTANCE;
 
-		ExpectMaxQueryExecutionTime expectedMaxExecutionTime = SqlAnnotationBuilder.expectMaxQueryExecutionTime(10, TimeUnit.MILLISECONDS);
-		
-		ExecutionTime sqlExecTime = new ExecutionTime(50L, TimeUnit.MILLISECONDS);
-		
-		PerfIssue perfIssue = verifier.verifyPerfIssue(expectedMaxExecutionTime, sqlExecTime);
-		
-		assertNotEquals(PerfIssue.NONE.getDescription(), perfIssue.getDescription());
-		
-		assertNotEquals(PerfIssue.NONE, perfIssue);
+    @Test
+    public void should_return_a_perf_issue_if_query_execution_time_is_greater_than_expected() {
 
-	}
+        // GIVEN
+        VerifiablePerformanceIssue<ExpectMaxQueryExecutionTime, ExecutionTime> verifier = SqlQueryMaxExecutionTimeVerifier.INSTANCE;
+        ExpectMaxQueryExecutionTime expectedMaxExecutionTime = SqlAnnotationBuilder.expectMaxQueryExecutionTime(1);
+        ExecutionTime sqlExecTime = new ExecutionTime(5, TimeUnit.MILLISECONDS);
 
-	@Test
-	public void should_return_no_perf_issue_if_query_execution_time_is_less_than_expected () {
+        // WHEN
+        PerfIssue perfIssue = verifier.verifyPerfIssue(expectedMaxExecutionTime, sqlExecTime);
 
-		VerifiablePerformanceIssue<ExpectMaxQueryExecutionTime, ExecutionTime> verifier = SqlQueryMaxExecutionTimeVerifier.INSTANCE;
-		
-		ExpectMaxQueryExecutionTime expectedMaxExecutionTime = SqlAnnotationBuilder.expectMaxQueryExecutionTime(1, TimeUnit.MILLISECONDS);
-		
-		ExecutionTime sqlExecTime = new ExecutionTime(5, TimeUnit.NANOSECONDS);
-		
-		PerfIssue perfIssue = verifier.verifyPerfIssue(expectedMaxExecutionTime, sqlExecTime);
-		
-		assertEquals(PerfIssue.NONE, perfIssue);
-		
-		assertEquals(PerfIssue.NONE.getDescription(), perfIssue.getDescription());
+        // THEN
+        Assertions.assertThat(PerfIssue.NONE).isNotEqualTo(perfIssue);
+        Assertions.assertThat(PerfIssue.NONE.getDescription()).isNotEqualTo(perfIssue.getDescription());
+        Assertions.assertThat(perfIssue.getDescription())
+                .contains("Query execution time expected to be less than <1 ms>")
+                .contains("At least one query has a greater execution time. The greater query execution time is <5 ms>");
 
-	}
-	
-	@Test
-	public void should_return_no_perf_issue_if_query_execution_time_is_same_as_expected () {
+    }
 
-		VerifiablePerformanceIssue<ExpectMaxQueryExecutionTime, ExecutionTime> verifier = SqlQueryMaxExecutionTimeVerifier.INSTANCE;
+    @Test
+    public void should_return_no_perf_issue_if_query_execution_time_is_less_than_expected() {
 
-		ExpectMaxQueryExecutionTime expectedMaxExecutionTime = SqlAnnotationBuilder.expectMaxQueryExecutionTime(1, TimeUnit.SECONDS);
+        // GIVEN
+        VerifiablePerformanceIssue<ExpectMaxQueryExecutionTime, ExecutionTime> verifier = SqlQueryMaxExecutionTimeVerifier.INSTANCE;
+        ExpectMaxQueryExecutionTime expectedMaxExecutionTime = SqlAnnotationBuilder.expectMaxQueryExecutionTime(5);
+        ExecutionTime sqlExecTime = new ExecutionTime(1, TimeUnit.MILLISECONDS);
 
-		ExecutionTime sqlExecTime = new ExecutionTime(1000L, TimeUnit.MILLISECONDS);
-		
-		PerfIssue perfIssue = verifier.verifyPerfIssue(expectedMaxExecutionTime, sqlExecTime);
-		
-		assertEquals(PerfIssue.NONE.getDescription(), perfIssue.getDescription());
-		
-		assertEquals(PerfIssue.NONE, perfIssue);
+        // WHEN
+        PerfIssue perfIssue = verifier.verifyPerfIssue(expectedMaxExecutionTime, sqlExecTime);
 
-	}
+        // THEN
+        Assertions.assertThat(PerfIssue.NONE).isEqualTo(perfIssue);
+        Assertions.assertThat(PerfIssue.NONE.getDescription()).isEqualTo(perfIssue.getDescription());
+
+    }
+
+    @Test
+    public void should_return_no_perf_issue_if_query_execution_time_is_same_as_expected() {
+
+        // GIVEN
+        VerifiablePerformanceIssue<ExpectMaxQueryExecutionTime, ExecutionTime> verifier = SqlQueryMaxExecutionTimeVerifier.INSTANCE;
+        ExpectMaxQueryExecutionTime expectedMaxExecutionTime = SqlAnnotationBuilder.expectMaxQueryExecutionTime(1);
+        ExecutionTime sqlExecTime = new ExecutionTime(1, TimeUnit.MILLISECONDS);
+
+        // WHEN
+        PerfIssue perfIssue = verifier.verifyPerfIssue(expectedMaxExecutionTime, sqlExecTime);
+
+        // THEN
+        Assertions.assertThat(PerfIssue.NONE).isEqualTo(perfIssue);
+        Assertions.assertThat(PerfIssue.NONE.getDescription()).isEqualTo(perfIssue.getDescription());
+
+    }
 
 }
