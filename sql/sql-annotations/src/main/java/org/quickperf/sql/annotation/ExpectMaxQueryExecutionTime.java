@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * <h4>Example:</h4>
  * <pre>
- *      <b>&#064;ExpectMaxQueryExecutionTime(value = 20, unit = TimeUnit.MILLISECONDS)</b>
+ *      <b>&#064;ExpectMaxQueryExecutionTime(thresholdInMilliSeconds = 2)</b>
  *      public void execute() {
  *          <code>..</code>
  *      }
@@ -35,16 +35,11 @@ import java.util.concurrent.TimeUnit;
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectMaxQueryExecutionTime {
 
-	/**
-	 * Max query execution time.
-	 */
+    /**
+     * Specifies a <code>value</code> (integer) to cause test method to fail if any query has a greater execution time.
+     * Note that if left empty, the assumed value will be zero.
+     */
 
-	long value();
-
-	/**
-	 * Time unit. Possible values are listed in {@link java.util.concurrent.TimeUnit }.
-	 */
-
-	TimeUnit unit();
+    int thresholdInMilliSeconds() default 0;
 
 }

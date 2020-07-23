@@ -12,7 +12,6 @@
 package org.quickperf.sql.annotation;
 
 import java.lang.annotation.Annotation;
-import java.util.concurrent.TimeUnit;
 
 public class SqlAnnotationBuilder {
 
@@ -210,19 +209,16 @@ public class SqlAnnotationBuilder {
         };
     }
 
-    public static ExpectMaxQueryExecutionTime expectMaxQueryExecutionTime(final int value, final TimeUnit unit) {
+    public static ExpectMaxQueryExecutionTime expectMaxQueryExecutionTime(final int thresholdInMilliSeconds) {
         return new ExpectMaxQueryExecutionTime() {
             @Override
             public Class<? extends Annotation> annotationType() {
                 return ExpectMaxQueryExecutionTime.class;
             }
+
             @Override
-            public long value() {
-                return value;
-            }
-            @Override
-            public TimeUnit unit() {
-                return unit;
+            public int thresholdInMilliSeconds() {
+                return thresholdInMilliSeconds;
             }
         };
     }
