@@ -14,22 +14,28 @@
     <img src="https://maven-badges.herokuapp.com/maven-central/org.quickperf/quick-perf/badge.svg"
          alt="Maven Central">
   </a>
+  &nbsp;&nbsp;
   <a href="https://github.com/quick-perf/quickperf/blob/master/LICENSE.txt">
     <img src="https://img.shields.io/badge/license-Apache2-blue.svg"
          alt = "License">
-  </a>  
+  </a>
+  &nbsp;&nbsp;
   <a href="https://travis-ci.com/quick-perf/quickperf">
     <img src="https://travis-ci.com/quick-perf/quickperf.svg?branch=master"
          alt = "Build Status">
   </a>
-    <a href="https://gitter.im/quickperf">
-     <img src="https://img.shields.io/gitter/room/quick-perf/quickperf?color=orange"
-          alt = "Gitter">
-    </a>
-    <a href="https://twitter.com/quickperf">
-      <img src="https://img.shields.io/twitter/follow/QuickPerf.svg?label=Follow%20%40QuickPerf&style=social"
-           alt = "Twitter Follow">
-    </a>
+  &nbsp;&nbsp;
+  <a href="https://gitter.im/quickperf">
+    <img src="https://img.shields.io/gitter/room/quick-perf/quickperf?color=orange"
+         alt = "Gitter">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://twitter.com/quickperf">
+    <img src="https://img.shields.io/twitter/follow/QuickPerf.svg?label=Follow%20%40QuickPerf&style=social"
+         alt = "Twitter Follow">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://www.youtube.com/playlist?list=PLyRtZQwOxA6ekhEr2H2nNV42ZLD8OkPEx">YouTube</a>
 </p>
 
 ---
