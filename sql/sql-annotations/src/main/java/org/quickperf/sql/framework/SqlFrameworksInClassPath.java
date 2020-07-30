@@ -37,4 +37,9 @@ public class SqlFrameworksInClassPath {
                 && classPath.contains("spring-boot");
     }
 
+    public boolean containsMicronaut() {
+        String classPath = retrieveClassPath();
+        return classPath.contains("micronaut-data");
+    }
+
 }

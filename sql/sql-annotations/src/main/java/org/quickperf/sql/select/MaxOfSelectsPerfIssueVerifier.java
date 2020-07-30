@@ -16,6 +16,7 @@ import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectMaxSelect;
 import org.quickperf.sql.framework.HibernateSuggestion;
 import org.quickperf.sql.framework.JdbcSuggestion;
+import org.quickperf.sql.framework.MicronautSuggestion;
 import org.quickperf.sql.framework.SqlFrameworksInClassPath;
 import org.quickperf.unit.Count;
 
@@ -56,13 +57,18 @@ public class MaxOfSelectsPerfIssueVerifier implements VerifiablePerformanceIssue
                   buildBaseDescription(measuredCount, expectedCount)
                 + System.lineSeparator()
                 + System.lineSeparator()
-                + JdbcSuggestion.SERVER_ROUND_TRIPS.getMessage()
-                + System.lineSeparator();
+                + JdbcSuggestion.SERVER_ROUND_TRIPS.getMessage();
 
         if (SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
-            String nPlusOneSelectMessage = HibernateSuggestion.N_PLUS_ONE_SELECT
+            String hibernateNPlusOneSelectMessage = HibernateSuggestion.N_PLUS_ONE_SELECT
                                           .getMessage();
-            description += nPlusOneSelectMessage;
+            description += System.lineSeparator() + hibernateNPlusOneSelectMessage;
+        }
+
+        if (SqlFrameworksInClassPath.INSTANCE.containsMicronaut()) {
+            String micronautNPlusOneSelectMessage = MicronautSuggestion.N_PLUS_ONE_SELECT
+                                          .getMessage();
+            description += System.lineSeparator() + micronautNPlusOneSelectMessage;
         }
 
         return description;
