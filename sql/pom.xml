@@ -31,7 +31,7 @@
             <modules>
                 <module>sql-annotations</module>
                 <module>sql-test-util</module>
-                <module>sql-integration-test</module>
+                <module>sql-memory-test</module>
             </modules>
         </profile>
         <profile>
