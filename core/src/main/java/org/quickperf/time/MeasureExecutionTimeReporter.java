@@ -25,7 +25,7 @@ public class MeasureExecutionTimeReporter implements VerifiablePerformanceIssue<
 
     @Override
     public PerfIssue verifyPerfIssue(MeasureExecutionTime annotation, ExecutionTime measuredExecutionTime) {
-        System.out.println("[QUICK PERF] Execution time of test method: " + formatter.formatAndAppendNanoSeconds(measuredExecutionTime)
+        System.out.println("[QUICK PERF] Execution time of the test method: " + formatter.formatAndAppendNanoSeconds(measuredExecutionTime)
                           + System.lineSeparator()
                           + ExecutionTimeWarning.INSTANCE.toString()
                           );

@@ -47,7 +47,7 @@ public class ExecutionTimeJUnit4Test {
 
         // THEN
         assertThat(testResult.failureCount()).isOne();
-        assertThat(testResult.toString()).contains("Execution time of test method expected to be less than <100 ms> but is <");
+        assertThat(testResult.toString()).contains("Execution time of the test method expected to be less than <100 ms> but is <");
 
     }
 
@@ -99,7 +99,7 @@ public class ExecutionTimeJUnit4Test {
 
         // THEN
         assertThat(testResult.failureCount()).isOne();
-        assertThat(testResult.toString()).contains("Execution time of test method expected to be less than <100 ms> but is <");
+        assertThat(testResult.toString()).contains("Execution time of the test method expected to be less than <100 ms> but is <");
 
     }
 

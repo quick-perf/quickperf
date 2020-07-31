@@ -35,7 +35,7 @@ public class MaxExecutionTimeVerifier implements VerifiablePerformanceIssue<Expe
         if(measuredExecutionTime.isGreaterThan(maxExpectedExecutionTime)) {
 
             String description =
-                      "Execution time of test method expected to be less than"
+                      "Execution time of the test method expected to be less than"
                     + " " + "<" + annotationFormatter.format(annotation) + ">"
                     + " but is " + "<" + executionTimeFormatter.formatAndAppendNanoSeconds(measuredExecutionTime) + ">"
                     + System.lineSeparator()
