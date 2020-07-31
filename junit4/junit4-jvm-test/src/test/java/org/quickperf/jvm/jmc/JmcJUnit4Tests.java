@@ -43,13 +43,13 @@ public class JmcJUnit4Tests {
 
         }
 
-        @HeapSize(value = 100, unit = AllocationUnit.MEGA_BYTE)
+        @HeapSize(value = 20, unit = AllocationUnit.MEGA_BYTE)
         @ExpectNoJvmIssue(score = 50)
         @Test
         public void code_with_scores_of_jmc_rules_greater_than_50() {
 
             IntegerAccumulator integerAccumulator = new IntegerAccumulator();
-            integerAccumulator.accumulateInteger(3_000_000);
+            integerAccumulator.accumulateInteger(500_000);
 
         }
 
