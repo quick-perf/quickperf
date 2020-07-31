@@ -19,7 +19,7 @@ public enum MicronautSuggestion implements QuickPerfSuggestion {
             public String getMessage() {
                 String lightBulb = "\uD83D\uDCA1";
                 String message =  System.lineSeparator()
-                        + lightBulb + " Perhaps you are facing a N+1 select issue"
+                        + lightBulb + " Perhaps you are facing an N+1 select issue"
                         + System.lineSeparator()
                         + "\t With Micronaut Data, you may fix it by using the @Join annotation on your repository interface:"
                         + System.lineSeparator()

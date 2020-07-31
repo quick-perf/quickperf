@@ -19,7 +19,7 @@ public enum HibernateSuggestion implements QuickPerfSuggestion {
         public String getMessage() {
             String lightBulb = "\uD83D\uDCA1";
             String message =  System.lineSeparator()
-                    + lightBulb + " Perhaps you are facing a N+1 select issue"
+                    + lightBulb + " Perhaps you are facing an N+1 select issue"
                     + System.lineSeparator()
                     + "\t* With Hibernate, you may fix it by using JOIN FETCH"
                     + System.lineSeparator()

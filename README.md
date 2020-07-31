@@ -74,7 +74,7 @@ Be careful with the cost of JDBC server roundtrips: https://blog.jooq.org/2017/1
 
 Auto-detection of Hibernate and Spring Data JPA:
 ```
-💡 Perhaps you are facing a N+1 select issue
+💡 Perhaps you are facing an N+1 select issue
 	* With Hibernate, you may fix it by using JOIN FETCH
 	                                       or LEFT JOIN FETCH
 	                                       or FetchType.LAZY

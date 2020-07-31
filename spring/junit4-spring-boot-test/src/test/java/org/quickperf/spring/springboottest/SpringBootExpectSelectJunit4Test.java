@@ -33,7 +33,7 @@ public class SpringBootExpectSelectJunit4Test {
 
         assertThat(printableResult.toString())
                       .contains("You may think that <1> select statement was sent to the database")
-                      .contains("Perhaps you are facing a N+1 select issue")
+                      .contains("Perhaps you are facing an N+1 select issue")
                       .contains("With Hibernate, you may fix it by")
                       .contains("With Spring Data JPA, you may fix it by");
 
@@ -53,7 +53,7 @@ public class SpringBootExpectSelectJunit4Test {
 
         assertThat(printableResult.toString())
                       .contains("You may think that <1> select statement was sent to the database")
-                      .contains("Perhaps you are facing a N+1 select issue")
+                      .contains("Perhaps you are facing an N+1 select issue")
                       .contains("With Hibernate, you may fix it by")
                       .contains("With Spring Data JPA, you may fix it by");
 
