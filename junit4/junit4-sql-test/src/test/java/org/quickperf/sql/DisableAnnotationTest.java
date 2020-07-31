@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
-import org.quickperf.sql.annotation.EnableCrossJoin;
+import org.quickperf.sql.annotation.EnableLikeWithLeadingWildcard;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -26,15 +26,18 @@ import static org.junit.experimental.results.PrintableResult.testResult;
 public class DisableAnnotationTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithEnableCrossJoin extends SqlTestBaseJUnit4 {
+    public static class TestClass extends SqlTestBaseJUnit4 {
 
-        @EnableCrossJoin
+        @EnableLikeWithLeadingWildcard
         @Test
-        public void execute_one_cross_join() {
-            EntityManager entityManager = emf.createEntityManager();
-            String nativeQuery = "SELECT b1.* FROM Book b1 CROSS JOIN Book b2";
-            Query query = entityManager.createNativeQuery(nativeQuery);
-            query.getResultList();
+        public void execute_select_who_started_with_like_wildcard() {
+
+            EntityManager em = emf.createEntityManager();
+
+            Query nativeQuery = em.createNativeQuery("SELECT * FROM Book b WHERE b.title LIKE  '%Ja'");
+
+            nativeQuery.getResultList();
+
         }
 
     }
@@ -43,8 +46,8 @@ public class DisableAnnotationTest {
     an_annotation_can_disable_another_one() {
 
         // GIVEN
-        Class<?> testClass = AClassHavingAMethodAnnotatedWithEnableCrossJoin.class;
-        // @DisableCrossJoin is applied to each test (see QuickPerfConfiguration class).
+        Class<?> testClass = TestClass.class;
+        // @DisableLikeWithLeadingWildcard is applied on each test (see QuickPerfConfiguration class).
 
         // WHEN
         PrintableResult printableResult = testResult(testClass);

@@ -24,14 +24,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class GlobalAnnotationJUnit4Test {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class SqlCrossJoin extends SqlTestBaseJUnit4 {
+    public static class TestClass extends SqlTestBaseJUnit4 {
 
         @Test
-        public void execute_one_cross_join() {
-            EntityManager entityManager = emf.createEntityManager();
-            String nativeQuery = "SELECT b1.* FROM Book b1 CROSS JOIN Book b2";
-            Query query = entityManager.createNativeQuery(nativeQuery);
-            query.getResultList();
+        public void execute_one_statement_containing_a_like_with_a_leading_wildcard() {
+            EntityManager em = emf.createEntityManager();
+            Query nativeQuery = em.createNativeQuery("SELECT * FROM Book b WHERE b.title LIKE  '%Ja'");
+            nativeQuery.getResultList();
         }
 
     }
@@ -40,7 +39,7 @@ public class GlobalAnnotationJUnit4Test {
     should_apply_global_annotation() {
 
         // GIVEN
-        Class<SqlCrossJoin> testClass = SqlCrossJoin.class;
+        Class<TestClass> testClass = TestClass.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);
@@ -49,9 +48,7 @@ public class GlobalAnnotationJUnit4Test {
         assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
-                      .contains("cross join detected")
-                      .contains("CROSS JOIN") //query cross join
-        ;
+                .contains("Like with leading wildcard");
 
     }
 

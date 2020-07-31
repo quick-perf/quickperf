@@ -26,11 +26,10 @@ public class GlobalAnnotationJUnit5Test {
     public static class SqlCrossJoinJUnit5 extends SqlTestBaseJUnit5 {
 
         @Test
-        public void fail_to_execute_cross_join() {
-            EntityManager entityManager = emf.createEntityManager();
-            String nativeQuery = "SELECT b1.* FROM Book b1 CROSS JOIN Book b2";
-            Query query = entityManager.createNativeQuery(nativeQuery);
-            query.getResultList();
+        public void execute_one_statement_containing_a_like_with_a_leading_wildcard() {
+            EntityManager em = emf.createEntityManager();
+            Query nativeQuery = em.createNativeQuery("SELECT * FROM Book b WHERE b.title LIKE  '%Ja'");
+            nativeQuery.getResultList();
         }
 
     }
@@ -49,9 +48,7 @@ public class GlobalAnnotationJUnit5Test {
         assertThat(jUnit5TestsResult.getNumberOfFailures()).isOne();
 
         String errorReport = jUnit5TestsResult.getErrorReport();
-        assertThat(errorReport).contains("cross join detected")
-                               .contains("CROSS JOIN") //query cross join
-        ;
+        assertThat(errorReport).contains("Like with leading wildcard");
 
     }
 

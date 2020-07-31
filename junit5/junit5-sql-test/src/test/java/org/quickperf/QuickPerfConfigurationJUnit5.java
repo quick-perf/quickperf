@@ -17,12 +17,12 @@ import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Collections;
 
-import static org.quickperf.sql.annotation.SqlAnnotationBuilder.disableCrossJoin;
+import static org.quickperf.sql.annotation.SqlAnnotationBuilder.disableLikeWithLeadingWildcard;
 
 public class QuickPerfConfigurationJUnit5 implements SpecifiableGlobalAnnotations {
 
     public Collection<Annotation> specifyAnnotationsAppliedOnEachTest() {
-        return Collections.singletonList(disableCrossJoin());
+        return Collections.singletonList(disableLikeWithLeadingWildcard());
     }
 
 }
