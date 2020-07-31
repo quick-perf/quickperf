@@ -17,6 +17,7 @@ import org.quickperf.measure.BooleanMeasure;
 import org.quickperf.sql.annotation.DisableSameSelectTypesWithDifferentParamValues;
 import org.quickperf.sql.framework.HibernateSuggestion;
 import org.quickperf.sql.framework.JdbcSuggestion;
+import org.quickperf.sql.framework.MicronautSuggestion;
 import org.quickperf.sql.framework.SqlFrameworksInClassPath;
 
 public class HasSameSelectTypesWithDiffParamValuesVerifier implements VerifiablePerformanceIssue<DisableSameSelectTypesWithDifferentParamValues, BooleanMeasure> {
@@ -34,13 +35,22 @@ public class HasSameSelectTypesWithDiffParamValuesVerifier implements Verifiable
                                 + System.lineSeparator()
                                 + System.lineSeparator()
                                 + JdbcSuggestion.SERVER_ROUND_TRIPS.getMessage();
+
             if(SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
                 String nPlusOneSelectMessage = HibernateSuggestion.N_PLUS_ONE_SELECT
                                               .getMessage();
                 description += System.lineSeparator()
                              + nPlusOneSelectMessage;
             }
+
+            if(SqlFrameworksInClassPath.INSTANCE.containsMicronaut()) {
+                String micronautNPlusOneSelectMessage = MicronautSuggestion.N_PLUS_ONE_SELECT
+                        .getMessage();
+                description += System.lineSeparator() + micronautNPlusOneSelectMessage;
+            }
+
             return new PerfIssue(description);
+
         }
 
         return PerfIssue.NONE;
