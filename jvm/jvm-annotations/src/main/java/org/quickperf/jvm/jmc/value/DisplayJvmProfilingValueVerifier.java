@@ -24,7 +24,7 @@ import static org.quickperf.jvm.jmc.value.ProfilingInfo.*;
 public class DisplayJvmProfilingValueVerifier implements
     VerifiablePerformanceIssue<ProfileJvm, JfrEventsMeasure> {
 
-    public static DisplayJvmProfilingValueVerifier INSTANCE = new DisplayJvmProfilingValueVerifier();
+    public static final DisplayJvmProfilingValueVerifier INSTANCE = new DisplayJvmProfilingValueVerifier();
 
     private static final String LINE_SEPARATOR = System.lineSeparator();
 

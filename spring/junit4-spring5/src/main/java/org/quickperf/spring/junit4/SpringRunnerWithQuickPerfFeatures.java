@@ -29,7 +29,7 @@ import java.util.List;
 
 class SpringRunnerWithQuickPerfFeatures extends SpringJUnit4ClassRunner {
 
-    private QuickPerfJUnitRunner quickPerfJUnitRunner;
+    private final QuickPerfJUnitRunner quickPerfJUnitRunner;
 
     static SpringRunnerWithQuickPerfFeatures build(Class<?> testClass) {
          try {

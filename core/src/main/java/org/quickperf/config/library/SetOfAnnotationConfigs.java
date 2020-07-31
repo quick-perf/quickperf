@@ -124,7 +124,7 @@ public class SetOfAnnotationConfigs {
     private boolean hasTestMethodToBeLaunchedInASpecificJvmWith(Annotation annotation) {
         Class<? extends Annotation> clazz = annotation.annotationType();
         Boolean testInNewJvm = hasTestToBeLaunchedInASpecificJvmByAnnotationClass.get(clazz);
-        return testInNewJvm == null ? false : testInNewJvm;
+        return testInNewJvm != null && testInNewJvm;
     }
 
     public List<Annotation> removeDisabledAndAndDisablingAnnotationsIn(Collection<Annotation> annotations) {

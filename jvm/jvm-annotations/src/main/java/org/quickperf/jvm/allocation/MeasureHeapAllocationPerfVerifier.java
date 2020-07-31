@@ -33,7 +33,7 @@ public class MeasureHeapAllocationPerfVerifier implements VerifiablePerformanceI
     public PerfIssue verifyPerfIssue(MeasureHeapAllocation annotation, Allocation measuredAllocation) {
         String allocationAsString = byteAllocationMeasureFormatter.formatAndAppendAllocationInBytes(measuredAllocation);
         Class<? extends WriterFactory> writerFactoryClass = annotation.writerFactory();
-        try (PrintWriter pw = buildPrintWriterFrom(writerFactoryClass);) {
+        try (PrintWriter pw = buildPrintWriterFrom(writerFactoryClass)) {
             pw.printf(annotation.format(), allocationAsString);
         }
         return PerfIssue.NONE;

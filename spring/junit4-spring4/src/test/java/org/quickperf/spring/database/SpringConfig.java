@@ -32,7 +32,7 @@ public class SpringConfig {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
         String packageName = this.getClass().getPackage().getName();
-        sessionFactory.setPackagesToScan(new String[]{packageName});
+        sessionFactory.setPackagesToScan(packageName);
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }

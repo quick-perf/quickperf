@@ -33,7 +33,7 @@ public class SpringConfig {
         AnnotationSessionFactoryBean  sessionFactory = new AnnotationSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
         String packageName = this.getClass().getPackage().getName();
-        sessionFactory.setPackagesToScan(new String[]{packageName});
+        sessionFactory.setPackagesToScan(packageName);
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }

@@ -16,7 +16,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The <code>ExpectMaxQueryExecutionTime</code> annotation verifies the query execution time is not greater than the

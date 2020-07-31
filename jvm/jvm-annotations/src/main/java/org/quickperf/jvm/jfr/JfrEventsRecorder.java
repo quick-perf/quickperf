@@ -20,7 +20,7 @@ import org.quickperf.jvm.jfr.profiler.JvmProfiler;
 
 public class JfrEventsRecorder implements RecordablePerformance<JfrRecording> {
 
-    private JvmProfiler jfrProfiler = JavaFlightRecorderProfilerFactory.getJavaFlightRecorderProfiler();
+    private final JvmProfiler jfrProfiler = JavaFlightRecorderProfilerFactory.getJavaFlightRecorderProfiler();
 
     private JfrRecording jfrRecording;
 

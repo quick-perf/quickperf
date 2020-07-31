@@ -23,7 +23,7 @@ import java.util.Collection;
 
 public class CoreConfigLoader implements QuickPerfConfigLoader {
 
-    public static CoreConfigLoader INSTANCE = new CoreConfigLoader();
+    public static final CoreConfigLoader INSTANCE = new CoreConfigLoader();
 
     private CoreConfigLoader() {}
 
