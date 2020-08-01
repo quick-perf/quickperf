@@ -253,4 +253,17 @@ public class SqlAnnotationBuilder {
             }
         };
     }
+    
+    public static ExpectMaxDelete expectMaxDelete(final int value) {
+        return new ExpectMaxDelete() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ExpectMaxDelete.class;
+            }
+            @Override
+            public int value() {
+                return value;
+            }
+        };
+    }
 }
