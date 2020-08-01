@@ -52,6 +52,7 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                 , SqlAnnotationsConfigs.EXPECT_UPDATED_COLUMN
                 , SqlAnnotationsConfigs.ENABLE_QUERIES_WITHOUT_BIND_PARAMETERS
                 , SqlAnnotationsConfigs.DISABLE_QUERIES_WITHOUT_BIND_PARAMETERS
+                , SqlAnnotationsConfigs.MAX_SQL_DELETE
         );
     }
 

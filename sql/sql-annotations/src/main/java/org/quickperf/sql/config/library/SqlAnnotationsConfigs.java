@@ -21,6 +21,7 @@ import org.quickperf.sql.bindparams.DisableQueriesWithoutBindParametersVerifier;
 import org.quickperf.sql.crossjoin.HasSqlCrossJoinPerfMeasureExtractor;
 import org.quickperf.sql.crossjoin.NoSqlCrossJoinPerfIssueVerifier;
 import org.quickperf.sql.delete.DeleteCountMeasureExtractor;
+import org.quickperf.sql.delete.MaxOfDeletesPerfIssueVerifier;
 import org.quickperf.sql.delete.NumberOfSqlDeletePerfIssueVerifier;
 import org.quickperf.sql.display.DisplaySqlOfTestMethodBodyRecorder;
 import org.quickperf.sql.display.DisplaySqlRecorder;
@@ -182,4 +183,10 @@ class SqlAnnotationsConfigs {
 			.perfMeasureExtractor(AllParametersAreBoundExtractor.INSTANCE)
 			.perfIssueVerifier(DisableQueriesWithoutBindParametersVerifier.INSTANCE)
 			.build(DisableQueriesWithoutBindParameters.class);
+	
+    	static final AnnotationConfig MAX_SQL_DELETE = new AnnotationConfig.Builder()
+            		.perfRecorderClass(PersistenceSqlRecorder.class)
+            		.perfMeasureExtractor(DeleteCountMeasureExtractor.INSTANCE)
+            		.perfIssueVerifier(MaxOfDeletesPerfIssueVerifier.INSTANCE)
+            		.build(ExpectMaxDelete.class);
 }
