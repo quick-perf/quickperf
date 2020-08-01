@@ -184,9 +184,9 @@ class SqlAnnotationsConfigs {
 			.perfIssueVerifier(DisableQueriesWithoutBindParametersVerifier.INSTANCE)
 			.build(DisableQueriesWithoutBindParameters.class);
 	
-    static final AnnotationConfig MAX_SQL_DELETE = new AnnotationConfig.Builder()
-            .perfRecorderClass(PersistenceSqlRecorder.class)
-            .perfMeasureExtractor(DeleteCountMeasureExtractor.INSTANCE)
-            .perfIssueVerifier(MaxOfDeletesPerfIssueVerifier.INSTANCE)
-            .build(ExpectMaxDelete.class);
+    	static final AnnotationConfig MAX_SQL_DELETE = new AnnotationConfig.Builder()
+            		.perfRecorderClass(PersistenceSqlRecorder.class)
+            		.perfMeasureExtractor(DeleteCountMeasureExtractor.INSTANCE)
+            		.perfIssueVerifier(MaxOfDeletesPerfIssueVerifier.INSTANCE)
+            		.build(ExpectMaxDelete.class);
 }
