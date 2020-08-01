@@ -297,7 +297,7 @@ Many thanks to all our contributors!
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=MrSnix" title="Code">💻</a>
         </td>         
-         <td align="center">
+        <td align="center">
             <a href="https://github.com/FTarfasse">
                 <img src="https://avatars.githubusercontent.com/FTarfasse" width="100px;" alt="Fabrice"/>
                 <br/>
@@ -305,7 +305,16 @@ Many thanks to all our contributors!
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=FTarfasse" title="Code">💻</a>
-        </td>              
+        </td>
+        <td align="center">
+            <a href="https://github.com/navkumar258">
+                <img src="https://avatars.githubusercontent.com/navkumar258" width="100px;" alt="Navneet Kumar"/>
+                <br/>
+                <sub><b>Navneet Kumar</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=navkumar258" title="Code">💻</a>
+        </td>                       
     </tr>
 </table>
 <a href = "https://allcontributors.org/docs/en/emoji-key">emoji key</a>
