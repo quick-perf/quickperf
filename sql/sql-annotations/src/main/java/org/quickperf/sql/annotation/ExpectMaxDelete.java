@@ -17,13 +17,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The <code>ExpectMaxInsert</code> annotation verifies the number of executed insert statements is not greater than the
+ * The <code>ExpectMaxDelete</code> annotation verifies the number of executed delete statements is not greater than the
  * specified value.
  * <p>
  * <h4>Example:</h4>
  * <pre>
- *      <b>&#064;ExpectMaxInsert(6)</b>
- *      public void execute_five_insert() {
+ *      <b>&#064;ExpectMaxDelete(6)</b>
+ *      public void execute_five_delete() {
  *          <code>..</code>
  *      }
  * </pre>

@@ -59,40 +59,6 @@ public class ExpectMaxDeleteTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    @ExpectMaxDelete(0)
-    public static class AClassAnnotatedWithExpectMaxDelete extends SqlTestBase {
-
-        @Test
-        public void execute_one_delete_but_no_delete_expected() {
-            EntityManager em = emf.createEntityManager();
-            em.getTransaction().begin();
-
-            Query query = em.createQuery("DELETE FROM " + Book.class.getCanonicalName());
-            query.executeUpdate();
-
-            em.getTransaction().commit();
-        }
-    }
-
-    @Test public void
-    should_fail_if_the_number_of_sql_statements_is_greater_than_the_number_expected_with_annotation_on_class() {
-
-        // GIVEN
-        Class<?> testClass = AClassAnnotatedWithExpectMaxDelete.class;
-
-        // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
-
-        // THEN
-        assertThat(printableResult.failureCount()).isOne();
-
-        assertThat(printableResult.toString())
-                .contains("You may think that at most <0> delete statement was sent to the database")
-                .contains("But in fact <1>...");
-
-    }
-
-    @RunWith(QuickPerfJUnitRunner.class)
     public static class AClassHavingAMethodAnnotatedWithExpectMaxDeleteAndHavingNoPerfIssue extends SqlTestBase {
 
         @ExpectMaxDelete(1)
