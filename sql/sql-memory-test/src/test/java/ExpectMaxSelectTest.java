@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ExpectMaxSelectTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelect extends SqlTestBase {
+    public static class OneSelectButNoSelectExpected extends SqlTestBase {
 
         @ExpectMaxSelect(0)
         @Test
@@ -39,17 +39,19 @@ public class ExpectMaxSelectTest {
     }
 
     @Test public void
-    should_fail_if_the_number_of_sql_statements_is_greater_than_the_number_expected_with_annotation_on_method() {
+    should_fail_if_the_number_of_sql_statements_is_greater_than_expected() {
 
         // GIVEN
-        Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectMaxSelect.class;
+        Class<?> testClass = OneSelectButNoSelectExpected.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
-        assertThat(printableResult.toString())
+
+        String testResult = printableResult.toString();
+        assertThat(testResult)
                 .contains("You may think that at most <0> select statement was sent to the database")
                 .doesNotContain("N+1 select") // Less than 2 SELECT executed
                 .contains("But in fact <1>...")
@@ -59,42 +61,9 @@ public class ExpectMaxSelectTest {
 
     }
 
-    @RunWith(QuickPerfJUnitRunner.class)
-    @ExpectMaxSelect(0)
-    public static class AClassAnnotatedWithExpectMaxSelect extends SqlTestBase {
-
-        @Test
-        public void execute_one_select_but_no_select_expected() {
-            EntityManager em = emf.createEntityManager();
-            Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
-            query.getResultList();
-        }
-
-    }
-
-    @Test public void
-    should_fail_if_the_number_of_sql_statements_is_greater_than_the_number_expected_with_annotation_on_class() {
-
-        // GIVEN
-        Class<?> testClass = AClassAnnotatedWithExpectMaxSelect.class;
-
-        // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
-
-        // THEN
-        assertThat(printableResult.failureCount()).isOne();
-
-        assertThat(printableResult.toString())
-                .contains("You may think that at most <0> select statement was sent to the database")
-                .doesNotContain("N+1 select") // Less than 2 SELECT executed
-                .contains("But in fact <1>...")
-                .contains("select")
-                .contains("book0_.id as id1_0_");
-
-    }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelectAndHavingNoPerfIssue extends SqlTestBase {
+    public static class OneSelectButAtMaxOneExpected extends SqlTestBase {
 
         @ExpectMaxSelect(1)
         @Test
@@ -110,7 +79,7 @@ public class ExpectMaxSelectTest {
     should_not_fail_if_the_performance_property_is_respected() {
 
         // GIVEN
-        Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectMaxSelectAndHavingNoPerfIssue.class;
+        Class<?> testClass = OneSelectButAtMaxOneExpected.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);
@@ -121,7 +90,7 @@ public class ExpectMaxSelectTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectMaxSelectAndWithXmx extends SqlTestBase {
+    public static class OneSelectButNoExpectedInSpecificJvm extends SqlTestBase {
 
         @Xmx(value = 20, unit = AllocationUnit.MEGA_BYTE)
         @ExpectMaxSelect(0)
@@ -138,7 +107,7 @@ public class ExpectMaxSelectTest {
     should_fail_if_the_number_of_sql_statements_is_greater_than_the_number_expected_and_test_method_annotated_with_xmx() {
 
         // GIVEN
-        Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectMaxSelectAndWithXmx.class;
+        Class<?> testClass = OneSelectButNoExpectedInSpecificJvm.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);
@@ -146,12 +115,100 @@ public class ExpectMaxSelectTest {
         // THEN
         assertThat(printableResult.failureCount()).isOne();
 
-        assertThat(printableResult.toString())
+        String testResult = printableResult.toString();
+        assertThat(testResult)
                 .contains("You may think that at most <0> select statement was sent to the database")
                 .doesNotContain("N+1 select") // Less than 2 SELECT executed
                 .contains("But in fact <1>...")
                 .contains("select")
                 .contains("book0_.id as id1_0");
+
+    }
+
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class TwoSameSelectTypeWithDifferentParameterValues extends SqlTestBase {
+
+        @ExpectMaxSelect(1)
+        @Test
+        public void execute_two_same_select_type_with_two_diff_param_values() {
+
+            EntityManager em = emf.createEntityManager();
+
+            String paramName = "idParam";
+            String hqlQuery = "FROM " + Book.class.getCanonicalName() + " b WHERE b.id=:" + paramName;
+
+            Query query = em.createQuery(hqlQuery);
+            query.setParameter(paramName, 2L);
+            query.getResultList();
+
+            Query query2 = em.createQuery(hqlQuery);
+            query2.setParameter(paramName, 1L);
+            query2.getResultList();
+
+        }
+
+    }
+
+    @Test public void
+    should_display_round_trip_and_n_plus_one_select_message_if_two_same_select_types_with_different_parameter_values() {
+
+        // GIVEN
+        Class<?> testClass = ExpectSelectTest.TwoSameSelectTypeWithDifferentParameterValues.class;
+
+        // WHEN
+        PrintableResult printableResult = PrintableResult.testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isOne();
+
+        String testResult = printableResult.toString();
+        assertThat(testResult).contains("You may think that <1> select statement was sent to the database")
+                              .contains("server roundtrips")
+                              .contains("N+1");
+
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class TwoSameSelects extends SqlTestBase {
+
+        @Test
+        @ExpectMaxSelect(1)
+        public void execute_two_same_selects() {
+            EntityManager em = emf.createEntityManager();
+
+            String hqlQuery =   " FROM " + Book.class.getCanonicalName() + " b"
+                    + " WHERE b.id=:idParam";
+
+            Query query = em.createQuery(hqlQuery);
+            query.setParameter("idParam", 2L);
+            query.getResultList();
+
+            Query query2 = em.createQuery(hqlQuery);
+            query2.setParameter("idParam", 2L);
+            query2.getResultList();
+
+        }
+
+    }
+
+    @Test
+    public void
+    should_not_display_round_trip_and_n_plus_one_select_message_if_two_same_selects() {
+
+        // GIVEN
+        Class<?> testClass = TwoSameSelects.class;
+
+        // WHEN
+        PrintableResult printableResult = PrintableResult.testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isOne();
+
+        String testResult = printableResult.toString();
+        assertThat(testResult).contains("You may think that at most <1> select statement was sent to the database")
+                              .doesNotContain("server roundtrips")
+                              .doesNotContain("N+1");
 
     }
 

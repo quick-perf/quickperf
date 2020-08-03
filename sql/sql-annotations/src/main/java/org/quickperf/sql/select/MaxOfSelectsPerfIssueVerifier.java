@@ -20,28 +20,30 @@ import org.quickperf.sql.framework.MicronautSuggestion;
 import org.quickperf.sql.framework.SqlFrameworksInClassPath;
 import org.quickperf.unit.Count;
 
-public class MaxOfSelectsPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectMaxSelect, Count> {
+public class MaxOfSelectsPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectMaxSelect, SelectAnalysis> {
 
     public static final MaxOfSelectsPerfIssueVerifier INSTANCE = new MaxOfSelectsPerfIssueVerifier();
 
     private MaxOfSelectsPerfIssueVerifier() {}
 
     @Override
-    public PerfIssue verifyPerfIssue(ExpectMaxSelect annotation, Count measuredCount) {
+    public PerfIssue verifyPerfIssue(ExpectMaxSelect annotation, SelectAnalysis selectAnalysis) {
 
-        Count expectedCount = new Count(annotation.value());
+        Count maxExpectedSelect = new Count(annotation.value());
 
-         if(measuredCount.isGreaterThan(expectedCount)) {
-            return buildPerfIssue(measuredCount, expectedCount);
+        Count executedSelectNumber = selectAnalysis.getSelectNumber();
+
+        if(executedSelectNumber.isGreaterThan(maxExpectedSelect)) {
+            return buildPerfIssue(executedSelectNumber, maxExpectedSelect, selectAnalysis);
         }
 
         return PerfIssue.NONE;
 
     }
 
-    private PerfIssue buildPerfIssue(Count measuredCount, Count expectedCount) {
+    private PerfIssue buildPerfIssue(Count measuredCount, Count expectedCount, SelectAnalysis selectAnalysis) {
 
-        if(measuredCount.isGreaterThan(Count.ONE)) {
+        if(selectAnalysis.hasSameSelectTypesWithDifferentParamValues()) {
             String description = buildDescriptionWithRoundTripsAndPossiblyNPlusOneSelect(measuredCount, expectedCount);
             return new PerfIssue(description);
         }

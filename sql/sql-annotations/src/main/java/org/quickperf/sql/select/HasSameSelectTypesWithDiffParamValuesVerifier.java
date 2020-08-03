@@ -13,14 +13,13 @@ package org.quickperf.sql.select;
 
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
-import org.quickperf.measure.BooleanMeasure;
 import org.quickperf.sql.annotation.DisableSameSelectTypesWithDifferentParamValues;
 import org.quickperf.sql.framework.HibernateSuggestion;
 import org.quickperf.sql.framework.JdbcSuggestion;
 import org.quickperf.sql.framework.MicronautSuggestion;
 import org.quickperf.sql.framework.SqlFrameworksInClassPath;
 
-public class HasSameSelectTypesWithDiffParamValuesVerifier implements VerifiablePerformanceIssue<DisableSameSelectTypesWithDifferentParamValues, BooleanMeasure> {
+public class HasSameSelectTypesWithDiffParamValuesVerifier implements VerifiablePerformanceIssue<DisableSameSelectTypesWithDifferentParamValues, SelectAnalysis> {
 
     public static final HasSameSelectTypesWithDiffParamValuesVerifier INSTANCE = new HasSameSelectTypesWithDiffParamValuesVerifier();
 
@@ -28,9 +27,9 @@ public class HasSameSelectTypesWithDiffParamValuesVerifier implements Verifiable
 
     @Override
     public PerfIssue verifyPerfIssue(DisableSameSelectTypesWithDifferentParamValues annotation
-                                   , BooleanMeasure sameSelectTypesWithDifferentParams) {
+                                   , SelectAnalysis selectAnalysis) {
 
-        if(sameSelectTypesWithDifferentParams.getValue()) {
+        if(selectAnalysis.hasSameSelectTypesWithDifferentParamValues()) {
             String description = "Same SELECT types with different parameter values"
                                 + System.lineSeparator()
                                 + System.lineSeparator()

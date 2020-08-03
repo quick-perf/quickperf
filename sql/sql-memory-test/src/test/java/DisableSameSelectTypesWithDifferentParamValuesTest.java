@@ -24,11 +24,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DisableSameSelectTypesWithDifferentParamValuesTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableSameSelectTypeWithDifferentParams extends SqlTestBase {
+    public static class TwoSameSelectTypesWithDifferentParamValues extends SqlTestBase {
 
         @Test
         @DisableSameSelectTypesWithDifferentParamValues
-        public void execute_two_same_select_types_with_two_diff_params() {
+        public void execute_two_same_select_types_with_two_diff_param_values() {
 
             EntityManager em = emf.createEntityManager();
 
@@ -48,10 +48,10 @@ public class DisableSameSelectTypesWithDifferentParamValuesTest {
     }
 
     @Test public void
-    should_fail_if_two_selects_with_diff_params_and_test_annotated_with_disable_select_with_diff_params() {
+    should_fail_if_two_same_select_types_with_diff_param_values() {
 
         // GIVEN
-        Class<?> testClass = AClassHavingAMethodAnnotatedWithDisableSameSelectTypeWithDifferentParams.class;
+        Class<?> testClass = TwoSameSelectTypesWithDifferentParamValues.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);
@@ -59,17 +59,20 @@ public class DisableSameSelectTypesWithDifferentParamValuesTest {
         // THEN
         assertThat(printableResult.failureCount()).isOne();
 
-        assertThat(printableResult.toString())
-                .contains("Same SELECT types with different parameter values");
+        String testResult = printableResult.toString();
+        assertThat(testResult)
+                .contains("Same SELECT types with different parameter values")
+                .contains("server roundtrips")
+                .contains("N+1");
 
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingASameParamsMethodAnnotatedWithDisableSameSelectTypeWithDifferentParams extends SqlTestBase {
+    public static class TwoSameSelects extends SqlTestBase {
 
         @Test
         @DisableSameSelectTypesWithDifferentParamValues
-        public void execute_two_same_select_with_two_same_params() {
+        public void execute_two_same_selects() {
             EntityManager em = emf.createEntityManager();
 
             String hqlQuery =   " FROM " + Book.class.getCanonicalName() + " b"
@@ -88,10 +91,10 @@ public class DisableSameSelectTypesWithDifferentParamValuesTest {
     }
 
     @Test public void
-    should_pass_with_two_selects_with_same_params_and_test_annotated_with_disable_select_with_diff_params() {
+    should_pass_with_two_same_selects() {
 
         // GIVEN
-        Class<?> testClass = AClassHavingASameParamsMethodAnnotatedWithDisableSameSelectTypeWithDifferentParams.class;
+        Class<?> testClass = TwoSameSelects.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);

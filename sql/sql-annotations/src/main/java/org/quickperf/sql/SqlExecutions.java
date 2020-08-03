@@ -57,8 +57,8 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
         return this == NONE || sqlExecutions.isEmpty();
     }
 
-    public long retrieveQueryNumberOfType(QueryType queryType) {
-        long queryNumber = 0;
+    public int retrieveQueryNumberOfType(QueryType queryType) {
+        int queryNumber = 0;
         QueryTypeRetriever queryTypeRetriever = QueryTypeRetriever.INSTANCE;
         for (SqlExecution sqlExecution : sqlExecutions) {
             for (QueryInfo query : sqlExecution.getQueries()) {

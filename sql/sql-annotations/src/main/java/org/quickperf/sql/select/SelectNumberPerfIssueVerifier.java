@@ -20,36 +20,38 @@ import org.quickperf.sql.framework.MicronautSuggestion;
 import org.quickperf.sql.framework.SqlFrameworksInClassPath;
 import org.quickperf.unit.Count;
 
-import static org.quickperf.unit.Count.*;
-
-public class SelectNumberPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectSelect, Count> {
+public class SelectNumberPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectSelect, SelectAnalysis> {
 
     public static final SelectNumberPerfIssueVerifier INSTANCE = new SelectNumberPerfIssueVerifier();
 
     private SelectNumberPerfIssueVerifier() {}
 
     @Override
-    public PerfIssue verifyPerfIssue(ExpectSelect annotation, Count measuredCount) {
+    public PerfIssue verifyPerfIssue(ExpectSelect annotation, SelectAnalysis selectAnalysis) {
 
-        Count expectedCount = new Count(annotation.value());
+        Count expectedSelectNumber = new Count(annotation.value());
 
-        if (!measuredCount.isEqualTo(expectedCount)) {
-            return buildPerfIssue(measuredCount, expectedCount);
+        Count executedSelectNumber = selectAnalysis.getSelectNumber();
+
+        if (!executedSelectNumber.isEqualTo(expectedSelectNumber)) {
+            return buildPerfIssue(executedSelectNumber, expectedSelectNumber, selectAnalysis);
         }
 
         return PerfIssue.NONE;
 
     }
 
-    private PerfIssue buildPerfIssue(Count measuredCount, Count expectedCount) {
+    private PerfIssue buildPerfIssue(Count executedSelectNumber, Count expectedSelectNumber, SelectAnalysis selectAnalysis) {
 
-        if(measuredCount.isGreaterThan(expectedCount) && measuredCount.isGreaterThan(ONE)) {
-            String description = buildDescriptionWithRoundTripsAndPossiblyNPlusOneSelect(measuredCount
-                                                                                       , expectedCount);
+        if(   executedSelectNumber.isGreaterThan(expectedSelectNumber)
+           && selectAnalysis.hasSameSelectTypesWithDifferentParamValues()
+          ) {
+            String description = buildDescriptionWithRoundTripsAndPossiblyNPlusOneSelect(executedSelectNumber
+                                                                                       , expectedSelectNumber);
             return new PerfIssue(description);
         }
 
-        String description = buildBaseDescription(measuredCount, expectedCount);
+        String description = buildBaseDescription(executedSelectNumber, expectedSelectNumber);
         return new PerfIssue(description);
 
     }

@@ -61,13 +61,13 @@ class SqlAnnotationsConfigs {
 
     static final AnnotationConfig NUMBER_OF_SQL_SELECT = new AnnotationConfig.Builder()
             .perfRecorderClass(PersistenceSqlRecorder.class)
-            .perfMeasureExtractor(SelectCountMeasureExtractor.INSTANCE)
+            .perfMeasureExtractor(SelectAnalysisExtractor.INSTANCE)
             .perfIssueVerifier(SelectNumberPerfIssueVerifier.INSTANCE)
             .build(ExpectSelect.class);
 
     static final AnnotationConfig MAX_SQL_SELECT = new AnnotationConfig.Builder()
             .perfRecorderClass(PersistenceSqlRecorder.class)
-            .perfMeasureExtractor(SelectCountMeasureExtractor.INSTANCE)
+            .perfMeasureExtractor(SelectAnalysisExtractor.INSTANCE)
             .perfIssueVerifier(MaxOfSelectsPerfIssueVerifier.INSTANCE)
             .build(ExpectMaxSelect.class);
 
@@ -87,7 +87,7 @@ class SqlAnnotationsConfigs {
 
 	static final AnnotationConfig DISABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS = new AnnotationConfig.Builder()
 			.perfRecorderClass(PersistenceSqlRecorder.class)
-			.perfMeasureExtractor(HasSameSelectTypesWithDiffParamsExtractor.INSTANCE)
+			.perfMeasureExtractor(SelectAnalysisExtractor.INSTANCE)
 			.perfIssueVerifier(HasSameSelectTypesWithDiffParamValuesVerifier.INSTANCE)
 			.build(DisableSameSelectTypesWithDifferentParamValues.class);
 

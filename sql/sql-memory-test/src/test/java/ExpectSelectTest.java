@@ -48,7 +48,8 @@ public class ExpectSelectTest {
         // THEN
         assertThat(printableResult.failureCount()).isOne();
 
-        assertThat(printableResult.toString())
+        String testResult = printableResult.toString();
+        assertThat(testResult)
                 .contains("You may think that <5> select statements were sent to the database")
                 .contains("But in fact <1>...")
                 .contains("select")
@@ -70,7 +71,7 @@ public class ExpectSelectTest {
     }
 
     @Test public void
-    should_not_display_round_trip_and_n_plus_one_select_messages_if_select_number_less_than_expected() {
+    should_not_display_round_trip_and_n_plus_one_select_message_if_a_select_number_less_than_expected() {
 
         // GIVEN
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectSelectAndSelectsLessThanExpected.class;
@@ -98,7 +99,7 @@ public class ExpectSelectTest {
     }
 
     @Test public void
-    should_not_display_round_trip_and_n_plus_one_select_messages_if_less_than_two_selects() {
+    should_not_display_round_trip_and_n_plus_one_select_message_if_less_than_two_selects() {
 
         // GIVEN
         Class<?> testClass = OneSelectAndExpectZero.class;
@@ -110,8 +111,96 @@ public class ExpectSelectTest {
         assertThat(printableResult.failureCount()).isOne();
 
         String testResult = printableResult.toString();
-        assertThat(testResult).contains("You may think that <0> select statement was sent to the database");
-        assertThat(testResult).doesNotContain("server roundtrips")
+        assertThat(testResult).contains("You may think that <0> select statement was sent to the database")
+                              .doesNotContain("server roundtrips")
+                              .doesNotContain("N+1");
+
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class TwoSameSelectTypeWithDifferentParameterValues extends SqlTestBase {
+
+        @ExpectSelect(1)
+        @Test
+        public void execute_two_same_select_type_with_two_diff_param_values() {
+
+            EntityManager em = emf.createEntityManager();
+
+            String paramName = "idParam";
+            String hqlQuery = "FROM " + Book.class.getCanonicalName() + " b WHERE b.id=:" + paramName;
+
+            Query query = em.createQuery(hqlQuery);
+            query.setParameter(paramName, 2L);
+            query.getResultList();
+
+            Query query2 = em.createQuery(hqlQuery);
+            query2.setParameter(paramName, 1L);
+            query2.getResultList();
+
+        }
+
+    }
+
+    @Test public void
+    should_display_round_trip_and_n_plus_one_select_message_if_two_same_select_types_with_different_parameter_values() {
+
+        // GIVEN
+        Class<?> testClass = TwoSameSelectTypeWithDifferentParameterValues.class;
+
+        // WHEN
+        PrintableResult printableResult = PrintableResult.testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isOne();
+
+        String testResult = printableResult.toString();
+        assertThat(testResult).contains("You may think that <1> select statement was sent to the database")
+                              .contains("server roundtrips")
+                              .contains("N+1");
+
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class TwoDifferentSelectTypes extends SqlTestBase {
+
+        @ExpectSelect(1)
+        @Test
+        public void execute_two_different_select_types() {
+
+            EntityManager em = emf.createEntityManager();
+
+            String idParamName = "idParam";
+            Query firstSelectType = em.createQuery(
+                        "FROM " + Book.class.getCanonicalName()
+                            + " b WHERE b.id=:" + idParamName
+                                                  );
+            firstSelectType.setParameter(idParamName, 2L);
+            firstSelectType.getResultList();
+
+            String isbnParamName = "isbnParam";
+            Query secondSelectType = em.createQuery("FROM " + Book.class.getCanonicalName() + " b WHERE b.isbn=:" + isbnParamName);
+            secondSelectType.setParameter(isbnParamName, "anIsbn");
+            secondSelectType.getResultList();
+
+        }
+
+    }
+
+    @Test public void
+    should_not_display_round_trip_and_n_plus_one_select_message_if_two_different_select_types() {
+
+        // GIVEN
+        Class<TwoDifferentSelectTypes> testClass = TwoDifferentSelectTypes.class;
+
+        // WHEN
+        PrintableResult printableResult = PrintableResult.testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isOne();
+
+        String testResult = printableResult.toString();
+        assertThat(testResult).contains("You may think that <1> select statement was sent to the database")
+                              .doesNotContain("server roundtrips")
                               .doesNotContain("N+1");
 
     }

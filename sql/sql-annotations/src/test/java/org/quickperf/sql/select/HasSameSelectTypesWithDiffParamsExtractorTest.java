@@ -56,8 +56,8 @@ public class HasSameSelectTypesWithDiffParamsExtractorTest {
         sqlExecutions.add(execInfo
                         , asList(queryInfo1, queryInfo2));
 
-        HasSameSelectTypesWithDiffParamsExtractor extractor
-                = HasSameSelectTypesWithDiffParamsExtractor.INSTANCE;
+        SelectAnalysisExtractor.HasSameSelectTypesWithDiffParamsExtractor extractor
+                = SelectAnalysisExtractor.HasSameSelectTypesWithDiffParamsExtractor.INSTANCE;
 
         // WHEN
         BooleanMeasure sameSelectsWithDifferentParams = extractor.extractPerfMeasureFrom(sqlExecutions);
