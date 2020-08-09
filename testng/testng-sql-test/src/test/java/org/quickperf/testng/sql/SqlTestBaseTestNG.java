@@ -14,9 +14,9 @@ package org.quickperf.testng.sql;
 import net.ttddyy.dsproxy.support.ProxyDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.quickperf.sql.Book;
-import org.quickperf.sql.config.HibernateConfigBuilder;
+import org.quickperf.sql.config.MemoryDataSourceBuilder;
+import org.quickperf.sql.config.MemoryDatabaseHibernateDialect;
 import org.quickperf.sql.config.PersistenceUnitInfoBuilder;
-import org.quickperf.sql.config.TestDataSourceBuilder;
 import org.testng.annotations.BeforeTest;
 
 import javax.persistence.EntityManagerFactory;
@@ -26,6 +26,7 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Properties;
 
+import static org.quickperf.sql.config.HibernateConfigBuilder.anHibernateConfig;
 import static org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
 
 public class SqlTestBaseTestNG {
@@ -40,9 +41,10 @@ public class SqlTestBaseTestNG {
     }
 
     private PersistenceUnitInfo buildPersistenceUnitInfo() {
-        DataSource baseDataSource = TestDataSourceBuilder.aDataSource().build();
+        DataSource baseDataSource = MemoryDataSourceBuilder.aDataSource().build();
         ProxyDataSource proxyDataSource = aDataSourceBuilder().buildProxy(baseDataSource);
-        Properties hibernateProperties = HibernateConfigBuilder.anHibernateConfig().build();
+        String hibernateDialect = MemoryDatabaseHibernateDialect.INSTANCE.getHibernateDialect();
+        Properties hibernateProperties = anHibernateConfig().build(hibernateDialect);
         return PersistenceUnitInfoBuilder.aPersistenceUnitInfo()
                                          .build( proxyDataSource
                                                , hibernateProperties

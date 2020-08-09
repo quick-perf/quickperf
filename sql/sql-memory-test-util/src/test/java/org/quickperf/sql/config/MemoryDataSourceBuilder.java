@@ -16,12 +16,12 @@ import org.apache.commons.dbcp.BasicDataSource;
 import javax.sql.DataSource;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class TestDataSourceBuilder {
+public class MemoryDataSourceBuilder {
 
-    private TestDataSourceBuilder() { }
+    private MemoryDataSourceBuilder() { }
 
-    public static TestDataSourceBuilder aDataSource() {
-        return new TestDataSourceBuilder();
+    public static MemoryDataSourceBuilder aDataSource() {
+        return new MemoryDataSourceBuilder();
     }
 
     public DataSource build() {

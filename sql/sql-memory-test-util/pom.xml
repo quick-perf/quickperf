@@ -20,7 +20,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>quick-perf-sql-test-util</artifactId>
+    <artifactId>quick-perf-sql-memory-test-util</artifactId>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -43,11 +43,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback-classic.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.4.0.Final</version>
         </dependency>
     </dependencies>
 

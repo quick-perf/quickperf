@@ -11,11 +11,13 @@
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <parent>
         <artifactId>quick-perf</artifactId>
         <groupId>org.quickperf</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>quick-perf-sql-parent</artifactId>
@@ -30,7 +32,8 @@
             </activation>
             <modules>
                 <module>sql-annotations</module>
-                <module>sql-test-util</module>
+                <module>sql-memory-test-util</module>
+                <module>sql-hibernate-test-util</module>
                 <module>sql-memory-test</module>
             </modules>
         </profile>
@@ -38,6 +41,12 @@
             <id>release</id>
             <modules>
                 <module>sql-annotations</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>testcontainers</id>
+            <modules>
+                <module>sql-testcontainers-test</module>
             </modules>
         </profile>
     </profiles>

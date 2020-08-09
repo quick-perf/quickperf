@@ -9,60 +9,48 @@
   ~
   ~ Copyright 2019-2020 the original author or authors.
   -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
         <groupId>org.quickperf</groupId>
-        <artifactId>quick-perf-testng-parent</artifactId>
+        <artifactId>quick-perf-sql-testcontainers-test</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>quick-perf-testng-sql-test</artifactId>
-
-    <properties>
-        <jar.skipIfEmpty>true</jar.skipIfEmpty>
-        <maven.install.skip>true</maven.install.skip>
-    </properties>
+    <artifactId>quick-perf-testcontainers-test-util</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>7.0.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.quickperf</groupId>
-            <artifactId>quick-perf-testng</artifactId>
+            <artifactId>quick-perf-junit5</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-sql-annotations</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.quickperf</groupId>
-            <artifactId>quick-perf-testng-test-util</artifactId>
+            <artifactId>quick-perf-junit5-test-util</artifactId>
             <version>1.0-SNAPSHOT</version>
             <classifier>tests</classifier>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.quickperf</groupId>
-            <artifactId>quick-perf-sql-memory-test-util</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <classifier>tests</classifier>
-            <type>test-jar</type>
-            <scope>test</scope>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>jdbc</artifactId>
+            <version>${testcontainers.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>${commons-dbcp.version}</version>
         </dependency>
         <dependency>
             <groupId>org.quickperf</groupId>
@@ -73,5 +61,25 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

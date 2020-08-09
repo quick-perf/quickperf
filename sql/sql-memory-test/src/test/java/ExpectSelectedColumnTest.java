@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ExpectSelectedColumnTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithExpectSelectedColumn extends SqlTestBase {
+    public static class Select3ColumnsBut2Expected extends SqlTestBase {
 
         @ExpectSelectedColumn(2)
         @Test
@@ -40,10 +40,10 @@ public class ExpectSelectedColumnTest {
     }
 
     @Test public void
-    should_fail_if_the_max_number_of_selected_columns_is_not_this_expected() {
+    should_fail_if_the_number_of_selected_columns_is_not_this_expected() {
 
         // GIVEN
-        Class<AClassHavingAMethodAnnotatedWithExpectSelectedColumn> testClass = AClassHavingAMethodAnnotatedWithExpectSelectedColumn.class;
+        Class<?> testClass = Select3ColumnsBut2Expected.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);

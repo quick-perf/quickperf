@@ -14,7 +14,8 @@ package org.quickperf.sql;
 import net.ttddyy.dsproxy.support.ProxyDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.junit.Before;
-import org.quickperf.sql.config.TestDataSourceBuilder;
+import org.quickperf.sql.config.MemoryDataSourceBuilder;
+import org.quickperf.sql.config.MemoryDatabaseHibernateDialect;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -42,7 +43,7 @@ public class SqlTestBaseJUnit4 {
     }
 
     private PersistenceUnitInfo buildPersistenceUnitInfo() {
-        DataSource baseDataSource = TestDataSourceBuilder.aDataSource().build();
+        DataSource baseDataSource = MemoryDataSourceBuilder.aDataSource().build();
         ProxyDataSource proxyDataSource = aDataSourceBuilder().buildProxy(baseDataSource);
         Properties hibernateProperties = getHibernateProperties();
         return aPersistenceUnitInfo().build(proxyDataSource
@@ -51,7 +52,8 @@ public class SqlTestBaseJUnit4 {
     }
 
     Properties getHibernateProperties() {
-        return anHibernateConfig().build();
+        String hibernateDialect = MemoryDatabaseHibernateDialect.INSTANCE.getHibernateDialect();
+        return anHibernateConfig().build(hibernateDialect);
     }
 
     void executeInATransaction(Consumer<EntityManager> toExecuteInATransaction) {

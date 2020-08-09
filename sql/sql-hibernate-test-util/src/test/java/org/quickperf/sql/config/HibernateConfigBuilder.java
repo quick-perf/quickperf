@@ -56,10 +56,10 @@ public class HibernateConfigBuilder {
         return newConfigBuilder;
     }
 
-    public Properties build() {
-        final Properties config = new Properties();
+    public Properties build(String dialect) {
+        Properties config = new Properties();
         config.setProperty("hibernate.hbm2ddl.auto", "create");
-        config.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        config.setProperty("hibernate.dialect", dialect);
         config.put("hibernate.show_sql", showSql);
         config.put("hibernate.format_sql", formatSql);
         if(isBatched) {

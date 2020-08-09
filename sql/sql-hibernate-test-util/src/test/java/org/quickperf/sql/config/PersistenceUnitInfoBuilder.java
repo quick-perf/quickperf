@@ -24,6 +24,7 @@ import java.util.Properties;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
+
 public class PersistenceUnitInfoBuilder {
 
     private PersistenceUnitInfoBuilder() {}

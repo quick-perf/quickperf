@@ -17,6 +17,7 @@ import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.annotations.HeapSize;
 import org.quickperf.sql.Book;
 import org.quickperf.sql.annotation.ExpectJdbcBatching;
+import org.quickperf.sql.config.MemoryDatabaseHibernateDialect;
 
 import javax.persistence.Query;
 import java.util.Properties;
@@ -33,9 +34,10 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
         @Override
         protected Properties getHibernateProperties() {
+            String hibernateDialect = MemoryDatabaseHibernateDialect.INSTANCE.getHibernateDialect();
             return   anHibernateConfig()
                     .withBatchSize(BATCH_SIZE)
-                    .build();
+                    .build(hibernateDialect);
         }
 
         @Test
@@ -141,9 +143,10 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
         @Override
         protected Properties getHibernateProperties() {
+            String hibernateDialect = MemoryDatabaseHibernateDialect.INSTANCE.getHibernateDialect();
             return   anHibernateConfig()
                     .withBatchSize(30)
-                    .build();
+                    .build(hibernateDialect);
         }
 
         @Test

@@ -45,7 +45,7 @@
         </dependency>
         <dependency>
             <groupId>org.quickperf</groupId>
-            <artifactId>quick-perf-sql-test-util</artifactId>
+            <artifactId>quick-perf-sql-memory-test-util</artifactId>
             <version>1.0-SNAPSHOT</version>
             <classifier>tests</classifier>
             <type>test-jar</type>
@@ -55,6 +55,14 @@
             <groupId>com.vmlens</groupId>
             <artifactId>concurrent-junit</artifactId>
             <version>1.0.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.quickperf</groupId>
+            <artifactId>quick-perf-sql-hibernate-test-util</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <classifier>tests</classifier>
+            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
     </dependencies>

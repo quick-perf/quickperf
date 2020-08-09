@@ -65,6 +65,8 @@ You need a JDK (OpenJDK, ...) >= 11 or an Oracle JDK >= 1.8.
   💡 To disable Spring Boot tests: ```mvn clean install -P -SpringBootTests```
   
   💡 To not build Spring modules: ```mvn clean install -P -default-spring,-SpringBootTests```
+ 
+  💡 To build with the Testcontainers tests: ``` mvn clean install -P testcontainers```
 
 ## Test several JDK with Docker
 
