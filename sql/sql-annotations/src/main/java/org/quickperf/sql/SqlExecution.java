@@ -24,6 +24,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +64,12 @@ public class SqlExecution implements Externalizable {
 
     private long retrieveNumberOfReturnedColumns(ExecutionInfo executionInfo) {
         ResultSet resultSet = (ResultSet) executionInfo.getResult();
+        if(resultSet == null) {
+            return 0;
+        }
         try {
-            return resultSet.getMetaData().getColumnCount();
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            return metaData.getColumnCount();
         } catch (SQLException e) {
             e.printStackTrace();
             return 0;
