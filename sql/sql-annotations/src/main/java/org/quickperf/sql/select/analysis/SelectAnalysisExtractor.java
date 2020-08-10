@@ -9,40 +9,60 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.sql.select;
+package org.quickperf.sql.select.analysis;
 
 import net.ttddyy.dsproxy.QueryInfo;
 import net.ttddyy.dsproxy.QueryType;
 import org.quickperf.ExtractablePerformanceMeasure;
-import org.quickperf.measure.BooleanMeasure;
 import org.quickperf.sql.QueryTypeRetriever;
 import org.quickperf.sql.SqlExecution;
 import org.quickperf.sql.SqlExecutions;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class HasExactlySameSelectExtractor implements ExtractablePerformanceMeasure<SqlExecutions, BooleanMeasure> {
+public class SelectAnalysisExtractor implements ExtractablePerformanceMeasure<SqlExecutions, SelectAnalysis> {
 
-    public static final HasExactlySameSelectExtractor INSTANCE = new HasExactlySameSelectExtractor();
+    public static final SelectAnalysisExtractor INSTANCE = new SelectAnalysisExtractor();
 
-    private HasExactlySameSelectExtractor() {}
+    private SelectAnalysisExtractor() { }
 
     @Override
-    public BooleanMeasure extractPerfMeasureFrom(SqlExecutions sqlExecutions) {
+    public SelectAnalysis extractPerfMeasureFrom(SqlExecutions sqlExecutions) {
+
+        int selectNumber = sqlExecutions.retrieveQueryNumberOfType(QueryType.SELECT);
+
+        boolean sameSelectTypesWithDifferentParamValues = false;
+
+        boolean sameSelects = false;
+
         SqlSelects sqlSelects = new SqlSelects();
         for (SqlExecution sqlExecution : sqlExecutions) {
             for (QueryInfo query : sqlExecution.getQueries()) {
-                if (       isSelectType(query)
-                        && sqlSelects.exactlySameSqlQueryExists(query)
-                    ) {
-                        return BooleanMeasure.TRUE;
-                    }
                 if (isSelectType(query)) {
+                    if (!sameSelectTypesWithDifferentParamValues
+                     && sqlSelects.sameSqlQueryWithDifferentParams(query)) {
+                        sameSelectTypesWithDifferentParamValues = true;
+                    }
+                    if(  !sameSelects
+                      && sqlSelects.exactlySameSqlQueryExists(query)) {
+                        sameSelects = true;
+                    }
+                    if(sameSelectTypesWithDifferentParamValues && sameSelects) {
+                        break;
+                    }
                     sqlSelects.add(query);
                 }
+
             }
         }
-        return BooleanMeasure.FALSE;
+
+        return new SelectAnalysis(selectNumber
+                                , sameSelectTypesWithDifferentParamValues
+                                , sameSelects);
+
     }
 
     private boolean isSelectType(QueryInfo query) {
@@ -54,16 +74,6 @@ public class HasExactlySameSelectExtractor implements ExtractablePerformanceMeas
 
         private final Map<String, ParamsCalls> callsParamsByQuery = new HashMap<>();
 
-        boolean exactlySameSqlQueryExists(QueryInfo query) {
-            String queryAsString = query.getQuery();
-            ParamsCalls paramsCalls = callsParamsByQuery.get(queryAsString);
-            if (paramsCalls == null) {
-                return false;
-            }
-            List<Object> paramsList = QueryParamsExtractor.INSTANCE.getParamsOf(query);
-            return paramsCalls.alreadySameParamsCalled(paramsList);
-        }
-
         void add(QueryInfo query) {
             String queryAsString = query.getQuery();
             ParamsCalls paramsCalls = callsParamsByQuery.get(queryAsString);
@@ -73,6 +83,26 @@ public class HasExactlySameSelectExtractor implements ExtractablePerformanceMeas
             List<Object> paramsList = QueryParamsExtractor.INSTANCE.getParamsOf(query);
             paramsCalls.addParams(paramsList);
             callsParamsByQuery.put(queryAsString, paramsCalls);
+        }
+
+        boolean sameSqlQueryWithDifferentParams(QueryInfo query) {
+            String queryAsString = query.getQuery();
+            ParamsCalls paramsCalls = callsParamsByQuery.get(queryAsString);
+            if (paramsCalls == null) {
+                return false;
+            }
+            List<Object> paramsList = QueryParamsExtractor.INSTANCE.getParamsOf(query);
+            return !paramsCalls.alreadySameParamsCalled(paramsList);
+        }
+
+        boolean exactlySameSqlQueryExists(QueryInfo query) {
+            String queryAsString = query.getQuery();
+            ParamsCalls paramsCalls = callsParamsByQuery.get(queryAsString);
+            if (paramsCalls == null) {
+                return false;
+            }
+            List<Object> paramsList = QueryParamsExtractor.INSTANCE.getParamsOf(query);
+            return paramsCalls.alreadySameParamsCalled(paramsList);
         }
 
         private static class ParamsCalls {

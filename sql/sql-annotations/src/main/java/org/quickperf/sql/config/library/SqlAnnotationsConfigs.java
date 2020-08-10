@@ -31,6 +31,7 @@ import org.quickperf.sql.insert.MaxOfInsertsPerfIssueVerifier;
 import org.quickperf.sql.like.ContainsLikeWithLeadingWildcardExtractor;
 import org.quickperf.sql.like.HasLikeWithLeadingWildcardVerifier;
 import org.quickperf.sql.select.*;
+import org.quickperf.sql.select.analysis.SelectAnalysisExtractor;
 import org.quickperf.sql.select.columns.MaxSelectedColumnsPerMeasureExtractor;
 import org.quickperf.sql.select.columns.MaxSelectedColumnsPerfIssueVerifier;
 import org.quickperf.sql.select.columns.SelectedColumnNumberPerfIssueVerifier;
@@ -51,7 +52,7 @@ class SqlAnnotationsConfigs {
 
 	static final AnnotationConfig DISABLE_EXACTLY_SAME_SQL_SELECTS = new AnnotationConfig.Builder()
 			.perfRecorderClass(PersistenceSqlRecorder.class)
-			.perfMeasureExtractor(HasExactlySameSelectExtractor.INSTANCE)
+			.perfMeasureExtractor(SelectAnalysisExtractor.INSTANCE)
 			.perfIssueVerifier(HasExactlySameSelectVerifier.INSTANCE)
 			.build(DisableExactlySameSelects.class);
 

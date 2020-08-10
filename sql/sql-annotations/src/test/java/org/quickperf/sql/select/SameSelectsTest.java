@@ -15,8 +15,9 @@ import net.ttddyy.dsproxy.ExecutionInfo;
 import net.ttddyy.dsproxy.QueryInfo;
 import net.ttddyy.dsproxy.proxy.ParameterSetOperation;
 import org.junit.Test;
-import org.quickperf.measure.BooleanMeasure;
 import org.quickperf.sql.SqlExecutions;
+import org.quickperf.sql.select.analysis.SelectAnalysis;
+import org.quickperf.sql.select.analysis.SelectAnalysisExtractor;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -29,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class HasExactlySameSelectExtractorTest {
+public class SameSelectsTest {
 
     //Not a use case with requests executed on a database waiting for to have a clear use case
     @Test public void
@@ -54,15 +55,14 @@ public class HasExactlySameSelectExtractorTest {
 
         SqlExecutions sqlExecutions = SqlExecutions.NONE;
         sqlExecutions.add(execInfo
-                       , asList(queryInfo1, queryInfo2));
-
-        HasExactlySameSelectExtractor extractor = HasExactlySameSelectExtractor.INSTANCE;
+                        , asList(queryInfo1, queryInfo2));
 
         // WHEN
-        BooleanMeasure sameSelectsWithDifferentParams = extractor.extractPerfMeasureFrom(sqlExecutions);
+        SelectAnalysisExtractor selectAnalysisExtractor = SelectAnalysisExtractor.INSTANCE;
+        SelectAnalysis selectAnalysis = selectAnalysisExtractor.extractPerfMeasureFrom(sqlExecutions);
 
         // THEN
-        assertThat(sameSelectsWithDifferentParams.getValue()).isTrue();
+        assertThat(selectAnalysis.hasSameSelects()).isTrue();
 
     }
 

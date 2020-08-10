@@ -80,11 +80,11 @@ public class DisableExactlySameSelectsTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithSameParams extends SqlTestBase {
+    public static class ExactlySameSelects extends SqlTestBase {
 
         @Test
         @DisableExactlySameSelects
-        public void execute_two_same_select_with_same_params() {
+        public void execute_two_same_selects_with_same_params() {
 
             EntityManager em = emf.createEntityManager();
 
@@ -103,10 +103,10 @@ public class DisableExactlySameSelectsTest {
     }
 
     @Test public void
-    should_fail_if_same_selects_with_same_params_and_test_method_annotated_disable_same_sql_select() {
+    should_fail_if_same_selects_with_same_params() {
 
         // GIVEN
-        Class<?> testClass = AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithSameParams.class;
+        Class<?> testClass = ExactlySameSelects.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);

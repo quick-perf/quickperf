@@ -9,7 +9,7 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.sql.select;
+package org.quickperf.sql.select.analysis;
 
 import net.ttddyy.dsproxy.QueryInfo;
 import net.ttddyy.dsproxy.proxy.ParameterSetOperation;

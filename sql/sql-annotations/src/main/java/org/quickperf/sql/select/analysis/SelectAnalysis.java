@@ -9,20 +9,25 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.sql.select;
+package org.quickperf.sql.select.analysis;
 
 import org.quickperf.measure.PerfMeasure;
 import org.quickperf.unit.Count;
 import org.quickperf.unit.NoUnit;
 
-class SelectAnalysis implements PerfMeasure {
+public class SelectAnalysis implements PerfMeasure {
 
     private final Count selectNumber;
 
     private final boolean sameSelectTypesWithDifferentParamValues;
 
-    public SelectAnalysis(int selectNumber, boolean sameSelectTypesWithDifferentParamValues) {
+    private final boolean sameSelects;
+
+    public SelectAnalysis(int selectNumber
+                        , boolean sameSelectTypesWithDifferentParamValues
+                        , boolean sameSelects) {
         this.selectNumber = new Count(selectNumber);
+        this.sameSelects = sameSelects;
         this.sameSelectTypesWithDifferentParamValues = sameSelectTypesWithDifferentParamValues;
     }
 
@@ -32,6 +37,10 @@ class SelectAnalysis implements PerfMeasure {
 
     public boolean hasSameSelectTypesWithDifferentParamValues() {
         return sameSelectTypesWithDifferentParamValues;
+    }
+
+    public boolean hasSameSelects() {
+        return sameSelects;
     }
 
     @Override
