@@ -75,8 +75,6 @@
 
 </details>	
 
----
-
 ## Usage
 ### JVM annotations
 
@@ -126,11 +124,9 @@ Auto-detection of Hibernate and Spring Data JPA:
 
 ## Talks and videos
 
-### [english](https://www.youtube.com/watch?v=cEkoJL09kKI&list=PLyRtZQwOxA6ekhEr2H2nNV42ZLD8OkPEx&index=2)
+### [English](https://www.youtube.com/playlist?list=PLyRtZQwOxA6e7hOpc_n0WJ0exOYyVaS_b)
 
-### [french](https://www.youtube.com/watch?v=H412IeitOBs&list=PLyRtZQwOxA6ekhEr2H2nNV42ZLD8OkPEx&index=3&t=0s)
-
-[more...](https://www.youtube.com/playlist?list=PLyRtZQwOxA6ekhEr2H2nNV42ZLD8OkPEx)
+### [French](https://www.youtube.com/playlist?list=PLyRtZQwOxA6c8cpz7k_ZuIMAY4hvDwBzI)
 
 ## Something to ask us?
 
