@@ -9,7 +9,7 @@
 </div>
 
 ---
-<p align="center">
+<p align="center">	
   <a href="https://search.maven.org/search?q=org.quickperf">
     <img src="https://maven-badges.herokuapp.com/maven-central/org.quickperf/quick-perf/badge.svg"
          alt="Maven Central">
@@ -37,6 +37,43 @@
   &nbsp;&nbsp;
   <a href="https://www.youtube.com/playlist?list=PLyRtZQwOxA6ekhEr2H2nNV42ZLD8OkPEx">YouTube</a>
 </p>
+
+---
+
+##  [📙 Documentation](https://github.com/quick-perf/doc/wiki/QuickPerf)
+<details>
+	
+### Annotations
+
+:point_right:  [Core](https://github.com/quick-perf/doc/wiki/core-annotations)
+
+:point_right:  [JVM](https://github.com/quick-perf/doc/wiki/jvm-annotations)
+
+:point_right:  [SQL](https://github.com/quick-perf/doc/wiki/sql-annotations)
+
+[more...](https://github.com/quick-perf/doc/wiki/QuickPerf#annotation-scopes)
+
+### Frameworks and Test Frameworks 
+
+:point_right:  [Spring](https://github.com/quick-perf/doc/wiki/Spring)
+
+[more...](https://github.com/quick-perf/doc/wiki/QuickPerf#execute-quickperf)
+
+</br>
+
+:point_right:  [JUnit 4](https://github.com/quick-perf/doc/wiki/JUnit-4)
+
+:point_right:  [JUnit 5](https://github.com/quick-perf/doc/wiki/JUnit-5)
+
+:point_right:  [TestNG](https://github.com/quick-perf/doc/wiki/TestNG)
+
+[more...](https://github.com/quick-perf/doc/wiki/QuickPerf#execute-quickperf)
+
+### Frequently Asked Questions
+
+[more...](https://github.com/quick-perf/doc/wiki/Frequently-Asked-Questions)
+
+</details>	
 
 ---
 
@@ -87,11 +124,13 @@ Auto-detection of Hibernate and Spring Data JPA:
 
 📙 [All the SQL annotations](https://github.com/quick-perf/doc/wiki/SQL-annotations)  &nbsp;&nbsp; :mag_right: [Spring Boot & JUnit 4](https://github.com/quick-perf/quickperf-examples/tree/master/springboot-junit4) &nbsp;&nbsp; :mag_right: [Spring Boot & JUnit 5](https://github.com/quick-perf/quickperf-examples/tree/master/springboot-junit5)
 
-### View Devoxx Belgium talk
-[![Devoxx Belgium talk](https://github.com/quick-perf/doc/blob/master/doc/images/Devoxx-Belgium.jpg?raw=true)](https://youtu.be/cEkoJL09kKI?t=5)
+## Talks and videos
 
-## Documentation
-The full documentation is available [here](https://github.com/quick-perf/doc/wiki/QuickPerf).
+### [english](https://www.youtube.com/watch?v=cEkoJL09kKI&list=PLyRtZQwOxA6ekhEr2H2nNV42ZLD8OkPEx&index=2)
+
+### [french](https://www.youtube.com/watch?v=H412IeitOBs&list=PLyRtZQwOxA6ekhEr2H2nNV42ZLD8OkPEx&index=3&t=0s)
+
+[more...](https://www.youtube.com/playlist?list=PLyRtZQwOxA6ekhEr2H2nNV42ZLD8OkPEx)
 
 ## Something to ask us?
 
