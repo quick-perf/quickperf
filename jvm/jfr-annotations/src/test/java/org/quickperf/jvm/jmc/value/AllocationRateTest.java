@@ -13,6 +13,8 @@ package org.quickperf.jvm.jmc.value;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 import org.openjdk.jmc.common.item.*;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.QuantityConversionException;
@@ -23,9 +25,6 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import java.util.Iterator;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class AllocationRateTest {
 
@@ -73,56 +72,56 @@ public class AllocationRateTest {
   @Before
   @SuppressWarnings("unchecked")
   public void setUpIItemCollection() throws QuantityConversionException {
-    mockedJfrEvents = mock(IItemCollection.class);
-    mockedJfrEventsIterator = mock(Iterator.class);
-    mockedTotalAlloc = mock(IQuantity.class);
-    mockedAllocationEvents = mock(IItemIterable.class);
-    mockedAllocationEventsIterator = mock(Iterator.class);
-    mockedEvent = mock(IItem.class);
-    mockedEvent2 = mock(IItem.class);
-    mockedEvent3 = mock(IItem.class);
-    mockedIType = mock(StructContentType.class);
-    mockedIMemberAccessor = mock(IMemberAccessor.class);
-    mockedIQuantity = mock(IQuantity.class);
+    mockedJfrEvents = Mockito.mock(IItemCollection.class);
+    mockedJfrEventsIterator = Mockito.mock(Iterator.class);
+    mockedTotalAlloc = Mockito.mock(IQuantity.class);
+    mockedAllocationEvents = Mockito.mock(IItemIterable.class);
+    mockedAllocationEventsIterator = Mockito.mock(Iterator.class);
+    mockedEvent = Mockito.mock(IItem.class);
+    mockedEvent2 = Mockito.mock(IItem.class);
+    mockedEvent3 = Mockito.mock(IItem.class);
+    mockedIType = Mockito.mock(StructContentType.class);
+    mockedIMemberAccessor = Mockito.mock(IMemberAccessor.class);
+    mockedIQuantity = Mockito.mock(IQuantity.class);
 
-    when(mockedJfrEvents.hasItems()).thenReturn(true);
+    Mockito.when(mockedJfrEvents.hasItems()).thenReturn(true);
 
-    when(mockedTotalAlloc.longValue()).thenReturn(1024L);
+    Mockito.when(mockedTotalAlloc.longValue()).thenReturn(1024L);
 
-    when(mockedJfrEvents.getAggregate(any(IAggregator.class))).thenReturn(mockedTotalAlloc);
+    Mockito.when(mockedJfrEvents.getAggregate(ArgumentMatchers.any(IAggregator.class))).thenReturn(mockedTotalAlloc);
 
-    when(mockedJfrEvents.apply(JdkFilters.ALLOC_INSIDE_TLAB)).thenReturn(mockedJfrEvents);
-    when(mockedJfrEvents.apply(JdkFilters.ALLOC_OUTSIDE_TLAB)).thenReturn(mockedJfrEvents);
+    Mockito.when(mockedJfrEvents.apply(JdkFilters.ALLOC_INSIDE_TLAB)).thenReturn(mockedJfrEvents);
+    Mockito.when(mockedJfrEvents.apply(JdkFilters.ALLOC_OUTSIDE_TLAB)).thenReturn(mockedJfrEvents);
 
-    when(mockedJfrEvents.iterator())
+    Mockito.when(mockedJfrEvents.iterator())
             .thenReturn(mockedJfrEventsIterator, mockedJfrEventsIterator, mockedJfrEventsIterator,
                     mockedJfrEventsIterator);
-    when(mockedJfrEventsIterator.next())
+    Mockito.when(mockedJfrEventsIterator.next())
             .thenReturn(mockedAllocationEvents, mockedAllocationEvents, mockedAllocationEvents,
                     mockedAllocationEvents);
-    when(mockedJfrEventsIterator.hasNext())
+    Mockito.when(mockedJfrEventsIterator.hasNext())
             .thenReturn(true, false, true, false, true, false, true, false);
 
-    when(mockedAllocationEvents.iterator())
+    Mockito.when(mockedAllocationEvents.iterator())
             .thenReturn(mockedAllocationEventsIterator, mockedAllocationEventsIterator,
                     mockedAllocationEventsIterator,
                     mockedAllocationEventsIterator);
-    when(mockedAllocationEventsIterator.next())
+    Mockito.when(mockedAllocationEventsIterator.next())
             .thenReturn(mockedEvent, mockedEvent2, mockedEvent3, mockedEvent, mockedEvent2,
                     mockedEvent3, mockedEvent, mockedEvent2, mockedEvent3);
-    when(mockedAllocationEventsIterator.hasNext())
+    Mockito.when(mockedAllocationEventsIterator.hasNext())
             .thenReturn(true, true, true, false, true, true, true, false, true, true, true, false, true,
                     true, true, false);
 
-    when(mockedEvent.getType()).thenReturn(mockedIType);
-    when(mockedEvent2.getType()).thenReturn(mockedIType);
-    when(mockedEvent3.getType()).thenReturn(mockedIType);
+    Mockito.when(mockedEvent.getType()).thenReturn(mockedIType);
+    Mockito.when(mockedEvent2.getType()).thenReturn(mockedIType);
+    Mockito.when(mockedEvent3.getType()).thenReturn(mockedIType);
 
-    when(mockedIType.getAccessor(any(IAccessorKey.class))).thenReturn(mockedIMemberAccessor);
+    Mockito.when(mockedIType.getAccessor(ArgumentMatchers.any(IAccessorKey.class))).thenReturn(mockedIMemberAccessor);
 
-    when(mockedIMemberAccessor.getMember(any(IItem.class))).thenReturn(mockedIQuantity);
+    Mockito.when(mockedIMemberAccessor.getMember(ArgumentMatchers.any(IItem.class))).thenReturn(mockedIQuantity);
 
-    when(mockedIQuantity.longValueIn(UnitLookup.EPOCH_MS))
+    Mockito.when(mockedIQuantity.longValueIn(UnitLookup.EPOCH_MS))
             .thenReturn(1000L, 2000L, 3000L, 10_000L, 10_000L, 11_000L, 1000L, 2000L, 3000L, 10000L,
                     11000L, 11000L);
   }
@@ -133,7 +132,7 @@ public class AllocationRateTest {
   @Test
   public void should_format_100_bytes_per_second_as_string() {
 
-    when(mockedTotalAlloc.longValue()).thenReturn(1024L);
+    Mockito.when(mockedTotalAlloc.longValue()).thenReturn(1024L);
 
     assertThat(ProfilingInfo.ALLOCATION_RATE.formatAsString(mockedJfrEvents))
             .isEqualTo("102 B/s");
@@ -146,7 +145,7 @@ public class AllocationRateTest {
   @Test
   public void should_format_100_ki_b_per_second_as_string() {
 
-    when(mockedTotalAlloc.longValue()).thenReturn(1024L * 1024L);
+    Mockito.when(mockedTotalAlloc.longValue()).thenReturn(1024L * 1024L);
 
     assertThat(ProfilingInfo.ALLOCATION_RATE.formatAsString(mockedJfrEvents))
             .isEqualTo("102 KiB/s");
@@ -159,7 +158,7 @@ public class AllocationRateTest {
   @Test
   public void should_format_100_mi_b_per_second_as_string() {
 
-    when(mockedTotalAlloc.longValue()).thenReturn((long) Math.pow(1024L, 3));
+    Mockito.when(mockedTotalAlloc.longValue()).thenReturn((long) Math.pow(1024L, 3));
 
     assertThat(ProfilingInfo.ALLOCATION_RATE.formatAsString(mockedJfrEvents))
             .isEqualTo("102 MiB/s");
@@ -172,7 +171,7 @@ public class AllocationRateTest {
   @Test
   public void should_format_100_giga_bytes_per_second_as_string() {
 
-    when(mockedTotalAlloc.longValue()).thenReturn((long) Math.pow(1024, 4));
+    Mockito.when(mockedTotalAlloc.longValue()).thenReturn((long) Math.pow(1024, 4));
 
     assertThat(ProfilingInfo.ALLOCATION_RATE.formatAsString(mockedJfrEvents))
             .isEqualTo("102 GiB/s");
@@ -185,8 +184,8 @@ public class AllocationRateTest {
   @Test
   public void should_return_an_empty_string_if_all_zero_time_stamps() throws QuantityConversionException {
 
-    when(mockedTotalAlloc.longValue()).thenReturn(1000L);
-    when(mockedIQuantity.longValueIn(UnitLookup.EPOCH_MS))
+    Mockito.when(mockedTotalAlloc.longValue()).thenReturn(1000L);
+    Mockito.when(mockedIQuantity.longValueIn(UnitLookup.EPOCH_MS))
             .thenReturn(0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
                     0L);
 

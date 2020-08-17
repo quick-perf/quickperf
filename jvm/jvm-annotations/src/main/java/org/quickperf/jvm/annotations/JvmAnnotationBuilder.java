@@ -22,32 +22,6 @@ public class JvmAnnotationBuilder {
 
     private JvmAnnotationBuilder() {}
 
-    public static ExpectNoJvmIssue expectNoJvmIssue() {
-        return new ExpectNoJvmIssue() {
-            @Override
-            public Class<? extends Annotation> annotationType() {
-                return ExpectNoJvmIssue.class;
-            }
-            @Override
-            public int score() {
-                return 60;
-            }
-        };
-    }
-
-    public static ExpectNoJvmIssue expectNoJvmIssue(final int score) {
-        return new ExpectNoJvmIssue() {
-            @Override
-            public Class<? extends Annotation> annotationType() {
-                return ExpectNoJvmIssue.class;
-            }
-            @Override
-            public int score() {
-                return score;
-            }
-        };
-    }
-
     public static HeapSize heapSize(final int value, final AllocationUnit unit) {
         return new HeapSize() {
             @Override
@@ -181,15 +155,6 @@ public class JvmAnnotationBuilder {
             @Override
             public Class<? extends Annotation> annotationType() {
                 return ExpectNoHeapAllocation.class;
-            }
-        };
-    }
-
-    public static ProfileJvm profileJvm() {
-        return new ProfileJvm() {
-            @Override
-            public Class<? extends Annotation> annotationType() {
-                return ProfileJvm.class;
             }
         };
     }

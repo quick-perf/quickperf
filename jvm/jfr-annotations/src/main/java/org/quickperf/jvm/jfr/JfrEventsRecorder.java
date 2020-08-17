@@ -14,9 +14,9 @@ package org.quickperf.jvm.jfr;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.quickperf.TestExecutionContext;
 import org.quickperf.WorkingFolder;
-import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.jvm.jfr.profiler.JavaFlightRecorderProfilerFactory;
 import org.quickperf.jvm.jfr.profiler.JvmProfiler;
+import org.quickperf.perfrecording.RecordablePerformance;
 
 public class JfrEventsRecorder implements RecordablePerformance<JfrRecording> {
 

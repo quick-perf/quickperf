@@ -21,7 +21,7 @@ import java.io.IOException;
 
 class JFREventsLoader {
 
-    public IItemCollection loadJfrEventsFrom(WorkingFolder workingFolder) {
+    IItemCollection loadJfrEventsFrom(WorkingFolder workingFolder) {
 
         String jfrFilePath = workingFolder.getPath() + File.separator + "jvm-profiling.jfr";
         File jfrFile = new File(jfrFilePath);
