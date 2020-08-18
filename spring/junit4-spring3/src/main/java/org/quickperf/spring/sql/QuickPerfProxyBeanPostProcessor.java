@@ -17,6 +17,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.core.Ordered;
 import org.springframework.util.ReflectionUtils;
 
 import javax.sql.DataSource;
@@ -25,7 +26,7 @@ import java.lang.reflect.Method;
 /*
 From https://blog.arnoldgalovics.com/configuring-a-datasource-proxy-in-spring-boot/
  */
-public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor {
+public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, Ordered {
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
@@ -45,6 +46,11 @@ public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor {
 
     private boolean isProxyDataSourceBean(Object bean) {
         return bean.toString().contains(ProxyDataSource.class.getName());
+    }
+
+    @Override
+    public int getOrder() {
+        return Ordered.LOWEST_PRECEDENCE - 1;
     }
 
     private static class ProxyDataSourceInterceptor implements MethodInterceptor {
