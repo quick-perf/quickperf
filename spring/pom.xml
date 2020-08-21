@@ -24,6 +24,7 @@
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
+        <spring4-version>4.3.22.RELEASE</spring4-version>
         <spring5-version>5.1.8.RELEASE</spring5-version>
     </properties>
 
@@ -34,10 +35,13 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
+                <module>sql-spring4</module>
                 <module>sql-spring5</module>
                 <module>junit4-spring3</module>
                 <module>junit4-spring4</module>
                 <module>junit4-spring5</module>
+                <module>spring-boot-1-starter</module>
+                <module>spring-boot-2-starter</module>
                 <module>junit4-spring-base-tests</module>
             </modules>
         </profile>
@@ -53,10 +57,13 @@
         <profile>
             <id>release</id>
             <modules>
+                <module>sql-spring4</module>
                 <module>sql-spring5</module>
                 <module>junit4-spring3</module>
                 <module>junit4-spring4</module>
                 <module>junit4-spring5</module>
+                <module>spring-boot-1-starter</module>
+                <module>spring-boot-2-starter</module>
             </modules>
         </profile>
     </profiles>

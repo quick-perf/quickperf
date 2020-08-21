@@ -9,17 +9,17 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.spring.springboottest.config;
+package org.quickperf.spring.sql;
 
-import org.quickperf.spring.sql.QuickPerfProxyBeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+
 @Configuration
-public class Configs {
+public class QuickPerfSpringConfig {
 
     @Bean
-    public QuickPerfProxyBeanPostProcessor dataSourceBeanPostProcessor() {
+    public QuickPerfProxyBeanPostProcessor quickPerfProxyBeanPostProcessor() {
         return new QuickPerfProxyBeanPostProcessor();
     }
 
