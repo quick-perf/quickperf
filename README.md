@@ -4,7 +4,7 @@
 
 <div>
 <blockquote>
-<p><h3>QuickPerf is a testing library for Java to quickly evaluate some performance properties.</h3></p>
+<p><h3>QuickPerf is a testing library for Java to quickly evaluate and improve some performance properties.</h3></p>
 </blockquote>
 </div>
 
@@ -25,14 +25,8 @@
          alt = "Build Status">
   </a>
   &nbsp;&nbsp;
-  <a href="https://gitter.im/quickperf">
-    <img src="https://img.shields.io/gitter/room/quick-perf/quickperf?color=orange"
-         alt = "Gitter">
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://twitter.com/quickperf">
-    <img src="https://img.shields.io/twitter/follow/QuickPerf.svg?label=Follow%20%40QuickPerf&style=social"
-         alt = "Twitter Follow">
+  <a href="https://twitter.com/quickperf">       
+    <img alt="@QuickPerf" src="https://img.shields.io/twitter/url?label=Twitter&style=social&url=https%3A%2F%2Ftwitter.com%2Fquickperf">
   </a>
   &nbsp;&nbsp;
   <a href="https://www.youtube.com/playlist?list=PLyRtZQwOxA6ekhEr2H2nNV42ZLD8OkPEx">YouTube</a>
@@ -130,9 +124,11 @@ Auto-detection of Hibernate and Spring Data JPA:
 
 ## Something to ask us?
 
+:e-mail: quickperftest@gmail.com
+
 💬 Want to chat with us? Join us on [gitter](https://gitter.im/quickperf)
 
-:octocat: You prefer to use a Github issue to ask a question? [Create a question issue](https://github.com/quick-perf/quickperf/issues/new?assignees=&labels=question&template=question.md&title=)
+:octocat: Do you prefer to use a Github issue to ask a question? [Create a question issue](https://github.com/quick-perf/quickperf/issues/new?assignees=&labels=question&template=question.md&title=)
 
 ## Show your support
 Please ⭐ this repository or [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Tweet%20to%20support%20QuickPerf)](https://twitter.com/intent/tweet?text=You%20can%20use%20%40QuickPerf%20to%20quickly%20evaluate%20some%20Java%20performance%20properties%0Ahttps%3A%2F%2Fgithub.com%2Fquick-perf%2Fquickperf%0A) if this project helped you!
