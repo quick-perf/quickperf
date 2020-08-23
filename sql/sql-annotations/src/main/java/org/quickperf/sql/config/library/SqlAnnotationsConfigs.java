@@ -25,6 +25,8 @@ import org.quickperf.sql.delete.MaxOfDeletesPerfIssueVerifier;
 import org.quickperf.sql.delete.NumberOfSqlDeletePerfIssueVerifier;
 import org.quickperf.sql.display.DisplaySqlOfTestMethodBodyRecorder;
 import org.quickperf.sql.display.DisplaySqlRecorder;
+import org.quickperf.sql.sending.SqlAnalysisExtractor;
+import org.quickperf.sql.sending.SqlQueriesSendingVerifier;
 import org.quickperf.sql.insert.InsertCountMeasureExtractor;
 import org.quickperf.sql.insert.InsertNumberPerfIssueVerifier;
 import org.quickperf.sql.insert.MaxOfInsertsPerfIssueVerifier;
@@ -49,6 +51,12 @@ import org.quickperf.sql.update.columns.UpdatedColumnsPerfIssueVerifier;
 class SqlAnnotationsConfigs {
 
     private SqlAnnotationsConfigs() { }
+
+	static final AnnotationConfig QUERIES_SENDING = new AnnotationConfig.Builder()
+			.perfRecorderClass(PersistenceSqlRecorder.class)
+			.perfMeasureExtractor(SqlAnalysisExtractor.INSTANCE)
+			.perfIssueVerifier(SqlQueriesSendingVerifier.INSTANCE)
+			.build(ExpectQueriesSending.class);
 
 	static final AnnotationConfig DISABLE_EXACTLY_SAME_SQL_SELECTS = new AnnotationConfig.Builder()
 			.perfRecorderClass(PersistenceSqlRecorder.class)

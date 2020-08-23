@@ -140,7 +140,7 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
         return standardFormatting
                 + System.lineSeparator()
                 + System.lineSeparator()
-                + "[SQL EXECUTIONS]"
+                + "[QUERIES SENDINGS]"
                 + System.lineSeparator()
                 + toString();
     }
@@ -149,4 +149,9 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
     public Iterator<SqlExecution> iterator() {
         return sqlExecutions.iterator();
     }
+
+    public int getNumberOfExecutions() {
+        return sqlExecutions.size();
+    }
+
 }

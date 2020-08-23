@@ -79,6 +79,19 @@ public class SqlAnnotationBuilder {
         };
     }
 
+    public static ExpectQueriesSending expectQueriesSending(final int value) {
+        return new ExpectQueriesSending() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ExpectQueriesSending.class;
+            }
+            @Override
+            public int value() {
+                return value;
+            }
+        };
+    }
+
     public static ExpectMaxSelectedColumn expectMaxSelectedColumn(final int value) {
         return new ExpectMaxSelectedColumn() {
             @Override
@@ -86,6 +99,7 @@ public class SqlAnnotationBuilder {
                 return ExpectMaxSelectedColumn.class;
             }
             @Override
+
             public int value() {
                 return value;
             }

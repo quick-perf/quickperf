@@ -27,7 +27,7 @@ public class ExpectMaxInsertTest {
 
         @Test
         @ExpectMaxInsert(0)
-        public void execute_one_insert_but_no_insert_expected() {
+        public void execute_one_insert() {
             EntityManager em = emf.createEntityManager();
             em.getTransaction().begin();
 
