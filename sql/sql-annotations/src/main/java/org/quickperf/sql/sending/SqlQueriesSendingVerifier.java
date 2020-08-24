@@ -14,6 +14,7 @@ package org.quickperf.sql.sending;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectQueriesSending;
+import org.quickperf.sql.select.analysis.SelectAnalysis;
 import org.quickperf.unit.Count;
 
 public class SqlQueriesSendingVerifier implements VerifiablePerformanceIssue<ExpectQueriesSending, SqlAnalysis> {
@@ -26,22 +27,38 @@ public class SqlQueriesSendingVerifier implements VerifiablePerformanceIssue<Exp
     public PerfIssue verifyPerfIssue(ExpectQueriesSending annotation, SqlAnalysis sqlAnalysis) {
 
         Count expectedSendingNumber = new Count(annotation.value());
-
         Count sendingNumber = sqlAnalysis.getQueriesSendingNumber();
 
         if (!sendingNumber.isEqualTo(expectedSendingNumber)) {
-            boolean severalExpectedSendings = expectedSendingNumber.getValue() > 1;
-            boolean severalSendings = sendingNumber.getValue() > 1;
-            String description =   "You may think that there " + (severalExpectedSendings ? "were" : "was")
-                                 + " <" + expectedSendingNumber.getValue() + ">"
-                                 + " queries sending" + (severalExpectedSendings ? "s" : "" )
-                                 + System.lineSeparator()
-                                 + "       " + "But there " + (severalSendings ? "are" : "is") + " <" + sendingNumber.getValue() + ">...";
+            String description =   buildBaseDescription(sendingNumber, expectedSendingNumber)
+                                 + buildPotentialSuggestionToFix(sqlAnalysis, sendingNumber, expectedSendingNumber);
             return new PerfIssue(description);
         }
 
         return PerfIssue.NONE;
 
+    }
+
+    private String buildBaseDescription(Count sendingNumber, Count expectedSendingNumber) {
+        boolean severalExpectedSendings = expectedSendingNumber.getValue() > 1;
+        boolean severalSendings = sendingNumber.getValue() > 1;
+        return    "You may think that there " + (severalExpectedSendings ? "were" : "was")
+                + " <" + expectedSendingNumber.getValue() + ">"
+                + " queries sending" + (severalExpectedSendings ? "s" : "" )
+                + System.lineSeparator()
+                + "       " + "But there " + (severalSendings ? "are" : "is") + " <" + sendingNumber.getValue() + ">...";
+    }
+
+    private String buildPotentialSuggestionToFix(SqlAnalysis sqlAnalysis, Count sendingNumber, Count expectedSendingNumber) {
+        SelectAnalysis selectAnalysis = sqlAnalysis.getSelectAnalysis();
+        SelectAnalysis.SameSelectTypesWithDifferentParamValues sameSelectTypesWithDifferentParamValues =
+                selectAnalysis.getSameSelectTypesWithDifferentParamValues();
+        if(   sendingNumber.isGreaterThan(expectedSendingNumber)
+           && sameSelectTypesWithDifferentParamValues.evaluate()
+        ) {
+            return sameSelectTypesWithDifferentParamValues.getSuggestionToFixIt();
+        }
+        return "";
     }
 
 }

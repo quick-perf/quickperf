@@ -102,4 +102,47 @@ public class ExpectQueriesSendingTest {
 
     }
 
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class TwoSameSelectTypeWithDifferentParameterValues extends SqlTestBase {
+
+        @ExpectQueriesSending(1)
+        @Test
+        public void execute_two_same_select_type_with_two_diff_param_values() {
+
+            EntityManager em = emf.createEntityManager();
+
+            String paramName = "idParam";
+            String hqlQuery = "FROM " + Book.class.getCanonicalName() + " b WHERE b.id=:" + paramName;
+
+            Query query = em.createQuery(hqlQuery);
+            query.setParameter(paramName, 2L);
+            query.getResultList();
+
+            Query query2 = em.createQuery(hqlQuery);
+            query2.setParameter(paramName, 1L);
+            query2.getResultList();
+
+        }
+
+    }
+
+    @Test public void
+    should_display_round_trip_and_n_plus_one_select_message_if_two_same_select_types_with_different_parameter_values() {
+
+        // GIVEN
+        Class<?> testClass = TwoSameSelectTypeWithDifferentParameterValues.class;
+
+        // WHEN
+        PrintableResult printableResult = PrintableResult.testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isOne();
+
+        String testResult = printableResult.toString();
+        assertThat(testResult).contains("ou may think that there was <1> queries sending")
+                              .contains("server roundtrips")
+                              .contains("N+1");
+
+    }
+
 }
