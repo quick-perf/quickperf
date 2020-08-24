@@ -31,7 +31,8 @@ public class SpringBootExpectSelectJunit4Test {
         // THEN
         assertThat(printableResult.failureCount()).isOne();
 
-        assertThat(printableResult.toString())
+        String testReport = printableResult.toString();
+        assertThat(testReport)
                       .contains("You may think that <1> select statement was sent to the database")
                       .contains("Perhaps you are facing an N+1 select issue")
                       .contains("With Hibernate, you may fix it by")

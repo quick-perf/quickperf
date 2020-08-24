@@ -18,22 +18,22 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>
- * The <code>ExpectQueriesSending</code> annotation verifies the number of SQL queries sendings.
+ * <p>The <code>ExpectMaxQueriesSending</code> annotation verifies the number of SQL queries sendings is less than
+ * the specified value.
  * </p>
  * <p>
  * JDBC roundtrips number equals to queries sendings number, except when a SELECT statement
- * returns a row number greater than JDBC fetch size. In such a case, the retrieval of all the
- * SELECT rows requires several JDBC roundtrips.
+ * returns a row number greater than JDBC fetch size. In such a case, the retrieval of all the SELECT rows
+ * requires several JDBC roundtrips.
  * </p>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
-public @interface ExpectQueriesSending {
+public @interface ExpectMaxQueriesSending {
 
     /**
      * Specifies a <code>value</code> to cause the test method to fail if the number of queries
-     * sendings is not equal. Note that if left empty, the assumed value will be one.
+     * sendings is greater. Note that if left empty, the assumed value will be one.
      */
     int value() default 1;
 

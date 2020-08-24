@@ -31,7 +31,8 @@ public class SpringBootExpectMaxSelectJunit4Test {
         // THEN
         assertThat(printableResult.failureCount()).isOne();
 
-        assertThat(printableResult.toString())
+        String testReport = printableResult.toString();
+        assertThat(testReport)
                 .contains("You may think that at most <1> select statement was sent to the database")
                 .contains("But in fact <3>...")
                 .contains("Perhaps you are facing an N+1 select issue")

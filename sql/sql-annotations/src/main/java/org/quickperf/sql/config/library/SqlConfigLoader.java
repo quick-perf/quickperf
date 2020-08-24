@@ -28,6 +28,7 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
     public Collection<AnnotationConfig> loadAnnotationConfigs() {
         return Arrays.asList(
                   SqlAnnotationsConfigs.QUERIES_SENDING
+                , SqlAnnotationsConfigs.MAX_QUERIES_SENDING
                 , SqlAnnotationsConfigs.NUMBER_OF_SQL_SELECT
                 , SqlAnnotationsConfigs.MAX_SQL_SELECT
                 , SqlAnnotationsConfigs.NUMBER_OF_SQL_INSERT
