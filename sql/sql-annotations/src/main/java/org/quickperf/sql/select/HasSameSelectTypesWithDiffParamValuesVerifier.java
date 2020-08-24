@@ -11,6 +11,7 @@
 
 package org.quickperf.sql.select;
 
+import org.quickperf.SystemProperties;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.DisableSameSelectTypesWithDifferentParamValues;
@@ -31,9 +32,14 @@ public class HasSameSelectTypesWithDiffParamValuesVerifier implements Verifiable
                 selectAnalysis.getSameSelectTypesWithDifferentParamValues();
 
         if(sameSelectTypesWithDifferentParamValues.evaluate()) {
-            String description =  "Same SELECT types with different parameter values"
-                                + sameSelectTypesWithDifferentParamValues.getSuggestionToFixIt();
+            String description =  "Same SELECT types with different parameter values";
+
+            if(!SystemProperties.SIMPLIFIED_SQL_DISPLAY.evaluate()){
+                description += sameSelectTypesWithDifferentParamValues.getSuggestionToFixIt();
+            }
+
             return new PerfIssue(description);
+
         }
 
         return PerfIssue.NONE;
