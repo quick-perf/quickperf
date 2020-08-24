@@ -11,6 +11,7 @@
 
 package org.quickperf.sql.select;
 
+import org.quickperf.SystemProperties;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectMaxSelect;
@@ -46,7 +47,7 @@ public class MaxOfSelectsPerfIssueVerifier implements VerifiablePerformanceIssue
         SameSelectTypesWithDifferentParamValues sameSelectTypesWithDifferentParamValues =
                 selectAnalysis.getSameSelectTypesWithDifferentParamValues();
 
-        if (sameSelectTypesWithDifferentParamValues.evaluate()) {
+        if (!SystemProperties.SIMPLIFIED_SQL_DISPLAY.evaluate() && sameSelectTypesWithDifferentParamValues.evaluate()) {
             description += sameSelectTypesWithDifferentParamValues.getSuggestionToFixIt();
         }
 

@@ -64,4 +64,38 @@ public class SystemProperties {
                     return "-D" + name + "=" + propertyValue;
                 }
             };
+
+    public static final SystemProperty<Boolean> SIMPLIFIED_SQL_DISPLAY =
+            new SystemProperty<Boolean>() {
+
+                private final String name = "limitQuickPerfSqlInfoOnConsole";
+
+                @Override
+                public Boolean evaluate() {
+                    String booleanAsString = System.getProperty(name);
+                    return Boolean.valueOf(booleanAsString);
+                }
+
+                @Override
+                public String buildForJvm(String propertyValue) {
+                    return "-D" + name + "=" + propertyValue;
+                }
+            };
+
+    public static final SystemProperty<Boolean> SIMPLIFIED_JVM_PROFILE_DISPLAY =
+            new SystemProperty<Boolean>() {
+
+                private final String name = "limitQuickPerfJvmInfoOnConsole";
+
+                @Override
+                public Boolean evaluate() {
+                    String booleanAsString = System.getProperty(name);
+                    return Boolean.valueOf(booleanAsString);
+                }
+
+                @Override
+                public String buildForJvm(String propertyValue) {
+                    return "-D" + name + "=" + propertyValue;
+                }
+            };
 }
