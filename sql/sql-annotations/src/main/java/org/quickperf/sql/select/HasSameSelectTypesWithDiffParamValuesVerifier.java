@@ -14,11 +14,8 @@ package org.quickperf.sql.select;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.DisableSameSelectTypesWithDifferentParamValues;
-import org.quickperf.sql.framework.HibernateSuggestion;
-import org.quickperf.sql.framework.JdbcSuggestion;
-import org.quickperf.sql.framework.MicronautSuggestion;
-import org.quickperf.sql.framework.SqlFrameworksInClassPath;
 import org.quickperf.sql.select.analysis.SelectAnalysis;
+import org.quickperf.sql.select.analysis.SelectAnalysis.SameSelectTypesWithDifferentParamValues;
 
 public class HasSameSelectTypesWithDiffParamValuesVerifier implements VerifiablePerformanceIssue<DisableSameSelectTypesWithDifferentParamValues, SelectAnalysis> {
 
@@ -30,27 +27,13 @@ public class HasSameSelectTypesWithDiffParamValuesVerifier implements Verifiable
     public PerfIssue verifyPerfIssue(DisableSameSelectTypesWithDifferentParamValues annotation
                                    , SelectAnalysis selectAnalysis) {
 
-        if(selectAnalysis.hasSameSelectTypesWithDifferentParamValues()) {
-            String description = "Same SELECT types with different parameter values"
-                                + System.lineSeparator()
-                                + System.lineSeparator()
-                                + JdbcSuggestion.SERVER_ROUND_TRIPS.getMessage();
+        SameSelectTypesWithDifferentParamValues sameSelectTypesWithDifferentParamValues =
+                selectAnalysis.getSameSelectTypesWithDifferentParamValues();
 
-            if(SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
-                String nPlusOneSelectMessage = HibernateSuggestion.N_PLUS_ONE_SELECT
-                                              .getMessage();
-                description += System.lineSeparator()
-                             + nPlusOneSelectMessage;
-            }
-
-            if(SqlFrameworksInClassPath.INSTANCE.containsMicronaut()) {
-                String micronautNPlusOneSelectMessage = MicronautSuggestion.N_PLUS_ONE_SELECT
-                        .getMessage();
-                description += System.lineSeparator() + micronautNPlusOneSelectMessage;
-            }
-
+        if(sameSelectTypesWithDifferentParamValues.evaluate()) {
+            String description =  "Same SELECT types with different parameter values"
+                                + sameSelectTypesWithDifferentParamValues.getSuggestionToFixIt();
             return new PerfIssue(description);
-
         }
 
         return PerfIssue.NONE;

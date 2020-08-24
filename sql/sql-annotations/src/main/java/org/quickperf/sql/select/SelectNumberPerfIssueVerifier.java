@@ -14,11 +14,8 @@ package org.quickperf.sql.select;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectSelect;
-import org.quickperf.sql.framework.HibernateSuggestion;
-import org.quickperf.sql.framework.JdbcSuggestion;
-import org.quickperf.sql.framework.MicronautSuggestion;
-import org.quickperf.sql.framework.SqlFrameworksInClassPath;
 import org.quickperf.sql.select.analysis.SelectAnalysis;
+import org.quickperf.sql.select.analysis.SelectAnalysis.SameSelectTypesWithDifferentParamValues;
 import org.quickperf.unit.Count;
 
 public class SelectNumberPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectSelect, SelectAnalysis> {
@@ -44,15 +41,17 @@ public class SelectNumberPerfIssueVerifier implements VerifiablePerformanceIssue
 
     private PerfIssue buildPerfIssue(Count executedSelectNumber, Count expectedSelectNumber, SelectAnalysis selectAnalysis) {
 
+        String description = buildBaseDescription(executedSelectNumber, expectedSelectNumber);
+
+        SameSelectTypesWithDifferentParamValues sameSelectTypesWithDifferentParamValues =
+                selectAnalysis.getSameSelectTypesWithDifferentParamValues();
+
         if(   executedSelectNumber.isGreaterThan(expectedSelectNumber)
-           && selectAnalysis.hasSameSelectTypesWithDifferentParamValues()
+           && sameSelectTypesWithDifferentParamValues.evaluate()
           ) {
-            String description = buildDescriptionWithRoundTripsAndPossiblyNPlusOneSelect(executedSelectNumber
-                                                                                       , expectedSelectNumber);
-            return new PerfIssue(description);
+            description += sameSelectTypesWithDifferentParamValues.getSuggestionToFixIt();
         }
 
-        String description = buildBaseDescription(executedSelectNumber, expectedSelectNumber);
         return new PerfIssue(description);
 
     }
@@ -63,30 +62,6 @@ public class SelectNumberPerfIssueVerifier implements VerifiablePerformanceIssue
                + " sent to the database"
                + System.lineSeparator()
                + "       " + "But in fact <" + measuredCount.getValue() + ">...";
-    }
-
-    private String buildDescriptionWithRoundTripsAndPossiblyNPlusOneSelect(Count measuredCount, Count expectedCount) {
-        
-        String description = buildBaseDescription(measuredCount, expectedCount);
-
-        description += System.lineSeparator()
-                     + System.lineSeparator()
-                     + JdbcSuggestion.SERVER_ROUND_TRIPS.getMessage();
-
-        if(SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
-            String hibernateNPlusOneSelectMessage = HibernateSuggestion.N_PLUS_ONE_SELECT
-                                          .getMessage();
-            description += System.lineSeparator() + hibernateNPlusOneSelectMessage;
-        }
-
-        if(SqlFrameworksInClassPath.INSTANCE.containsMicronaut()) {
-            String micronautNPlusOneSelectMessage = MicronautSuggestion.N_PLUS_ONE_SELECT
-                                          .getMessage();
-            description += System.lineSeparator() + micronautNPlusOneSelectMessage;
-        }
-        
-        return description;
-    
     }
 
 }

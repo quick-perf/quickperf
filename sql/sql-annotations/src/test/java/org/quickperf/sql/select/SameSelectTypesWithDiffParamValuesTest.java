@@ -17,6 +17,7 @@ import net.ttddyy.dsproxy.proxy.ParameterSetOperation;
 import org.junit.Test;
 import org.quickperf.sql.SqlExecutions;
 import org.quickperf.sql.select.analysis.SelectAnalysis;
+import org.quickperf.sql.select.analysis.SelectAnalysis.SameSelectTypesWithDifferentParamValues;
 import org.quickperf.sql.select.analysis.SelectAnalysisExtractor;
 
 import java.sql.ResultSet;
@@ -62,7 +63,8 @@ public class SameSelectTypesWithDiffParamValuesTest {
         SelectAnalysis selectAnalysis = selectAnalysisExtractor.extractPerfMeasureFrom(sqlExecutions);
 
         // THEN
-        assertThat(selectAnalysis.hasSameSelectTypesWithDifferentParamValues()).isFalse();
+        SameSelectTypesWithDifferentParamValues sameSelectTypesWithDifferentParamValues = selectAnalysis.getSameSelectTypesWithDifferentParamValues();
+        assertThat(sameSelectTypesWithDifferentParamValues.evaluate()).isFalse();
 
     }
 

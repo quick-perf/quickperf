@@ -14,11 +14,8 @@ package org.quickperf.sql.select;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectMaxSelect;
-import org.quickperf.sql.framework.HibernateSuggestion;
-import org.quickperf.sql.framework.JdbcSuggestion;
-import org.quickperf.sql.framework.MicronautSuggestion;
-import org.quickperf.sql.framework.SqlFrameworksInClassPath;
 import org.quickperf.sql.select.analysis.SelectAnalysis;
+import org.quickperf.sql.select.analysis.SelectAnalysis.SameSelectTypesWithDifferentParamValues;
 import org.quickperf.unit.Count;
 
 public class MaxOfSelectsPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectMaxSelect, SelectAnalysis> {
@@ -44,37 +41,16 @@ public class MaxOfSelectsPerfIssueVerifier implements VerifiablePerformanceIssue
 
     private PerfIssue buildPerfIssue(Count measuredCount, Count expectedCount, SelectAnalysis selectAnalysis) {
 
-        if(selectAnalysis.hasSameSelectTypesWithDifferentParamValues()) {
-            String description = buildDescriptionWithRoundTripsAndPossiblyNPlusOneSelect(measuredCount, expectedCount);
-            return new PerfIssue(description);
+        String description = buildBaseDescription(measuredCount, expectedCount);
+
+        SameSelectTypesWithDifferentParamValues sameSelectTypesWithDifferentParamValues =
+                selectAnalysis.getSameSelectTypesWithDifferentParamValues();
+
+        if (sameSelectTypesWithDifferentParamValues.evaluate()) {
+            description += sameSelectTypesWithDifferentParamValues.getSuggestionToFixIt();
         }
 
-        String baseDescription = buildBaseDescription(measuredCount, expectedCount);
-        return new PerfIssue(baseDescription);
-
-    }
-
-    private String buildDescriptionWithRoundTripsAndPossiblyNPlusOneSelect(Count measuredCount, Count expectedCount) {
-
-        String description =
-                  buildBaseDescription(measuredCount, expectedCount)
-                + System.lineSeparator()
-                + System.lineSeparator()
-                + JdbcSuggestion.SERVER_ROUND_TRIPS.getMessage();
-
-        if (SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
-            String hibernateNPlusOneSelectMessage = HibernateSuggestion.N_PLUS_ONE_SELECT
-                                          .getMessage();
-            description += System.lineSeparator() + hibernateNPlusOneSelectMessage;
-        }
-
-        if (SqlFrameworksInClassPath.INSTANCE.containsMicronaut()) {
-            String micronautNPlusOneSelectMessage = MicronautSuggestion.N_PLUS_ONE_SELECT
-                                          .getMessage();
-            description += System.lineSeparator() + micronautNPlusOneSelectMessage;
-        }
-
-        return description;
+        return new PerfIssue(description);
 
     }
 
