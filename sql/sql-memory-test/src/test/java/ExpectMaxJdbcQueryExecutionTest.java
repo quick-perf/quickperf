@@ -14,19 +14,19 @@ import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.sql.Book;
-import org.quickperf.sql.annotation.ExpectMaxQueriesSending;
+import org.quickperf.sql.annotation.ExpectMaxJdbcQueryExecution;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ExpectMaxQueriesSendingTest {
+public class ExpectMaxJdbcQueryExecutionTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class TwoQueriesSendingsButOneExpected extends SqlTestBase {
+    public static class TwoJdbcQueryExecutionsButOneExpected extends SqlTestBase {
 
-        @ExpectMaxQueriesSending(1)
+        @ExpectMaxJdbcQueryExecution(1)
         @Test
         public void execute_two_selects() {
             EntityManager em = emf.createEntityManager();
@@ -38,10 +38,10 @@ public class ExpectMaxQueriesSendingTest {
     }
 
     @Test public void
-    should_fail_if_number_of_queries_sendings_is_greater_than_expected() {
+    should_fail_if_number_of_jdbc_query_executions_is_greater_than_expected() {
 
         // GIVEN
-        Class<?> testClass = TwoQueriesSendingsButOneExpected.class;
+        Class<?> testClass = TwoJdbcQueryExecutionsButOneExpected.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);
@@ -50,7 +50,7 @@ public class ExpectMaxQueriesSendingTest {
         assertThat(printableResult.failureCount()).isOne();
 
         String testResult = printableResult.toString();
-        assertThat(testResult).contains("You may think that there was at most <1> queries sending")
+        assertThat(testResult).contains("You may think that there was at most <1> JDBC query execution")
                               .contains("But there are <2>...");
 
 

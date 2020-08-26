@@ -140,7 +140,7 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
         return standardFormatting
                 + System.lineSeparator()
                 + System.lineSeparator()
-                + "[QUERIES SENDINGS]"
+                + "[JDBC QUERY EXECUTION (executeQuery, executeBatch, ...)]"
                 + System.lineSeparator()
                 + toString();
     }

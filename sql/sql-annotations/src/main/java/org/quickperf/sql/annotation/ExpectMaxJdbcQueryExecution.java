@@ -18,22 +18,22 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>The <code>ExpectMaxQueriesSending</code> annotation verifies the number of SQL queries sendings is less than
- * the specified value.
- * </p>
- * <p>
- * JDBC roundtrips number equals to queries sendings number, except when a SELECT statement
- * returns a row number greater than JDBC fetch size. In such a case, the retrieval of all the SELECT rows
- * requires several JDBC roundtrips.
- * </p>
+ * <p>The <code>ExpectMaxQueriesSending</code> annotation verifies the maximum number of JDBC
+ * query executions (<i>executeQuery</i>, <i>executeUpdate</i>, <i>execute</i>,
+ * <i>executeLargeUpdate</i>, <i>executeBatch</i>, <i>executeLargeBatch</i>).
+ * <p>Each JDBC execution triggers one or several JDBC roundtrips. For example, if a SELECT
+ * statement returns a row number greater than JDBC fetch size, the retrieval of all rows will
+ * need several JDBC roundtrips.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
-public @interface ExpectMaxQueriesSending {
+public @interface ExpectMaxJdbcQueryExecution {
 
     /**
-     * Specifies a <code>value</code> to cause the test method to fail if the number of queries
-     * sendings is greater. Note that if left empty, the assumed value will be one.
+     * Specifies a <code>value</code> to cause the test method to fail if the number of JDBC query
+     * executions (<i>executeQuery</i>, <i>executeUpdate</i>, <i>execute</i>, <i>executeLargeUpdate</i>,
+     * <i>executeBatch</i>, <i>executeLargeBatch</i>) is greater. Note that if left empty, the assumed
+     * value will be one.
      */
     int value() default 1;
 

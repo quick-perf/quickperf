@@ -15,7 +15,7 @@ import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.sql.Book;
-import org.quickperf.sql.annotation.ExpectQueriesSending;
+import org.quickperf.sql.annotation.ExpectJdbcQueryExecution;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -25,12 +25,12 @@ import java.sql.Statement;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ExpectQueriesSendingTest {
+public class ExpectJdbcQueryExecutionTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
     public static class OneExecutionButZeroExpected extends SqlTestBase {
 
-        @ExpectQueriesSending(0)
+        @ExpectJdbcQueryExecution(0)
         @Test
         public void execute_one_select() {
             EntityManager em = emf.createEntityManager();
@@ -41,7 +41,7 @@ public class ExpectQueriesSendingTest {
     }
 
     @Test public void
-    should_fail_if_the_number_of_queries_sendings_is_not_equal_to_this_expected() {
+    should_fail_if_the_number_of_jdbc_query_executions_is_not_equal_to_this_expected() {
 
         // GIVEN
         Class<?> testClass = OneExecutionButZeroExpected.class;
@@ -53,7 +53,7 @@ public class ExpectQueriesSendingTest {
         assertThat(printableResult.failureCount()).isOne();
 
         String testResult = printableResult.toString();
-        assertThat(testResult).contains("You may think that there was <0> queries sending")
+        assertThat(testResult).contains("You may think that there was <0> JDBC query execution")
                               .contains("But there is <1>");
 
     }
@@ -61,7 +61,7 @@ public class ExpectQueriesSendingTest {
     @RunWith(QuickPerfJUnitRunner.class)
     public static class OneExecutionButZeroExpectedWithStatementAndBatching extends SqlTestBase {
 
-        @ExpectQueriesSending(0)
+        @ExpectJdbcQueryExecution(0)
         @Test
         public void execute_two_inserts_with_a_statement_and_batching() {
 
@@ -71,6 +71,7 @@ public class ExpectQueriesSendingTest {
 
             executeInATransaction(entityManager -> {
                 try {
+                    connection.setAutoCommit(true);
                     Statement statement = connection.createStatement();
                     statement.addBatch("insert into Book (isbn, title, id) values ('isbn1', 'title1', 1)");
                     statement.addBatch("insert into Book (isbn, title, id) values ('isbn2', 'title2', 2)");
@@ -85,7 +86,7 @@ public class ExpectQueriesSendingTest {
     }
 
     @Test public void
-    should_fail_if_the_number_of_queries_sendings_is_not_equal_to_this_expected_with_statement_and_batching() {
+    should_fail_if_the_number_of_jdbc_query_executions_is_not_equal_to_this_expected_with_statement_and_batching() {
 
         // GIVEN
         Class<?> testClass = OneExecutionButZeroExpectedWithStatementAndBatching.class;
@@ -97,7 +98,7 @@ public class ExpectQueriesSendingTest {
         assertThat(printableResult.failureCount()).isOne();
 
         String testResult = printableResult.toString();
-        assertThat(testResult).contains("You may think that there was <0> queries sending")
+        assertThat(testResult).contains("You may think that there was <0> JDBC query execution")
                               .contains("But there is <1>");
 
     }
@@ -105,7 +106,7 @@ public class ExpectQueriesSendingTest {
     @RunWith(QuickPerfJUnitRunner.class)
     public static class TwoSameSelectTypeWithDifferentParameterValues extends SqlTestBase {
 
-        @ExpectQueriesSending(1)
+        @ExpectJdbcQueryExecution(1)
         @Test
         public void execute_two_same_select_type_with_two_diff_param_values() {
 
@@ -139,7 +140,7 @@ public class ExpectQueriesSendingTest {
         assertThat(printableResult.failureCount()).isOne();
 
         String testResult = printableResult.toString();
-        assertThat(testResult).contains("ou may think that there was <1> queries sending")
+        assertThat(testResult).contains("ou may think that there was <1> JDBC query execution")
                               .contains("server roundtrips")
                               .contains("N+1");
 

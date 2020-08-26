@@ -9,7 +9,7 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.sql.sending;
+package org.quickperf.sql.execution;
 
 import org.quickperf.measure.PerfMeasure;
 import org.quickperf.sql.select.analysis.SelectAnalysis;
@@ -18,12 +18,12 @@ import org.quickperf.unit.NoUnit;
 
 public class SqlAnalysis implements PerfMeasure {
 
-    private final Count queriesSendingNumber;
+    private final Count jdbcQueryExecutionNumber;
 
     private final SelectAnalysis selectAnalysis;
 
-    public SqlAnalysis(Count queriesSendingNumber, SelectAnalysis selectAnalysis) {
-        this.queriesSendingNumber = queriesSendingNumber;
+    public SqlAnalysis(Count jdbcQueryExecutionNumber, SelectAnalysis selectAnalysis) {
+        this.jdbcQueryExecutionNumber = jdbcQueryExecutionNumber;
         this.selectAnalysis = selectAnalysis;
     }
 
@@ -42,8 +42,8 @@ public class SqlAnalysis implements PerfMeasure {
         return null;
     }
 
-    public Count getQueriesSendingNumber() {
-        return queriesSendingNumber;
+    public Count getJdbcQueryExecutionNumber() {
+        return jdbcQueryExecutionNumber;
     }
 
     public SelectAnalysis getSelectAnalysis() {

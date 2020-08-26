@@ -8,7 +8,7 @@
  *
  * Copyright 2019-2020 the original author or authors.
  */
-package org.quickperf.sql.sending;
+package org.quickperf.sql.execution;
 
 import org.quickperf.ExtractablePerformanceMeasure;
 import org.quickperf.sql.SqlExecutions;

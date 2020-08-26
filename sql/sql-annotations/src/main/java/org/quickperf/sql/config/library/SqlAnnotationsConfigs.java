@@ -25,9 +25,9 @@ import org.quickperf.sql.delete.MaxOfDeletesPerfIssueVerifier;
 import org.quickperf.sql.delete.NumberOfSqlDeletePerfIssueVerifier;
 import org.quickperf.sql.display.DisplaySqlOfTestMethodBodyRecorder;
 import org.quickperf.sql.display.DisplaySqlRecorder;
-import org.quickperf.sql.sending.MaxQueriesSendingVerifier;
-import org.quickperf.sql.sending.SqlAnalysisExtractor;
-import org.quickperf.sql.sending.QueriesSendingVerifier;
+import org.quickperf.sql.execution.MaxJdbcQueryExecutionVerifier;
+import org.quickperf.sql.execution.SqlAnalysisExtractor;
+import org.quickperf.sql.execution.JdbcQueryExecutionVerifier;
 import org.quickperf.sql.insert.InsertCountMeasureExtractor;
 import org.quickperf.sql.insert.InsertNumberPerfIssueVerifier;
 import org.quickperf.sql.insert.MaxOfInsertsPerfIssueVerifier;
@@ -53,17 +53,17 @@ class SqlAnnotationsConfigs {
 
     private SqlAnnotationsConfigs() { }
 
-	static final AnnotationConfig QUERIES_SENDING = new AnnotationConfig.Builder()
+	static final AnnotationConfig JDBC_QUERY_EXECUTION = new AnnotationConfig.Builder()
 			.perfRecorderClass(PersistenceSqlRecorder.class)
 			.perfMeasureExtractor(SqlAnalysisExtractor.INSTANCE)
-			.perfIssueVerifier(QueriesSendingVerifier.INSTANCE)
-			.build(ExpectQueriesSending.class);
+			.perfIssueVerifier(JdbcQueryExecutionVerifier.INSTANCE)
+			.build(ExpectJdbcQueryExecution.class);
 
-	static final AnnotationConfig MAX_QUERIES_SENDING = new AnnotationConfig.Builder()
+	static final AnnotationConfig MAX_JDBC_QUERY_EXECUTION = new AnnotationConfig.Builder()
 			.perfRecorderClass(PersistenceSqlRecorder.class)
 			.perfMeasureExtractor(SqlAnalysisExtractor.INSTANCE)
-			.perfIssueVerifier(MaxQueriesSendingVerifier.INSTANCE)
-			.build(ExpectMaxQueriesSending.class);
+			.perfIssueVerifier(MaxJdbcQueryExecutionVerifier.INSTANCE)
+			.build(ExpectMaxJdbcQueryExecution.class);
 
 	static final AnnotationConfig DISABLE_EXACTLY_SAME_SQL_SELECTS = new AnnotationConfig.Builder()
 			.perfRecorderClass(PersistenceSqlRecorder.class)
@@ -205,4 +205,5 @@ class SqlAnnotationsConfigs {
             		.perfMeasureExtractor(DeleteCountMeasureExtractor.INSTANCE)
             		.perfIssueVerifier(MaxOfDeletesPerfIssueVerifier.INSTANCE)
             		.build(ExpectMaxDelete.class);
+
 }

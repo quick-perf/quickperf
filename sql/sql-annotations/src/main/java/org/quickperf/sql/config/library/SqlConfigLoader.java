@@ -27,8 +27,8 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
     @Override
     public Collection<AnnotationConfig> loadAnnotationConfigs() {
         return Arrays.asList(
-                  SqlAnnotationsConfigs.QUERIES_SENDING
-                , SqlAnnotationsConfigs.MAX_QUERIES_SENDING
+                  SqlAnnotationsConfigs.JDBC_QUERY_EXECUTION
+                , SqlAnnotationsConfigs.MAX_JDBC_QUERY_EXECUTION
                 , SqlAnnotationsConfigs.NUMBER_OF_SQL_SELECT
                 , SqlAnnotationsConfigs.MAX_SQL_SELECT
                 , SqlAnnotationsConfigs.NUMBER_OF_SQL_INSERT

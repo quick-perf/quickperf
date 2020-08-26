@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 import org.quickperf.spring.junit4.QuickPerfSpringRunner;
 import org.quickperf.spring.springboottest.FootballApplication;
 import org.quickperf.spring.springboottest.dto.PlayerWithTeamName;
-import org.quickperf.sql.annotation.ExpectMaxQueriesSending;
+import org.quickperf.sql.annotation.ExpectMaxJdbcQueryExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -26,12 +26,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(QuickPerfSpringRunner.class)
 @SpringBootTest(classes = {FootballApplication.class})
-public class DetectionOfNPlusOneSelectInServiceWithExpectMaxQueriesSending {
+public class DetectionOfNPlusOneSelectInServiceWithExpectMaxJdbcQueryExecution {
 
     @Autowired
     private PlayerService playerService;
 
-    @ExpectMaxQueriesSending(1)
+    @ExpectMaxJdbcQueryExecution(1)
     @Test
     public void should_find_all_players_with_team_name() {
 

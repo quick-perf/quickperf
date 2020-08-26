@@ -79,11 +79,24 @@ public class SqlAnnotationBuilder {
         };
     }
 
-    public static ExpectQueriesSending expectQueriesSending(final int value) {
-        return new ExpectQueriesSending() {
+    public static ExpectJdbcQueryExecution expectJdbcQueryExecution(final int value) {
+        return new ExpectJdbcQueryExecution() {
             @Override
             public Class<? extends Annotation> annotationType() {
-                return ExpectQueriesSending.class;
+                return ExpectJdbcQueryExecution.class;
+            }
+            @Override
+            public int value() {
+                return value;
+            }
+        };
+    }
+
+    public static ExpectMaxJdbcQueryExecution expectMaxJdbcQueryExecution(final int value) {
+        return new ExpectMaxJdbcQueryExecution() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ExpectMaxJdbcQueryExecution.class;
             }
             @Override
             public int value() {

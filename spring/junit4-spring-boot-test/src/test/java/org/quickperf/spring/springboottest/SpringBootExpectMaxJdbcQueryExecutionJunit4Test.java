@@ -13,17 +13,17 @@ package org.quickperf.spring.springboottest;
 
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
-import org.quickperf.spring.springboottest.service.DetectionOfNPlusOneSelectInServiceWithExpectMaxQueriesSending;
+import org.quickperf.spring.springboottest.service.DetectionOfNPlusOneSelectInServiceWithExpectMaxJdbcQueryExecution;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SpringBootExpectMaxQueriesSendingJunit4Test {
+public class SpringBootExpectMaxJdbcQueryExecutionJunit4Test {
 
     @Test
     public void should_fail_if_select_number_is_greater_than_expected() {
 
         // GIVEN
-        Class<?> testClass = DetectionOfNPlusOneSelectInServiceWithExpectMaxQueriesSending.class;
+        Class<?> testClass = DetectionOfNPlusOneSelectInServiceWithExpectMaxJdbcQueryExecution.class;
 
         // WHEN
         PrintableResult printableResult = PrintableResult.testResult(testClass);
@@ -33,7 +33,7 @@ public class SpringBootExpectMaxQueriesSendingJunit4Test {
 
         String testReport = printableResult.toString();
         assertThat(testReport)
-                .contains("You may think that there was at most <1> queries sending")
+                .contains("You may think that there was at most <1> JDBC query execution")
                 .contains("But there are <3>...")
                 .contains("Perhaps you are facing an N+1 select issue")
                 .contains("With Hibernate, you may fix it by")
