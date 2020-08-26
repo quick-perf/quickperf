@@ -14,6 +14,7 @@ package org.quickperf.sql;
 import net.ttddyy.dsproxy.ExecutionInfo;
 import net.ttddyy.dsproxy.QueryInfo;
 import net.ttddyy.dsproxy.QueryType;
+import org.quickperf.SystemProperties;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.PerfIssuesFormat;
 import org.quickperf.perfrecording.ViewablePerfRecordIfPerfIssue;
@@ -137,6 +138,11 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
     @Override
     public String format(Collection<PerfIssue> perfIssues) {
         String standardFormatting = PerfIssuesFormat.STANDARD.format(perfIssues);
+
+        if(SystemProperties.SIMPLIFIED_SQL_DISPLAY.evaluate()) {
+            return standardFormatting;
+        }
+
         return standardFormatting
                 + System.lineSeparator()
                 + System.lineSeparator()

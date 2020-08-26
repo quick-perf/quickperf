@@ -11,6 +11,7 @@
 
 package org.quickperf.sql.delete;
 
+import org.quickperf.SystemProperties;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectMaxDelete;
@@ -47,7 +48,7 @@ public class MaxOfDeletesPerfIssueVerifier implements VerifiablePerformanceIssue
                            + System.lineSeparator()
                            ;
 
-        if(!expectedCount.isEqualTo(Count.ZERO)) {
+        if(!SystemProperties.SIMPLIFIED_SQL_DISPLAY.evaluate() && !expectedCount.isEqualTo(Count.ZERO)) {
             description += JdbcSuggestion.BATCHING.getMessage();
         }
 
