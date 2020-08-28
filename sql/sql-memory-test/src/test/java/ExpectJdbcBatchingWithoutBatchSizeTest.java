@@ -104,7 +104,8 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
         assertThat(printableResult.failureCount()).isOne();
 
-        assertThat(printableResult.toString())
+        String testReport = printableResult.toString();
+        assertThat(testReport)
                 .contains("[PERF] SQL executions were supposed to be batched.");
 
     }
@@ -135,7 +136,10 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
         assertThat(testResult.failureCount()).isOne();
 
-        assertThat(testResult.toString()).contains("SQL executions were supposed to be batched");
+        String testReport = testResult.toString();
+        assertThat(testReport)
+                .contains("SQL executions were supposed to be batched")
+                .contains("hibernate.jdbc.batch_size");
 
     }
 

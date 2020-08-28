@@ -14,6 +14,7 @@ package org.quickperf.sql.batch;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectJdbcBatching;
+import org.quickperf.sql.framework.JdbcSuggestion;
 
 public class SqlStatementBatchVerifier implements VerifiablePerformanceIssue<ExpectJdbcBatching, SqlBatchSizes> {
 
@@ -29,19 +30,21 @@ public class SqlStatementBatchVerifier implements VerifiablePerformanceIssue<Exp
         int[] measuredBatchSizesAsArray = measuredSqlBatchSizes.getValue();
 
         boolean userHasGivenBatchSize = expectedBatchSize != -1;
-        if (!userHasGivenBatchSize) {
-            return verifyThatInsertUpdateDeleteExecutionAreBatched(measuredBatchSizesAsArray);
+        if (userHasGivenBatchSize) {
+            return verifyBatchSize(expectedBatchSize
+                                 , measuredBatchSizesAsArray);
         }
 
-        return verifyBatchSize(expectedBatchSize
-                             , measuredBatchSizesAsArray);
+        return verifyThatInsertUpdateDeleteExecutionAreBatched(measuredBatchSizesAsArray);
 
     }
 
     private PerfIssue verifyThatInsertUpdateDeleteExecutionAreBatched(int[] measuredBatchSizesAsArray) {
         for (int measuredBatchSize : measuredBatchSizesAsArray) {
             if (measuredBatchSize == 0) {
-                return new PerfIssue("SQL executions were supposed to be batched.");
+                String description = "SQL executions were supposed to be batched."
+                                   + JdbcSuggestion.BATCHING.getMessage();
+                return new PerfIssue(description);
             }
         }
         return PerfIssue.NONE;

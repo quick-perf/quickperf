@@ -148,7 +148,8 @@ public class ExpectJdbcBatchingWithBatchSizeTest {
 
         assertThat(printableResult.failureCount()).isOne();
 
-        assertThat(printableResult.toString()).contains(
+        String testReport = printableResult.toString();
+        assertThat(testReport).contains(
                 "a performance property is not respected");
 
     }
@@ -228,8 +229,10 @@ public class ExpectJdbcBatchingWithBatchSizeTest {
 
         assertThat(printableResult.failureCount()).isOne();
 
-        assertThat(printableResult.toString())
-                .contains("[PERF] Expected batch size <30> but is <0>.");
+        String testReport = printableResult.toString();
+        assertThat(testReport)
+                .contains("[PERF] Expected batch size <30> but is <0>.")
+                .doesNotContain(".contains(hibernate.jdbc.batch_size)");
 
     }
 
@@ -272,7 +275,9 @@ public class ExpectJdbcBatchingWithBatchSizeTest {
 
         assertThat(testResult.failureCount()).isOne();
 
-        assertThat(testResult.toString()).contains("Expected batch size <30> but is <20>");
+        String testReport = testResult.toString();
+        assertThat(testReport).contains("Expected batch size <30> but is <20>");
+
     }
 
 }
