@@ -48,7 +48,7 @@ public class MaxOfDeletesPerfIssueVerifier implements VerifiablePerformanceIssue
                            + System.lineSeparator()
                            ;
 
-        if(!SystemProperties.SIMPLIFIED_SQL_DISPLAY.evaluate() && !expectedCount.isEqualTo(Count.ZERO)) {
+        if(!expectedCount.isEqualTo(Count.ZERO)) {
             description += JdbcSuggestion.BATCHING.getMessage();
         }
 

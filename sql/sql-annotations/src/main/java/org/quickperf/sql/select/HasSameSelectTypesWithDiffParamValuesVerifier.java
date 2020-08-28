@@ -33,13 +33,8 @@ public class HasSameSelectTypesWithDiffParamValuesVerifier implements Verifiable
 
         if(sameSelectTypesWithDifferentParamValues.evaluate()) {
             String description =  "Same SELECT types with different parameter values";
-
-            if(!SystemProperties.SIMPLIFIED_SQL_DISPLAY.evaluate()){
-                description += sameSelectTypesWithDifferentParamValues.getSuggestionToFixIt();
-            }
-
+            description += sameSelectTypesWithDifferentParamValues.getSuggestionToFixIt();
             return new PerfIssue(description);
-
         }
 
         return PerfIssue.NONE;

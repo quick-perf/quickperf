@@ -11,6 +11,7 @@
 
 package org.quickperf.sql.select.analysis;
 
+import org.quickperf.SystemProperties;
 import org.quickperf.measure.PerfMeasure;
 import org.quickperf.sql.framework.HibernateSuggestion;
 import org.quickperf.sql.framework.JdbcSuggestion;
@@ -40,6 +41,10 @@ public class SelectAnalysis implements PerfMeasure {
         }
 
         public String getSuggestionToFixIt() {
+
+            if(SystemProperties.SIMPLIFIED_SQL_DISPLAY.evaluate()) {
+                return "";
+            }
 
             String suggestion =  System.lineSeparator()
                                + System.lineSeparator()

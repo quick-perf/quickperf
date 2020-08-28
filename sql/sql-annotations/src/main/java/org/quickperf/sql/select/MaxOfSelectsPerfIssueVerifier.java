@@ -47,7 +47,7 @@ public class MaxOfSelectsPerfIssueVerifier implements VerifiablePerformanceIssue
         SameSelectTypesWithDifferentParamValues sameSelectTypesWithDifferentParamValues =
                 selectAnalysis.getSameSelectTypesWithDifferentParamValues();
 
-        if (!SystemProperties.SIMPLIFIED_SQL_DISPLAY.evaluate() && sameSelectTypesWithDifferentParamValues.evaluate()) {
+        if (sameSelectTypesWithDifferentParamValues.evaluate()) {
             description += sameSelectTypesWithDifferentParamValues.getSuggestionToFixIt();
         }
 

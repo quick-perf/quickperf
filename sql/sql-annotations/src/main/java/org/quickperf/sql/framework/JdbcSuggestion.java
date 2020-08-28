@@ -11,6 +11,8 @@
 
 package org.quickperf.sql.framework;
 
+import org.quickperf.SystemProperties;
+
 public enum JdbcSuggestion implements QuickPerfSuggestion {
 
     SERVER_ROUND_TRIPS {
@@ -27,6 +29,9 @@ public enum JdbcSuggestion implements QuickPerfSuggestion {
     BATCHING {
         @Override
         public String getMessage() {
+            if(SystemProperties.SIMPLIFIED_SQL_DISPLAY.evaluate()) {
+                return "";
+            }
             if (  SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa()
                && SqlFrameworksInClassPath.INSTANCE.containsSpringBoot() ) {
                 return SpringDataJpaSpringBootSuggestion.BATCHING.getMessage();

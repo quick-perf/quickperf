@@ -47,7 +47,7 @@ public class SelectNumberPerfIssueVerifier implements VerifiablePerformanceIssue
         SameSelectTypesWithDifferentParamValues sameSelectTypesWithDifferentParamValues =
                 selectAnalysis.getSameSelectTypesWithDifferentParamValues();
 
-        if( !SystemProperties.SIMPLIFIED_SQL_DISPLAY.evaluate() && executedSelectNumber.isGreaterThan(expectedSelectNumber)
+        if(   executedSelectNumber.isGreaterThan(expectedSelectNumber)
            && sameSelectTypesWithDifferentParamValues.evaluate()
           ) {
             description += sameSelectTypesWithDifferentParamValues.getSuggestionToFixIt();

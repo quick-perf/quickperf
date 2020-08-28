@@ -38,7 +38,8 @@ public class MaxOfUpdatesPerfIssueVerifier implements VerifiablePerformanceIssue
 
     private PerfIssue buildPerfIssue(Count measuredCount, Count expectedCount) {
 
-        String description = "You may think that at most <" + expectedCount.getValue() + "> update statement"
+        String description =
+                  "You may think that at most <" + expectedCount.getValue() + "> update statement"
                 + (expectedCount.getValue() > 1 ? "s were" : " was")
                 + " sent to the database"
                 + System.lineSeparator()
@@ -46,7 +47,7 @@ public class MaxOfUpdatesPerfIssueVerifier implements VerifiablePerformanceIssue
                 + System.lineSeparator()
                 + System.lineSeparator();
 
-        if(!SystemProperties.SIMPLIFIED_SQL_DISPLAY.evaluate() && !expectedCount.isEqualTo(Count.ZERO)) {
+        if(!expectedCount.isEqualTo(Count.ZERO)) {
             description += JdbcSuggestion.BATCHING.getMessage();
         }
 
