@@ -56,7 +56,7 @@ public class JUnit4RssTests {
     public static class ClassWithRssAnnotations {
 
         @MeasureRSS
-        @ExpectMaxRSS(value=10, unit = AllocationUnit.MEGA_BYTE)
+        @ExpectMaxRSS(value = 10, unit = AllocationUnit.MEGA_BYTE)
         @Test
         public void measure_and_expect_rss() {
         }
@@ -72,9 +72,9 @@ public class JUnit4RssTests {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        System.out.println(printableResult.toString());
         assertThat(printableResult.failureCount()).isEqualTo(1);
         assertThat(printableResult.toString()).contains("[PERF] Expected RSS to be less than 10.00 Mega bytes");
 
     }
+
 }
