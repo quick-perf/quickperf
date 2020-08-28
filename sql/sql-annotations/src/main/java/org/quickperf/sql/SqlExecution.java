@@ -63,10 +63,10 @@ public class SqlExecution implements Externalizable {
     }
 
     private long retrieveNumberOfReturnedColumns(ExecutionInfo executionInfo) {
-        ResultSet resultSet = (ResultSet) executionInfo.getResult();
-        if(resultSet == null) {
+        if (dbExceptionHappened(executionInfo) || executeMethodOnStatement(executionInfo)) {
             return 0;
         }
+        ResultSet resultSet = (ResultSet) executionInfo.getResult();
         try {
             ResultSetMetaData metaData = resultSet.getMetaData();
             return metaData.getColumnCount();
@@ -74,6 +74,14 @@ public class SqlExecution implements Externalizable {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    private boolean dbExceptionHappened(ExecutionInfo executionInfo) {
+        return executionInfo.getResult() == null;
+    }
+
+    private boolean executeMethodOnStatement(ExecutionInfo executionInfo) {
+        return !(executionInfo.getResult() instanceof ResultSet);
     }
 
     public boolean hasQueryFollowing(SqlQueryPredicate sqlQueryPredicate) {
