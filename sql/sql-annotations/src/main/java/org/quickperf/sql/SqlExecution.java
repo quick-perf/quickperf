@@ -102,7 +102,9 @@ public class SqlExecution implements Externalizable {
     private void writeExecutionInfo(ObjectOutput out) throws IOException {
         out.writeUTF(executionInfo.getDataSourceName());
         out.writeUTF(executionInfo.getConnectionId());
-        out.writeUTF(executionInfo.getStatementType().name());
+        String statementTypeWriteAsString = executionInfo.getStatementType().name();
+        System.out.println("stateTypeWrite = " + statementTypeWriteAsString);
+        out.writeUTF(statementTypeWriteAsString);
         out.writeBoolean(executionInfo.isBatch());
         out.writeInt(executionInfo.getBatchSize());
     }
@@ -172,7 +174,11 @@ public class SqlExecution implements Externalizable {
         ExecutionInfo executionInfo = new ExecutionInfo();
         executionInfo.setDataSourceName(in.readUTF());
         executionInfo.setConnectionId(in.readUTF());
-        executionInfo.setStatementType(StatementType.valueOf(in.readUTF()));
+        String statementTypeReadAsString = in.readUTF();
+        System.out.println("statementTypeReadAsString = " + statementTypeReadAsString);
+        StatementType statementTypeReadAsEnum = StatementType.valueOf(statementTypeReadAsString);
+        System.out.println("statementTypeReadAsEnum = " + statementTypeReadAsEnum);
+        executionInfo.setStatementType(statementTypeReadAsEnum);
         executionInfo.setBatch(in.readBoolean());
         executionInfo.setBatchSize(in.readInt());
         return executionInfo;
@@ -259,7 +265,9 @@ public class SqlExecution implements Externalizable {
 
     public boolean withStatement() {
         StatementType statementType = executionInfo.getStatementType();
-        return StatementType.STATEMENT.equals(statementType);
+        boolean withStatement = StatementType.STATEMENT.equals(statementType);
+        System.out.println("withStatement = " + withStatement);
+        return withStatement;
     }
 
     @Override
