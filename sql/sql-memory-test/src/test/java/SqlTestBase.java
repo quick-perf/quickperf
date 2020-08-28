@@ -10,6 +10,7 @@
  */
 
 import net.ttddyy.dsproxy.support.ProxyDataSource;
+import org.hibernate.internal.SessionImpl;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.junit.Before;
 import org.quickperf.sql.Book;
@@ -22,6 +23,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.spi.PersistenceProvider;
 import javax.persistence.spi.PersistenceUnitInfo;
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.function.Consumer;
@@ -61,6 +63,12 @@ public class SqlTestBase {
         transaction.begin();
         toExecuteInATransaction.accept(entityManager);
         transaction.commit();
+    }
+
+    Connection getConnection() {
+        EntityManager em = emf.createEntityManager();
+        SessionImpl session = (SessionImpl) em.getDelegate();
+        return session.connection();
     }
 
 }

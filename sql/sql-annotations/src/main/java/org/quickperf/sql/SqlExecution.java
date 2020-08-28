@@ -257,6 +257,11 @@ public class SqlExecution implements Externalizable {
     	return executionInfo.getElapsedTime();
     }
 
+    public boolean withStatement() {
+        StatementType statementType = executionInfo.getStatementType();
+        return StatementType.STATEMENT.equals(statementType);
+    }
+
     @Override
     public String toString() {
         return QuickPerfSqlFormatter.INSTANCE.format(executionInfo, queries);

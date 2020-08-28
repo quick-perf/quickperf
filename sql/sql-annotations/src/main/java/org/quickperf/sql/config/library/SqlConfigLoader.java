@@ -30,12 +30,13 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                   SqlAnnotationsConfigs.JDBC_QUERY_EXECUTION
                 , SqlAnnotationsConfigs.MAX_JDBC_QUERY_EXECUTION
                 , SqlAnnotationsConfigs.NUMBER_OF_SQL_SELECT
-                , SqlAnnotationsConfigs.MAX_SQL_SELECT
                 , SqlAnnotationsConfigs.NUMBER_OF_SQL_INSERT
-                , SqlAnnotationsConfigs.MAX_SQL_INSERT
-                , SqlAnnotationsConfigs.NUMBER_OF_SQL_DELETE
                 , SqlAnnotationsConfigs.NUMBER_OF_SQL_UPDATE
+                , SqlAnnotationsConfigs.NUMBER_OF_SQL_DELETE
+                , SqlAnnotationsConfigs.MAX_SQL_SELECT
+                , SqlAnnotationsConfigs.MAX_SQL_INSERT
                 , SqlAnnotationsConfigs.MAX_SQL_UPDATE
+                , SqlAnnotationsConfigs.MAX_SQL_DELETE
                 , SqlAnnotationsConfigs.MAX_SELECTED_COLUMNS
                 , SqlAnnotationsConfigs.MAX_UPDATED_COLUMNS
                 , SqlAnnotationsConfigs.NUMBER_OF_SELECTED_COLUMNS
@@ -44,8 +45,8 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                 , SqlAnnotationsConfigs.DISABLE_LIKE_STARTING_WITH_WILDCARD
                 , SqlAnnotationsConfigs.ENABLE_LIKE_STARTING_WITH_WILDCARD
                 , SqlAnnotationsConfigs.SQL_STATEMENTS_BATCHED
+                , SqlAnnotationsConfigs.DISPLAY_SQL_OF_TEST_METHOD_BODY
                 , SqlAnnotationsConfigs.DISPLAY_ALL_SQL
-                , SqlAnnotationsConfigs.DISPLAY_SQL
                 , SqlAnnotationsConfigs.DISABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS
                 , SqlAnnotationsConfigs.ENABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS
                 , SqlAnnotationsConfigs.DISABLE_EXACTLY_SAME_SQL_SELECTS
@@ -54,7 +55,8 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                 , SqlAnnotationsConfigs.EXPECT_UPDATED_COLUMN
                 , SqlAnnotationsConfigs.ENABLE_QUERIES_WITHOUT_BIND_PARAMETERS
                 , SqlAnnotationsConfigs.DISABLE_QUERIES_WITHOUT_BIND_PARAMETERS
-                , SqlAnnotationsConfigs.MAX_SQL_DELETE
+                , SqlAnnotationsConfigs.DISABLE_STATEMENTS
+                , SqlAnnotationsConfigs.ENABLE_STATEMENTS
         );
     }
 

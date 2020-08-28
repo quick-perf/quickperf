@@ -53,6 +53,15 @@ public class SqlAnnotationBuilder {
         };
     }
 
+    public static DisableStatements disableStatements() {
+        return new DisableStatements() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return DisableStatements.class;
+            }
+        };
+    }
+
     public static ExpectJdbcBatching expectJdbcBatching() {
         return new ExpectJdbcBatching() {
             @Override

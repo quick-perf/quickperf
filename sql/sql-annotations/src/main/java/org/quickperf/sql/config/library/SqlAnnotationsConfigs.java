@@ -39,6 +39,8 @@ import org.quickperf.sql.select.columns.MaxSelectedColumnsPerMeasureExtractor;
 import org.quickperf.sql.select.columns.MaxSelectedColumnsPerfIssueVerifier;
 import org.quickperf.sql.select.columns.SelectedColumnNumberPerfIssueVerifier;
 import org.quickperf.sql.select.columns.SelectedColumnNumberPerfMeasureExtractor;
+import org.quickperf.sql.statement.NoStatementExtractor;
+import org.quickperf.sql.statement.NoStatementVerifier;
 import org.quickperf.sql.time.SqlQueryExecutionTimeExtractor;
 import org.quickperf.sql.time.SqlQueryMaxExecutionTimeVerifier;
 import org.quickperf.sql.update.MaxOfUpdatesPerfIssueVerifier;
@@ -97,9 +99,19 @@ class SqlAnnotationsConfigs {
             .perfRecorderClass(DisplaySqlRecorder.class)
             .build(DisplaySql.class);
 
-    static final AnnotationConfig DISPLAY_SQL = new AnnotationConfig.Builder()
+    static final AnnotationConfig DISPLAY_SQL_OF_TEST_METHOD_BODY = new AnnotationConfig.Builder()
             .perfRecorderClass(DisplaySqlOfTestMethodBodyRecorder.class)
             .build(DisplaySqlOfTestMethodBody.class);
+
+	static final AnnotationConfig DISABLE_STATEMENTS = new AnnotationConfig.Builder()
+			.perfRecorderClass(PersistenceSqlRecorder.class)
+			.perfMeasureExtractor(NoStatementExtractor.INSTANCE)
+			.perfIssueVerifier(NoStatementVerifier.INSTANCE)
+			.build(DisableStatements.class);
+
+	static final AnnotationConfig ENABLE_STATEMENTS = new AnnotationConfig.Builder()
+			.cancelBehaviorOf(DisableStatements.class)
+			.build(EnableStatements.class);
 
 	static final AnnotationConfig DISABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS = new AnnotationConfig.Builder()
 			.perfRecorderClass(PersistenceSqlRecorder.class)
