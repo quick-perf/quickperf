@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class DisableQueriesWithoutBindParametersTest {
 
@@ -48,7 +49,7 @@ public class DisableQueriesWithoutBindParametersTest {
         Class<?> testClass = StatementWithBindParameters.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isZero();
@@ -77,7 +78,7 @@ public class DisableQueriesWithoutBindParametersTest {
         Class<?> testClass = StatementWithOneBindParameter.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isZero();
@@ -106,7 +107,7 @@ public class DisableQueriesWithoutBindParametersTest {
         Class<?> testClass = StatementWithoutWhereClause.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isZero();
@@ -136,7 +137,7 @@ public class DisableQueriesWithoutBindParametersTest {
         Class<?> testClass = StatementWithOneBindParameterAndOneUnbindParameter.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -167,7 +168,7 @@ public class DisableQueriesWithoutBindParametersTest {
         Class<?> testClass = StatementWithoutBindParameters.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -200,7 +201,7 @@ public class DisableQueriesWithoutBindParametersTest {
         Class<?> testClass = StatementWithBindParametersAndOr.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isZero();
@@ -229,7 +230,7 @@ public class DisableQueriesWithoutBindParametersTest {
         Class<?> testClass = StatementWithOneBindParameterAndOneUnbindParameterAndOr.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -259,7 +260,7 @@ public class DisableQueriesWithoutBindParametersTest {
         Class<?> testClass = StatementWithOneUnbindParameterAtFirstPosition.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -289,7 +290,7 @@ public class DisableQueriesWithoutBindParametersTest {
         Class<?> testClass = StatementUsingLowerCaseSQLKeywordsAndOneUnbindParameter.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -319,7 +320,7 @@ public class DisableQueriesWithoutBindParametersTest {
         Class<?> testClass = StatementHavingAKeyWordWithinValues.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -350,7 +351,7 @@ public class DisableQueriesWithoutBindParametersTest {
         Class<?> testClass = StatementHavingAKeyWordAndAQuoteWithinValues.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();

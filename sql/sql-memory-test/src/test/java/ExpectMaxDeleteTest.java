@@ -9,17 +9,18 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.sql.Book;
 import org.quickperf.sql.annotation.ExpectMaxDelete;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class ExpectMaxDeleteTest {
 
@@ -47,7 +48,7 @@ public class ExpectMaxDeleteTest {
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectMaxDelete.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -82,7 +83,7 @@ public class ExpectMaxDeleteTest {
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectMaxDeleteAndHavingNoPerfIssue.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isZero();

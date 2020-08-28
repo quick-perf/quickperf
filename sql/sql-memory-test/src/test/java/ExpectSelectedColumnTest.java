@@ -23,6 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class ExpectSelectedColumnTest {
 
@@ -46,7 +47,7 @@ public class ExpectSelectedColumnTest {
         Class<?> testClass = Select3ColumnsBut2Expected.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -77,7 +78,7 @@ public class ExpectSelectedColumnTest {
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectMaxSelectedColumn.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -108,7 +109,7 @@ public class ExpectSelectedColumnTest {
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectMaxSelectedColumnAndWithHeapSize.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();

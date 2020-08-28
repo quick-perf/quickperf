@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class ExpectMaxJdbcQueryExecutionTest {
 
@@ -44,7 +45,7 @@ public class ExpectMaxJdbcQueryExecutionTest {
         Class<?> testClass = TwoJdbcQueryExecutionsButOneExpected.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();

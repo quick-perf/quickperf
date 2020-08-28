@@ -20,6 +20,7 @@ import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.annotations.HeapSize;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class ExecutionTimeJUnit4Test {
 
@@ -41,7 +42,7 @@ public class ExecutionTimeJUnit4Test {
         Class<?> testClass = ClassWithTestHavingAnExecutionTimeGreaterThanExpected.class;
 
         // WHEN
-        PrintableResult testResult = PrintableResult.testResult(testClass);
+        PrintableResult testResult = testResult(testClass);
 
         // THEN
         assertThat(testResult.failureCount()).isOne();
@@ -67,7 +68,7 @@ public class ExecutionTimeJUnit4Test {
         Class<?> testClass = ClassWithTestHavingAnExecutionTimeLessThanExpected.class;
 
         // WHEN
-        PrintableResult testResult = PrintableResult.testResult(testClass);
+        PrintableResult testResult = testResult(testClass);
 
         // THEN
         assertThat(testResult.failureCount()).isZero();
@@ -93,7 +94,7 @@ public class ExecutionTimeJUnit4Test {
         Class<?> testClass = ClassWithTestHavingAnExecutionTimeGreaterThanExpectedInASpecificJVM.class;
 
         // WHEN
-        PrintableResult testResult = PrintableResult.testResult(testClass);
+        PrintableResult testResult = testResult(testClass);
 
         // THEN
         assertThat(testResult.failureCount()).isOne();
@@ -120,7 +121,7 @@ public class ExecutionTimeJUnit4Test {
         Class<?> testClass = ClassWithTestHavingAnExecutionTimeLessThanExpectedInASpecificJVM.class;
 
         // WHEN
-        PrintableResult testResult = PrintableResult.testResult(testClass);
+        PrintableResult testResult = testResult(testClass);
 
         // THEN
         assertThat(testResult.failureCount()).isZero();

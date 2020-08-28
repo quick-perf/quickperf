@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class ExpectUpdatedColumnTest {
 
@@ -47,7 +48,7 @@ public class ExpectUpdatedColumnTest {
         Class<?> testClass = AClassAnnotatedWithExpectUpdatedColumnPassing.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isZero();
@@ -78,7 +79,7 @@ public class ExpectUpdatedColumnTest {
         Class<?> testClass = AClassAnnotatedWithExpectUpdatedColumnFailing.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -131,7 +132,7 @@ public class ExpectUpdatedColumnTest {
         Class<?> testClass = AClassAnnotatedWithExpectUpdatedColumnFailingBecauseOneOfTheTwoUpdates.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();

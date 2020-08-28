@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class ExpectSelectTest {
 
@@ -43,7 +44,7 @@ public class ExpectSelectTest {
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectSelect.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -77,7 +78,7 @@ public class ExpectSelectTest {
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectSelectAndSelectsLessThanExpected.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.toString()).doesNotContain("server roundtrips")
@@ -105,7 +106,7 @@ public class ExpectSelectTest {
         Class<?> testClass = OneSelectAndExpectZero.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -148,7 +149,7 @@ public class ExpectSelectTest {
         Class<?> testClass = TwoSameSelectTypeWithDifferentParameterValues.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -193,7 +194,7 @@ public class ExpectSelectTest {
         Class<TwoDifferentSelectTypes> testClass = TwoDifferentSelectTypes.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();

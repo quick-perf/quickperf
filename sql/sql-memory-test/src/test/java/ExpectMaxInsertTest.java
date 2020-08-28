@@ -19,6 +19,7 @@ import org.quickperf.sql.annotation.ExpectMaxInsert;
 import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class ExpectMaxInsertTest {
 
@@ -49,7 +50,7 @@ public class ExpectMaxInsertTest {
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectMaxInsert.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -86,7 +87,7 @@ public class ExpectMaxInsertTest {
         Class<?> testClass = AClassAnnotatedWithExpectMaxInsert.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -124,7 +125,7 @@ public class ExpectMaxInsertTest {
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectMaxInsertAndHavingNoPerfIssue.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isZero();

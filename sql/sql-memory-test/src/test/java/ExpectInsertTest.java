@@ -19,6 +19,7 @@ import org.quickperf.sql.annotation.ExpectInsert;
 import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class ExpectInsertTest {
 
@@ -51,7 +52,7 @@ public class ExpectInsertTest {
         Class<?> testClass = SqlInsert.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();

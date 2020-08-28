@@ -23,6 +23,7 @@ import javax.persistence.Query;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.experimental.results.PrintableResult.testResult;
 import static org.quickperf.sql.config.HibernateConfigBuilder.anHibernateConfig;
 
 public class ExpectJdbcBatchingWithoutBatchSizeTest {
@@ -66,7 +67,7 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
         Class<?> testClass = AClassHavingAPassingMethodAnnotatedExpectJdbcBatchingWithoutBatchSize.class;
 
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         assertThat(printableResult.failureCount()).isZero();
 
@@ -99,7 +100,7 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
         Class<?> testClass = AClassHavingAFailingMethodAnnotatedExpectJdbcBatchingWithoutBatchSize.class;
 
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         assertThat(printableResult.failureCount()).isOne();
 
@@ -130,7 +131,7 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingOneInsertNotBatched.class;
 
-        PrintableResult testResult = PrintableResult.testResult(testClass);
+        PrintableResult testResult = testResult(testClass);
 
         assertThat(testResult.failureCount()).isOne();
 
@@ -168,7 +169,7 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingOneInsertBatched.class;
 
-        PrintableResult testResult = PrintableResult.testResult(testClass);
+        PrintableResult testResult = testResult(testClass);
 
         assertThat(testResult.failureCount()).isZero();
 

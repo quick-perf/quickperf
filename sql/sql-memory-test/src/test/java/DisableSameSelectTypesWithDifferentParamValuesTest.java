@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class DisableSameSelectTypesWithDifferentParamValuesTest {
 
@@ -54,7 +55,7 @@ public class DisableSameSelectTypesWithDifferentParamValuesTest {
         Class<?> testClass = TwoSameSelectTypesWithDifferentParamValues.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -97,7 +98,7 @@ public class DisableSameSelectTypesWithDifferentParamValuesTest {
         Class<?> testClass = TwoSameSelects.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isZero();

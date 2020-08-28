@@ -9,7 +9,6 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-import org.hibernate.internal.SessionImpl;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
@@ -24,6 +23,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class ExpectJdbcQueryExecutionTest {
 
@@ -47,7 +47,7 @@ public class ExpectJdbcQueryExecutionTest {
         Class<?> testClass = OneExecutionButZeroExpected.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -88,7 +88,7 @@ public class ExpectJdbcQueryExecutionTest {
         Class<?> testClass = OneExecutionButZeroExpectedWithStatementAndBatching.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
@@ -130,7 +130,7 @@ public class ExpectJdbcQueryExecutionTest {
         Class<?> testClass = TwoSameSelectTypeWithDifferentParameterValues.class;
 
         // WHEN
-        PrintableResult printableResult = PrintableResult.testResult(testClass);
+        PrintableResult printableResult = testResult(testClass);
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
