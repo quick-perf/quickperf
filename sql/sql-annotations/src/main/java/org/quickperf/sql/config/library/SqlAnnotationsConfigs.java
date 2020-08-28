@@ -18,22 +18,23 @@ import org.quickperf.sql.batch.SqlStatementBatchRecorder;
 import org.quickperf.sql.batch.SqlStatementBatchVerifier;
 import org.quickperf.sql.bindparams.AllParametersAreBoundExtractor;
 import org.quickperf.sql.bindparams.DisableQueriesWithoutBindParametersVerifier;
-import org.quickperf.sql.crossjoin.HasSqlCrossJoinPerfMeasureExtractor;
-import org.quickperf.sql.crossjoin.NoSqlCrossJoinPerfIssueVerifier;
 import org.quickperf.sql.delete.DeleteCountMeasureExtractor;
 import org.quickperf.sql.delete.MaxOfDeletesPerfIssueVerifier;
 import org.quickperf.sql.delete.NumberOfSqlDeletePerfIssueVerifier;
 import org.quickperf.sql.display.DisplaySqlOfTestMethodBodyRecorder;
 import org.quickperf.sql.display.DisplaySqlRecorder;
+import org.quickperf.sql.execution.JdbcQueryExecutionVerifier;
 import org.quickperf.sql.execution.MaxJdbcQueryExecutionVerifier;
 import org.quickperf.sql.execution.SqlAnalysisExtractor;
-import org.quickperf.sql.execution.JdbcQueryExecutionVerifier;
 import org.quickperf.sql.insert.InsertCountMeasureExtractor;
 import org.quickperf.sql.insert.InsertNumberPerfIssueVerifier;
 import org.quickperf.sql.insert.MaxOfInsertsPerfIssueVerifier;
 import org.quickperf.sql.like.ContainsLikeWithLeadingWildcardExtractor;
 import org.quickperf.sql.like.HasLikeWithLeadingWildcardVerifier;
-import org.quickperf.sql.select.*;
+import org.quickperf.sql.select.HasExactlySameSelectVerifier;
+import org.quickperf.sql.select.HasSameSelectTypesWithDiffParamValuesVerifier;
+import org.quickperf.sql.select.MaxOfSelectsPerfIssueVerifier;
+import org.quickperf.sql.select.SelectNumberPerfIssueVerifier;
 import org.quickperf.sql.select.analysis.SelectAnalysisExtractor;
 import org.quickperf.sql.select.columns.MaxSelectedColumnsPerMeasureExtractor;
 import org.quickperf.sql.select.columns.MaxSelectedColumnsPerfIssueVerifier;
@@ -169,16 +170,6 @@ class SqlAnnotationsConfigs {
             .perfMeasureExtractor(SelectedColumnNumberPerfMeasureExtractor.INSTANCE)
             .perfIssueVerifier(SelectedColumnNumberPerfIssueVerifier.INSTANCE)
             .build(ExpectSelectedColumn.class);
-
-    static final AnnotationConfig DISABLE_SQL_CROSS_JOIN = new AnnotationConfig.Builder()
-            .perfRecorderClass(PersistenceSqlRecorder.class)
-            .perfMeasureExtractor(HasSqlCrossJoinPerfMeasureExtractor.INSTANCE)
-            .perfIssueVerifier(NoSqlCrossJoinPerfIssueVerifier.INSTANCE)
-            .build(DisableCrossJoin.class);
-
-    static final AnnotationConfig ENABLE_SQL_CROSS_JOIN = new AnnotationConfig.Builder()
-            .cancelBehaviorOf(DisableCrossJoin.class)
-            .build(EnableCrossJoin.class);
 
     static final AnnotationConfig DISABLE_LIKE_STARTING_WITH_WILDCARD = new AnnotationConfig.Builder()
             .perfRecorderClass(PersistenceSqlRecorder.class)

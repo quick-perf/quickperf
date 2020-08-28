@@ -40,8 +40,6 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                 , SqlAnnotationsConfigs.MAX_SELECTED_COLUMNS
                 , SqlAnnotationsConfigs.MAX_UPDATED_COLUMNS
                 , SqlAnnotationsConfigs.NUMBER_OF_SELECTED_COLUMNS
-                , SqlAnnotationsConfigs.DISABLE_SQL_CROSS_JOIN
-                , SqlAnnotationsConfigs.ENABLE_SQL_CROSS_JOIN
                 , SqlAnnotationsConfigs.DISABLE_LIKE_STARTING_WITH_WILDCARD
                 , SqlAnnotationsConfigs.ENABLE_LIKE_STARTING_WITH_WILDCARD
                 , SqlAnnotationsConfigs.SQL_STATEMENTS_BATCHED

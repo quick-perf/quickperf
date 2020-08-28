@@ -26,15 +26,6 @@ public class SqlAnnotationBuilder {
         };
     }
 
-    public static DisableCrossJoin disableCrossJoin() {
-        return new DisableCrossJoin() {
-            @Override
-            public Class<? extends Annotation> annotationType() {
-                return DisableCrossJoin.class;
-            }
-        };
-    }
-
     public static DisableSameSelectTypesWithDifferentParamValues disableSameSelectTypesWithDifferentParams() {
         return new DisableSameSelectTypesWithDifferentParamValues() {
             @Override
