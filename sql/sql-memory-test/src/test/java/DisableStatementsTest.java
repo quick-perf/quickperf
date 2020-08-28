@@ -95,7 +95,7 @@ public class DisableStatementsTest {
     public static class PreparedStatementAndDisableStatementsAnnotationInADedicatedJVM extends SqlTestBase {
 
         @DisableStatements
-        @HeapSize(value = 10, unit = AllocationUnit.MEGA_BYTE)
+        @HeapSize(value = 20, unit = AllocationUnit.MEGA_BYTE)
         @Test
         public void execute_one_select_with_a_prepared_statement() {
             Connection connection = getConnection();
@@ -126,7 +126,7 @@ public class DisableStatementsTest {
     public static class StatementAndDisableStatementsAnnotationInADedicatedJVM extends SqlTestBase {
 
         @DisableStatements
-        @HeapSize(value = 10, unit = AllocationUnit.MEGA_BYTE)
+        @HeapSize(value = 20, unit = AllocationUnit.MEGA_BYTE)
         @Test
         public void execute_one_select_with_a_statement() {
             Connection connection = getConnection();
