@@ -33,8 +33,8 @@ public @interface ExpectMaxJdbcQueryExecution {
      * Specifies a <code>value</code> to cause the test method to fail if the number of JDBC query
      * executions (<i>executeQuery</i>, <i>executeUpdate</i>, <i>execute</i>, <i>executeLargeUpdate</i>,
      * <i>executeBatch</i>, <i>executeLargeBatch</i>) is greater. Note that if left empty, the assumed
-     * value will be one.
+     * value will be zero.
      */
-    int value() default 1;
+    int value() default 0;
 
 }
