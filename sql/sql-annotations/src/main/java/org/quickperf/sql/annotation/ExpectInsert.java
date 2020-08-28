@@ -35,9 +35,9 @@ public @interface ExpectInsert {
 
     /**
      * Specifies a <code>value</code> (integer) to cause test method to fail if the number of insert
-     * statements is not equal. Note that if left empty, the assumed value will be zero.
+     * statements is not equal. Note that if left empty, the assumed value will be one.
      */
 
-    int value() default 0;
+    int value() default 1;
 
 }

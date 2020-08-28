@@ -28,16 +28,14 @@ import java.lang.annotation.Target;
  *      }
  * </pre>
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectUpdatedColumn {
 
 	/**
 	 * Specifies a <code>value</code> (integer) to cause test method to fail if the number of updated
-	 * columns is not equal. Note that if left empty, the assumed value will be zero.
+	 * columns is not equal. Note that if left empty, the assumed value will be one.
 	 */
-
-	int value() default 0;
+	int value() default 1;
 
 }

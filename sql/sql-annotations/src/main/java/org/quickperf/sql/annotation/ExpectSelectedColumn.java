@@ -28,16 +28,14 @@ import java.lang.annotation.Target;
  * </pre>
  * @see <a href="https://github.com/quick-perf/doc/wiki/Why-limit-the-number-of-selected-columns">Why limit the number of selected columns ?</a>
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectSelectedColumn {
 
     /**
      * Specifies a <code>value</code> (integer) to cause test method to fail if the number of selected
-     * columns is not equal. Note that if left empty, the assumed value will be zero.
+     * columns is not equal. Note that if left empty, the assumed value will be one.
      */
-
-    int value() default 0;
+    int value() default 1;
 
 }
