@@ -23,10 +23,18 @@ public class SqlStatementPerfIssueBuilder {
     }
 
     public PerfIssue buildNotEqualNumberOfStatements(Count measuredCount, Count expectedCount, String requestType) {
-        String assertionMessage = "Expected number of " + requestType + " statements "
-                               + "<" + expectedCount.getValue() + ">"
-                               + " but is " + "<" + measuredCount.getValue() + ">" + ".";
-        return new PerfIssue(assertionMessage);
+        String description = "Expected number of " + requestType + " statements "
+                           + "<" + expectedCount.getValue() + ">"
+                           + " but is " + "<" + measuredCount.getValue() + ">" + ".";
+        return new PerfIssue(description);
+    }
+
+    public String buildMaxOfStatementsDesc(Count measuredCount, Count expectedCount, String statementName) {
+        return    "You may think that at most <" + expectedCount.getValue() + "> " + statementName + " statement"
+                + (expectedCount.getValue() > 1 ? "s were" : " was" )
+                + " sent to the database"
+                + System.lineSeparator()
+                + "       " + "But in fact <" + measuredCount.getValue() + ">...";
     }
 
 }

@@ -17,6 +17,8 @@ import org.quickperf.sql.annotation.ExpectMaxInsert;
 import org.quickperf.sql.framework.JdbcSuggestion;
 import org.quickperf.unit.Count;
 
+import static org.quickperf.sql.SqlStatementPerfIssueBuilder.aSqlPerfIssue;
+
 public class MaxOfInsertsPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectMaxInsert, Count> {
 
     public static final MaxOfInsertsPerfIssueVerifier INSTANCE = new MaxOfInsertsPerfIssueVerifier();
@@ -38,17 +40,14 @@ public class MaxOfInsertsPerfIssueVerifier implements VerifiablePerformanceIssue
 
     private PerfIssue buildPerfIssue(Count measuredCount, Count expectedCount) {
 
-        String description = "You may think that at most <" + expectedCount.getValue() + "> insert statement"
-                           + (expectedCount.getValue() > 1 ? "s were" : " was" )
-                           + " sent to the database"
-                           + System.lineSeparator()
-                           + "       " + "But in fact <" + measuredCount.getValue() + ">..."
-                           + System.lineSeparator()
-                           + System.lineSeparator()
-                           ;
+        String description = aSqlPerfIssue().buildMaxOfStatementsDesc(measuredCount
+                                                                    , expectedCount
+                                                                    , "insert");
 
         if(!expectedCount.isEqualTo(Count.ZERO)) {
-            description += JdbcSuggestion.BATCHING.getMessage();
+            description += System.lineSeparator()
+                         + System.lineSeparator()
+                         + JdbcSuggestion.BATCHING.getMessage();
         }
 
         return new PerfIssue(description);

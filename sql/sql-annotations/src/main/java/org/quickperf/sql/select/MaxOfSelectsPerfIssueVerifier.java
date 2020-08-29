@@ -18,6 +18,8 @@ import org.quickperf.sql.select.analysis.SelectAnalysis;
 import org.quickperf.sql.select.analysis.SelectAnalysis.SameSelectTypesWithDifferentParamValues;
 import org.quickperf.unit.Count;
 
+import static org.quickperf.sql.SqlStatementPerfIssueBuilder.aSqlPerfIssue;
+
 public class MaxOfSelectsPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectMaxSelect, SelectAnalysis> {
 
     public static final MaxOfSelectsPerfIssueVerifier INSTANCE = new MaxOfSelectsPerfIssueVerifier();
@@ -41,7 +43,9 @@ public class MaxOfSelectsPerfIssueVerifier implements VerifiablePerformanceIssue
 
     private PerfIssue buildPerfIssue(Count measuredCount, Count expectedCount, SelectAnalysis selectAnalysis) {
 
-        String description = buildBaseDescription(measuredCount, expectedCount);
+        String description = aSqlPerfIssue().buildMaxOfStatementsDesc(measuredCount
+                                                                    , expectedCount
+                                                                    , "select");
 
         SameSelectTypesWithDifferentParamValues sameSelectTypesWithDifferentParamValues =
                 selectAnalysis.getSameSelectTypesWithDifferentParamValues();
@@ -52,14 +56,6 @@ public class MaxOfSelectsPerfIssueVerifier implements VerifiablePerformanceIssue
 
         return new PerfIssue(description);
 
-    }
-
-    private String buildBaseDescription(Count measuredCount, Count expectedCount) {
-        return  "You may think that at most <" + expectedCount.getValue() + "> select statement"
-              + (expectedCount.getValue() > 1 ? "s were" : " was")
-              + " sent to the database"
-              + System.lineSeparator()
-              + "       " + "But in fact <" + measuredCount.getValue() + ">...";
     }
 
 }
