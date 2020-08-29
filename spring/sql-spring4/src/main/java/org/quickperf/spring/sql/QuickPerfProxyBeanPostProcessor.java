@@ -11,11 +11,11 @@
 
 package org.quickperf.spring.sql;
 
-import net.ttddyy.dsproxy.support.ProxyDataSource;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder;
 import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.Ordered;
 import org.springframework.util.ReflectionUtils;
@@ -24,8 +24,9 @@ import javax.sql.DataSource;
 import java.lang.reflect.Method;
 
 /*
-From https://blog.arnoldgalovics.com/configuring-a-datasource-proxy-in-spring-boot/
- */
+Inspiration from https://blog.arnoldgalovics.com/configuring-a-datasource-proxy-in-spring-boot/
+and https://github.com/gavlyukovskiy/spring-boot-data-source-decorator
+*/
 public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, Ordered {
 
     @Override
@@ -35,17 +36,13 @@ public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, Order
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) {
-        if (bean instanceof DataSource && !isProxyDataSourceBean(bean)) {
+        if (bean instanceof DataSource && !ScopedProxyUtils.isScopedTarget(beanName)) {
             final ProxyFactory factory = new ProxyFactory(bean);
             factory.setProxyTargetClass(true);
             factory.addAdvice(new ProxyDataSourceInterceptor((DataSource) bean));
             return factory.getProxy();
         }
         return bean;
-    }
-
-    private boolean isProxyDataSourceBean(Object bean) {
-        return bean.toString().contains(ProxyDataSource.class.getName());
     }
 
     @Override
