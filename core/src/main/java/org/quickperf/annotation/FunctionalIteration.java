@@ -16,6 +16,25 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>FunctionalIteration</code> annotation shows we are implementing the functional, not performance-related
+ * behavior. A typical use case is the development of a new feature. First, this annotation allows us to focus on the
+ * implementation of functional behavior by disabling global annotations. In a second step, we remove it to re-enable
+ * global annotations. Later on, we may also add other QuickPerf annotations on the test method.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;FunctionalIteration</b>
+ *      <b>&#064;DisableSameSelectTypesWithDifferentParamValues</b>
+ *      public void execute() {
+ *          <code>...</code>
+ *      }
+ * </pre>
+ * <p>
+ *
+ * @see DisableQuickPerf
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface FunctionalIteration {

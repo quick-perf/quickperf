@@ -16,6 +16,40 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>DisplayAppliedAnnotations</code> annotation displays all applied QuickPerf annotations. Being from global,
+ * class or method scope.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;DisplayAppliedAnnotations</b>
+ *      <b>&#064;RunWith(QuickPerfJUnitRunner.class)</b>
+ *      public static class AClassWithVariousCoolAnnotations extends SqlTest
+ *
+ *           <b>&#064;Test</b>
+ *           <b>&#064;DisableLikeWithLeadingWildcard</b>
+ *           <b>&#064;ExpectMaxSelect(5)</b>
+ *           <b>&#064;ProfileJvm</b>
+ *           public void execute_select_who_started_with_like_wildcard() {
+ *              <code>..</code>
+ *           }
+ *
+ *       }
+ * </pre>
+ * <p>
+ * QuickPerf will give the following feedback on the console:<p> [QUICK PERF] Applied annotations:
+ * <b>&#064;DisableLikeWithLeadingWildcard</b>, <b>&#064;ExpectMaxSelect(value=5)</b>,
+ * <b>&#064;ProfileJvm</b>, <b>&#064;DebugQuickPerf</b>
+ * <p>
+ * <h4>Note:</h4>
+ * QuickPerf won't display <b>&#064;DisplayAppliedAnnotations</b> as part of the applied annotations in the output
+ * message.
+ * <p>
+ *
+ * @see <a href="https://github.com/quick-perf/doc/wiki/QuickPerf#annotation-scopes"><i>QuickPerf annotations
+ * scopes</i></a>
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DisplayAppliedAnnotations {
