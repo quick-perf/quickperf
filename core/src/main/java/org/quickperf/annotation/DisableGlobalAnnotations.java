@@ -16,6 +16,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>DisableGlobalAnnotations</code> annotation disables QuickPerf annotations applied from the <u>global</u> scope.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;DisableGlobalAnnotations</b>
+ *      <b>&#064;Test</b>
+ *      public void execute() {
+ *          <code>...</code>
+ *      }
+ * </pre>
+ * <p>
+ *
+ * @see FunctionalIteration
+ * @see DisableQuickPerf
+ * @see org.quickperf.config.SpecifiableGlobalAnnotations
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DisableGlobalAnnotations {
