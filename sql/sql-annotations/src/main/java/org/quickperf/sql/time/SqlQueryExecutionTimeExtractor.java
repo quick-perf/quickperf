@@ -11,12 +11,12 @@
 
 package org.quickperf.sql.time;
 
-import java.util.concurrent.TimeUnit;
-
 import org.quickperf.ExtractablePerformanceMeasure;
 import org.quickperf.sql.SqlExecution;
 import org.quickperf.sql.SqlExecutions;
 import org.quickperf.time.ExecutionTime;
+
+import java.util.concurrent.TimeUnit;
 
 public class SqlQueryExecutionTimeExtractor implements ExtractablePerformanceMeasure<SqlExecutions, ExecutionTime> {
 

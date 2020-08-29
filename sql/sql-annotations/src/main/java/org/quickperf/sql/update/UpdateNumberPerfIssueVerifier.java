@@ -20,8 +20,6 @@ import static org.quickperf.sql.SqlStatementPerfIssueBuilder.aSqlPerfIssue;
 
 public class UpdateNumberPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectUpdate, Count> {
 
-    private static final String UPDATE = "UPDATE";
-
     public static final UpdateNumberPerfIssueVerifier INSTANCE = new UpdateNumberPerfIssueVerifier();
 
     private UpdateNumberPerfIssueVerifier() { }
@@ -33,8 +31,8 @@ public class UpdateNumberPerfIssueVerifier implements VerifiablePerformanceIssue
 
         if (!measuredCount.isEqualTo(expectedCount)) {
             return aSqlPerfIssue().buildNotEqualNumberOfStatements(measuredCount
-                                                               , expectedCount
-                                                               , UPDATE);
+                                                                 , expectedCount
+                                                                 , "UPDATE");
         }
 
         return PerfIssue.NONE;

@@ -20,8 +20,6 @@ import static org.quickperf.sql.SqlStatementPerfIssueBuilder.aSqlPerfIssue;
 
 public class InsertNumberPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectInsert, Count> {
 
-    private static final String INSERT = "INSERT";
-
     public static final InsertNumberPerfIssueVerifier INSTANCE = new InsertNumberPerfIssueVerifier();
 
     private InsertNumberPerfIssueVerifier() {}
@@ -34,7 +32,7 @@ public class InsertNumberPerfIssueVerifier implements VerifiablePerformanceIssue
         if (!measuredCount.isEqualTo(expectedCount)) {
             return aSqlPerfIssue().buildNotEqualNumberOfStatements(measuredCount
                                                                  , expectedCount
-                                                                 , INSERT);
+                                                                 , "INSERT");
         }
 
         return PerfIssue.NONE;

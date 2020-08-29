@@ -11,7 +11,6 @@
 
 package org.quickperf.sql.insert;
 
-import org.quickperf.SystemProperties;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectMaxInsert;

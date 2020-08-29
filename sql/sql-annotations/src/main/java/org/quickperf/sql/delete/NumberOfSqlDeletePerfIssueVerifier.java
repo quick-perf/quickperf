@@ -20,8 +20,6 @@ import static org.quickperf.sql.SqlStatementPerfIssueBuilder.aSqlPerfIssue;
 
 public class NumberOfSqlDeletePerfIssueVerifier implements VerifiablePerformanceIssue<ExpectDelete, Count> {
 
-    private static final String DELETE = "DELETE";
-
     public static final NumberOfSqlDeletePerfIssueVerifier INSTANCE = new NumberOfSqlDeletePerfIssueVerifier();
 
     private NumberOfSqlDeletePerfIssueVerifier() { }
@@ -34,7 +32,7 @@ public class NumberOfSqlDeletePerfIssueVerifier implements VerifiablePerformance
         if (!measuredCount.isEqualTo(expectedCount)) {
             return aSqlPerfIssue().buildNotEqualNumberOfStatements(measuredCount
                                                                  , expectedCount
-                                                                 , DELETE);
+                                                                 , "DELETE");
         }
 
         return PerfIssue.NONE;
