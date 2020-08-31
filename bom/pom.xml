@@ -48,6 +48,11 @@
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
+                <artifactId>quick-perf-sql-spring4</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-sql-spring5</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
@@ -64,6 +69,16 @@
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-junit4-spring5</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.quickperf</groupId>
+                <artifactId>quick-perf-springboot1-starter</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.quickperf</groupId>
+                <artifactId>quick-perf-springboot2-starter</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
         </dependencies>
