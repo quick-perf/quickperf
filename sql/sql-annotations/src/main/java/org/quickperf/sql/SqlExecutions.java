@@ -45,15 +45,6 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
         return sb.toString();
     }
 
-    public boolean oneExecutionHasQueryRespecting(SqlExecutionPredicate predicate) {
-        for (SqlExecution sqlExecution : sqlExecutions) {
-            if (predicate.test(sqlExecution)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean isEmpty() {
         return this == NONE || sqlExecutions.isEmpty();
     }

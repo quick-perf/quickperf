@@ -18,7 +18,7 @@ import org.quickperf.unit.Count;
 
 public class SqlAnalysisExtractor implements ExtractablePerformanceMeasure<SqlExecutions, SqlAnalysis> {
 
-    public static SqlAnalysisExtractor INSTANCE = new SqlAnalysisExtractor();
+    public static final SqlAnalysisExtractor INSTANCE = new SqlAnalysisExtractor();
 
     private SqlAnalysisExtractor() { }
 
