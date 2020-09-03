@@ -47,6 +47,9 @@ public class DetectionOfNPlusOneSelectInWebService {
     @Test
     public void should_find_all_players() {
 
+        String classPath = System.getProperty("java.class.path");
+        System.out.println("classPath = " + classPath);
+
         // GIVEN
         String getUrl = "http://localhost:" + port + "/players";
 
