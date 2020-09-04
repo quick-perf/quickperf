@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.quickperf.SystemProperties;
 import org.quickperf.TestExecutionContext;
 import org.quickperf.config.library.QuickPerfConfigs;
@@ -28,6 +29,7 @@ import org.quickperf.perfrecording.PerformanceRecording;
 import org.quickperf.reporter.QuickPerfReporter;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -50,6 +52,91 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs
                                                             , extensionContext.getRequiredTestMethod()
                                                             , junit5AllocationOffset);
+    }
+
+    // we need to skip all interceptor methods in case we plan to fork the VM.
+    @Override
+    public void interceptBeforeAllMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            invocation.skip();
+        }
+        else {
+            invocation.proceed();
+        }
+    }
+
+    @Override
+    public void interceptAfterAllMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            invocation.skip();
+        }
+        else {
+            invocation.proceed();
+        }
+    }
+
+    @Override
+    public void interceptBeforeEachMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            invocation.skip();
+        }
+        else {
+            invocation.proceed();
+        }
+    }
+
+    @Override
+    public void interceptAfterEachMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            invocation.skip();
+        }
+        else {
+            invocation.proceed();
+        }
+    }
+
+    @Override
+    public <T> T interceptTestClassConstructor(Invocation<T> invocation, ReflectiveInvocationContext<Constructor<T>> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            invocation.skip();
+            // this is taken from the default implementation in org.junit.jupiter.engine.execution.ConstructorInvocation.proceed()
+            return ReflectionUtils.newInstance(invocationContext.getExecutable(), invocationContext.getArguments().toArray());
+        }
+        else {
+            return invocation.proceed();
+        }
+    }
+
+    @Override
+    public <T> T interceptTestFactoryMethod(Invocation<T> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            invocation.skip();
+            // this is taken from the default implementation in org.junit.jupiter.engine.execution.MethodInvocation.proceed()
+            return (T) ReflectionUtils.invokeMethod(invocationContext.getExecutable(), invocationContext.getTarget().orElse(null), invocationContext.getArguments().toArray());
+        }
+        else {
+            return invocation.proceed();
+        }
+    }
+
+    @Override
+    public void interceptTestTemplateMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            invocation.skip();
+        }
+        else {
+            invocation.proceed();
+        }
+    }
+
+    @Override
+    public void interceptDynamicTest(Invocation<Void> invocation, ExtensionContext extensionContext) throws Throwable {
+        if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            invocation.skip();
+        }
+        else {
+            invocation.proceed();
+        }
     }
 
     @Override
