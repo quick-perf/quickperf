@@ -52,6 +52,41 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
                                                             , junit5AllocationOffset);
     }
 
+    // we need to skip BeforeEach/AfterEach if we plan to fork as they will be executed in the forked VM
+    // FIXME we should also do this for BeforeAll/AfterAll but the TestExecutionContext is not yet created so we don't know at this stage that we need to fork.
+    @Override
+    public void interceptBeforeEachMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        if(invocationContext.getTargetClass().equals(QuickPerfTestExtension.class)){
+            // We proceed with our own BeforeEach as we need it for all cases.
+            // Note that currently this never happens as our BeforeEach is not intercepted by our own extension,
+            // maybe it's a bug in JUnit or maybe not but we keep this as a safeguard.
+            invocation.proceed();
+        }
+        else if (testExecutionContext.testExecutionUsesTwoJVMs() && !SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            // we skip the BeforeEach if the test will fork
+            invocation.skip();
+        }
+        else {
+            invocation.proceed();
+        }
+    }
+
+    @Override
+    public void interceptAfterEachMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        if (testExecutionContext.testExecutionUsesTwoJVMs() && !SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            // we skip the AfterEach if the test will fork
+            invocation.skip();
+        }
+        else {
+            invocation.proceed();
+        }
+    }
+
+    @Override
+    public void interceptTestTemplateMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        throw new RuntimeException("Quickperf didn't support test template yet");
+    }
+
     @Override
     public void interceptTestMethod(  Invocation<Void> invocation
                                     , ReflectiveInvocationContext<Method> invocationContext
