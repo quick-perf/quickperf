@@ -56,7 +56,6 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
     public void interceptTestMethod(  Invocation<Void> invocation
                                     , ReflectiveInvocationContext<Method> invocationContext
                                     , ExtensionContext extensionContext) throws Throwable {
-
         if (testExecutionContext.isQuickPerfDisabled()) {
             invocation.proceed();
             return;
@@ -67,21 +66,49 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
             return;
         }
 
-        JvmOrTestIssue jvmOrTestIssue =
-                executeTestMethodAndRecordPerformance(invocation, invocationContext);
+        JvmOrTestIssue jvmOrTestIssue = executeTestMethodAndRecordPerformance(invocation, invocationContext);
+        processJvmOrTestIssue(jvmOrTestIssue);
+    }
 
+    @Override
+    public void interceptDynamicTest(Invocation<Void> invocation, ExtensionContext extensionContext) throws Throwable {
+        // Be careful that this method will be called by each dynamic tests defines by a single test factory method.
+        // And that @BeforeEach and @AfterEach methods will be invoked onces for all dynamic test produced by a test factory method.
+        // This means that we will use the same TestExecutionContext for all dynamic tests produced by a test factory method.
+        // So the annotation from the test factory method will be used on all dynamic tests produced by it.
+
+        if (testExecutionContext.isQuickPerfDisabled()) {
+            invocation.proceed();
+            return;
+        }
+
+        if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            // FIXME unable to fork the VM for dynamic test, see https://github.com/junit-team/junit5/issues/2399
+            throw new RuntimeException("Cannot run a dynamic test on a forked JVM");
+        }
+
+        if (testExecutionContext.testExecutionUsesTwoJVMs()) {
+            // FIXME unable to fork the VM for dynamic test, see https://github.com/junit-team/junit5/issues/2399
+            throw new RuntimeException("Cannot run a dynamic test on a forked JVM");
+        }
+
+        TestIssue testIssue = executeTestMethodAndRecordPerformanceInSameJvm(invocation);
+        JvmOrTestIssue jvmOrTestIssue = JvmOrTestIssue.buildFrom(testIssue);
+        processJvmOrTestIssue(jvmOrTestIssue);
+    }
+
+    private void processJvmOrTestIssue(JvmOrTestIssue jvmOrTestIssue) throws Throwable {
         SetOfAnnotationConfigs testAnnotationConfigs = quickPerfConfigs.getTestAnnotationConfigs();
 
         Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat
-                    = perfIssuesEvaluator.evaluatePerfIssuesIfNoJvmIssue(testAnnotationConfigs
-                                                                       , testExecutionContext
-                                                                       , jvmOrTestIssue);
+                = perfIssuesEvaluator.evaluatePerfIssuesIfNoJvmIssue(testAnnotationConfigs
+                , testExecutionContext
+                , jvmOrTestIssue);
         testExecutionContext.cleanResources();
 
         quickPerfReporter.report(jvmOrTestIssue
-                               , groupOfPerfIssuesToFormat
-                               , testExecutionContext);
-
+                , groupOfPerfIssuesToFormat
+                , testExecutionContext);
     }
 
     private void executeTestMethodInNewJvmAndRecordPerformance(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext) throws IllegalAccessException, InvocationTargetException {
