@@ -43,6 +43,7 @@ public class DetectionOfNPlusOneSelectInWebService {
     private TestRestTemplate restTemplate;
 
     @ExpectSelect(1)
+    @HeapSize(value = 50, unit = AllocationUnit.MEGA_BYTE)
     @Test
     public void should_find_all_players() {
 
