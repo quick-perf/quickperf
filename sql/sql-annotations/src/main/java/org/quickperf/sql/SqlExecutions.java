@@ -18,6 +18,7 @@ import org.quickperf.SystemProperties;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.PerfIssuesFormat;
 import org.quickperf.perfrecording.ViewablePerfRecordIfPerfIssue;
+import org.quickperf.sql.framework.quickperf.DataSourceConfig;
 import org.quickperf.sql.update.columns.NumberOfUpdatedColumnsStatistics;
 
 import java.io.Serializable;
@@ -134,12 +135,17 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
             return standardFormatting;
         }
 
-        return standardFormatting
+        return    standardFormatting
                 + System.lineSeparator()
                 + System.lineSeparator()
                 + "[JDBC QUERY EXECUTION (executeQuery, executeBatch, ...)]"
                 + System.lineSeparator()
-                + toString();
+                + (noJdbcExecution() ? new DataSourceConfig().getMessage()
+                                     : toString());
+    }
+
+    private boolean noJdbcExecution() {
+        return sqlExecutions.size() == 0;
     }
 
     @Override

@@ -32,10 +32,10 @@ public enum JdbcSuggestion implements QuickPerfSuggestion {
             if(SystemProperties.SIMPLIFIED_SQL_DISPLAY.evaluate()) {
                 return "";
             }
-            if (  SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa()
-               && SqlFrameworksInClassPath.INSTANCE.containsSpringBoot() ) {
+            if (  ClassPath.INSTANCE.containsSpringDataJpa()
+               && ClassPath.INSTANCE.containsSpringBoot() ) {
                 return SpringDataJpaSpringBootSuggestion.BATCHING.getMessage();
-            } else if (SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
+            } else if (ClassPath.INSTANCE.containsHibernate()) {
                 return HibernateSuggestion.BATCHING.getMessage();
             }
             return "";

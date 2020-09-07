@@ -9,10 +9,15 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.sql.framework;
+package org.quickperf.sql.framework.quickperf;
 
-public interface QuickPerfSuggestion {
+import org.quickperf.sql.framework.QuickPerfSuggestion;
 
-    String getMessage();
+public class MicronautHibernateJpaConfig implements QuickPerfSuggestion {
+
+    @Override
+    public String getMessage() {
+        return "Project example with QuickPerf: " + "https://github.com/quick-perf/quickperf-examples/tree/master/micronaut-hibernate-jpa";
+    }
 
 }

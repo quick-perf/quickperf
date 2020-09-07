@@ -12,7 +12,7 @@
 package org.quickperf.sql.formatter;
 
 import org.quickperf.sql.SqlFormatter;
-import org.quickperf.sql.framework.SqlFrameworksInClassPath;
+import org.quickperf.sql.framework.ClassPath;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -72,7 +72,7 @@ class SqlFormatterBasedOnHibernate implements SqlFormatter {
     @Override
    public String formatQuery(String query) {
 
-       if (SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
+       if (ClassPath.INSTANCE.containsHibernate()) {
            try {
                return formatWithHibernateFormatter(query);
            } catch (Exception e) {

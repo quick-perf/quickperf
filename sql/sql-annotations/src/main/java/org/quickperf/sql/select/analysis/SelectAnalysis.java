@@ -16,7 +16,7 @@ import org.quickperf.measure.PerfMeasure;
 import org.quickperf.sql.framework.HibernateSuggestion;
 import org.quickperf.sql.framework.JdbcSuggestion;
 import org.quickperf.sql.framework.MicronautSuggestion;
-import org.quickperf.sql.framework.SqlFrameworksInClassPath;
+import org.quickperf.sql.framework.ClassPath;
 import org.quickperf.unit.Count;
 import org.quickperf.unit.NoUnit;
 
@@ -50,12 +50,12 @@ public class SelectAnalysis implements PerfMeasure {
                                + System.lineSeparator()
                                + JdbcSuggestion.SERVER_ROUND_TRIPS.getMessage();
 
-            if(SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
+            if(ClassPath.INSTANCE.containsHibernate()) {
                 suggestion += System.lineSeparator()
                             + HibernateSuggestion.N_PLUS_ONE_SELECT.getMessage();
             }
 
-            if(SqlFrameworksInClassPath.INSTANCE.containsMicronaut()) {
+            if(ClassPath.INSTANCE.containsMicronautData()) {
                 suggestion += System.lineSeparator()
                             + MicronautSuggestion.N_PLUS_ONE_SELECT.getMessage();
             }

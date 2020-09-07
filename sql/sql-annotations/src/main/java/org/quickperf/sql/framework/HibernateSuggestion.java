@@ -34,7 +34,7 @@ public enum HibernateSuggestion implements QuickPerfSuggestion {
                     + "\t                 https://stackoverflow.com/questions/52850442/how-to-get-rid-of-n1-with-jpa-criteria-api-in-hibernate/52945771?stw=2#52945771"
                     + System.lineSeparator()
                     + "\t                 https://thoughts-on-java.org/jpa-21-entity-graph-part-1-named-entity/";
-            if(SqlFrameworksInClassPath.INSTANCE.containsSpringDataJpa()) {
+            if(ClassPath.INSTANCE.containsSpringDataJpa()) {
                 message +=  System.lineSeparator()
                         +   System.lineSeparator()
                         +   "\t* With Spring Data JPA, you may fix it by adding @EntityGraph(attributePaths = { \"...\" })"

@@ -15,7 +15,7 @@ import net.ttddyy.dsproxy.ExecutionInfo;
 import net.ttddyy.dsproxy.QueryInfo;
 import net.ttddyy.dsproxy.listener.logging.DefaultQueryLogEntryCreator;
 import org.quickperf.sql.SqlFormatter;
-import org.quickperf.sql.framework.SqlFrameworksInClassPath;
+import org.quickperf.sql.framework.ClassPath;
 
 import java.util.List;
 
@@ -56,7 +56,7 @@ public class QuickPerfSqlFormatter {
             return sqlFormatterDefinedByUser;
         }
 
-        if (SqlFrameworksInClassPath.INSTANCE.containsHibernate()) {
+        if (ClassPath.INSTANCE.containsHibernate()) {
             return SqlFormatterBasedOnHibernate.INSTANCE;
         }
 

@@ -9,10 +9,15 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.sql.framework;
+package org.quickperf.sql.framework.quickperf;
 
-public interface QuickPerfSuggestion {
+import org.quickperf.sql.framework.QuickPerfSuggestion;
 
-    String getMessage();
+class QuarkusDataSourceConfig implements QuickPerfSuggestion {
+
+    @Override
+    public String getMessage() {
+        return "Quarkus/QuickPerf project example: https://github.com/quick-perf/quickperf-examples/tree/master/quarkus";
+    }
 
 }
