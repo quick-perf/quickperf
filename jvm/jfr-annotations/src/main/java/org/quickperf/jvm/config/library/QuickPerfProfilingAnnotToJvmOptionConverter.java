@@ -12,6 +12,7 @@
 package org.quickperf.jvm.config.library;
 
 import org.quickperf.WorkingFolder;
+import org.quickperf.jvm.JvmVersion;
 import org.quickperf.jvm.annotations.ProfileQuickPerfInTestJvm;
 import org.quickperf.testlauncher.AnnotationToJvmOptionConverter;
 import org.quickperf.testlauncher.JvmOption;
@@ -32,7 +33,15 @@ class QuickPerfProfilingAnnotToJvmOptionConverter implements AnnotationToJvmOpti
         List<JvmOption> jfrJvmOptions = JfrJvmOptions.INSTANCE.getValues();
         List<JvmOption> jvmOptions = new ArrayList<>(jfrJvmOptions);
 
-        JvmOption flightRecorderOptions = new JvmOption("-XX:FlightRecorderOptions=defaultrecording=true,disk=true,settings=profile,dumponexit=true,dumponexitpath=dumponexit.jfr");
+        String jfrOptionName = "FlightRecorderOptions";
+        String defaultRecording = "defaultrecording=true,";
+        String pathName = "dumponexitpath";
+        if(JvmVersion.isGreaterThanOrEqualTo9()) {
+            jfrOptionName = "StartFlightRecording";
+            defaultRecording = "";
+            pathName = "filename";
+        }
+        JvmOption flightRecorderOptions = new JvmOption("-XX:" + jfrOptionName + "=" + defaultRecording + "disk=true,settings=profile," + "dumponexit=true," + pathName + "=dumponexit.jfr");
         jvmOptions.add(flightRecorderOptions);
 
         return jvmOptions;
