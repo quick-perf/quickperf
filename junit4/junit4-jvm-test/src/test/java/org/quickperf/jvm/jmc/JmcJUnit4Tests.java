@@ -18,6 +18,7 @@ import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.annotations.ExpectNoJvmIssue;
 import org.quickperf.jvm.annotations.HeapSize;
+import org.quickperf.jvm.annotations.ProfileQuickPerfInTestJvm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +72,17 @@ public class JmcJUnit4Tests {
                       .contains("JMC rules are expected to have score less than <50>.")
                       .contains("Rule: Primitive" +
                               " To Object Conversion");
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class TestMethodWithProfileQuickPerfInTestJvm {
+
+        @ProfileQuickPerfInTestJvm
+        @Test
+        public void test() {
+
+        }
+
     }
 
 }
