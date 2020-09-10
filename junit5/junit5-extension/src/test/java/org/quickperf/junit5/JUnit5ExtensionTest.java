@@ -11,12 +11,20 @@
 
 package org.quickperf.junit5;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
 import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.annotations.HeapSize;
+import org.quickperf.jvm.annotations.MeasureHeapAllocation;
+
+import java.io.File;
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JUnit5ExtensionTest {
 
@@ -83,4 +91,50 @@ public class JUnit5ExtensionTest {
 
     }
 
+    @QuickPerfTest
+    public static class TestWithBeforeEachAndAfterEach {
+        @BeforeEach
+        void createLockFile() throws IOException {
+            System.out.println("Creating the file");
+            File file = new File("lock");
+            if(!file.createNewFile()){
+                throw new RuntimeException("Unable to create lock file");
+            }
+        }
+
+        // this test will fork the VM so if we didn't skip the BeforeEach/AfterEach invocation
+        // the file will be created twice
+        @Test
+        @MeasureHeapAllocation
+        void checkLockFile() {
+            File file = new File("lock");
+            assertTrue(file.exists());
+        }
+
+        @AfterEach
+        void deleteLockFile() {
+            System.out.println("Deleting the file");
+            File file = new File("lock");
+            if(!file.delete()){
+                throw new RuntimeException("Unable to delete lock file");
+            }
+        }
+    }
+
+    @Test public void
+    a_test_with_before_each_and_after_each_must_work_on_forked_vm() {
+        // GIVEN
+        Class<?> testClass = TestWithBeforeEachAndAfterEach.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isZero();
+
+        String errorReport = jUnit5TestsResult.getErrorReport();
+        System.err.println(errorReport);
+        assertThat(errorReport).isNullOrEmpty();
+    }
 }
