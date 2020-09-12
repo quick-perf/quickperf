@@ -53,6 +53,15 @@ public class SqlAnnotationBuilder {
         };
     }
 
+    public static DisableQueriesWithoutBindParameters disableQueriesWithoutBindParameters() {
+        return new DisableQueriesWithoutBindParameters() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return DisableQueriesWithoutBindParameters.class;
+            }
+        };
+    }
+
     public static ExpectJdbcBatching expectJdbcBatching() {
         return new ExpectJdbcBatching() {
             @Override
