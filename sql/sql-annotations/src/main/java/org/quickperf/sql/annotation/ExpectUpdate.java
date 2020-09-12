@@ -19,8 +19,9 @@ import java.lang.annotation.Target;
 /**
  * The <code>ExpectUpdate</code> annotation verifies the number of executed update statements corresponds to the
  * specified value.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;ExpectUpdate(1)</b>
  *      public void execute_one_update() {

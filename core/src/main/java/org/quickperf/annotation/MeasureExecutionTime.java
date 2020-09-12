@@ -18,19 +18,21 @@ import java.lang.annotation.Target;
 
 /**
  * The <code>MeasureExecutionTime</code> annotation measures the execution time of the test method.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;MeasureExecutionTime</b>
  *      public void executeLongAPIcall() {
  *          <code>...</code>
  *      }
  * </pre>
- * <p>
+ *
  * QuickPerf will give the following feedback on the console:<p> [QUICK PERF] Execution time of the test method: 5 s 289
  * ms (5 289 245 600 ns)
- * <p></p>
- * <h4>Note:</h4>
+ *
+ * <br><br>
+ * <h3>Note:</h3>
  * Be cautious with time measurement results. It is a rough and first level result. Data has no meaning below the
  * ~second/millisecond. JIT warm-up, GC, or <a href="https://loonytek.com/2020/01/20/long-jvm-pauses-without-gc/">safe
  * points</a> can impact the measure and its reproducibility. We recommend <a href="https://openjdk.java.net/projects/code-tools/jmh/">JMH</a>
@@ -38,7 +40,6 @@ import java.lang.annotation.Target;
  *
  * @see ExpectMaxExecutionTime
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface MeasureExecutionTime {

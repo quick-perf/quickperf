@@ -18,8 +18,9 @@ import java.lang.annotation.Target;
 
 /**
  * The <code>DisableQuickPerf</code> annotation disables all QuickPerf annotations on every scope (test, method, global).
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;DisableQuickPerf</b>
  *      <b>&#064;DisableSameSelectTypesWithDifferentParamValues</b>
@@ -27,11 +28,9 @@ import java.lang.annotation.Target;
  *          <code>...</code>
  *      }
  * </pre>
- * <p>
  *
  * @see FunctionalIteration
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DisableQuickPerf {

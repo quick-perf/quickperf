@@ -20,25 +20,30 @@ import java.lang.annotation.Target;
  * The <code>ExpectJdbcBatching</code> annotation verifies that insert, delete and update statements are processed in
  * JDBC batches having *batchSize* elements.
  *
- * <p>
- * <h4>Example:</h4>
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;ExpectJdbcBatching(batchSize = 30)</b>
  *      public void insert_using_jdbc_batching_system(){
  *          <code>..</code>
  *      }
  * </pre>
- * <h4>Note:</h4>
+ *
+ * <br><br>
+ * <h3>Note:</h3>
  * You may sometimes think that you are using JDBC batching but in fact not:
- * <p>
- * - <a href="https://abramsm.wordpress.com/2008/04/23/hibernate-batch-processing-why-you-may-not-be-using-it-even-if-you-think-you-are/"><i>Hibernate
+ * <ul>
+ * <li>
+ * <a href="https://abramsm.wordpress.com/2008/04/23/hibernate-batch-processing-why-you-may-not-be-using-it-even-if-you-think-you-are/"><i>Hibernate
  * batch processing why you may not be using it even if you think you are</i></a>
- * <p>
- * - <a href="https://stackoverflow.com/questions/27697810/hibernate-disabled-insert-batching-when-using-an-identity-identifier"><i>Hibernate disabled insert batching when using an identity identifier</i></a>
- * <p>
+ * </li>
+ * <li>
+ * <a href="https://stackoverflow.com/questions/27697810/hibernate-disabled-insert-batching-when-using-an-identity-identifier"><i>Hibernate disabled insert batching when using an identity identifier</i></a>
+ * </li>
+ * </ul>
+ *
  * @see <a href="https://blog.jooq.org/2017/12/18/the-cost-of-jdbc-server-roundtrips/"><i>The cost of JDBC Server roundtrips.</i></a>
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectJdbcBatching {
@@ -49,7 +54,6 @@ public @interface ExpectJdbcBatching {
      * annotation will still check that insert, delete and update statements are processed in * JDBC batches (but the
      * annotation will not check the batch size).
      */
-
     int batchSize() default -1;
 
 }

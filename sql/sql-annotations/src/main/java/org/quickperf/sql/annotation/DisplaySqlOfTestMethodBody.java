@@ -25,7 +25,9 @@ import java.lang.annotation.Target;
  * <p>
  * It is not recommended to commit your test with this annotation. Indeed, the SQL statements would pollute the logs
  * and may slow down the continuous integration build.
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;DisplaySqlOfTestMethodBody</b>
  *      public void obscure_sql_query_execution() {
@@ -33,7 +35,6 @@ import java.lang.annotation.Target;
  *      }
  * </pre>
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD,ElementType.TYPE})
 public @interface DisplaySqlOfTestMethodBody {

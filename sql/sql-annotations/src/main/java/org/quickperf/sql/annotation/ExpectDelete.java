@@ -19,8 +19,9 @@ import java.lang.annotation.Target;
 /**
  * The <code>ExpectDelete</code> annotation verifies the number of executed delete statements corresponds to the
  * specified value.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;ExpectDelete(3)</b>
  *      public void execute_three_delete() {

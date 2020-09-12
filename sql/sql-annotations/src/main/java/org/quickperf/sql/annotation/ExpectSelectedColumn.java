@@ -19,13 +19,16 @@ import java.lang.annotation.Target;
 /**
  * The <code>ExpectSelectedColumn</code> annotation verifies the number of updated columns corresponds to the
  * specified value.
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;ExpectSelectedColumn(5)</b>
  *      public void select_on_five_columns() {
  *          <code>..</code>
  *      }
  * </pre>
+ *
  * @see <a href="https://github.com/quick-perf/doc/wiki/Why-limit-the-number-of-selected-columns">Why limit the number of selected columns ?</a>
  */
 @Retention(RetentionPolicy.RUNTIME)

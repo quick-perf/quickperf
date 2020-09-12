@@ -19,8 +19,9 @@ import java.lang.annotation.Target;
 /**
  * The <code>ExpectInsert</code> annotation verifies the number of executed insert statements corresponds to the
  * specified value.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;ExpectInsert(6)</b>
  *      public void execute_six_insert() {
@@ -28,7 +29,6 @@ import java.lang.annotation.Target;
  *      }
  * </pre>
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface ExpectInsert {

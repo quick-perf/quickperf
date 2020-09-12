@@ -19,8 +19,9 @@ import java.lang.annotation.Target;
 /**
  * The <code>ExpectUpdatedColumn</code> annotation verifies the number of updated columns corresponds to the
  * specified value.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;ExpectMaxUpdatedColumn(2)</b>
  *      public void update_two_columns() {

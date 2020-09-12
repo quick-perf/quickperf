@@ -19,8 +19,9 @@ import java.lang.annotation.Target;
 /**
  * The <code>ExpectSelect</code> annotation verifies the number of executed select statements corresponds to the
  * specified value.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;ExpectSelect(2)</b>
  *      public void execute_two_select() {

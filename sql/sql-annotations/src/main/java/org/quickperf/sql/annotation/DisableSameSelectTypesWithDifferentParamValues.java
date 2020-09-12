@@ -19,8 +19,9 @@ import java.lang.annotation.Target;
 /**
  * The <code>DisableSameSelectTypesWithDifferentParamValues</code> annotation verifies that same SELECT statements are
  * not executed with different parameters by a method. If so, the test will fail.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;DisableSameSelectTypesWithDifferentParamValues</b>
  *      public void execute() {
@@ -28,9 +29,9 @@ import java.lang.annotation.Target;
  *          <code> SELECT 1 with parameter B;</code>
  *      }
  * </pre>
+ *
  * @see EnableSameSelectTypesWithDifferentParamValues
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DisableSameSelectTypesWithDifferentParamValues {

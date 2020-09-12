@@ -20,8 +20,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * The <code>ExpectMaxQueryExecutionTime</code> annotation verifies the query execution time is not greater than the
  * specified value. If so, the test will fail.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;ExpectMaxQueryExecutionTime(thresholdInMilliSeconds = 2)</b>
  *      public void execute() {
@@ -29,7 +30,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *      }
  * </pre>
  */
-
 @Retention(RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectMaxQueryExecutionTime {
@@ -38,7 +38,6 @@ public @interface ExpectMaxQueryExecutionTime {
      * Specifies a <code>value</code> (integer) to cause test method to fail if any query has a greater execution time.
      * Note that if left empty, the assumed value will be zero.
      */
-
     int thresholdInMilliSeconds() default 0;
 
 }

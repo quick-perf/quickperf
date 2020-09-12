@@ -21,6 +21,7 @@ import java.lang.annotation.Target;
  * {@link java.sql.PreparedStatement} or {@link java.sql.CallableStatement}
  * is used to execute the queries. The test will fail with a
  * {@link java.sql.Statement}.
+ *
  * @see EnableStatements
  */
 @Retention(RetentionPolicy.RUNTIME)

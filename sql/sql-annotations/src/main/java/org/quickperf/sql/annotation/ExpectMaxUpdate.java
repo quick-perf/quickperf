@@ -19,8 +19,9 @@ import java.lang.annotation.Target;
 /**
  * The <code>ExpectMaxUpdate</code> annotation verifies the number of executed update statements is not greater to the
  * specified value. The number of executed statements should be between zero and the specified value.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;ExpectMaxUpdate(4)</b>
  *      public void execute_two_update() {
@@ -28,7 +29,6 @@ import java.lang.annotation.Target;
  *      }
  * </pre>
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectMaxUpdate {
@@ -37,7 +37,6 @@ public @interface ExpectMaxUpdate {
      * Specifies a <code>value</code> (integer) to cause test method to fail if the number of
      * executed update statements is greater. Note that if left empty, the assumed value will be zero.
      */
-
     int value() default 0;
 
 }

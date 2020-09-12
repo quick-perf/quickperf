@@ -21,8 +21,9 @@ import java.lang.annotation.Target;
  * behavior. A typical use case is the development of a new feature. First, this annotation allows us to focus on the
  * implementation of functional behavior by disabling global annotations. In a second step, we remove it to re-enable
  * global annotations. Later on, we may also add other QuickPerf annotations on the test method.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;FunctionalIteration</b>
  *      <b>&#064;DisableSameSelectTypesWithDifferentParamValues</b>
@@ -30,11 +31,9 @@ import java.lang.annotation.Target;
  *          <code>...</code>
  *      }
  * </pre>
- * <p>
  *
  * @see DisableQuickPerf
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface FunctionalIteration {

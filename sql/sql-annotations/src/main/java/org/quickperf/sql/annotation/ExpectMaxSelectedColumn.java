@@ -19,17 +19,18 @@ import java.lang.annotation.Target;
 /**
  * The <code>ExpectMaxSelectedColumn</code> annotation verifies the number of updated columns is not greater than the
  * specified value.
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;ExpectSelectedColumn(5)</b>
  *      public void select_on_four_columns() {
  *          <code>..</code>
  *      }
  * </pre>
+ *
  * @see <a href="https://github.com/quick-perf/doc/wiki/Why-limit-the-number-of-selected-columns">Why limit the number of selected columns ?</a>
- * <p>
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectMaxSelectedColumn {
@@ -38,7 +39,6 @@ public @interface ExpectMaxSelectedColumn {
      * Specifies a <code>value</code> (integer) to cause test method to fail if the number of selected
      * columns is greater. Note that if left empty, the assumed value will be zero.
      */
-
     int value() default 0;
 
 }

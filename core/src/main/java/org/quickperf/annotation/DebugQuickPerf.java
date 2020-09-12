@@ -19,8 +19,9 @@ import java.lang.annotation.Target;
 /**
  * The <code>DebugQuickPerf</code> annotation allows to debug QuickPerf execution by displaying information on the
  * console. For example, this annotation gives the JVM options added by QuickPerf.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *     <b>&#064;DebugQuickPerf</b>
  *      <b>&#064;RunWith(QuickPerfJUnitRunner.class)</b>
@@ -72,7 +73,6 @@ import java.lang.annotation.Target;
  * 7003 | org.quickperf.sql.batch.SqlStatementBatchRecorder
  * </pre>
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DebugQuickPerf {

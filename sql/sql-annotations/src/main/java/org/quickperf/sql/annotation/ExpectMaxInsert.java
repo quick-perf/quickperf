@@ -19,8 +19,9 @@ import java.lang.annotation.Target;
 /**
  * The <code>ExpectMaxInsert</code> annotation verifies the number of executed insert statements is not greater than the
  * specified value.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;ExpectMaxInsert(6)</b>
  *      public void execute_five_insert() {
@@ -28,7 +29,6 @@ import java.lang.annotation.Target;
  *      }
  * </pre>
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectMaxInsert {
@@ -37,7 +37,6 @@ public @interface ExpectMaxInsert {
      * Specifies a <code>value</code> (integer) to cause test method to fail if the number of insert
      * statements is greater. Note that if left empty, the assumed value will be zero.
      */
-
     int value() default 0;
 
 }
