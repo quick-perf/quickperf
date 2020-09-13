@@ -90,13 +90,13 @@ class SpringDataSourceConfig implements QuickPerfSuggestion {
     }
 
     private String buildSpringRESTControllerMessage() {
-        return    "Are you testing a REST controller without MockMvc? Try to execute the test in"
+        return                     "Are you testing a REST controller without MockMvc? Execute the test in"
                 + LINE_SEPARATOR + "a dedicated JVM by adding" + " @HeapSize(value = ..., unit = AllocationUnit.MEGA_BYTE)."
                 + LINE_SEPARATOR + "A heap size value around 50 megabytes may allow the test to run.";
     }
 
     private String buildImportQuickPerfSpringConfigExample() {
-        return    "\timport org.quickperf.spring.sql.QuickPerfSpringConfig;"
+        return                     "\timport org.quickperf.spring.sql.QuickPerfSpringConfig;"
                 + LINE_SEPARATOR + "\t..."
                 + LINE_SEPARATOR + "\t@Import(QuickPerfSpringConfig.class)"
                 + LINE_SEPARATOR + "\tpublic class TestClass {";
