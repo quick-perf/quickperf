@@ -29,83 +29,91 @@ class SpringDataSourceConfig implements QuickPerfSuggestion {
     @Override
     public String getMessage() {
 
-        DependencyMessage dependencyMessage = new DependencyMessage();
-
         if (classPath.containsSpringBoot1()) {
             if (classPath.contains(QUICKPERF_SPRING_BOOT_STARTER_1)) {
-                return buildSpringRESTControllerMessage();
+                return    buildDataJpaTestAnnotationMessage()
+                        + LINE_SEPARATOR
+                        + LINE_SEPARATOR + buildSpringRESTControllerMessage();
             }
             return "To configure it, add the following dependency: "
-                  + LINE_SEPARATOR + dependencyMessage.format(QUICKPERF_SPRING_BOOT_STARTER_1);
+                  + LINE_SEPARATOR + format(QUICKPERF_SPRING_BOOT_STARTER_1);
         }
 
         if (classPath.containsSpringBoot2()) {
             if (classPath.contains(QUICKPERF_SPRING_BOOT_STARTER_2)) {
-                return buildSpringRESTControllerMessage();
+                return    buildDataJpaTestAnnotationMessage()
+                        + LINE_SEPARATOR
+                        + LINE_SEPARATOR + buildSpringRESTControllerMessage();
             }
-            return "To configure it, add the following dependency: "
-                    + LINE_SEPARATOR + dependencyMessage.format(QUICKPERF_SPRING_BOOT_STARTER_2);
+            return   "To configure it, add the following dependency: "
+                    + LINE_SEPARATOR + format(QUICKPERF_SPRING_BOOT_STARTER_2);
         }
 
         if (classPath.containsSpring4()) {
             if (classPath.contains(QUICKPERF_SQL_SPRING_4)) {
                 return    "Import QuickPerfSpringConfig:"
-                        + LINE_SEPARATOR + buildImportSpringBeanExample()
+                        + LINE_SEPARATOR + buildImportQuickPerfSpringConfigExample()
                         + LINE_SEPARATOR
                         + LINE_SEPARATOR + buildSpringRESTControllerMessage();
             }
             return   "To configure the proxy, add the following dependency: "
-                    + LINE_SEPARATOR + dependencyMessage.format(QUICKPERF_SQL_SPRING_4)
+                    + LINE_SEPARATOR + format(QUICKPERF_SQL_SPRING_4)
                     + LINE_SEPARATOR + "You have also to import QuickPerfSpringConfig:"
-                    + LINE_SEPARATOR + buildImportSpringBeanExample();
+                    + LINE_SEPARATOR + buildImportQuickPerfSpringConfigExample();
         }
 
         if (classPath.containsSpring5()) {
             if (classPath.contains(QUICKPERF_SQL_SPRING_5)) {
                 return    "Import QuickPerfSpringConfig:"
-                        + LINE_SEPARATOR + buildImportSpringBeanExample()
+                        + LINE_SEPARATOR + buildImportQuickPerfSpringConfigExample()
                         + LINE_SEPARATOR
                         + LINE_SEPARATOR + buildSpringRESTControllerMessage();
             }
             return  "To configure the proxy, add the following dependency: "
-                    + LINE_SEPARATOR + dependencyMessage.format(QUICKPERF_SQL_SPRING_5)
+                    + LINE_SEPARATOR + format(QUICKPERF_SQL_SPRING_5)
                     + LINE_SEPARATOR + "You have also to import QuickPerfSpringConfig:"
-                    + LINE_SEPARATOR + buildImportSpringBeanExample();
+                    + LINE_SEPARATOR + buildImportQuickPerfSpringConfigExample();
         }
 
         return "";
 
     }
 
-    private String buildSpringRESTControllerMessage() {
-        return    "If you are testing a REST controller without MockMvc, try to"
-                + " execute the test in a dedicated JVM by adding"
-                + " @HeapSize(value = ..., unit = AllocationUnit.MEGA_BYTE)."
-                + LINE_SEPARATOR + " A heap size value around 50 megabytes may allow the test to run.";
+    private String buildDataJpaTestAnnotationMessage() {
+        return    "Do you use @DataJpaTest? This annotation disables Spring auto-configuration."
+                + LINE_SEPARATOR + "So, QuickPerf Spring auto-configuration is disabled."
+                + LINE_SEPARATOR + "To allow QuickPerf to intercept the SQL queries, you have two possibilities: "
+                + LINE_SEPARATOR + "1) Import QuickPerfSpringConfig class (recommended): "
+                + LINE_SEPARATOR + buildImportQuickPerfSpringConfigExample()
+                + LINE_SEPARATOR + "2) Force to enable Spring auto-configuration by adding"
+                + LINE_SEPARATOR + "   " + "@OverrideAutoConfiguration(enabled = true) on the test class";
     }
 
-    private String buildImportSpringBeanExample() {
+    private String buildSpringRESTControllerMessage() {
+        return    "Are you testing a REST controller without MockMvc? Try to execute the test in"
+                + LINE_SEPARATOR + "a dedicated JVM by adding" + " @HeapSize(value = ..., unit = AllocationUnit.MEGA_BYTE)."
+                + LINE_SEPARATOR + "A heap size value around 50 megabytes may allow the test to run.";
+    }
+
+    private String buildImportQuickPerfSpringConfigExample() {
         return    "\timport org.quickperf.spring.sql.QuickPerfSpringConfig;"
                 + LINE_SEPARATOR + "\t..."
-                + LINE_SEPARATOR + "\t@Import(QuickPerfBeanConfig.class)"
-                + LINE_SEPARATOR + "\t@Test"
+                + LINE_SEPARATOR + "\t@Import(QuickPerfSpringConfig.class)"
                 + LINE_SEPARATOR + "\tpublic class TestClass {";
     }
 
-    static class DependencyMessage {
 
-        public String format(QuickPerfDependency quickPerfDependency) {
-            return   "\t* Maven"
-                    + LINE_SEPARATOR
-                    + quickPerfDependency.toMavenWithVersion()
-                    + LINE_SEPARATOR
-                    + "\t* Gradle"
-                    + LINE_SEPARATOR
-                    + quickPerfDependency.toGradleWithVersion()
-                    + LINE_SEPARATOR
-                    + "\t* Other: " + quickPerfDependency.getMavenSearchLink()
-                    ;
-        }
+    public String format(QuickPerfDependency quickPerfDependency) {
+        return    "\t* Maven"
+                + LINE_SEPARATOR
+                + quickPerfDependency.toMavenWithVersion()
+                + LINE_SEPARATOR
+                + "\t* Gradle"
+                + LINE_SEPARATOR
+                + quickPerfDependency.toGradleWithVersion()
+                + LINE_SEPARATOR
+                + "\t* Other: " + quickPerfDependency.getMavenSearchLink()
+                ;
     }
 
 }

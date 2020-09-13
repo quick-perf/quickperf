@@ -20,9 +20,11 @@ public class DataSourceConfig implements QuickPerfSuggestion {
     public String getMessage() {
 
         String possibleConfigIssue =
-                  "No SQL execution is detected."
+                  System.lineSeparator()
+                + "No SQL execution is detected."
                 + System.lineSeparator()
-                + "QuickPerf uses a proxy on the data source to intercept the SQL executions.";
+                + "QuickPerf uses a proxy on the data source to intercept the SQL executions."
+                + System.lineSeparator();
 
         QuickPerfSuggestion frameworkConfig
                 = DataSourceFrameworkConfigFactory.makeFrom(ClassPath.INSTANCE);
