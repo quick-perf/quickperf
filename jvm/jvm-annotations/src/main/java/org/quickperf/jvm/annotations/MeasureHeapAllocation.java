@@ -19,6 +19,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>MeasureHeapAllocation</code> annotation measures the test thread heap's allocation.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface MeasureHeapAllocation {

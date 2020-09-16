@@ -20,8 +20,9 @@ import java.lang.annotation.Target;
 
 /**
  * The <code>Xmx</code> annotation makes the test executed in a specific JVM having the given mamixum heap size value.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;Xmx(value = 20, unit = AllocationUnit.MEGA_BYTE)</b>
  *      public void execute() {
@@ -33,7 +34,6 @@ import java.lang.annotation.Target;
  * @see HeapSize
  * @see Xms
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface Xmx {

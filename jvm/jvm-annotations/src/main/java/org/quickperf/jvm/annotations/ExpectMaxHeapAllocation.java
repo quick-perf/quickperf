@@ -21,14 +21,15 @@ import java.lang.annotation.Target;
 /**
  * The <code>ExpectMaxHeapAllocation</code> annotation makes the test fail if the test thread heap's allocation is
  * greater than expected.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;HeapSize(value = 20, unit = AllocationUnit.MEGA_BYTE)
  *      &#064;ExpectMaxHeapAllocation(value = 440, unit = AllocationUnit.BYTE)
  *      &#064;Test</b>
  *      public void array_list_with_size_100_should_allocate_440_bytes() {
- *          ArrayList<Object> data = new ArrayList<>(100);
+ *          ArrayList&lt;Objec&gt; data = new ArrayList&lt;&gt;(100);
  *      }
  * </pre>
  *
@@ -36,7 +37,6 @@ import java.lang.annotation.Target;
  * @see MeasureHeapAllocation
  * @see ExpectNoHeapAllocation
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectMaxHeapAllocation {

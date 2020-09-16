@@ -19,8 +19,9 @@ import java.lang.annotation.Target;
 /**
  * The <code>MeasureRSS</code> annotation measures the <a href="https://en.wikipedia.org/wiki/Resident_set_size">Resident
  * Set Size</a> (RSS) with this annotation.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;MeasureRSS
  *      &#064;Test</b>
@@ -29,17 +30,16 @@ import java.lang.annotation.Target;
  *      }
  * </pre>
  * <p>
- * <p>
  * QuickPerf will give the following type of feedback on the console:<p> [QUICK PERF] Measured RSS (process 5227): 46.64
  * Mega bytes (48 902 144 bytes)
  *
- * <h4>Note:</h4>
+ * <br><br>
+ * <h3>Note:</h3>
  * Today this annotation only woks on Linux. You can work on this <a href="https://github.com/quick-perf/quickperf/issues/56">issue</a>
  * to make the RSS annotations work on MacOS.
  *
  * @see ExpectMaxRSS
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface MeasureRSS {

@@ -25,25 +25,26 @@ import java.lang.annotation.Target;
  * - <a href="https://openjdk.java.net/jeps/318">Epsilon</a>,<p>
  * - <a href="https://wiki.openjdk.java.net/display/zgc/Main">Z</a>,<p>
  * - <a href="https://wiki.openjdk.java.net/display/shenandoah/Main">Shenandoah</a>.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;UseGC(GC.EPSILON_GC)</b>
  *      public void execute() {
  *          <code>...</code>
  *      }
  * </pre>
- * <p>
- * <h4>Note:</h4>
+ *
+ * <br><br>
+ * <h3>Note:</h3>
  * You may use the {@link JvmOptions} with another GC as following:
  * <p>
  * <code>
- *     <b>&#064;JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers -XX:+UseParallelGC")
+ *     <b>&#064;JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers -XX:+UseParallelGC")</b>
  * </code>
  * <p></p>
  * @see org.quickperf.jvm.gc.GC
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface UseGC {

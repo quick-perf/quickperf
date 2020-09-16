@@ -20,8 +20,9 @@ import java.lang.annotation.Target;
 
 /**
  * The <code>JvmOptions</code> annotation makes the test executed in a specific JVM having the given JVM options.
- * <p>
- * <h4>Example:</h4>
+ *
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;JvmOptions("-Xlog:gc*")</b>
  *      public void execute() {
@@ -33,7 +34,6 @@ import java.lang.annotation.Target;
  * @see <a href="https://chriswhocodes.com/vm-options-explorer.html">This</a> tool developed by Chris Newland can be
  * used to explore the available JVM options.
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface JvmOptions {

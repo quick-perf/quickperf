@@ -22,8 +22,8 @@ import java.lang.annotation.Target;
  * attributed. The maximum score value is 100. The test will fail if one rule has a score greater than this expected (by
  * default 60) Things like significant primitives to object conversions can be detected:
  *
- * <p>
- * <h4>Example:</h4>
+ * <br><br>
+ * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;ExpectNoHeapAllocation
  *      &#064;Test</b>
@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  * <pre>
  * QuickPerf will give the following type of feedback on the console:
  *
- * <code>[PERF] JMC rules are expected to have score less than <50>.
+ * <code>[PERF] JMC rules are expected to have score less than &lt;50&gt;.
  * Rule: Primitive To Object Conversion
  * Severity: INFO
  * Score: 74
@@ -44,7 +44,6 @@ import java.lang.annotation.Target;
  * 'java.lang.Integer', which causes 45,6 MiB to be allocated. The most common call site is
  * 'org.quickperf.jvm.jmc.JmcJUnit4Tests$ClassWithFailingJmcRules$IntegerAccumulator.accumulateInteger(int):40'.</code>
  * </pre>
- * <p>
  * <pre>
  * With this annotation you can also detect that most of the time is spent to do garbage collection in your test. If you
  * have the following message in the console:
@@ -55,7 +54,6 @@ import java.lang.annotation.Target;
  * <b>&#064;JvmOptions("-XX:FlightRecorderOptions=stackdepth=128")</b>
  * </pre>
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectNoJvmIssue {
