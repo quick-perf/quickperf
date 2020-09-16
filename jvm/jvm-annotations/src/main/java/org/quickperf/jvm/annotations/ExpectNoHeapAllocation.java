@@ -16,6 +16,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>ExpectNoHeapAllocation</code> annotation makes the test fail if the test thread allocates on heap.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;ExpectNoHeapAllocation
+ *      &#064;Test</b>
+ *      public void randomMethod() {
+ *          <code>...</code>
+ *      }
+ * </pre>
+ * <p>
+ *
+ * @see HeapSize
+ * @see MeasureHeapAllocation
+ * @see ExpectMaxHeapAllocation
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectNoHeapAllocation {

@@ -18,12 +18,34 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>Xmx</code> annotation makes the test executed in a specific JVM having the given mamixum heap size value.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;Xmx(value = 20, unit = AllocationUnit.MEGA_BYTE)</b>
+ *      public void execute() {
+ *          <code>...</code>
+ *      }
+ * </pre>
+ * <p>
+ *
+ * @see HeapSize
+ * @see Xms
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface Xmx {
 
+    /**
+     * Heapsize <code>value</code> passed to the JVM.
+     */
     int value();
 
+    /**
+     * Allocation unit.
+     */
     AllocationUnit unit();
 
 }

@@ -11,15 +11,36 @@
 
 package org.quickperf.jvm.annotations;
 
+import org.quickperf.annotation.FunctionalIteration;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>JvmOptions</code> annotation makes the test executed in a specific JVM having the given JVM options.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;JvmOptions("-Xlog:gc*")</b>
+ *      public void execute() {
+ *          <code>...</code>
+ *      }
+ * </pre>
+ * <p>
+ *
+ * @see <a href="https://chriswhocodes.com/vm-options-explorer.html">This</a> tool developed by Chris Newland can be
+ * used to explore the available JVM options.
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface JvmOptions {
 
+    /**
+     * JVM arguments.
+     */
     String value() default "";
 
 }
