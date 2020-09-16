@@ -18,11 +18,39 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>ExpectMaxRSS</code> annotation will make the test fail if <a href="https://en.wikipedia.org/wiki/Resident_set_size">Resident
+ * Set Size</a> (RSS) is greater than expected.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;ExpectMaxRSS(value = 1, unit = AllocationUnit.MEGA_BYTE)
+ *      &#064;Test</b>
+ *      public void execute() {
+ *          <code>...</code>
+ *      }
+ * </pre>
+ * QuickPerf will give the following type of feedback on the console:<p>
+ * <code>[PERF] Expected RSS to be less than 1.00 Mega bytes but is 65.42 Mega bytes (68 599 808 bytes).</code>
+ * <p>
+ * <h4>Note:</h4>
+ * Today this annotation only woks on Linux. You can work on this <a href="https://github.com/quick-perf/quickperf/issues/56">issue</a>
+ * to make the RSS annotations work on MacOS.
+ *
+ * @see MeasureRSS
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectMaxRSS {
 
+    /**
+     * Allocation value.
+     */
     double value();
 
+    /**
+     * Allocation unit.
+     */
     AllocationUnit unit();
 }

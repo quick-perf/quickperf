@@ -17,12 +17,52 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Based on flight recorder heuristics engine.
+ * Based on flight recorder heuristics engine, the <code>ExpectNoJvmIssue</code> annotation makes the JVM profiled
+ * with JDK Flight Recorder (JFR). Based on the profiling, some JMC rules are evaluated. For each rule a score is
+ * attributed. The maximum score value is 100. The test will fail if one rule has a score greater than this expected (by
+ * default 60) Things like significant primitives to object conversions can be detected:
+ *
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;ExpectNoHeapAllocation
+ *      &#064;Test</b>
+ *      public void randomMethod() {
+ *          <code>...</code>
+ *      }
+ * </pre>
+ *
+ * <pre>
+ * QuickPerf will give the following type of feedback on the console:
+ *
+ * <code>[PERF] JMC rules are expected to have score less than <50>.
+ * Rule: Primitive To Object Conversion
+ * Severity: INFO
+ * Score: 74
+ * Message: 79 % of the total allocation (45,6 MiB) is caused by conversion from primitive types to object types.
+ * The most common object type that primitives are converted into is
+ * 'java.lang.Integer', which causes 45,6 MiB to be allocated. The most common call site is
+ * 'org.quickperf.jvm.jmc.JmcJUnit4Tests$ClassWithFailingJmcRules$IntegerAccumulator.accumulateInteger(int):40'.</code>
+ * </pre>
+ * <p>
+ * <pre>
+ * With this annotation you can also detect that most of the time is spent to do garbage collection in your test. If you
+ * have the following message in the console:
+ * <code>
+ * Rule: Stackdepth Setting Severity: WARNING Score: 97 Message: Some stack traces were truncated in this recording.
+ * </code>
+ * Then you can increase the stack depth value in this way:
+ * <b>&#064;JvmOptions("-XX:FlightRecorderOptions=stackdepth=128")</b>
+ * </pre>
  */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ExpectNoJvmIssue {
 
+    /**
+     * Score value.
+     */
     int score() default 60;
 
 }

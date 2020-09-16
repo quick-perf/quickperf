@@ -11,6 +11,7 @@
 
 package org.quickperf.jvm.annotations;
 
+import org.quickperf.annotation.FunctionalIteration;
 import org.quickperf.jvm.allocation.AllocationUnit;
 
 import java.lang.annotation.ElementType;
@@ -18,12 +19,34 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>HeapSize</code> annotation makes the test executed in a specific JVM with the given heap size.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;HeapSize(value = 20, unit = AllocationUnit.MEGA_BYTE)</b>
+ *      public void execute() {
+ *          <code>...</code>
+ *      }
+ * </pre>
+ * <p>
+ *
+ * @see ExpectMaxHeapAllocation
+ * @see ExpectNoHeapAllocation
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface HeapSize {
 
+    /**
+     * Heapsize <code>value</code> passed to the JVM.
+     */
     int value();
 
+    /**
+     * Allocation unit.
+     */
     AllocationUnit unit();
 
 }

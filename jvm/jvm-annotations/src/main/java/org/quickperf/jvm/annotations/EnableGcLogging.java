@@ -16,6 +16,26 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>EnableGcLogging</code> annotation enables GC logging.
+ * <p>
+ * <h4>Example:</h4>
+ * <pre>
+ *      <b>&#064;EnableGcLogging</b>
+ *      public void execute() {
+ *          <code>...</code>
+ *      }
+ * </pre>
+ * <p>
+ * The path of the GC log file will be displayed in the
+ * console with the following format: <p>
+ * <code>GC log file: /tmp/QuickPerf-6513460244229078013/gc.log</code><p>
+ * This file can be analysed with the help of a GC log analyzer:<p>
+ * - <a href="https://github.com/chewiebug/GCViewer">GCViewer</a>,<p>
+ * - <a href="https://gceasy.io/">GCeasy</a>,<p>
+ * - ...
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface EnableGcLogging {
