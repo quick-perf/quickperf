@@ -43,12 +43,6 @@ public class MaxOfUpdatesPerfIssueVerifier implements VerifiablePerformanceIssue
                                                                     , expectedCount
                                                                     , "update");
 
-        if(!expectedCount.isEqualTo(Count.ZERO)) {
-            description += System.lineSeparator()
-                         + System.lineSeparator()
-                         + JdbcSuggestion.BATCHING.getMessage();
-        }
-
         return new PerfIssue(description);
 
     }
