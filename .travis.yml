@@ -31,6 +31,8 @@ matrix:
       jdk: openjdk13
     - os: osx
       jdk: openjdk14
+    - os: osx
+      jdk: openjdk15
 
 jdk:
   - oraclejdk11
@@ -41,6 +43,7 @@ jdk:
   - openjdk12
   - openjdk13
   - openjdk14
+  - openjdk15
 
 cache:
   directories:
