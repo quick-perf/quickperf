@@ -106,7 +106,7 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
         String testReport = printableResult.toString();
         assertThat(testReport)
-                .contains("[PERF] SQL executions were supposed to be batched.");
+                .contains("[PERF] JDBC batching is disabled.");
 
     }
 
@@ -138,7 +138,7 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
 
         String testReport = testResult.toString();
         assertThat(testReport)
-                .contains("SQL executions were supposed to be batched")
+                .contains("JDBC batching is disabled.")
                 .contains("hibernate.jdbc.batch_size");
 
     }

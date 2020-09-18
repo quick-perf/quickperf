@@ -11,6 +11,9 @@
 
 package org.quickperf.sql.framework;
 
+import org.quickperf.sql.annotation.DisplaySql;
+import org.quickperf.sql.annotation.DisplaySqlOfTestMethodBody;
+
 public enum HibernateSuggestion implements QuickPerfSuggestion {
 
     N_PLUS_ONE_SELECT() {
@@ -50,31 +53,26 @@ public enum HibernateSuggestion implements QuickPerfSuggestion {
 
         @Override
         public String getMessage() {
-            String lightBulb = "\uD83D\uDCA1";
 
             return System.lineSeparator()
-                    + lightBulb + " Perhaps you may think that JDBC batching is enabled."
+                    + "\tYou should check that hibernate.jdbc.batch_size Hibernate property has a positive value."
                     + System.lineSeparator()
-                    + "\t* You can verify it using @ExpectJdbcBatching"
-                    + System.lineSeparator()
-                    + "\t Sometimes you may think that JDBC is enabled but in fact not:"
-                    + System.lineSeparator()
-                    + "\t https://abramsm.wordpress.com/2008/04/23/hibernate-batch-processing-why-you-may-not-be-using-it-even-if-you-think-you-are/"
-                    + System.lineSeparator()
-                    + "\t https://stackoverflow.com/questions/27697810/hibernate-disabled-insert-batching-when-using-an-identity-identifier"
+                    + "\tA batch size value between 5 and 30 is generally recommended."
                     + System.lineSeparator()
                     + System.lineSeparator()
-                    + "\tYou should check that you project has the following Hibernate properties"
+                    + "\tNote that IDENTITY generator disables JDBC batching: https://stackoverflow.com/questions/27697810/hibernate-disabled-insert-batching-when-using-an-identity-identifier"
                     + System.lineSeparator()
-                    + "\thibernate.jdbc.batch_size => positive value"
                     + System.lineSeparator()
-                    + "\thibernate.order_inserts => true"
+                    + "\tOrdering inserts and updates is recommended. To do this, set hibernate.order_inserts and hibernate.order_updates Hibernate properties with true."
                     + System.lineSeparator()
-                    + "\thibernate.order_updates => true"
+                    + "\tThis paper explains why: https://abramsm.wordpress.com/2008/04/23/hibernate-batch-processing-why-you-may-not-be-using-it-even-if-you-think-you-are/"
                     + System.lineSeparator()
-                    + "\tIn case of versioned entities, you should also check"
-                    + "\thibernate.jdbc.batch_versioned_data => true"
-                    ;
+                    + System.lineSeparator()
+                    + "\tWith versioned entities, you should also set hibernate.jdbc.batch_versioned_data Hibernate property with true. "
+                    + System.lineSeparator()
+                    + System.lineSeparator()
+                    + "\tUse @" + DisplaySqlOfTestMethodBody.class.getSimpleName()
+                    + " or @" + DisplaySql.class.getSimpleName() + " to display JDBC executions.";
         }
     },
 

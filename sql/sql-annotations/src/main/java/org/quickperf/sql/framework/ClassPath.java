@@ -37,7 +37,7 @@ public class ClassPath {
 
     public boolean containsSpringBoot() {
         return     value.contains("org.springframework.boot")
-                && value.contains("spring-boot");
+                || value.contains("spring-boot");
     }
 
     public boolean containsSpringBoot1() {

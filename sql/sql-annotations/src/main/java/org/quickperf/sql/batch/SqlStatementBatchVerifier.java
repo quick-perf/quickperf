@@ -42,8 +42,11 @@ public class SqlStatementBatchVerifier implements VerifiablePerformanceIssue<Exp
     private PerfIssue verifyThatInsertUpdateDeleteExecutionAreBatched(int[] measuredBatchSizesAsArray) {
         for (int measuredBatchSize : measuredBatchSizesAsArray) {
             if (measuredBatchSize == 0) {
-                String description = "SQL executions were supposed to be batched."
-                                   + JdbcSuggestion.BATCHING.getMessage();
+                String description = "JDBC batching is disabled."
+                                   + System.lineSeparator()
+                                   + JdbcSuggestion.BATCHING.getMessage()
+                                   + System.lineSeparator()
+                                   + "";
                 return new PerfIssue(description);
             }
         }

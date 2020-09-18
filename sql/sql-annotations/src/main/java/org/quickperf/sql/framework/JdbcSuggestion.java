@@ -35,7 +35,8 @@ public enum JdbcSuggestion implements QuickPerfSuggestion {
             if (  ClassPath.INSTANCE.containsSpringDataJpa()
                && ClassPath.INSTANCE.containsSpringBoot() ) {
                 return SpringDataJpaSpringBootSuggestion.BATCHING.getMessage();
-            } else if (ClassPath.INSTANCE.containsHibernate()) {
+            }
+            if (ClassPath.INSTANCE.containsHibernate()) {
                 return HibernateSuggestion.BATCHING.getMessage();
             }
             return "";
