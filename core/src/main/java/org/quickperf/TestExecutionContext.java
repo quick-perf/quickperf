@@ -286,5 +286,8 @@ public class TestExecutionContext {
         }
     }
 
+    public void setRunnerAllocationOffset(int runnerAllocationOffset) {
+        this.runnerAllocationOffset = runnerAllocationOffset;
+    }
 }
 

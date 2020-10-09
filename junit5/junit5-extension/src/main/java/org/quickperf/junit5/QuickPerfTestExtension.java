@@ -84,7 +84,23 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
     @Override
     public void interceptTestTemplateMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
-        throw new RuntimeException("Quickperf didn't support test template yet");
+        // Be careful that this method will be called by each invocation of the test template defines by a single test template method.
+        // Normal lifecycle will apply.
+        // There is no allocation offset with template method
+        testExecutionContext.setRunnerAllocationOffset(0);
+
+        if (testExecutionContext.isQuickPerfDisabled()) {
+            invocation.proceed();
+            return;
+        }
+
+        if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            executeTestMethodInNewJvmAndRecordPerformance(invocation, invocationContext);
+            return;
+        }
+
+        JvmOrTestIssue jvmOrTestIssue = executeTestMethodAndRecordPerformance(invocation, invocationContext);
+        processJvmOrTestIssue(jvmOrTestIssue);
     }
 
     @Override
