@@ -22,4 +22,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface EnableQueriesWithoutBindParameters {
+
+    String comment() default "";
+
 }
