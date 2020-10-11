@@ -23,7 +23,7 @@ import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class DisableQueriesWithoutBindParametersTest {
 
-    private static final String UNBOUND_PARAMETERS_MESSAGE = "[PERF] Unbound parameters detected";
+    private static final String QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE = "[PERF] Query without bind parameters";
 
     @RunWith(QuickPerfJUnitRunner.class)
     public static class StatementWithBindParameters extends SqlTestBase {
@@ -40,7 +40,6 @@ public class DisableQueriesWithoutBindParametersTest {
         }
 
     }
-
 
     @Test
     public void should_succeed_when_statement_with_bind_parameters() {
@@ -142,7 +141,7 @@ public class DisableQueriesWithoutBindParametersTest {
         // THEN
         assertThat(printableResult.failureCount()).isOne();
 
-        assertThat(printableResult.toString()).contains(UNBOUND_PARAMETERS_MESSAGE);
+        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
 
     }
 
@@ -173,7 +172,7 @@ public class DisableQueriesWithoutBindParametersTest {
         // THEN
         assertThat(printableResult.failureCount()).isOne();
 
-        assertThat(printableResult.toString()).contains(UNBOUND_PARAMETERS_MESSAGE);
+        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
 
     }
 
@@ -234,7 +233,7 @@ public class DisableQueriesWithoutBindParametersTest {
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
-        assertThat(printableResult.toString()).contains(UNBOUND_PARAMETERS_MESSAGE);
+        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
 
     }
 
@@ -264,7 +263,7 @@ public class DisableQueriesWithoutBindParametersTest {
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
-        assertThat(printableResult.toString()).contains(UNBOUND_PARAMETERS_MESSAGE);
+        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
 
     }
 
@@ -294,7 +293,7 @@ public class DisableQueriesWithoutBindParametersTest {
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
-        assertThat(printableResult.toString()).contains(UNBOUND_PARAMETERS_MESSAGE);
+        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
 
     }
 
@@ -324,7 +323,7 @@ public class DisableQueriesWithoutBindParametersTest {
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
-        assertThat(printableResult.toString()).contains(UNBOUND_PARAMETERS_MESSAGE);
+        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
 
     }
 
@@ -355,7 +354,7 @@ public class DisableQueriesWithoutBindParametersTest {
 
         // THEN
         assertThat(printableResult.failureCount()).isOne();
-        assertThat(printableResult.toString()).contains(UNBOUND_PARAMETERS_MESSAGE);
+        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
 
     }
 

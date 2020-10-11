@@ -27,7 +27,7 @@ public class DisableQueriesWithoutBindParametersVerifier implements VerifiablePe
     public PerfIssue verifyPerfIssue(final DisableQueriesWithoutBindParameters annotation, final BooleanMeasure areAllParametersBound) {
 
         if(!areAllParametersBound.getValue()) {
-            return new PerfIssue("Unbound parameters detected");
+            return new PerfIssue("Query without bind parameters");
         }
 
         return PerfIssue.NONE;
