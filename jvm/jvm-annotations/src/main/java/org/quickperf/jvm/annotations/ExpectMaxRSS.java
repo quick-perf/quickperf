@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
  *
  * <br><br>
  * <h3>Note:</h3>
- * Today this annotation only woks on Linux. You can work on this <a href="https://github.com/quick-perf/quickperf/issues/56">issue</a>
+ * Today this annotation only works on Linux. You can work on this <a href="https://github.com/quick-perf/quickperf/issues/56">issue</a>
  * to make the RSS annotations work on MacOS.
  *
  * @see MeasureRSS
