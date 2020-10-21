@@ -26,7 +26,7 @@ public class DisableQueriesWithoutBindParametersTest {
     private static final String QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE = "[PERF] Query without bind parameters";
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class StatementWithBindParametersAndNamedParametersInQuery extends SqlTestBase {
+    public static class StatementWithBindParameters extends SqlTestBase {
 
         @Test
         @DisableQueriesWithoutBindParameters
@@ -42,10 +42,10 @@ public class DisableQueriesWithoutBindParametersTest {
     }
 
     @Test
-    public void should_succeed_when_statement_with_bind_parameters_and_named_parameters_in_query() {
+    public void should_succeed_when_statement_with_bind_parameters() {
 
         // GIVEN
-        Class<?> testClass = StatementWithBindParametersAndNamedParametersInQuery.class;
+        Class<?> testClass = StatementWithBindParameters.class;
 
         // WHEN
         PrintableResult printableResult = testResult(testClass);
@@ -56,37 +56,7 @@ public class DisableQueriesWithoutBindParametersTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class StatementWithBindParametersAndPositionalParametersInQuery extends SqlTestBase {
-
-        @Test
-        @DisableQueriesWithoutBindParameters
-        public void test_method() {
-            EntityManager em = emf.createEntityManager();
-            String sql = "SELECT * FROM book WHERE isbn = ? AND title = ?";
-            Query nativeQuery = em.createNativeQuery(sql)
-                    .setParameter(1, "978-0321356680")
-                    .setParameter(2, "Effective Java");
-            nativeQuery.getResultList();
-        }
-
-    }
-
-    @Test
-    public void should_succeed_when_statement_with_bind_parameters_and_positional_parameters_in_query() {
-
-        // GIVEN
-        Class<?> testClass = StatementWithBindParametersAndPositionalParametersInQuery.class;
-
-        // WHEN
-        PrintableResult printableResult = testResult(testClass);
-
-        // THEN
-        assertThat(printableResult.failureCount()).isZero();
-
-    }
-
-    @RunWith(QuickPerfJUnitRunner.class)
-    public static class StatementWithOneBindParameterAndNamedParameterInQuery extends SqlTestBase {
+    public static class StatementWithOneBindParameter extends SqlTestBase {
 
         @Test
         @DisableQueriesWithoutBindParameters
@@ -101,40 +71,10 @@ public class DisableQueriesWithoutBindParametersTest {
     }
 
     @Test
-    public void should_succeed_when_statement_with_one_bind_parameter_and_named_parameter_in_query() {
+    public void should_succeed_when_statement_with_one_bind_parameter() {
 
         // GIVEN
-        Class<?> testClass = StatementWithOneBindParameterAndNamedParameterInQuery.class;
-
-        // WHEN
-        PrintableResult printableResult = testResult(testClass);
-
-        // THEN
-        assertThat(printableResult.failureCount()).isZero();
-
-    }
-
-
-    @RunWith(QuickPerfJUnitRunner.class)
-    public static class StatementWithOneBindParameterAndPositionalParameterInQuery extends SqlTestBase {
-
-        @Test
-        @DisableQueriesWithoutBindParameters
-        public void test_method() {
-            EntityManager em = emf.createEntityManager();
-            String sql = "SELECT * FROM book WHERE isbn = ?";
-            Query nativeQuery = em.createNativeQuery(sql)
-                    .setParameter(1, "978-0321356680");
-            nativeQuery.getResultList();
-        }
-
-    }
-
-    @Test
-    public void should_succeed_when_statement_with_one_bind_parameter_and_positional_parameter_in_query() {
-
-        // GIVEN
-        Class<?> testClass = StatementWithOneBindParameterAndPositionalParameterInQuery.class;
+        Class<?> testClass = StatementWithOneBindParameter.class;
 
         // WHEN
         PrintableResult printableResult = testResult(testClass);
@@ -155,8 +95,6 @@ public class DisableQueriesWithoutBindParametersTest {
             Query nativeQuery = em.createNativeQuery(sql);
             nativeQuery.getResultList();
         }
-
-
     }
 
     @Test
@@ -174,7 +112,7 @@ public class DisableQueriesWithoutBindParametersTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class StatementWithOneBindParameterAndNamedParameterInQueryAndOneUnbindParameter extends SqlTestBase {
+    public static class StatementWithOneBindParameterAndOneUnbindParameter extends SqlTestBase {
 
         @Test
         @DisableQueriesWithoutBindParameters
@@ -185,42 +123,15 @@ public class DisableQueriesWithoutBindParametersTest {
                     .setParameter("isbn", "978-0321356680");
             nativeQuery.getResultList();
         }
+
+
     }
 
     @Test
-    public void should_have_one_failure_when_statement_with_one_bind_parameter_and_named_parameter_in_query_and_one_unbind_parameter() {
+    public void should_have_one_failure_when_statement_with_one_bind_parameter_and_one_unbind_parameter() {
 
         // GIVEN
-        Class<?> testClass = StatementWithOneBindParameterAndNamedParameterInQueryAndOneUnbindParameter.class;
-
-        // WHEN
-        PrintableResult printableResult = testResult(testClass);
-
-        // THEN
-        assertThat(printableResult.failureCount()).isOne();
-
-        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
-
-    }
-    @RunWith(QuickPerfJUnitRunner.class)
-    public static class StatementWithOneBindParameterAndPositionalParameterInQueryAndOneUnbindParameter extends SqlTestBase {
-
-        @Test
-        @DisableQueriesWithoutBindParameters
-        public void test_method() {
-            EntityManager em = emf.createEntityManager();
-            String sql = "SELECT * FROM book WHERE isbn = ? AND title = 'Effective Java'";
-            Query nativeQuery = em.createNativeQuery(sql)
-                    .setParameter(1, "978-0321356680");
-            nativeQuery.getResultList();
-        }
-    }
-
-    @Test
-    public void should_have_one_failure_when_statement_with_one_bind_parameter_and_positional_parameter_in_query_and_one_unbind_parameter() {
-
-        // GIVEN
-        Class<?> testClass = StatementWithOneBindParameterAndPositionalParameterInQueryAndOneUnbindParameter.class;
+        Class<?> testClass = StatementWithOneBindParameterAndOneUnbindParameter.class;
 
         // WHEN
         PrintableResult printableResult = testResult(testClass);
@@ -340,7 +251,7 @@ public class DisableQueriesWithoutBindParametersTest {
     }
 
     @Test
-    public void should_have_one_failure_when_statement_with_one_un_bind_parameter_at_first_position() {
+    public void should_succeed_when_statement_with_one_un_bind_parameter_at_first_position() {
 
         // GIVEN
         Class<?> testClass = StatementWithOneUnbindParameterAtFirstPosition.class;
@@ -445,37 +356,6 @@ public class DisableQueriesWithoutBindParametersTest {
 
     }
 
-
-    @RunWith(QuickPerfJUnitRunner.class)
-    public static class StatementHavingAKeyWordAndNamedParameterWithinValues extends SqlTestBase {
-
-        @Test
-        @DisableQueriesWithoutBindParameters
-        public void test_method() {
-            EntityManager em = emf.createEntityManager();
-            String sql = "select * from book where title = 'or ''= :isbn' or isbn = ?";
-            Query nativeQuery = em.createNativeQuery(sql)
-                    .setParameter(1, "978-0321356680");
-            nativeQuery.getResultList();
-        }
-
-    }
-
-    @Test
-    public void should_succeed_when_statement_having_a_key_word_and_named_parameter_within_values() {
-
-        // GIVEN
-        Class<?> testClass = StatementHavingAKeyWordAndNamedParameterWithinValues.class;
-
-        // WHEN
-        PrintableResult printableResult = testResult(testClass);
-
-        // THEN
-        assertThat(printableResult.failureCount()).isOne();
-        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
-
-    }
-
     @RunWith(QuickPerfJUnitRunner.class)
     public static class StatementUsingUpperCaseSQLKeywordsAndOneUnbindParameter extends SqlTestBase {
 
@@ -504,6 +384,124 @@ public class DisableQueriesWithoutBindParametersTest {
         assertThat(printableResult.failureCount()).isOne();
         assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
 
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class SqlDeleteStatementWithOneBindParameter extends SqlTestBase {
+
+        @Test
+        @DisableQueriesWithoutBindParameters
+        public void test_method() {
+            EntityManager em = emf.createEntityManager();
+            em.getTransaction().begin();
+            String sql = "DELETE FROM book WHERE id = :id";
+            Query nativeQuery = em.createNativeQuery(sql)
+                    .setParameter("id", 40L);
+            nativeQuery.executeUpdate();
+            em.getTransaction().commit();
+        }
+    }
+
+    @Test
+    public void should_succeed_when_delete_statement_with_bind_parameter() {
+
+        // GIVEN
+        Class<?> testClass = SqlDeleteStatementWithOneBindParameter.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isZero();
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class SqlDeleteStatementWithoutBindParameter extends SqlTestBase {
+
+        @Test
+        @DisableQueriesWithoutBindParameters
+        public void test_method() {
+            EntityManager em = emf.createEntityManager();
+            em.getTransaction().begin();
+            String sql = "DELETE FROM book WHERE id = 40";
+            Query nativeQuery = em.createNativeQuery(sql);
+            nativeQuery.executeUpdate();
+            em.getTransaction().commit();
+        }
+    }
+
+    @Test
+    public void should_fail_when_delete_statement_without_bind_parameter() {
+
+        // GIVEN
+        Class<?> testClass = SqlDeleteStatementWithoutBindParameter.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isOne();
+        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class SqlUpdateStatementWithBindParameters extends SqlTestBase {
+        @Test
+        @DisableQueriesWithoutBindParameters
+        public void test_method() {
+            EntityManager em = emf.createEntityManager();
+            em.getTransaction().begin();
+            String sql = "UPDATE book SET isbn = :isbn,title = :title WHERE id = :id";
+            Query nativeQuery = em.createNativeQuery(sql)
+                    .setParameter("isbn", "978-0321356680")
+                    .setParameter("title", "Effective Java")
+                    .setParameter("id", 40L);
+            nativeQuery.executeUpdate();
+            em.getTransaction().commit();
+        }
+    }
+
+    @Test
+    public void should_succeed_when_update_statement_with_bind_parameters() {
+
+        // GIVEN
+        Class<?> testClass = SqlUpdateStatementWithBindParameters.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isZero();
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class SqlUpdateStatementWithOneBindParameterAndOneUnbindParameter extends SqlTestBase {
+
+        @Test
+        @DisableQueriesWithoutBindParameters
+        public void test_method() {
+            EntityManager em = emf.createEntityManager();
+            em.getTransaction().begin();
+            String sql = "UPDATE book SET isbn = :isbn WHERE id = 40";
+            Query nativeQuery = em.createNativeQuery(sql)
+                    .setParameter("isbn", "978-0321356680");
+            nativeQuery.executeUpdate();
+            em.getTransaction().commit();
+        }
+    }
+
+    @Test
+    public void should_fail_when_update_statement_with_one_bind_parameter_and_one_unbind_parameter() {
+
+        // GIVEN
+        Class<?> testClass = SqlUpdateStatementWithOneBindParameterAndOneUnbindParameter.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isOne();
+        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
     }
 
 }
