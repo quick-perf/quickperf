@@ -31,6 +31,7 @@
             <modules>
                 <module>junit4-runner</module>
                 <module>junit4-jvm-test</module>
+                <module>junit4-5-jvm-test</module>
                 <module>junit4-13-jvm-test</module>
                 <module>junit4-13-1-jvm-test</module>
                 <module>junit4-sql-test</module>
