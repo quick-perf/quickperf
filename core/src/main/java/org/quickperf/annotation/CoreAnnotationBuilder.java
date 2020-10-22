@@ -133,14 +133,6 @@ public class CoreAnnotationBuilder {
                 return milliSeconds;
             }
             @Override
-            public long microSeconds() {
-                return microSeconds;
-            }
-            @Override
-            public long nanoSeconds() {
-                return nanoSeconds;
-            }
-            @Override
             public Class<? extends Annotation> annotationType() {
                 return ExpectMaxExecutionTime.class;
             }

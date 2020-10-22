@@ -52,8 +52,4 @@ public @interface ExpectMaxExecutionTime {
 
     int milliSeconds() default 0;
 
-    long microSeconds() default 0;
-
-    long nanoSeconds() default 0;
-
 }
