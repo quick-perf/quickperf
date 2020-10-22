@@ -18,6 +18,13 @@ import org.quickperf.writer.WriterFactory;
 
 import java.lang.annotation.Annotation;
 
+/**
+ * <p>This class helps to build JVM annotations with a global scope.</p>
+ *
+ *@see <a href="https://github.com/quick-perf/doc/wiki/QuickPerf#annotation-scopes"><i>QuickPerf annotations
+ *scopes</i></a>
+ *@see org.quickperf.config.SpecifiableGlobalAnnotations
+ */
 public class JvmAnnotationBuilder {
 
     private JvmAnnotationBuilder() {}
