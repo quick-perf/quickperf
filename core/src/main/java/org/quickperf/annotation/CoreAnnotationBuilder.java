@@ -96,32 +96,23 @@ public class CoreAnnotationBuilder {
     }
 
     public static ExpectMaxExecutionTime expectMaxExecutionTimeOfHours(final int hours) {
-        return expectMaxExecutionTime(hours, 0, 0, 0, 0, 0);
+        return expectMaxExecutionTime(hours, 0, 0, 0);
     }
 
     public static ExpectMaxExecutionTime expectMaxExecutionTimeOfMinutes(final int minutes) {
-        return expectMaxExecutionTime(0, minutes, 0, 0, 0, 0);
+        return expectMaxExecutionTime(0, minutes, 0, 0);
     }
 
     public static ExpectMaxExecutionTime expectMaxExecutionTimeOfSeconds(final int seconds) {
-        return expectMaxExecutionTime(0, 0, seconds, 0, 0, 0);
+        return expectMaxExecutionTime(0, 0, seconds, 0);
     }
 
     public static ExpectMaxExecutionTime expectMaxExecutionTimeOfMilliSeconds(final int ms) {
-        return expectMaxExecutionTime(0, 0, 0, ms, 0, 0);
-    }
-
-    public static ExpectMaxExecutionTime expectMaxExecutionTimeOfMicroSeconds(final int microSeconds) {
-        return expectMaxExecutionTime(0, 0, 0, 0, microSeconds, 0);
-    }
-
-    public static ExpectMaxExecutionTime expectMaxExecutionTimeOfNanoSeconds(final int nanoSeconds) {
-        return expectMaxExecutionTime(0, 0, 0, 0, 0, nanoSeconds);
+        return expectMaxExecutionTime(0, 0, 0, ms);
     }
 
     public static ExpectMaxExecutionTime expectMaxExecutionTime( final int hours, final int minutes
-                                                               , final int seconds, final int milliSeconds
-                                                               , final int microSeconds, final int nanoSeconds) {
+                                                               , final int seconds, final int milliSeconds) {
         return new ExpectMaxExecutionTime() {
             @Override
             public int hours() {
