@@ -13,10 +13,20 @@ package org.quickperf.jvm.annotations;
 
 import java.lang.annotation.Annotation;
 
+/**
+ * <p>This class helps to build JDK Flight Recording (JFR) annotations with a global scope.</p>
+ *
+ *@see <a href="https://github.com/quick-perf/doc/wiki/QuickPerf#annotation-scopes"><i>QuickPerf annotations
+ *scopes</i></a>
+ *@see org.quickperf.config.SpecifiableGlobalAnnotations
+ */
 public class JfrAnnotationBuilder {
 
     private JfrAnnotationBuilder() { }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.ProfileJvm} annotation.
+     */
     public static ProfileJvm profileJvm() {
         return new ProfileJvm() {
             @Override
@@ -26,6 +36,9 @@ public class JfrAnnotationBuilder {
         };
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.ExpectNoJvmIssue} annotation.
+     */
     public static ExpectNoJvmIssue expectNoJvmIssue() {
         return new ExpectNoJvmIssue() {
             @Override
@@ -39,6 +52,9 @@ public class JfrAnnotationBuilder {
         };
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.ExpectNoJvmIssue} annotation.
+     */
     public static ExpectNoJvmIssue expectNoJvmIssue(final int score) {
         return new ExpectNoJvmIssue() {
             @Override
@@ -51,6 +67,5 @@ public class JfrAnnotationBuilder {
             }
         };
     }
-
 
 }

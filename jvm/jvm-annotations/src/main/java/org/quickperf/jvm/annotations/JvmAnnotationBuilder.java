@@ -29,6 +29,9 @@ public class JvmAnnotationBuilder {
 
     private JvmAnnotationBuilder() {}
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.HeapSize} annotation.
+     */
     public static HeapSize heapSize(final int value, final AllocationUnit unit) {
         return new HeapSize() {
             @Override
@@ -46,6 +49,9 @@ public class JvmAnnotationBuilder {
         };
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.JvmOptions} annotation.
+     */
     public static JvmOptions jvmOptions(final String value) {
         return new JvmOptions() {
             @Override
@@ -59,6 +65,9 @@ public class JvmAnnotationBuilder {
         };
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.UseGC} annotation.
+     */
     public static UseGC useGC(final GC gc) {
         return new UseGC() {
             @Override
@@ -72,6 +81,9 @@ public class JvmAnnotationBuilder {
         };
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.EnableGcLogging} annotation.
+     */
     public static EnableGcLogging enableGcLogging() {
         return new EnableGcLogging(){
             @Override
@@ -81,6 +93,9 @@ public class JvmAnnotationBuilder {
         };
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.ExpectMaxHeapAllocation} annotation.
+     */
     public static ExpectMaxHeapAllocation expectMaxHeapAllocation(final double value, final AllocationUnit unit) {
         return new ExpectMaxHeapAllocation() {
             @Override
@@ -98,6 +113,9 @@ public class JvmAnnotationBuilder {
         };
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.MeasureHeapAllocation} annotation.
+     */
     public static MeasureHeapAllocation measureHeapAllocation(
               final String format
             , final Class<? extends WriterFactory> writerFactoryClass) {
@@ -119,18 +137,30 @@ public class JvmAnnotationBuilder {
         };
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.MeasureHeapAllocation} annotation.
+     */
     public static MeasureHeapAllocation measureHeapAllocation() {
         return measureHeapAllocation(MeasureHeapAllocation.QUICK_PERF_MEASURED_HEAP_ALLOCATION_DEFAULT_FORMAT, DefaultWriterFactory.class);
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.MeasureHeapAllocation} annotation.
+     */
     public static MeasureHeapAllocation measureHeapAllocation(final String format) {
         return measureHeapAllocation(format, DefaultWriterFactory.class);
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.MeasureHeapAllocation} annotation.
+     */
     public static MeasureHeapAllocation measureHeapAllocation(final Class<? extends WriterFactory> writerFactoryClass) {
         return measureHeapAllocation(MeasureHeapAllocation.QUICK_PERF_MEASURED_HEAP_ALLOCATION_DEFAULT_FORMAT, writerFactoryClass);
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.MeasureRSS} annotation.
+     */
     public static MeasureRSS measureRSS(){
         return  new MeasureRSS() {
             @Override
@@ -140,6 +170,9 @@ public class JvmAnnotationBuilder {
         };
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.ExpectMaxRSS} annotation.
+     */
     public static ExpectMaxRSS expectMaxRSS(final double value, final AllocationUnit unit) {
         return new ExpectMaxRSS() {
             @Override
@@ -157,6 +190,9 @@ public class JvmAnnotationBuilder {
         };
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.ExpectNoHeapAllocation} annotation.
+     */
     public static ExpectNoHeapAllocation expectNoHeapAllocation() {
         return new ExpectNoHeapAllocation() {
             @Override
@@ -166,6 +202,9 @@ public class JvmAnnotationBuilder {
         };
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.Xms} annotation.
+     */
     public static Xms xms(final int value, final AllocationUnit unit) {
         return new Xms() {
             @Override
@@ -183,6 +222,9 @@ public class JvmAnnotationBuilder {
         };
     }
 
+    /**
+     *Allows to build {@link org.quickperf.jvm.annotations.Xmx} annotation.
+     */
     public static Xmx xmx(final int value, final AllocationUnit unit) {
         return new Xmx() {
             @Override
