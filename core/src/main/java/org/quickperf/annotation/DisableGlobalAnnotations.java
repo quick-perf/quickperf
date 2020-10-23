@@ -37,6 +37,10 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DisableGlobalAnnotations {
 
+    /**
+     * To comment on the reason why global annotations are disabled.
+     * @return the reason why global annotations are disabled
+     */
     String comment() default "";
 
 }

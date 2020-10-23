@@ -18,11 +18,28 @@ import java.lang.annotation.Target;
 
 /**
  * Cancels behavior of {@link DisableQueriesWithoutBindParameters}.
+ *
+ * <br><br>
+ * <h3>Example:</h3>
+ * <pre>
+ *      <b>&#064;DisableQueriesWithoutBindParameters(comment = "Skewed data")</b>
+ *      <b>&#064;Test</b>
+ *      public void execute() {
+ *          <code>...</code>
+ *      }
+ * </pre>
+ *
+ * @see <a href="https://medium.com/@FranckPachot/postgresql-bind-variable-peeking-fb4be4942252"><i>PostgreSQL
+ * “bind variable peeking”</i></a>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface EnableQueriesWithoutBindParameters {
 
+    /**
+     * To comment on the reason why SQL queries without bind parameters are enabled.
+     * @return the reason why SQL queries without bind parameters are enabled
+     */
     String comment() default "";
 
 }

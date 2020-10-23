@@ -23,6 +23,11 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface EnableSameSelectTypesWithDifferentParamValues {
 
+    /**
+     * To comment on the reason why the same select types with different parameter
+     * values are enabled.
+     * @return the reason why the same select types with different parameter values are enabled
+     */
     String comment() default "";
 
 }
