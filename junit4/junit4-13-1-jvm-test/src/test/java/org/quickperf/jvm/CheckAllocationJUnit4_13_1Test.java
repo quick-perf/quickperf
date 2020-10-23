@@ -18,7 +18,7 @@ import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
 import org.quickperf.jvm.annotations.JvmOptions;
 
 @RunWith(QuickPerfJUnitRunner.class)
-public class CheckAllocationJUnit4_13Test {
+public class CheckAllocationJUnit4_13_1Test {
 
     @ExpectNoHeapAllocation
     @JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers")
