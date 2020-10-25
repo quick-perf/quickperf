@@ -24,17 +24,18 @@ class JFREventsLoader {
     IItemCollection loadJfrEventsFrom(WorkingFolder workingFolder) {
 
         String jfrFilePath = workingFolder.getPath() + File.separator + "jvm-profiling.jfr";
-        File jfrFile = new File(jfrFilePath);
-        if(!jfrFile.exists()) {
-            String message =
-                      "Java Flight Recorder profiling is available for "
-                    + System.lineSeparator()
-                    + "Oracle JDK >= 1.7u40 and OpenJDK >= 11";
-            throw new IllegalStateException(message);
+
+        if (unableToProfileWithJdkFlightRecorder(jfrFilePath)) {
+            throw new UnableToProfileJvmWithJdkFlightRecorder();
         }
 
         return load(jfrFilePath);
 
+    }
+
+    private boolean unableToProfileWithJdkFlightRecorder(String jfrFilePath) {
+        File jfrFile = new File(jfrFilePath);
+        return !jfrFile.exists();
     }
 
     private IItemCollection load(String jfrFilePath) {
