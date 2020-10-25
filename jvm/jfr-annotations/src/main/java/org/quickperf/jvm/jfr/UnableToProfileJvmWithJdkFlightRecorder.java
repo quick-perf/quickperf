@@ -9,22 +9,23 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.jvm;
+package org.quickperf.jvm.jfr;
 
-public class JvmType {
+import org.quickperf.jvm.JVM;
 
-    private static final String JAVA_VM_NAME_PROPERTY = "java.vm.name";
+class UnableToProfileJvmWithJdkFlightRecorder extends RuntimeException {
 
-    private JvmType() {}
-
-    public static boolean isOpenJdkJvm() {
-        String vmName = System.getProperty(JAVA_VM_NAME_PROPERTY);
-        return vmName.contains("OpenJDK");
+    UnableToProfileJvmWithJdkFlightRecorder() {
+        super(buildMessage());
     }
 
-    public static boolean isHotSpotJvm() {
-        String vmName = System.getProperty(JAVA_VM_NAME_PROPERTY);
-        return vmName.contains("HotSpot");
+    private static String buildMessage() {
+        return   "JDK Flight Recorder profiling is available for "
+                + System.lineSeparator()
+                + "Oracle JDK >= 1.7u40 and OpenJDK >= 11"
+                + System.lineSeparator()
+                + "Used JVM: " + JVM.INSTANCE.toString()
+                ;
     }
 
 }

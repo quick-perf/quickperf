@@ -17,10 +17,10 @@ import org.quickperf.config.library.QuickPerfConfigs;
 import org.quickperf.config.library.QuickPerfConfigsLoader;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
 import org.quickperf.issue.JvmOrTestIssue;
-import org.quickperf.issue.TestIssue;
 import org.quickperf.issue.PerfIssuesEvaluator;
 import org.quickperf.issue.PerfIssuesToFormat;
-import org.quickperf.jvm.JvmVersion;
+import org.quickperf.issue.TestIssue;
+import org.quickperf.jvm.JVM;
 import org.quickperf.perfrecording.PerformanceRecording;
 import org.quickperf.reporter.QuickPerfReporter;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
@@ -83,7 +83,8 @@ public class QuickPerfTestNGListener implements IHookable {
     }
 
     private int findTestNGAllocationOffset() {
-        if (JvmVersion.isGreaterThanOrEqualTo12()) {
+        JVM.Version jvmVersion = JVM.INSTANCE.version;
+        if (jvmVersion.isGreaterThanOrEqualTo12()) {
             return 72;
         }
         return 40;
