@@ -14,7 +14,6 @@ package org.quickperf.sql.update;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectMaxUpdate;
-import org.quickperf.sql.framework.JdbcSuggestion;
 import org.quickperf.unit.Count;
 
 import static org.quickperf.sql.SqlStatementPerfIssueBuilder.aSqlPerfIssue;
