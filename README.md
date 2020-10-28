@@ -357,6 +357,16 @@ Many thanks to all our contributors!
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=kanedafromparis" title="Documentation">📖</a>
+        </td>        
+        <td align="center">
+            <a href="https://github.com/MohamedKaraga">
+                <img src="https://avatars.githubusercontent.com/MohamedKaraga" width="100px;" alt="Mohamed Karaga"/>
+                <br/>
+                <sub><b>Mohamed Karaga</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=mohamedkaraga" title="Bug reports">🐛</a>
+                        <a href="https://github.com/quick-perf/quickperf/commits?author=mohamedkaraga" title="Code">💻</a>
         </td>
     </tr>
 </table>
