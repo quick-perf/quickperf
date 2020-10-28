@@ -24,7 +24,6 @@ import java.util.List;
 public class AllParametersAreBoundExtractor implements ExtractablePerformanceMeasure<SqlExecutions, BooleanMeasure> {
 
     public static final AllParametersAreBoundExtractor INSTANCE = new AllParametersAreBoundExtractor();
-    private static final List<String> SQL_KEYS = List.of("where", "values", "set");
 
     private AllParametersAreBoundExtractor() {
     }
@@ -45,7 +44,7 @@ public class AllParametersAreBoundExtractor implements ExtractablePerformanceMea
         final String queryString = query.getQuery();
         String queryStrippedOfQuotes = stripQuotesContent(queryString);
         final String queryInLowerCase = queryStrippedOfQuotes.toLowerCase();
-        if (SQL_KEYS.stream().anyMatch(queryInLowerCase::contains)) {
+        if (queryInLowerCase.contains("where") || queryInLowerCase.contains("values") || queryInLowerCase.contains("set")) {
             String[] splitWhere = queryInLowerCase.split("where");
             List<String> andOrParts = new ArrayList<>();
             for (String s : splitWhere) {
