@@ -21,11 +21,16 @@ public class JavaFlightRecorderProfilerFactory {
 
         JVM jvm = JVM.INSTANCE;
 
-        if (jvm.type.isHotSpotJvm() && (jvm.version.is7() || jvm.version.is8())) {
-            return new JavaFlightRecorderProfilerBeforeJava9();
-        } else if ((jvm.type.isHotSpotJvm() && jvm.version.isGreaterThanOrEqualTo9())
-                || (jvm.type.isOpenJdkJvm() && jvm.version.isGreaterThanOrEqualTo11()) ) {
-            return new JavaFlightRecorderProfilerFromJava9();
+        JVM.Type jvmType = jvm.type;
+        JVM.Version jvmVersion = jvm.version;
+
+        if (jvmType.isHotSpotJvm() && (jvmVersion.is7() || jvmVersion.is8())) {
+            return new OracleJdkFlightRecorderProfilerBeforeJava9();
+        } else if (
+                   (jvmType.isHotSpotJvm() && jvmVersion.isGreaterThanOrEqualTo9())
+                || (jvmType.isOpenJdkJvm() && (jvmVersion.is8() || jvmVersion.isGreaterThanOrEqualTo11()))
+                  ) {
+            return new JdkFlightRecorderProfilerFromJava9();
         }
 
         return JvmProfiler.NONE;

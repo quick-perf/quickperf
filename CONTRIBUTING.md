@@ -36,7 +36,14 @@ Need some help with Git or Github? Don't worry, you can watch [these videos](htt
 ## Build QuickPerf
 
 ### JDK requirements
-You need a JDK (OpenJDK, ...) >= 11 or an Oracle JDK >= 1.8.
+The JDK must have a version equal to or greater than 1.8.
+
+Also, the JDK must be able to profile with the JDK Flight Recorder that is available with 
+* OpenJDK JDK >= 11
+* OpenJDK JDK 8 with a version greater than u262/u272 (following vendors)
+
+  👉 Article from Marcus Hirt giving details: http://hirt.se/blog/?p=1235
+* Oracle JDK >= 1.7u40
 
 ### Steps to build QuickPerf
 1) Clone the repository

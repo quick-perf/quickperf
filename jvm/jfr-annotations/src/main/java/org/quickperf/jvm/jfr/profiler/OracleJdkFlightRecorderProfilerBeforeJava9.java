@@ -15,20 +15,22 @@ import javax.management.*;
 import java.io.File;
 import java.lang.management.ManagementFactory;
 
-class JavaFlightRecorderProfilerFromJava9 implements JvmProfiler {
+class OracleJdkFlightRecorderProfilerBeforeJava9 implements JvmProfiler {
+
+    private final String name = "1";
 
     private final MBeanServer mBeanServer;
 
     private final ObjectName objectName;
 
-    JavaFlightRecorderProfilerFromJava9() {
+    OracleJdkFlightRecorderProfilerBeforeJava9() {
         this.mBeanServer = ManagementFactory.getPlatformMBeanServer();
         this.objectName = getObjectName();
     }
 
     private ObjectName getObjectName() {
         try {
-            return new ObjectName("jdk.management.jfr:type=FlightRecorder");
+            return new ObjectName("com.sun.management:type=DiagnosticCommand");
         } catch (MalformedObjectNameException e) {
             throw new IllegalStateException(e);
         }
@@ -37,13 +39,8 @@ class JavaFlightRecorderProfilerFromJava9 implements JvmProfiler {
     @Override
     public void startProfiling(String workingFolderPath) {
         try {
-            Long recordingId = (Long) mBeanServer.invoke(objectName, "newRecording", new Object[]{}, new String[0]);
-
-            Object[] setConfigArgs = new Object[]{recordingId, "profile"};
-            mBeanServer.invoke(objectName, "setPredefinedConfiguration", setConfigArgs, new String[]{long.class.getName(), String.class.getName()});
-
-            Object[] startRecordingArgs = new Object[]{recordingId};
-            mBeanServer.invoke(objectName, "startRecording", startRecordingArgs, new String[]{long.class.getName()});
+            Object[] jfrStartArgs = new Object[]{new String[]{"name=" + name, "settings=" + "profile.jfc"}};
+            mBeanServer.invoke(objectName, "jfrStart", jfrStartArgs, new String[]{String[].class.getName()});
         } catch (InstanceNotFoundException | MBeanException | ReflectionException e) {
             throw new IllegalStateException(e);
         }
@@ -51,22 +48,12 @@ class JavaFlightRecorderProfilerFromJava9 implements JvmProfiler {
 
     @Override
     public void stopProfiling(String workingFolderPath) {
-        String jfrPath = workingFolderPath + File.separator + FlightRecorder.FILE_NAME;
         try {
-
-            long recordingId = (long) mBeanServer.invoke(objectName
-                                                       , "takeSnapshot"
-                                                       , new Object[]{}
-                                                       , new String[0]
-                                                        );
-
-            Object[] copyToArgs = new Object[]{recordingId, jfrPath};
-            mBeanServer.invoke(objectName, "copyTo", copyToArgs, new String[]{long.class.getName(), String.class.getName()});
-
+            Object[] jfrStopArgs = new Object[]{new String[]{"name=" + name, "filename=" + workingFolderPath + File.separator + FlightRecorder.FILE_NAME, "compress=" + false}};
+            mBeanServer.invoke(objectName, "jfrStop", jfrStopArgs, new String[]{String[].class.getName()});
         } catch (InstanceNotFoundException | MBeanException | ReflectionException e) {
             throw new IllegalStateException(e);
         }
-
     }
 
 }

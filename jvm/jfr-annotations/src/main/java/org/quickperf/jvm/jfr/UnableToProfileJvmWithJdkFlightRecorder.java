@@ -20,11 +20,21 @@ class UnableToProfileJvmWithJdkFlightRecorder extends RuntimeException {
     }
 
     private static String buildMessage() {
-        return   "JDK Flight Recorder profiling is available for "
+
+        String pointingRight = "\uD83D\uDC49";
+
+        return    System.lineSeparator()
+                + "\t * JDK Flight Recorder profiling is available with "
                 + System.lineSeparator()
-                + "Oracle JDK >= 1.7u40 and OpenJDK >= 11"
+                + "\t \t * OpenJDK JDK >= 11"
                 + System.lineSeparator()
-                + "Used JVM: " + JVM.INSTANCE.toString()
+                + "\t\t * OpenJDK JDK 8 with a version greater than u262/u272 (following vendors)"
+                + System.lineSeparator()
+                + "\t\t   " + pointingRight + " Article from Marcus Hirt giving details: http://hirt.se/blog/?p=1235"
+                + System.lineSeparator()
+                + "\t\t * Oracle JDK >= 1.7u40"
+                + System.lineSeparator()
+                + "\t * Used JVM: " + JVM.INSTANCE.toString()
                 ;
     }
 
