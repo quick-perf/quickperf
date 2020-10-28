@@ -30,7 +30,7 @@ class ExpectMaxExecutionTimeAnnotationFormatter {
         SortedSet<TimeUnit> unitsToDisplay = findUnitsToDisplay(annotation);
 
         TreeMap<TimeUnit, Long> timeValueByTimeUnit = buildTimeValueByUnit(annotation
-                , unitsToDisplay);
+                                                                         , unitsToDisplay);
 
         return toString(timeValueByTimeUnit);
 
@@ -50,7 +50,7 @@ class ExpectMaxExecutionTimeAnnotationFormatter {
         timeUnits.add(TimeUnit.NANOSECONDS);
 
         return timeUnits.subSet( minUnitToDisplay, true
-                , maxUnitToDisplay, true);
+                               , maxUnitToDisplay, true);
     }
 
     private TreeMap<TimeUnit, Long> buildTimeValueByUnit(ExpectMaxExecutionTime annotation, SortedSet<TimeUnit> unitsToDisplay) {
@@ -64,10 +64,6 @@ class ExpectMaxExecutionTimeAnnotationFormatter {
                 valuesByTimeUnit.put(TimeUnit.SECONDS, (long) annotation.seconds());
             } else if(unitToDisplay.equals(TimeUnit.MILLISECONDS)) {
                 valuesByTimeUnit.put(TimeUnit.MILLISECONDS, (long) annotation.milliSeconds());
-            } else if(unitToDisplay.equals(TimeUnit.MICROSECONDS)) {
-                valuesByTimeUnit.put(TimeUnit.MICROSECONDS, annotation.microSeconds());
-            } else if(unitToDisplay.equals(TimeUnit.NANOSECONDS)) {
-                valuesByTimeUnit.put(TimeUnit.NANOSECONDS, annotation.nanoSeconds());
             }
         }
         return valuesByTimeUnit;
@@ -94,12 +90,6 @@ class ExpectMaxExecutionTimeAnnotationFormatter {
     }
 
     private TimeUnit findMinUnitToDisplay(ExpectMaxExecutionTime annotation) {
-        if(annotation.nanoSeconds() != 0) {
-            return TimeUnit.NANOSECONDS;
-        }
-        if(annotation.microSeconds() != 0) {
-            return TimeUnit.MICROSECONDS;
-        }
         if(annotation.milliSeconds() != 0) {
             return TimeUnit.MILLISECONDS;
         }
@@ -127,12 +117,6 @@ class ExpectMaxExecutionTimeAnnotationFormatter {
         }
         if(annotation.milliSeconds() != 0) {
             return TimeUnit.MILLISECONDS;
-        }
-        if(annotation.microSeconds() != 0) {
-            return TimeUnit.MICROSECONDS;
-        }
-        if(annotation.nanoSeconds() != 0) {
-            return TimeUnit.NANOSECONDS;
         }
         return TimeUnit.HOURS;
     }

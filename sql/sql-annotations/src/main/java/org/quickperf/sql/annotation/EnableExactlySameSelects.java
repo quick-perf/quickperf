@@ -23,6 +23,10 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface EnableExactlySameSelects {
 
+    /**
+     * To comment on the reason why the same selects are enabled.
+     * @return the reason why the same selects are enabled
+     */
     String comment() default "";
 
 }

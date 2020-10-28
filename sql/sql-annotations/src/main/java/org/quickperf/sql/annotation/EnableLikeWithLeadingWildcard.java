@@ -23,6 +23,10 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface EnableLikeWithLeadingWildcard {
 
+    /**
+     * To comment on the reason why LIKE with leading wildcard is enabled.
+     * @return the reason why LIKE with leading wildcard is enabled
+     */
     String comment() default "";
 
 }

@@ -35,6 +35,10 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DisableQuickPerf {
 
+    /**
+     * To comment on the reason why QuickPerf annotations are disabled.
+     * @return the reason why QuickPerf annotations are disabled
+     */
     String comment() default "";
 
 }

@@ -11,7 +11,6 @@
 
 package org.quickperf.jvm.annotations;
 
-import org.quickperf.annotation.FunctionalIteration;
 import org.quickperf.jvm.allocation.AllocationUnit;
 
 import java.lang.annotation.ElementType;

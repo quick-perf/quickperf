@@ -11,8 +11,7 @@
 
 package org.quickperf.jvm.jfr.profiler;
 
-import org.quickperf.jvm.JvmType;
-import org.quickperf.jvm.JvmVersion;
+import org.quickperf.jvm.JVM;
 
 public class JavaFlightRecorderProfilerFactory {
 
@@ -20,11 +19,12 @@ public class JavaFlightRecorderProfilerFactory {
 
     public static JvmProfiler getJavaFlightRecorderProfiler() {
 
-        if (JvmType.isHotSpotJvm() && (JvmVersion.is7() || JvmVersion.is8())) {
+        JVM jvm = JVM.INSTANCE;
+
+        if (jvm.type.isHotSpotJvm() && (jvm.version.is7() || jvm.version.is8())) {
             return new JavaFlightRecorderProfilerBeforeJava9();
-        } else if ((JvmType.isHotSpotJvm() && JvmVersion.isGreaterThanOrEqualTo9())
-                || (JvmType.isOpenJdkJvm() && JvmVersion.isGreaterThanOrEqualTo11())
-        ) {
+        } else if ((jvm.type.isHotSpotJvm() && jvm.version.isGreaterThanOrEqualTo9())
+                || (jvm.type.isOpenJdkJvm() && jvm.version.isGreaterThanOrEqualTo11()) ) {
             return new JavaFlightRecorderProfilerFromJava9();
         }
 

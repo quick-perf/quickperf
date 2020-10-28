@@ -11,16 +11,17 @@
 
 package org.quickperf.junit4;
 
+import junit.runner.Version;
 import org.junit.Test;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
-import org.quickperf.config.library.QuickPerfConfigsLoader;
+import org.quickperf.SystemProperties;
 import org.quickperf.TestExecutionContext;
 import org.quickperf.config.library.QuickPerfConfigs;
-import org.quickperf.SystemProperties;
-import org.quickperf.jvm.JvmVersion;
+import org.quickperf.config.library.QuickPerfConfigsLoader;
+import org.quickperf.jvm.JVM;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -77,10 +78,19 @@ public class QuickPerfJUnitRunner extends BlockJUnit4ClassRunner {
     }
 
     private int findJUnit4AllocationOffset() {
-        if (JvmVersion.isGreaterThanOrEqualTo12()) {
+        JVM.Version jvmVersion = JVM.INSTANCE.version;
+        if (jvmVersion.isGreaterThanOrEqualTo12() && !junit4_13IsUsed() && !junit4_13_1IsUsed()) {
             return 72;
         }
         return 40;
+    }
+
+    private boolean junit4_13IsUsed() {
+        return Version.id().equals("4.13");
+    }
+
+    private boolean junit4_13_1IsUsed() {
+        return Version.id().equals("4.13.1");
     }
 
     @Override

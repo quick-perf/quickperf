@@ -54,9 +54,7 @@ public class MaxExecutionTimeVerifier implements VerifiablePerformanceIssue<Expe
                   TimeUnit.HOURS.toNanos(annotation.hours())
                 + TimeUnit.MINUTES.toNanos(annotation.minutes())
                 + TimeUnit.SECONDS.toNanos(annotation.seconds())
-                + TimeUnit.MILLISECONDS.toNanos(annotation.milliSeconds())
-                + TimeUnit.MICROSECONDS.toNanos(annotation.microSeconds())
-                + annotation.nanoSeconds();
+                + TimeUnit.MILLISECONDS.toNanos(annotation.milliSeconds());
         return new ExecutionTime(maxExpectedExecutionTimeInNanoSeconds
                                , TimeUnit.NANOSECONDS);
     }

@@ -11,8 +11,6 @@
 
 package org.quickperf.jvm.annotations;
 
-import org.quickperf.annotation.FunctionalIteration;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

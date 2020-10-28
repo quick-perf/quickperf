@@ -11,7 +11,7 @@
 
 package org.quickperf.jvm.config.library;
 
-import org.quickperf.jvm.JvmVersion;
+import org.quickperf.jvm.JVM;
 import org.quickperf.testlauncher.JvmOption;
 
 import java.util.ArrayList;
@@ -28,7 +28,8 @@ class JfrJvmOptions {
 
     private static List<JvmOption> buildJvmOptions() {
         List<JvmOption> jvmOptions = new ArrayList<>(4);
-        if(!JvmVersion.isGreaterThanOrEqualTo11()) {
+        JVM jvm = JVM.INSTANCE;
+        if(jvm.type.isHotSpotJvm() && !jvm.version.isGreaterThanOrEqualTo11()) {
             jvmOptions.add(new JvmOption("-XX:+UnlockCommercialFeatures"));
         }
         jvmOptions.add(new JvmOption("-XX:+FlightRecorder"));

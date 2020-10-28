@@ -35,7 +35,7 @@ public @interface MeasureHeapAllocation {
      *
      * The default value is <code>[QUICK PERF] Measured heap allocation (test method thread): %s</code>
      *
-     * @return
+     * @return the format used to print the measured heap allocation on the console
      */
     String format() default QUICK_PERF_MEASURED_HEAP_ALLOCATION_DEFAULT_FORMAT;
 
@@ -51,7 +51,7 @@ public @interface MeasureHeapAllocation {
      * falls back on this default value.</p>
      *
      * @return a class that implements the <code>WriterFactory</code> interface
-     * @see WriterFactory
+     * @see org.quickperf.writer.WriterFactory
      */
     Class<? extends WriterFactory> writerFactory()
             default DefaultWriterFactory.class;

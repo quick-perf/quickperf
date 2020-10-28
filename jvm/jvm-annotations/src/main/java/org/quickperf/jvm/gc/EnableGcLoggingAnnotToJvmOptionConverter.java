@@ -12,7 +12,7 @@
 package org.quickperf.jvm.gc;
 
 import org.quickperf.WorkingFolder;
-import org.quickperf.jvm.JvmVersion;
+import org.quickperf.jvm.JVM;
 import org.quickperf.jvm.annotations.EnableGcLogging;
 import org.quickperf.testlauncher.AnnotationToJvmOptionConverter;
 import org.quickperf.testlauncher.JvmOption;
@@ -33,7 +33,8 @@ public class EnableGcLoggingAnnotToJvmOptionConverter implements AnnotationToJvm
         String gcLogPath = workingFolder.getPath() + File.separator + "gc.log";
         System.out.println("GC log file: " + gcLogPath);
 
-        if (JvmVersion.isGreaterThanOrEqualTo9()) {
+        JVM.Version jvmVersion = JVM.INSTANCE.version;
+        if (jvmVersion.isGreaterThanOrEqualTo9()) {
             return Arrays.asList(new JvmOption("-Xlog:gc*,gc+age=trace:file=\\\"" + gcLogPath + "\\\":tags,uptime,time"));
         }
 

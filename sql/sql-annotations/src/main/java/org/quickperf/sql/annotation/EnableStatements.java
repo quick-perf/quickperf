@@ -23,6 +23,10 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface EnableStatements {
 
+    /**
+     * To comment on the reason why {@link java.sql.Statement} is enabled.
+     * @return the reason why {@link java.sql.Statement} is enabled.
+     */
     String comment() default "";
 
 }
