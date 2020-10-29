@@ -22,27 +22,13 @@
 
     <packaging>pom</packaging>
 
-    <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>junit4-runner</module>
-                <module>junit4-5-jvm-test</module>
-                <module>junit4-12-jvm-test</module>
-                <module>junit4-13-jvm-test</module>
-                <module>junit4-13-1-jvm-test</module>
-                <module>junit4-sql-test</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>release</id>
-            <modules>
-                <module>junit4-runner</module>
-            </modules>
-        </profile>
-    </profiles>
+    <modules>
+        <module>junit4-runner</module>
+        <module>junit4-5-jvm-test</module>
+        <module>junit4-12-jvm-test</module>
+        <module>junit4-13-jvm-test</module>
+        <module>junit4-13-1-jvm-test</module>
+        <module>junit4-sql-test</module>
+    </modules>
 
 </project>

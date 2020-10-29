@@ -24,25 +24,14 @@
 
     <packaging>pom</packaging>
 
+    <modules>
+        <module>sql-annotations</module>
+        <module>sql-memory-test-util</module>
+        <module>sql-hibernate-test-util</module>
+        <module>sql-memory-test</module>
+    </modules>
+
     <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>sql-annotations</module>
-                <module>sql-memory-test-util</module>
-                <module>sql-hibernate-test-util</module>
-                <module>sql-memory-test</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>release</id>
-            <modules>
-                <module>sql-annotations</module>
-            </modules>
-        </profile>
         <profile>
             <id>testcontainers</id>
             <modules>

@@ -22,6 +22,10 @@
 
     <artifactId>quick-perf-junit5-test-util</artifactId>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
