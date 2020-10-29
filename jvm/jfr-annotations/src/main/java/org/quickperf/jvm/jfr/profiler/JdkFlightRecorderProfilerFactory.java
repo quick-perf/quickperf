@@ -13,11 +13,11 @@ package org.quickperf.jvm.jfr.profiler;
 
 import org.quickperf.jvm.JVM;
 
-public class JavaFlightRecorderProfilerFactory {
+public class JdkFlightRecorderProfilerFactory {
 
-    private JavaFlightRecorderProfilerFactory() { }
+    private JdkFlightRecorderProfilerFactory() { }
 
-    public static JvmProfiler getJavaFlightRecorderProfiler() {
+    public static JvmProfiler getJdkFlightRecorderProfiler() {
 
         JVM jvm = JVM.INSTANCE;
 

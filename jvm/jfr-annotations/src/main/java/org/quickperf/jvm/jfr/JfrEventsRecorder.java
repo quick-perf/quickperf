@@ -14,13 +14,13 @@ package org.quickperf.jvm.jfr;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.quickperf.TestExecutionContext;
 import org.quickperf.WorkingFolder;
-import org.quickperf.jvm.jfr.profiler.JavaFlightRecorderProfilerFactory;
+import org.quickperf.jvm.jfr.profiler.JdkFlightRecorderProfilerFactory;
 import org.quickperf.jvm.jfr.profiler.JvmProfiler;
 import org.quickperf.perfrecording.RecordablePerformance;
 
 public class JfrEventsRecorder implements RecordablePerformance<JfrRecording> {
 
-    private final JvmProfiler jfrProfiler = JavaFlightRecorderProfilerFactory.getJavaFlightRecorderProfiler();
+    private final JvmProfiler jfrProfiler = JdkFlightRecorderProfilerFactory.getJdkFlightRecorderProfiler();
 
     private JfrRecording jfrRecording;
 

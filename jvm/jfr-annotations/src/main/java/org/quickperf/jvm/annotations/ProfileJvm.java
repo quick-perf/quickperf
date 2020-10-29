@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 
 /**
  * The <code>ProfileJvm</code> annotation To profile the JVM with the JDK Flight Recorder (JFR). The console displays
- * the path to the recording file. You can open this file with Java Mission Control.<p>
+ * the path to the recording file. You can open this file with JDK Mission Control.<p>
  * &#064;ProfileJvm also displays some JVM profiling data (GC times, heap allocation estimation, exception numbers, ...)
  * in standard output.
  *
