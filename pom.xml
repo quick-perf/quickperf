@@ -158,35 +158,20 @@
         <url>https://github.com/quick-perf/quickperf/issues</url>
     </issueManagement>
 
+    <modules>
+        <module>core</module>
+        <module>jvm</module>
+        <module>sql</module>
+        <module>junit4</module>
+        <module>junit5</module>
+        <module>testng</module>
+        <module>spring</module>
+        <module>bom</module>
+    </modules>
+
     <profiles>
         <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>core</module>
-                <module>jvm</module>
-                <module>sql</module>
-                <module>junit4</module>
-                <module>junit5</module>
-                <module>testng</module>
-                <module>spring</module>
-                <module>bom</module>
-            </modules>
-        </profile>
-        <profile>
             <id>release</id>
-            <modules>
-                <module>core</module>
-                <module>jvm</module>
-                <module>sql</module>
-                <module>junit4</module>
-                <module>junit5</module>
-                <module>testng</module>
-                <module>spring</module>
-                <module>bom</module>
-            </modules>
             <build>
                 <plugins>
                     <plugin>
