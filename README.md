@@ -366,7 +366,16 @@ Many thanks to all our contributors!
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=mohamedkaraga" title="Bug reports">🐛</a>
-                        <a href="https://github.com/quick-perf/quickperf/commits?author=mohamedkaraga" title="Code">💻</a>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=mohamedkaraga" title="Code">💻</a>
+        </td>        
+        <td align="center">
+            <a href="https://github.com/hboutemy">
+                <img src="https://avatars.githubusercontent.com/hboutemy" width="100px;" alt="Hervé Boutemy"/>
+                <br/>
+                <sub><b>Hervé Boutemy</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=hboutemy" title="Packaging">📦</a>
         </td>
     </tr>
 </table>
