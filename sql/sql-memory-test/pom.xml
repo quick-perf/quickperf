@@ -28,6 +28,7 @@
         <dependencies.max.jdk.version>1.8</dependencies.max.jdk.version>
         <jar.skipIfEmpty>true</jar.skipIfEmpty>
         <gpg.skip>true</gpg.skip>
+        <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
         <maven.install.skip>true</maven.install.skip>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
