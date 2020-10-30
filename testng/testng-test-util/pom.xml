@@ -25,6 +25,7 @@
     <artifactId>quick-perf-testng-test-util</artifactId>
 
     <properties>
+        <gpg.skip>true</gpg.skip>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
