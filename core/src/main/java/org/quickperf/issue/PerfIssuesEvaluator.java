@@ -34,6 +34,23 @@ public class PerfIssuesEvaluator {
                                                                        , TestExecutionContext testExecutionContext
                                                                        , JvmOrTestIssue jvmOrTestIssue) {
 
+        try {
+            return evaluatePerfIssuesIfNoJvmIssueWithPotentialUnexpectedException(annotationConfigs
+                                                                                , testExecutionContext
+                                                                                , jvmOrTestIssue);
+        } catch (Exception e) {
+            if(UnexpectedQuickPerfException.isQuickPerfException(e)) {
+                throw e;
+            }
+            throw new UnexpectedQuickPerfException(e);
+        }
+
+    }
+
+    private Collection<PerfIssuesToFormat> evaluatePerfIssuesIfNoJvmIssueWithPotentialUnexpectedException(SetOfAnnotationConfigs annotationConfigs
+                                                                                                        , TestExecutionContext testExecutionContext
+                                                                                                        , JvmOrTestIssue jvmOrTestIssue) {
+
         if(jvmOrTestIssue.hasJvmIssue()) {
             return Collections.emptyList();
         }
@@ -126,12 +143,14 @@ public class PerfIssuesEvaluator {
     }
 
     @SuppressWarnings("unchecked")
-    public Map<Annotation, PerfMeasure> extractPerfMeasureByAnnotation(SetOfAnnotationConfigs testAnnotationConfigs, Map<Annotation, PerfRecord> perfRecordByAnnotation, TestExecutionContext testExecutionContext) {
+    private Map<Annotation, PerfMeasure> extractPerfMeasureByAnnotation(SetOfAnnotationConfigs testAnnotationConfigs, Map<Annotation, PerfRecord> perfRecordByAnnotation, TestExecutionContext testExecutionContext) {
         Map<Annotation, PerfMeasure> perfMeasureByAnnotation = new HashMap<>();
         for (Annotation annotation : testExecutionContext.getPerfAnnotations()) {
             ExtractablePerformanceMeasure perfMeasureExtractor = testAnnotationConfigs.retrievePerfMeasureExtractorFor(annotation);
             PerfRecord perfRecord = perfRecordByAnnotation.get(annotation);
+
             PerfMeasure perfMeasure = perfMeasureExtractor.extractPerfMeasureFrom(perfRecord);
+
             if(perfMeasure != PerfMeasure.NONE) {
                 perfMeasureByAnnotation.put(annotation, perfMeasure);
             }
