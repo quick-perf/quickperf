@@ -214,6 +214,8 @@ Many thanks to all our contributors!
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=loicmathieu" title="Code">💻</a>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=loicmathieu" title="Examples">💡</a>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=loicmathieu" title="Documentation">📖</a>
         </td>
     </tr>
     <tr>
