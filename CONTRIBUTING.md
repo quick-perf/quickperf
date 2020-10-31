@@ -40,8 +40,7 @@ The JDK must have a version equal to or greater than 1.8.
 
 Also, the JDK must be able to profile with the JDK Flight Recorder that is available with 
 * OpenJDK JDK >= 11
-* OpenJDK JDK 8 with a version greater than u262/u272 (following vendors)
-
+* OpenJDK JDK 8 with a version greater than u262/u272 (following vendors) <br>
   👉 Article from Marcus Hirt giving details: http://hirt.se/blog/?p=1235
 * Oracle JDK >= 1.7u40
 
@@ -70,8 +69,6 @@ Also, the JDK must be able to profile with the JDK Flight Recorder that is avail
         
 ### Tips
   💡 To disable Spring Boot tests: ```mvn clean install -P -SpringBootTests```
-  
-  💡 To not build Spring modules: ```mvn clean install -P -default-spring,-SpringBootTests```
  
   💡 To build with the Testcontainers tests: ``` mvn clean install -P testcontainers```
 
