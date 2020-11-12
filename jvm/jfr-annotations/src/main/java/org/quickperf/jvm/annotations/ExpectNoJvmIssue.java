@@ -17,11 +17,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Based on flight recorder heuristics engine, the <code>ExpectNoJvmIssue</code> annotation makes the JVM profiled
- * with JDK Flight Recorder (JFR). Based on the profiling, some JMC rules are evaluated. For each rule a score is
- * attributed. The maximum score value is 100. The test will fail if one rule has a score greater than this expected (by
- * default 60) Things like significant primitives to object conversions can be detected:
- *
+ * The <code>ExpectNoJvmIssue</code> annotation profiles the JVM with <code>JDK Flight Recorder (JFR)</code>. Based on profiling, the annotation evaluates <a href="http://hirt.se/blog/?p=920"><i>JMC rules</i></a>
+ *  (heuristics). For each rule, a score is attributed. The maximum score value is 100. The test will fail if one rule has a score greater than this expected (by
+ * default 60). Things like significant primitives to object conversions can be detected:
  * <br><br>
  * <h3>Example:</h3>
  * <pre>

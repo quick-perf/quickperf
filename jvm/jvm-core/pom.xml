@@ -21,6 +21,10 @@
 
     <artifactId>quick-perf-jvm-core</artifactId>
 
+    <properties>
+        <javadoc-sourceFileIncludes>**\/\AllocationUnit.java</javadoc-sourceFileIncludes>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.quickperf</groupId>

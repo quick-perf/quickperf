@@ -21,7 +21,7 @@
     <artifactId>quick-perf-jvm-annotations</artifactId>
 
     <properties>
-        <javadoc-subpackages>org.quickperf.jvm.annotations</javadoc-subpackages>
+        <javadoc-sourceFileIncludes>**\/\GC.java,**\/\annotations**\/\*.java</javadoc-sourceFileIncludes>
     </properties>
 
     <dependencies>

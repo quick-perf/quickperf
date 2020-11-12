@@ -18,22 +18,36 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
+/** Garbage Collector type**/
 public enum GC {
 
-      DEFAULT(Collections.singletonList(JvmOption.NONE))
+    DEFAULT(Collections.singletonList(JvmOption.NONE))
 
-    , EPSILON_GC(asList( JvmOption.UNLOCK_EXPERIMENTAL_VM_OPTIONS
+    ,
+    /**
+     * See <a href= "https://openjdk.java.net/jeps/318">Epsilon GC - Doc 1</a> and
+     * <a href= "https://shipilev.net/jvm/diy-gc/#_epsilon_gc">Epsilon GC - Doc 2</a>
+     */
+    EPSILON_GC(asList( JvmOption.UNLOCK_EXPERIMENTAL_VM_OPTIONS
                        , JvmOption.ALWAYS_PRE_TOUCH
                        , new JvmOption("-XX:+UseEpsilonGC")
                        )
                 )
 
-    , ZGC(asList( JvmOption.UNLOCK_EXPERIMENTAL_VM_OPTIONS
+    ,
+    /**
+     *See <a href= "https://wiki.openjdk.java.net/display/zgc/Main">ZGC documentation</a>
+     */
+    ZGC(asList( JvmOption.UNLOCK_EXPERIMENTAL_VM_OPTIONS
                  , new JvmOption("-XX:+UseZGC")
                  )
           )
 
-    , SHENANDOAH(asList( JvmOption.UNLOCK_EXPERIMENTAL_VM_OPTIONS
+    ,
+    /**
+     *See <a href= "https://wiki.openjdk.java.net/display/shenandoah/Main">Shenandoah documentation</a>
+     */
+    SHENANDOAH(asList( JvmOption.UNLOCK_EXPERIMENTAL_VM_OPTIONS
                        , new JvmOption("-XX:+UseZGC")
                        )
                 )

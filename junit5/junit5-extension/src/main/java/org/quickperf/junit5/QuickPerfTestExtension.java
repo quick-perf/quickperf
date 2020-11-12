@@ -142,8 +142,8 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         testExecutionContext.cleanResources();
 
         quickPerfReporter.report(jvmOrTestIssue
-                , groupOfPerfIssuesToFormat
-                , testExecutionContext);
+                               , groupOfPerfIssuesToFormat
+                               , testExecutionContext);
     }
 
     private void executeTestMethodInNewJvmAndRecordPerformance(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext) throws IllegalAccessException, InvocationTargetException {

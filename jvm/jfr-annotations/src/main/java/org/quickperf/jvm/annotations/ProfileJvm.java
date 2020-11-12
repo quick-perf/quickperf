@@ -17,7 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The <code>ProfileJvm</code> annotation To profile the JVM with the JDK Flight Recorder (JFR). The console displays
+ * The <code>ProfileJvm</code> annotation profiles the JVM with the <code>JDK Flight Recorder (JFR)</code>. The console displays
  * the path to the recording file. You can open this file with JDK Mission Control.<p>
  * &#064;ProfileJvm also displays some JVM profiling data (GC times, heap allocation estimation, exception numbers, ...)
  * in standard output.
@@ -66,15 +66,7 @@ import java.lang.annotation.Target;
  *
  * <br><br>
  * <h3>Note:</h3>
- * Where to find JDK Mission Control (JMC)?
- * There are several ways to get JMC:<p>
- * - A jmc executable is available in the bin folder of some Oracle JDK (10 &gt;= version &gt;= 1.7u40),<p>
- * - With Oracle,<p>
- * - With <a href="https://www.azul.com/products/zulu-mission-control/">Azul Zulu</a> Mission Control,<p>
- * - With <a href="https://www.google.com/search?q=Download+Liberica+Mission+Control">Liberica</a> Mission Control,<p>
- * - With Red Hat:<p>
- * <code>yum install rh-jmc</code><p>
- * The last JMC release can be found <a href="https://adoptopenjdk.net/jmc.html">here</a> (AdoptOpenJDK).
+ * <a href= "https://github.com/quick-perf/doc/wiki/Where-to-find-JDK-Mission-Control-(JMC)">Where to find JDK Mission Control (JMC)?</a>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})

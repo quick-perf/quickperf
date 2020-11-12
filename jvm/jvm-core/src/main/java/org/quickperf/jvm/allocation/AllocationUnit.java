@@ -11,9 +11,15 @@
 
 package org.quickperf.jvm.allocation;
 
+/**
+ * An <code>AllocationUnit</code> represents RAM allocations at a given unit of granularity.
+ */
 public enum AllocationUnit {
 
-      BYTE(1) {
+    /**
+     * Allocation unit representing one byte
+     */
+    BYTE(1) {
           @Override
           public String toShortString() {
               return "B";
@@ -23,7 +29,11 @@ public enum AllocationUnit {
               return "bytes";
           }
       }
-    , KILO_BYTE(1024) {
+    ,
+    /**
+     * Allocation unit representing 1024 bytes
+     */
+    KILO_BYTE(1024) {
         @Override
         public String toShortString() {
             return "KiB";
@@ -33,7 +43,11 @@ public enum AllocationUnit {
             return "Kilo bytes";
         }
     }
-    , MEGA_BYTE(1024 * 1024) {
+    ,
+    /**
+     * Allocation unit representing 1024<sup>2</sup> bytes
+     */
+    MEGA_BYTE(1024 * 1024) {
         @Override
         public String toShortString() {
             return "MiB";
@@ -43,7 +57,11 @@ public enum AllocationUnit {
             return "Mega bytes";
         }
     }
-    , GIGA_BYTE(1024 * 1024 * 1024) {
+    ,
+    /**
+     * Allocation unit representing 1024<sup>3</sup> bytes
+     */
+    GIGA_BYTE(1024 * 1024 * 1024) {
         @Override
         public String toShortString() {
             return "GiB";

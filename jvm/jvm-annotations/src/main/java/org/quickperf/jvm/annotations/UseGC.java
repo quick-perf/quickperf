@@ -20,12 +20,6 @@ import java.lang.annotation.Target;
 
 /**
  * The <code>UseGC</code> annotation makes the test executed in a specific JVM with the given Garbage Collector (GC).<p>
- * If no value given, QuickPerf will not specify any GC to the new JVM.<p>
- * Available GC:<p>
- * - <a href="https://openjdk.java.net/jeps/318">Epsilon</a>,<p>
- * - <a href="https://wiki.openjdk.java.net/display/zgc/Main">Z</a>,<p>
- * - <a href="https://wiki.openjdk.java.net/display/shenandoah/Main">Shenandoah</a>.
- *
  * <br><br>
  * <h3>Example:</h3>
  * <pre>
@@ -35,14 +29,6 @@ import java.lang.annotation.Target;
  *      }
  * </pre>
  *
- * <br><br>
- * <h3>Note:</h3>
- * You may use the {@link JvmOptions} with another GC as following:
- * <p>
- * <code>
- *     <b>&#064;JvmOptions("-XX:+UseCompressedOops -XX:+UseCompressedClassPointers -XX:+UseParallelGC")</b>
- * </code>
- * <p></p>
  * @see org.quickperf.jvm.gc.GC
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -50,7 +36,7 @@ import java.lang.annotation.Target;
 public @interface UseGC {
 
     /**
-     * Garbage Collector defined in {@link GC}.
+     * Garbage Collector type.
      */
     GC value() default GC.DEFAULT;
 

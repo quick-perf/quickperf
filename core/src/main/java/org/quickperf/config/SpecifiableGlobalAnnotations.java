@@ -15,7 +15,7 @@ import java.lang.annotation.Annotation;
 import java.util.Collection;
 
 /**
- * To apply annotations on each QuickPerf test, you can configure the annotations with a global scope. To do this, implement the <code>SpecifiableGlobalAnnotation</code>s interface
+ * To apply annotations to each QuickPerf test, you can configure the annotations with a global scope. To do this, implement the <code>SpecifiableGlobalAnnotation</code>s interface
  * and locate the implementation in an <code>org.quickperf</code> package.
  *@see <a href="https://github.com/quick-perf/doc/wiki/QuickPerf#annotation-scopes"><i>QuickPerf annotations
  *scopes</i></a>
@@ -24,8 +24,8 @@ import java.util.Collection;
 public interface SpecifiableGlobalAnnotations {
 
     /**
-     * Allows to define the annotations applying on each QuickPerf test.
-     * @return the annotations applying on each QuickPerf test
+     * Allows to define the annotations applying to each QuickPerf test.
+     * @return the annotations applying to each QuickPerf test
      */
     Collection<Annotation> specifyAnnotationsAppliedOnEachTest();
 
