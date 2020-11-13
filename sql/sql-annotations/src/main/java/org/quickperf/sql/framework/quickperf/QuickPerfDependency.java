@@ -13,8 +13,8 @@ package org.quickperf.sql.framework.quickperf;
 
 public enum QuickPerfDependency {
 
-      QUICKPERF_SPRING_BOOT_STARTER_1("quick-perf-springboot1-starter")
-    , QUICKPERF_SPRING_BOOT_STARTER_2("quick-perf-springboot2-starter")
+      QUICKPERF_SPRING_BOOT_1_SQL_STARTER("quick-perf-springboot1-sql-starter")
+    , QUICKPERF_SPRING_BOOT_2_SQL_STARTER("quick-perf-springboot2-sql-starter")
     , QUICKPERF_SQL_SPRING_4("quick-perf-sql-spring4")
     , QUICKPERF_SQL_SPRING_5("quick-perf-sql-spring5");
 

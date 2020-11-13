@@ -30,23 +30,23 @@ class SpringDataSourceConfig implements QuickPerfSuggestion {
     public String getMessage() {
 
         if (classPath.containsSpringBoot1()) {
-            if (classPath.contains(QUICKPERF_SPRING_BOOT_STARTER_1)) {
+            if (classPath.contains(QUICKPERF_SPRING_BOOT_1_SQL_STARTER)) {
                 return    buildDataJpaTestAnnotationMessage()
                         + LINE_SEPARATOR
                         + LINE_SEPARATOR + buildSpringRESTControllerMessage();
             }
             return "To configure it, add the following dependency: "
-                  + LINE_SEPARATOR + format(QUICKPERF_SPRING_BOOT_STARTER_1);
+                  + LINE_SEPARATOR + format(QUICKPERF_SPRING_BOOT_1_SQL_STARTER);
         }
 
         if (classPath.containsSpringBoot2()) {
-            if (classPath.contains(QUICKPERF_SPRING_BOOT_STARTER_2)) {
+            if (classPath.contains(QUICKPERF_SPRING_BOOT_2_SQL_STARTER)) {
                 return    buildDataJpaTestAnnotationMessage()
                         + LINE_SEPARATOR
                         + LINE_SEPARATOR + buildSpringRESTControllerMessage();
             }
             return   "To configure it, add the following dependency: "
-                    + LINE_SEPARATOR + format(QUICKPERF_SPRING_BOOT_STARTER_2);
+                    + LINE_SEPARATOR + format(QUICKPERF_SPRING_BOOT_2_SQL_STARTER);
         }
 
         if (classPath.containsSpring4()) {

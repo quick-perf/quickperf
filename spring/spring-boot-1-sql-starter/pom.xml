@@ -21,36 +21,36 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>quick-perf-springboot2-starter</artifactId>
+    <artifactId>quick-perf-springboot1-sql-starter</artifactId>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <dependencies.max.jdk.version>1.8</dependencies.max.jdk.version>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <dependencies.max.jdk.version>1.7</dependencies.max.jdk.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.quickperf</groupId>
-            <artifactId>quick-perf-sql-spring5</artifactId>
+            <artifactId>quick-perf-sql-spring4</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring5-version}</version>
+            <version>${spring4-version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>${spring5-version}</version>
+            <version>${spring4-version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>2.0.0.RELEASE</version>
+            <version>1.0.0.RELEASE</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -47,7 +47,7 @@
 
         <dependency>
             <groupId>org.quickperf</groupId>
-            <artifactId>quick-perf-springboot2-starter</artifactId>
+            <artifactId>quick-perf-springboot2-sql-starter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
