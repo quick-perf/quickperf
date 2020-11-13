@@ -51,28 +51,28 @@ class SpringDataSourceConfig implements QuickPerfSuggestion {
 
         if (classPath.containsSpring4()) {
             if (classPath.contains(QUICKPERF_SQL_SPRING_4)) {
-                return    "Import QuickPerfSpringConfig:"
-                        + LINE_SEPARATOR + buildImportQuickPerfSpringConfigExample()
+                return    "Import QuickPerfSqlConfig:"
+                        + LINE_SEPARATOR + buildImportQuickPerfSqlConfigExample()
                         + LINE_SEPARATOR
                         + LINE_SEPARATOR + buildSpringRESTControllerMessage();
             }
             return   "To configure the proxy, add the following dependency: "
                     + LINE_SEPARATOR + format(QUICKPERF_SQL_SPRING_4)
-                    + LINE_SEPARATOR + "You have also to import QuickPerfSpringConfig:"
-                    + LINE_SEPARATOR + buildImportQuickPerfSpringConfigExample();
+                    + LINE_SEPARATOR + "You have also to import QuickPerfSqlConfig:"
+                    + LINE_SEPARATOR + buildImportQuickPerfSqlConfigExample();
         }
 
         if (classPath.containsSpring5()) {
             if (classPath.contains(QUICKPERF_SQL_SPRING_5)) {
-                return    "Import QuickPerfSpringConfig:"
-                        + LINE_SEPARATOR + buildImportQuickPerfSpringConfigExample()
+                return    "Import QuickPerfSqlConfig:"
+                        + LINE_SEPARATOR + buildImportQuickPerfSqlConfigExample()
                         + LINE_SEPARATOR
                         + LINE_SEPARATOR + buildSpringRESTControllerMessage();
             }
             return  "To configure the proxy, add the following dependency: "
                     + LINE_SEPARATOR + format(QUICKPERF_SQL_SPRING_5)
-                    + LINE_SEPARATOR + "You have also to import QuickPerfSpringConfig:"
-                    + LINE_SEPARATOR + buildImportQuickPerfSpringConfigExample();
+                    + LINE_SEPARATOR + "You have also to import QuickPerfSqlConfig:"
+                    + LINE_SEPARATOR + buildImportQuickPerfSqlConfigExample();
         }
 
         return "";
@@ -83,8 +83,8 @@ class SpringDataSourceConfig implements QuickPerfSuggestion {
         return    "Do you use @DataJpaTest? This annotation disables Spring auto-configuration."
                 + LINE_SEPARATOR + "So, QuickPerf Spring auto-configuration is disabled."
                 + LINE_SEPARATOR + "To allow QuickPerf to intercept the SQL queries, you have two possibilities: "
-                + LINE_SEPARATOR + "1) Import QuickPerfSpringConfig class (recommended): "
-                + LINE_SEPARATOR + buildImportQuickPerfSpringConfigExample()
+                + LINE_SEPARATOR + "1) Import QuickPerfSqlConfig (recommended): "
+                + LINE_SEPARATOR + buildImportQuickPerfSqlConfigExample()
                 + LINE_SEPARATOR + "2) Force to enable Spring auto-configuration by adding"
                 + LINE_SEPARATOR + "   " + "@OverrideAutoConfiguration(enabled = true) on the test class";
     }
@@ -95,10 +95,10 @@ class SpringDataSourceConfig implements QuickPerfSuggestion {
                 + LINE_SEPARATOR + "A heap size value around 50 megabytes may allow the test to run.";
     }
 
-    private String buildImportQuickPerfSpringConfigExample() {
-        return                     "\timport org.quickperf.spring.sql.QuickPerfSpringConfig;"
+    private String buildImportQuickPerfSqlConfigExample() {
+        return                     "\timport org.quickperf.spring.sql.QuickPerfSqlConfig;"
                 + LINE_SEPARATOR + "\t..."
-                + LINE_SEPARATOR + "\t@Import(QuickPerfSpringConfig.class)"
+                + LINE_SEPARATOR + "\t@Import(QuickPerfSqlConfig.class)"
                 + LINE_SEPARATOR + "\tpublic class TestClass {";
     }
 

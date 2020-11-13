@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-public class QuickPerfSpringConfig {
+public class QuickPerfSqlConfig {
 
     @Bean
     public QuickPerfProxyBeanPostProcessor quickPerfProxyBeanPostProcessor() {

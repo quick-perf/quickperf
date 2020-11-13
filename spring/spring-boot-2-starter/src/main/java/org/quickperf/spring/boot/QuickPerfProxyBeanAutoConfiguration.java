@@ -11,7 +11,7 @@
 
 package org.quickperf.spring.boot;
 
-import org.quickperf.spring.sql.QuickPerfSpringConfig;
+import org.quickperf.spring.sql.QuickPerfSqlConfig;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -25,6 +25,6 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnClass({ DataSource.class, EmbeddedDatabaseType.class })
 @ConditionalOnBean(DataSource.class)
 @AutoConfigureAfter(DataSourceAutoConfiguration.class)
-@Import(QuickPerfSpringConfig.class)
+@Import(QuickPerfSqlConfig.class)
 public class QuickPerfProxyBeanAutoConfiguration {
 }
