@@ -30,9 +30,9 @@ import java.lang.annotation.Target;
  *      }
  * </pre>
  *
- * @see EnableExactlySameSelects
+ * @see EnableSameSelects
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
-public @interface DisableExactlySameSelects {
+public @interface DisableSameSelects {
 }

@@ -14,7 +14,7 @@ import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.sql.Book;
-import org.quickperf.sql.annotation.DisableExactlySameSelects;
+import org.quickperf.sql.annotation.DisableSameSelects;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -22,13 +22,13 @@ import javax.persistence.Query;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.experimental.results.PrintableResult.testResult;
 
-public class DisableExactlySameSelectsTest {
+public class DisableSameSelectsTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
     public static class AClassHavingAMethodAnnotatedWithDisableSameSqlForDifferentParamValues extends SqlTestBase {
 
         @Test
-        @DisableExactlySameSelects
+        @DisableSameSelects
         public void execute_two_select_with_different_param_values() {
             EntityManager em = emf.createEntityManager();
 
@@ -48,7 +48,7 @@ public class DisableExactlySameSelectsTest {
         }
 
         @Test
-        @DisableExactlySameSelects
+        @DisableSameSelects
         public void execute_two_selects_with_different_param_names() {
 
             EntityManager em = emf.createEntityManager();
@@ -84,7 +84,7 @@ public class DisableExactlySameSelectsTest {
     public static class ExactlySameSelects extends SqlTestBase {
 
         @Test
-        @DisableExactlySameSelects
+        @DisableSameSelects
         public void execute_two_same_selects_with_same_params() {
 
             EntityManager em = emf.createEntityManager();
@@ -116,7 +116,7 @@ public class DisableExactlySameSelectsTest {
         assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
-                      .contains("[PERF] Exactly same SELECT statements");
+                      .contains("[PERF] Same SELECT statements");
 
     }
 
@@ -124,7 +124,7 @@ public class DisableExactlySameSelectsTest {
     public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithoutParams extends SqlTestBase {
 
         @Test
-        @DisableExactlySameSelects
+        @DisableSameSelects
         public void execute_two_same_selects_without_params() {
 
             EntityManager em = emf.createEntityManager();
@@ -151,7 +151,7 @@ public class DisableExactlySameSelectsTest {
         // THEN
         assertThat(printableResult.failureCount()).isOne();
 
-        assertThat(printableResult.toString()).contains("Exactly same SELECT statements");
+        assertThat(printableResult.toString()).contains("Same SELECT statements");
 
     }
 
@@ -159,7 +159,7 @@ public class DisableExactlySameSelectsTest {
     public static class AClassHavingAMethodAnnotatedWithDisableSameSqlSelectWithInsertQueries extends SqlTestBase {
 
         @Test
-        @DisableExactlySameSelects
+        @DisableSameSelects
         public void execute_two_insert_statements_who_should_pass() {
 
             EntityManager em = emf.createEntityManager();

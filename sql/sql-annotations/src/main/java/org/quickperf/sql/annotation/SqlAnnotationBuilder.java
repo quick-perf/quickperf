@@ -49,13 +49,13 @@ public class SqlAnnotationBuilder {
     }
 
     /**
-     *Allows to build {@link org.quickperf.sql.annotation.DisableExactlySameSelects} annotation.
+     *Allows to build {@link DisableSameSelects} annotation.
      */
-    public static DisableExactlySameSelects disableExactlySameSelects() {
-        return new DisableExactlySameSelects() {
+    public static DisableSameSelects disableSameSelects() {
+        return new DisableSameSelects() {
             @Override
             public Class<? extends Annotation> annotationType() {
-                return DisableExactlySameSelects.class;
+                return DisableSameSelects.class;
             }
         };
     }

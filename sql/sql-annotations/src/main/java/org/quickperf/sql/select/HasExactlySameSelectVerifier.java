@@ -13,23 +13,23 @@ package org.quickperf.sql.select;
 
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
-import org.quickperf.sql.annotation.DisableExactlySameSelects;
+import org.quickperf.sql.annotation.DisableSameSelects;
 import org.quickperf.sql.framework.HibernateSuggestion;
 import org.quickperf.sql.framework.ClassPath;
 import org.quickperf.sql.select.analysis.SelectAnalysis;
 
-public class HasExactlySameSelectVerifier implements VerifiablePerformanceIssue<DisableExactlySameSelects, SelectAnalysis> {
+public class HasExactlySameSelectVerifier implements VerifiablePerformanceIssue<DisableSameSelects, SelectAnalysis> {
 
     public static final HasExactlySameSelectVerifier INSTANCE = new HasExactlySameSelectVerifier();
 
     private HasExactlySameSelectVerifier() { }
 
     @Override
-    public PerfIssue verifyPerfIssue(DisableExactlySameSelects annotation
+    public PerfIssue verifyPerfIssue(DisableSameSelects annotation
                                    , SelectAnalysis selectAnalysis) {
 
         if(selectAnalysis.hasSameSelects()) {
-            String description = "Exactly same SELECT statements";
+            String description = "Same SELECT statements";
             if(ClassPath.INSTANCE.containsHibernate()) {
                 description += System.lineSeparator()
                              + HibernateSuggestion.SESSION.getMessage()

@@ -17,11 +17,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Cancels behavior of {@link DisableExactlySameSelects}.
+ * Cancels behavior of {@link DisableSameSelects}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
-public @interface EnableExactlySameSelects {
+public @interface EnableSameSelects {
 
     /**
      * To comment on the reason why the same selects are enabled.

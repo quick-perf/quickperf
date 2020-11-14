@@ -68,15 +68,15 @@ class SqlAnnotationsConfigs {
 			.perfIssueVerifier(MaxJdbcQueryExecutionVerifier.INSTANCE)
 			.build(ExpectMaxJdbcQueryExecution.class);
 
-	static final AnnotationConfig DISABLE_EXACTLY_SAME_SQL_SELECTS = new AnnotationConfig.Builder()
+	static final AnnotationConfig DISABLE_SAME_SQL_SELECTS = new AnnotationConfig.Builder()
 			.perfRecorderClass(PersistenceSqlRecorder.class)
 			.perfMeasureExtractor(SelectAnalysisExtractor.INSTANCE)
 			.perfIssueVerifier(HasExactlySameSelectVerifier.INSTANCE)
-			.build(DisableExactlySameSelects.class);
+			.build(DisableSameSelects.class);
 
-	static final AnnotationConfig ENABLE_EXACTLY_SAME_SQL_SELECTS = new AnnotationConfig.Builder()
-			.cancelBehaviorOf(DisableExactlySameSelects.class)
-			.build(EnableExactlySameSelects.class);
+	static final AnnotationConfig ENABLE_SAME_SQL_SELECTS = new AnnotationConfig.Builder()
+			.cancelBehaviorOf(DisableSameSelects.class)
+			.build(EnableSameSelects.class);
 
     static final AnnotationConfig NUMBER_OF_SQL_SELECT = new AnnotationConfig.Builder()
             .perfRecorderClass(PersistenceSqlRecorder.class)
