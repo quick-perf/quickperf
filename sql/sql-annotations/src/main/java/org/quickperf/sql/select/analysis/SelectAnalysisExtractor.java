@@ -36,7 +36,7 @@ public class SelectAnalysisExtractor implements ExtractablePerformanceMeasure<Sq
 
         boolean sameSelectTypesWithDifferentParamValues = false;
 
-        boolean sameSelects = false;
+        int sameSelectsNumber = 0;
 
         SqlSelects sqlSelects = new SqlSelects();
         for (SqlExecution sqlExecution : sqlExecutions) {
@@ -46,12 +46,11 @@ public class SelectAnalysisExtractor implements ExtractablePerformanceMeasure<Sq
                      && sqlSelects.sameSqlQueryWithDifferentParams(query)) {
                         sameSelectTypesWithDifferentParamValues = true;
                     }
-                    if(  !sameSelects
-                      && sqlSelects.exactlySameSqlQueryExists(query)) {
-                        sameSelects = true;
-                    }
-                    if(sameSelectTypesWithDifferentParamValues && sameSelects) {
-                        break;
+                    if( sqlSelects.exactlySameSqlQueryExists(query)) {
+                        if(sameSelectsNumber == 0) {
+                            sameSelectsNumber = 1;
+                        }
+                        sameSelectsNumber++;
                     }
                     sqlSelects.add(query);
                 }
@@ -60,8 +59,9 @@ public class SelectAnalysisExtractor implements ExtractablePerformanceMeasure<Sq
         }
 
         return new SelectAnalysis(selectNumber
+                                , sameSelectsNumber
                                 , sameSelectTypesWithDifferentParamValues
-                                , sameSelects);
+        );
 
     }
 

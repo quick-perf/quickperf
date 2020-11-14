@@ -176,10 +176,11 @@ public class ExpectMaxSelectTest {
         @Test
         @ExpectMaxSelect(1)
         public void execute_two_same_selects() {
+
             EntityManager em = emf.createEntityManager();
 
             String hqlQuery =   " FROM " + Book.class.getCanonicalName() + " b"
-                    + " WHERE b.id=:idParam";
+                              + " WHERE b.id=:idParam";
 
             Query query = em.createQuery(hqlQuery);
             query.setParameter("idParam", 2L);
@@ -193,9 +194,8 @@ public class ExpectMaxSelectTest {
 
     }
 
-    @Test
-    public void
-    should_not_display_round_trip_and_n_plus_one_select_message_if_two_same_selects() {
+    @Test public void
+    should_not_display_round_trip_and_n_plus_one_select_message_if_only_same_selects() {
 
         // GIVEN
         Class<?> testClass = TwoSameSelects.class;

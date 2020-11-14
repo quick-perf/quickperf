@@ -15,7 +15,6 @@ import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectSelect;
 import org.quickperf.sql.select.analysis.SelectAnalysis;
-import org.quickperf.sql.select.analysis.SelectAnalysis.SameSelectTypesWithDifferentParamValues;
 import org.quickperf.unit.Count;
 
 public class SelectNumberPerfIssueVerifier implements VerifiablePerformanceIssue<ExpectSelect, SelectAnalysis> {
@@ -43,13 +42,11 @@ public class SelectNumberPerfIssueVerifier implements VerifiablePerformanceIssue
 
         String description = buildBaseDescription(executedSelectNumber, expectedSelectNumber);
 
-        SameSelectTypesWithDifferentParamValues sameSelectTypesWithDifferentParamValues =
-                selectAnalysis.getSameSelectTypesWithDifferentParamValues();
-
-        if(   executedSelectNumber.isGreaterThan(expectedSelectNumber)
-           && sameSelectTypesWithDifferentParamValues.evaluate()
+        if(   executedSelectNumber.isGreaterThan(Count.ONE)
+           && executedSelectNumber.isGreaterThan(expectedSelectNumber)
+           && !selectAnalysis.hasOnlySameSelects()
           ) {
-            description += sameSelectTypesWithDifferentParamValues.getSuggestionToFixIt();
+            description += SelectAnalysis.getSuggestionToFIxNPlusOneSelect();
         }
 
         return new PerfIssue(description);

@@ -17,6 +17,8 @@ public class Count extends AbstractComparablePerfMeasure<Count> {
 
     public static final Count ZERO = new Count(0);
 
+    public static final Count ONE = new Count(1);
+
     private static final String NO_COMMENT = "";
 
     private final Long value;

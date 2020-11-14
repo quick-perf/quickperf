@@ -81,8 +81,9 @@ public class ExpectSelectTest {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        assertThat(printableResult.toString()).doesNotContain("server roundtrips")
-                                              .doesNotContain("N+1");
+        String testResult = printableResult.toString();
+        assertThat(testResult).doesNotContain("server roundtrips")
+                              .doesNotContain("N+1");
 
     }
 
@@ -114,6 +115,49 @@ public class ExpectSelectTest {
         String testResult = printableResult.toString();
         assertThat(testResult).contains("You may think that <0> select statement was sent to the database")
                               .doesNotContain("server roundtrips")
+                              .doesNotContain("N+1");
+
+    }
+
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class TwoSameSelects extends SqlTestBase {
+
+        @Test
+        @ExpectSelect(1)
+        public void execute_two_same_selects() {
+
+            EntityManager em = emf.createEntityManager();
+
+            String hqlQuery =   " FROM " + Book.class.getCanonicalName() + " b"
+                             + " WHERE b.id=:idParam";
+
+            Query query = em.createQuery(hqlQuery);
+            query.setParameter("idParam", 2L);
+            query.getResultList();
+
+            Query query2 = em.createQuery(hqlQuery);
+            query2.setParameter("idParam", 2L);
+            query2.getResultList();
+
+        }
+
+    }
+
+    @Test public void
+    should_not_display_round_trip_and_n_plus_one_select_message_if_only_same_selects() {
+
+        // GIVEN
+        Class<?> testClass = TwoSameSelects.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isOne();
+
+        String testResult = printableResult.toString();
+        assertThat(testResult).doesNotContain("server roundtrips")
                               .doesNotContain("N+1");
 
     }
@@ -188,7 +232,7 @@ public class ExpectSelectTest {
     }
 
     @Test public void
-    should_not_display_round_trip_and_n_plus_one_select_message_if_two_different_select_types() {
+    should_fail_with_two_different_select_types() {
 
         // GIVEN
         Class<TwoDifferentSelectTypes> testClass = TwoDifferentSelectTypes.class;
@@ -201,8 +245,8 @@ public class ExpectSelectTest {
 
         String testResult = printableResult.toString();
         assertThat(testResult).contains("You may think that <1> select statement was sent to the database")
-                              .doesNotContain("server roundtrips")
-                              .doesNotContain("N+1");
+                              .contains("server roundtrips")
+                              .contains("N+1");
 
     }
 

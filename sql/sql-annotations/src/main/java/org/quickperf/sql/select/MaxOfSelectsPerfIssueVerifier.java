@@ -15,7 +15,6 @@ import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.ExpectMaxSelect;
 import org.quickperf.sql.select.analysis.SelectAnalysis;
-import org.quickperf.sql.select.analysis.SelectAnalysis.SameSelectTypesWithDifferentParamValues;
 import org.quickperf.unit.Count;
 
 import static org.quickperf.sql.SqlStatementPerfIssueBuilder.aSqlPerfIssue;
@@ -47,11 +46,8 @@ public class MaxOfSelectsPerfIssueVerifier implements VerifiablePerformanceIssue
                                                                     , expectedCount
                                                                     , "select");
 
-        SameSelectTypesWithDifferentParamValues sameSelectTypesWithDifferentParamValues =
-                selectAnalysis.getSameSelectTypesWithDifferentParamValues();
-
-        if (sameSelectTypesWithDifferentParamValues.evaluate()) {
-            description += sameSelectTypesWithDifferentParamValues.getSuggestionToFixIt();
+        if (measuredCount.isGreaterThan(Count.ONE) && !selectAnalysis.hasOnlySameSelects()) {
+            description += SelectAnalysis.getSuggestionToFIxNPlusOneSelect();
         }
 
         return new PerfIssue(description);
