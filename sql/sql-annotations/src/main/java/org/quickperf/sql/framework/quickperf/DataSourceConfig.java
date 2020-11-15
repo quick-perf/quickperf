@@ -31,7 +31,9 @@ public class DataSourceConfig implements QuickPerfSuggestion {
 
         return    possibleConfigIssue
                 + System.lineSeparator()
-                + frameworkConfig.getMessage();
+                + frameworkConfig.getMessage()
+                + System.lineSeparator()
+                + System.lineSeparator();
 
     }
 
