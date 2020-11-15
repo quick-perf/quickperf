@@ -21,7 +21,7 @@
     <artifactId>quick-perf-jvm-annotations</artifactId>
 
     <properties>
-        <javadoc-sourceFileIncludes>**\/\GC.java,**\/\annotations**\/\*.java</javadoc-sourceFileIncludes>
+        <javadoc-sourceFileIncludes>**\/\GC.java,**\/\annotations**\/\*.java,**\/\HeapDumper.java</javadoc-sourceFileIncludes>
     </properties>
 
     <dependencies>

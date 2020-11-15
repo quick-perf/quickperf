@@ -19,7 +19,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The <code>ExpectMaxHeapAllocation</code> annotation makes the test fail if the test thread heap's allocation is
+ * The <code>ExpectMaxHeapAllocation</code> annotation makes the test fail if the heap allocation of the test method thread is
  * greater than expected.
  *
  * <br><br>

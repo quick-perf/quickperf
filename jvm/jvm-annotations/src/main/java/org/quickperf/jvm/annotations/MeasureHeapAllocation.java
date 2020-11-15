@@ -20,7 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The <code>MeasureHeapAllocation</code> annotation measures the test thread heap's allocation.
+ * The <code>MeasureHeapAllocation</code> annotation measures the heap allocation of the test method thread.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})

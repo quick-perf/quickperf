@@ -19,7 +19,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The <code>Xmx</code> annotation makes the test executed in a specific JVM having the given mamixum heap size value.
+ * The <code>Xmx</code> annotation makes the test executed in a specific JVM having the given maximum heap size value.
  *
  * <br><br>
  * <h3>Example:</h3>

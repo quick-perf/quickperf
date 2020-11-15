@@ -19,6 +19,9 @@ import javax.management.MBeanServer;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
+/**
+ * Allows you to dump the heap.
+ */
 public class HeapDumper {
 
     private HeapDumper() { }

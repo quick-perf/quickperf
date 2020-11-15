@@ -28,8 +28,8 @@ import java.lang.annotation.Target;
  *      }
  * </pre>
  * <p>
- * The path of the GC log file will be displayed in the
- * console with the following format: <p>
+ * The path of the GC log file will be displayed on the
+ * console: <p>
  * <code>GC log file: /tmp/QuickPerf-6513460244229078013/gc.log</code><p>
  *
  * This file can be analysed with the help of a GC log analyzer:<p>

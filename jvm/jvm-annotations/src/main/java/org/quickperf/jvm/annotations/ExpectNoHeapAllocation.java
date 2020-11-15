@@ -17,7 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The <code>ExpectNoHeapAllocation</code> annotation makes the test fail if the test thread allocates on heap.
+ * The <code>ExpectNoHeapAllocation</code> annotation makes the test fail if the test thread allocates on the heap.
  *
  * <br><br>
  * <h3>Example:</h3>
