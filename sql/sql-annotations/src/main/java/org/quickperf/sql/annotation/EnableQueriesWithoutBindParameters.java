@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
  * <br><br>
  * <h3>Example:</h3>
  * <pre>
- *      <b>&#064;DisableQueriesWithoutBindParameters(comment = "Skewed data")</b>
+ *      <b>&#064;EnableQueriesWithoutBindParameters(comment = "Skewed data")</b>
  *      <b>&#064;Test</b>
  *      public void execute() {
  *          <code>...</code>

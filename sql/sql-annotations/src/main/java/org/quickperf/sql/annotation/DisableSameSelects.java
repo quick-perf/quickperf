@@ -18,13 +18,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The <code>DisableExactlySameSelects</code> annotation verifies that at least two same SELECT statements are not executed.
+ * The <code>DisableSameSelects</code> annotation verifies that at least two same SELECT statements are not executed.
  * If so, the test will fail.
  *
  * <br><br>
  * <h3>Example:</h3>
  * <pre>
- *      <b>&#064;DisableExactlySameSelects</b>
+ *      <b>&#064;DisableSameSelects</b>
  *      public void execute_same_select_twice() {
  *          <code>..</code>
  *      }

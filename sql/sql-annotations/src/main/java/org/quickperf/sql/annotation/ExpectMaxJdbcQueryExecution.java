@@ -18,7 +18,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>The <code>ExpectMaxQueriesSending</code> annotation verifies the maximum number of JDBC
+ * <p>The <code>ExpectMaxJdbcQueryExecution</code> annotation verifies the maximum number of JDBC
  * query executions (<i>executeQuery</i>, <i>executeUpdate</i>, <i>execute</i>,
  * <i>executeLargeUpdate</i>, <i>executeBatch</i>, <i>executeLargeBatch</i>).
  * <p>Each JDBC execution triggers one or several JDBC roundtrips. For example, if a SELECT

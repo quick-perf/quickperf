@@ -17,8 +17,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The <code>ExpectJdbcBatching</code> annotation verifies that insert, delete and update statements are processed in
- * JDBC batches having *batchSize* elements.
+ * The <code>ExpectJdbcBatching</code> annotation that insert, delete, and update statements
+ * are processed through JDBC batches of <code>batchSize</code> elements.
  *
  * <br><br>
  * <h3>Example:</h3>
@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  *
  * <br><br>
  * <h3>Note:</h3>
- * You may sometimes think that you are using JDBC batching but in fact not:
+ * YYou may sometimes think that you are using JDBC batching, but in fact, you are not:
  * <ul>
  * <li>
  * <a href="https://abramsm.wordpress.com/2008/04/23/hibernate-batch-processing-why-you-may-not-be-using-it-even-if-you-think-you-are/"><i>Hibernate
@@ -49,9 +49,8 @@ import java.lang.annotation.Target;
 public @interface ExpectJdbcBatching {
 
     /**
-     * Specifies a <code>batchSize</code> (integer) to cause test method to fail if the batch size is superior
-     * to the specified value. Note that a zero batch size means that JDBC batching is <b><u>disabled</u></b>. Nevertheless, the
-     * annotation will still check that insert, delete and update statements are processed in * JDBC batches (but the
+     * Specifies a <code>batchSize</code> (integer) to cause the test method to fail if the used batch size is not equal. A zero batch size means that JDBC batching is <b><u>disabled</u></b>. With no given batch size value, the
+     * annotation will still check that insert, delete and update statements are processed through JDBC batches (but the
      * annotation will not check the batch size).
      */
     int batchSize() default -1;

@@ -17,8 +17,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The <code>DisableLikeWithLeadingWildcard</code> annotation verifies that SQL statements do not contain LIKE with
- * leading wildcard (% or _). If so, the test will fail.
+ * The <code>DisableLikeWithLeadingWildcard</code> annotation verifies that SQL statements do not contain a LIKE with
+ * a leading wildcard (% or _). If so, the test will fail.
  *
  * <br><br>
  * <h3>Example:</h3>
@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  * <h3>Note:</h3>
  * <a href="https://use-the-index-luke.com/sql/where-clause/searching-for-ranges/like-performance-tuning"><u>This
  * article</u></a>
- * explains why LIKE with leading wildcard could be a bad idea in term of performance. A code sent to the database with
+ * explains why a LIKE with a leading wildcard could be a bad idea for performance. A code sent to the database with
  * a like operator with leading wildcard may be fast in a test having a few data but very slow with the data volume of a
  * production environment.
  *
