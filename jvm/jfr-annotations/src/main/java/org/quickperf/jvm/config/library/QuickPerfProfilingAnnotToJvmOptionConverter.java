@@ -13,7 +13,7 @@ package org.quickperf.jvm.config.library;
 
 import org.quickperf.WorkingFolder;
 import org.quickperf.jvm.JVM;
-import org.quickperf.jvm.annotations.ProfileQuickPerfInTestJvm;
+import org.quickperf.jvm.jfr.annotation.ProfileQuickPerfInTestJvm;
 import org.quickperf.testlauncher.AnnotationToJvmOptionConverter;
 import org.quickperf.testlauncher.JvmOption;
 

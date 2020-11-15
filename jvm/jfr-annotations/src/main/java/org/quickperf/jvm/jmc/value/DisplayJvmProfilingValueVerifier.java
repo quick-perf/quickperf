@@ -18,7 +18,7 @@ import org.openjdk.jmc.common.item.ItemFilters;
 import org.quickperf.SystemProperties;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
-import org.quickperf.jvm.annotations.ProfileJvm;
+import org.quickperf.jvm.jfr.annotation.ProfileJvm;
 
 import static org.quickperf.jvm.jmc.value.ProfilingInfo.*;
 

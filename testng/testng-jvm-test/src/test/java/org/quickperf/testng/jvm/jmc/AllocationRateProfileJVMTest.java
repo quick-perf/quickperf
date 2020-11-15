@@ -1,6 +1,6 @@
 package org.quickperf.testng.jvm.jmc;
 
-import org.quickperf.jvm.annotations.ProfileJvm;
+import org.quickperf.jvm.jfr.annotation.ProfileJvm;
 import org.testng.annotations.Test;
 
 public class AllocationRateProfileJVMTest {

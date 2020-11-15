@@ -18,7 +18,7 @@ import org.quickperf.junit5.JUnit5Tests;
 import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
 import org.quickperf.junit5.QuickPerfTest;
 import org.quickperf.jvm.allocation.AllocationUnit;
-import org.quickperf.jvm.annotations.ExpectNoJvmIssue;
+import org.quickperf.jvm.jfr.annotation.ExpectNoJvmIssue;
 import org.quickperf.jvm.annotations.HeapSize;
 
 import java.util.ArrayList;

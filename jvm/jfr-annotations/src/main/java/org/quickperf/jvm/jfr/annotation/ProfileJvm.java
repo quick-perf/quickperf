@@ -9,7 +9,7 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.jvm.annotations;
+package org.quickperf.jvm.jfr.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

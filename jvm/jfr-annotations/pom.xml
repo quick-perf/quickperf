@@ -22,7 +22,7 @@
     <artifactId>quick-perf-jfr-annotations</artifactId>
 
     <properties>
-        <javadoc-subpackages>org.quickperf.jvm.annotations</javadoc-subpackages>
+        <javadoc-subpackages>org.quickperf.jvm.jfr.annotation</javadoc-subpackages>
     </properties>
 
     <dependencies>

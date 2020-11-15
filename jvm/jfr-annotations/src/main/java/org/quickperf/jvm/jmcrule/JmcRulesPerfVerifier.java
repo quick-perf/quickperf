@@ -13,7 +13,7 @@ package org.quickperf.jvm.jmcrule;
 
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
-import org.quickperf.jvm.annotations.ExpectNoJvmIssue;
+import org.quickperf.jvm.jfr.annotation.ExpectNoJvmIssue;
 import org.quickperf.unit.Count;
 
 import java.util.ArrayList;

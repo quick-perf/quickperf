@@ -9,7 +9,7 @@
  * Copyright 2019-2020 the original author or authors.
  */
 
-package org.quickperf.jvm.annotations;
+package org.quickperf.jvm.jfr.annotation;
 
 import java.lang.annotation.Annotation;
 
@@ -25,7 +25,7 @@ public class JfrAnnotationBuilder {
     private JfrAnnotationBuilder() { }
 
     /**
-     *Allows to build {@link org.quickperf.jvm.annotations.ProfileJvm} annotation.
+     *Allows to build {@link ProfileJvm} annotation.
      */
     public static ProfileJvm profileJvm() {
         return new ProfileJvm() {
@@ -37,7 +37,7 @@ public class JfrAnnotationBuilder {
     }
 
     /**
-     *Allows to build {@link org.quickperf.jvm.annotations.ExpectNoJvmIssue} annotation.
+     *Allows to build {@link ExpectNoJvmIssue} annotation.
      */
     public static ExpectNoJvmIssue expectNoJvmIssue() {
         return new ExpectNoJvmIssue() {
@@ -53,7 +53,7 @@ public class JfrAnnotationBuilder {
     }
 
     /**
-     *Allows to build {@link org.quickperf.jvm.annotations.ExpectNoJvmIssue} annotation.
+     *Allows to build {@link ExpectNoJvmIssue} annotation.
      */
     public static ExpectNoJvmIssue expectNoJvmIssue(final int score) {
         return new ExpectNoJvmIssue() {

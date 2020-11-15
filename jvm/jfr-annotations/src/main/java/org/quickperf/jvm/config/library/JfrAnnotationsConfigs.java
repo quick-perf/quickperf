@@ -2,9 +2,9 @@ package org.quickperf.jvm.config.library;
 
 import org.quickperf.WorkingFolder;
 import org.quickperf.config.library.AnnotationConfig;
-import org.quickperf.jvm.annotations.ExpectNoJvmIssue;
-import org.quickperf.jvm.annotations.ProfileJvm;
-import org.quickperf.jvm.annotations.ProfileQuickPerfInTestJvm;
+import org.quickperf.jvm.jfr.annotation.ExpectNoJvmIssue;
+import org.quickperf.jvm.jfr.annotation.ProfileJvm;
+import org.quickperf.jvm.jfr.annotation.ProfileQuickPerfInTestJvm;
 import org.quickperf.jvm.jfr.JfrEventsRecorder;
 import org.quickperf.jvm.jmc.value.DisplayJvmProfilingValueVerifier;
 import org.quickperf.jvm.jmc.value.JfrEventsMeasureExtractor;
