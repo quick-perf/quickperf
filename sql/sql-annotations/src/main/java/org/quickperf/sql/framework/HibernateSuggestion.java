@@ -76,13 +76,4 @@ public enum HibernateSuggestion implements QuickPerfSuggestion {
         }
     },
 
-    SESSION() {
-
-        @Override
-        public String getMessage() {
-            return "Exactly same select statements may show a bad use of Hibernate session.";
-        }
-
-    }
-
 }

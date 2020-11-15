@@ -14,8 +14,6 @@ package org.quickperf.sql.select;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.sql.annotation.DisableSameSelects;
-import org.quickperf.sql.framework.HibernateSuggestion;
-import org.quickperf.sql.framework.ClassPath;
 import org.quickperf.sql.select.analysis.SelectAnalysis;
 
 public class HasExactlySameSelectVerifier implements VerifiablePerformanceIssue<DisableSameSelects, SelectAnalysis> {
@@ -29,13 +27,7 @@ public class HasExactlySameSelectVerifier implements VerifiablePerformanceIssue<
                                    , SelectAnalysis selectAnalysis) {
 
         if(selectAnalysis.hasSameSelects()) {
-            String description = "Same SELECT statements";
-            if(ClassPath.INSTANCE.containsHibernate()) {
-                description += System.lineSeparator()
-                             + HibernateSuggestion.SESSION.getMessage()
-                ;
-            }
-            return new PerfIssue(description);
+            return new PerfIssue("Same SELECT statements");
         }
 
         return PerfIssue.NONE;
