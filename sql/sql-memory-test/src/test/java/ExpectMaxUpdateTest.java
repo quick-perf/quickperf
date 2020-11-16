@@ -58,7 +58,7 @@ public class ExpectMaxUpdateTest {
 
         assertThat(printableResult.toString())
                 .contains("You may think that at most <0> update statement")
-                .contains("But in fact <1>");
+                .contains("But there is in fact <1>");
 
     }
 
@@ -95,7 +95,7 @@ public class ExpectMaxUpdateTest {
 
         assertThat(printableResult.toString())
                 .contains("You may think that at most <0> update statement was sent to the database")
-                .contains("But in fact <1>...");
+                .contains("But there is in fact <1>...");
 
     }
 

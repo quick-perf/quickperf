@@ -52,7 +52,7 @@ public class ExpectSelectTest {
         String testResult = printableResult.toString();
         assertThat(testResult)
                 .contains("You may think that <5> select statements were sent to the database")
-                .contains("But in fact <1>...")
+                .contains("But there is in fact <1>...")
                 .contains("select")
                 .contains("book0_.id as id1_0");
 

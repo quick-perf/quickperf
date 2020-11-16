@@ -30,11 +30,13 @@ public class SqlStatementPerfIssueBuilder {
     }
 
     public String buildMaxOfStatementsDesc(Count measuredCount, Count expectedCount, String statementName) {
+        boolean severalExpectedStatements = expectedCount.getValue() > 1;
+        boolean severalExecutedStatements = measuredCount.getValue() > 1;
         return    "You may think that at most <" + expectedCount.getValue() + "> " + statementName + " statement"
-                + (expectedCount.getValue() > 1 ? "s were" : " was" )
+                + (severalExpectedStatements ? "s were" : " was" )
                 + " sent to the database"
                 + System.lineSeparator()
-                + "       " + "But in fact <" + measuredCount.getValue() + ">...";
+                + "       " + "But there " + (severalExecutedStatements ? "are" : "is" ) + " in fact <" + measuredCount.getValue() + ">...";
     }
 
 }

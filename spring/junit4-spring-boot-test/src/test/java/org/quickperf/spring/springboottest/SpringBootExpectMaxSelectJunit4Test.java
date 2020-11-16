@@ -34,7 +34,7 @@ public class SpringBootExpectMaxSelectJunit4Test {
         String testReport = printableResult.toString();
         assertThat(testReport)
                 .contains("You may think that at most <1> select statement was sent to the database")
-                .contains("But in fact <3>...")
+                .contains("But there are in fact <3>...")
                 .contains("Perhaps you are facing an N+1 select issue")
                 .contains("With Hibernate, you may fix it by")
                 .contains("With Spring Data JPA, you may fix it by");

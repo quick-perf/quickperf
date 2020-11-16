@@ -35,7 +35,7 @@ public class QuickPerfTestNGSqlTest {
         Throwable errorReport = testsResult.getThrowableOfFirstTest();
         assertThat(errorReport).hasMessageContaining("a performance property is not respected")
                                .hasMessageContaining("You may think that <5> select statements were sent to the database")
-                               .hasMessageContaining("But in fact <1>...");
+                               .hasMessageContaining("But there is in fact <1>...");
 
     }
 

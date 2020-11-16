@@ -55,7 +55,7 @@ public class ExpectMaxDeleteTest {
 
         assertThat(printableResult.toString())
                 .contains("You may think that at most <0> delete statement was sent to the database")
-                .contains("But in fact <1>...");
+                .contains("But there is in fact <1>...");
 
     }
 

@@ -54,11 +54,13 @@ public class SelectNumberPerfIssueVerifier implements VerifiablePerformanceIssue
     }
 
     private String buildBaseDescription(Count measuredCount, Count expectedCount) {
+        boolean severalExpectedStatements = expectedCount.getValue() > 1;
+        boolean severalExecutedStatements = measuredCount.getValue() > 1;
         return "You may think that <" + expectedCount.getValue() + "> select statement"
-               + (expectedCount.getValue() > 1 ? "s were" : " was" )
+               + (severalExpectedStatements ? "s were" : " was" )
                + " sent to the database"
                + System.lineSeparator()
-               + "       " + "But in fact <" + measuredCount.getValue() + ">...";
+               + "       " + "But there " + (severalExecutedStatements ? "are" : "is" ) + " in fact <" + measuredCount.getValue() + ">...";
     }
 
 }

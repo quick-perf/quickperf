@@ -126,7 +126,7 @@ public class QuickPerfJUnit5SqlDynamicTest {
 
         String errorReport = jUnit5TestsResult.getErrorReport();
         assertThat(errorReport).contains("You may think that <2> select statements were sent to the database")
-                               .contains("But in fact <1>...")
+                               .contains("But there is in fact <1>...")
                                .contains("select")
                                .contains("book0_.id")
                                .contains("from")
@@ -149,7 +149,7 @@ public class QuickPerfJUnit5SqlDynamicTest {
 
         String errorReport = jUnit5TestsResult.getErrorReport();
         assertThat(errorReport).contains("You may think that <2> select statements were sent to the database")
-                .contains("But in fact <1>...")
+                .contains("But there is in fact <1>...")
                 .contains("select")
                 .contains("book0_.id")
                 .contains("from")
@@ -172,7 +172,7 @@ public class QuickPerfJUnit5SqlDynamicTest {
 
         String errorReport = jUnit5TestsResult.getErrorReport();
         assertThat(errorReport).contains("You may think that <2> select statements were sent to the database")
-                .contains("But in fact <1>...")
+                .contains("But there is in fact <1>...")
                 .contains("select")
                 .contains("book0_.id")
                 .contains("from")
@@ -195,7 +195,7 @@ public class QuickPerfJUnit5SqlDynamicTest {
 
         String errorReport = jUnit5TestsResult.getErrorReport();
         assertThat(errorReport).contains("You may think that <2> select statements were sent to the database")
-                .contains("But in fact <1>...")
+                .contains("But there is in fact <1>...")
                 .contains("select")
                 .contains("book0_.id")
                 .contains("from")

@@ -55,7 +55,7 @@ public class ExpectMaxSelectTest {
         assertThat(testResult)
                 .contains("You may think that at most <0> select statement was sent to the database")
                 .doesNotContain("N+1 select") // Less than 2 SELECT executed
-                .contains("But in fact <1>...")
+                .contains("But there is in fact <1>...")
                 .contains("select")
                 .contains("book0_.id as id1_0_");
 
@@ -120,7 +120,7 @@ public class ExpectMaxSelectTest {
         assertThat(testResult)
                 .contains("You may think that at most <0> select statement was sent to the database")
                 .doesNotContain("N+1 select") // Less than 2 SELECT executed
-                .contains("But in fact <1>...")
+                .contains("But there is in fact <1>...")
                 .contains("select")
                 .contains("book0_.id as id1_0");
 

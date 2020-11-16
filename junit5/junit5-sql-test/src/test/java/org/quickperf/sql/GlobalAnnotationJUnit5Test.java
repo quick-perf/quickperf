@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class GlobalAnnotationJUnit5Test {
 
     @QuickPerfTest
-    public static class SqlCrossJoinJUnit5 extends SqlTestBaseJUnit5 {
+    public static class ClassToTestGlobalAnnotation extends SqlTestBaseJUnit5 {
 
         @Test
         public void execute_one_statement_containing_a_like_with_a_leading_wildcard() {
@@ -38,7 +38,7 @@ public class GlobalAnnotationJUnit5Test {
     public void should_apply_global_annotation() {
 
         // GIVEN
-        Class<?> testClass = SqlCrossJoinJUnit5.class;
+        Class<?> testClass = ClassToTestGlobalAnnotation.class;
         JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
 
         // WHEN

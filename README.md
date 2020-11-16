@@ -95,7 +95,7 @@
 
 ```
 [PERF] You may think that <1> select statement was sent to the database
-       But in fact <10>...
+       But there are in fact <10>...
 
 💣 You may have even more select statements with production data.
 Be careful with the cost of JDBC server roundtrips: https://blog.jooq.org/2017/12/18/the-cost-of-jdbc-server-roundtrips/
