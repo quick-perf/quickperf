@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.quickperf</groupId>
         <artifactId>quick-perf-junit5-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -24,12 +24,12 @@
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-jvm-annotations</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-junit5-test-util</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
             <classifier>tests</classifier>
             <type>test-jar</type>
             <scope>test</scope>
