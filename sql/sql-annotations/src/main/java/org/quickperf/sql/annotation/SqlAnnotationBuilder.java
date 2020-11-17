@@ -39,7 +39,7 @@ public class SqlAnnotationBuilder {
     /**
      *Allows to build {@link org.quickperf.sql.annotation.DisableSameSelectTypesWithDifferentParamValues} annotation.
      */
-    public static DisableSameSelectTypesWithDifferentParamValues disableSameSelectTypesWithDifferentParams() {
+    public static DisableSameSelectTypesWithDifferentParamValues disableSameSelectTypesWithDifferentParamValues() {
         return new DisableSameSelectTypesWithDifferentParamValues() {
             @Override
             public Class<? extends Annotation> annotationType() {
