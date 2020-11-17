@@ -14,12 +14,12 @@
     <parent>
         <groupId>org.quickperf</groupId>
         <artifactId>quick-perf-spring</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>quick-perf-junit4-spring3</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-junit4</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -53,7 +53,7 @@
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-sql-annotations</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -80,7 +80,7 @@
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-junit4-spring-base-tests</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1-SNAPSHOT</version>
             <classifier>tests</classifier>
             <type>test-jar</type>
             <scope>test</scope>

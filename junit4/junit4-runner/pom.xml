@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.quickperf</groupId>
         <artifactId>quick-perf-junit4-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -31,12 +31,12 @@
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-core</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-jvm-annotations</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
