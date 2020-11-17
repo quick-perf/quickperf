@@ -21,7 +21,7 @@ public enum JdbcSuggestion implements QuickPerfSuggestion {
             String bomb = "\uD83D\uDCA3";
             return    bomb + " " + "You may have even more select statements with production data."
                     + System.lineSeparator()
-                    + " Be careful with the cost of JDBC server roundtrips: "
+                    + "Be careful with the cost of JDBC server roundtrips: "
                     + "https://blog.jooq.org/2017/12/18/the-cost-of-jdbc-server-roundtrips/";
         }
     },
