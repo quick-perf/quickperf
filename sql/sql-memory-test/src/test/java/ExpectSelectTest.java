@@ -82,7 +82,7 @@ public class ExpectSelectTest {
 
         // THEN
         String testResult = printableResult.toString();
-        assertThat(testResult).doesNotContain("server roundtrips")
+        assertThat(testResult).doesNotContain("JDBC roundtrips")
                               .doesNotContain("N+1");
 
     }
@@ -114,7 +114,7 @@ public class ExpectSelectTest {
 
         String testResult = printableResult.toString();
         assertThat(testResult).contains("You may think that <0> select statement was sent to the database")
-                              .doesNotContain("server roundtrips")
+                              .doesNotContain("JDBC roundtrips")
                               .doesNotContain("N+1");
 
     }
@@ -157,7 +157,7 @@ public class ExpectSelectTest {
         assertThat(printableResult.failureCount()).isOne();
 
         String testResult = printableResult.toString();
-        assertThat(testResult).doesNotContain("server roundtrips")
+        assertThat(testResult).doesNotContain("JDBC roundtrips")
                               .doesNotContain("N+1");
 
     }
@@ -200,7 +200,7 @@ public class ExpectSelectTest {
 
         String testResult = printableResult.toString();
         assertThat(testResult).contains("You may think that <1> select statement was sent to the database")
-                              .contains("server roundtrips")
+                              .contains("JDBC roundtrips")
                               .contains("N+1");
 
     }
@@ -245,7 +245,7 @@ public class ExpectSelectTest {
 
         String testResult = printableResult.toString();
         assertThat(testResult).contains("You may think that <1> select statement was sent to the database")
-                              .contains("server roundtrips")
+                              .contains("JDBC roundtrips")
                               .contains("N+1");
 
     }

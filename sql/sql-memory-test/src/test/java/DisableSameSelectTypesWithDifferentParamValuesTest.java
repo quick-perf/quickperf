@@ -63,7 +63,7 @@ public class DisableSameSelectTypesWithDifferentParamValuesTest {
         String testResult = printableResult.toString();
         assertThat(testResult)
                 .contains("Same SELECT types with different parameter values")
-                .contains("server roundtrips")
+                .contains("JDBC roundtrips")
                 .contains("N+1");
 
     }

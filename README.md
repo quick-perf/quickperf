@@ -98,7 +98,7 @@
        But there are in fact <10>...
 
 💣 You may have even more select statements with production data.
-Be careful with the cost of JDBC server roundtrips: https://blog.jooq.org/2017/12/18/the-cost-of-jdbc-server-roundtrips/
+Be careful with the cost of JDBC roundtrips: https://blog.jooq.org/2017/12/18/the-cost-of-jdbc-server-roundtrips/
 ```
 
 Auto-detection of Hibernate and Spring Data JPA:

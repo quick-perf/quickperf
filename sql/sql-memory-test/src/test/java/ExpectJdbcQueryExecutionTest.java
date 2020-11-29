@@ -137,7 +137,7 @@ public class ExpectJdbcQueryExecutionTest {
 
         String testResult = printableResult.toString();
         assertThat(testResult).contains("ou may think that there was <1> JDBC query execution")
-                              .contains("server roundtrips")
+                              .contains("JDBC roundtrips")
                               .contains("N+1");
 
     }

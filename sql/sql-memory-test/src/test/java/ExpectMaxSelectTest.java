@@ -165,7 +165,7 @@ public class ExpectMaxSelectTest {
 
         String testResult = printableResult.toString();
         assertThat(testResult).contains("You may think that <1> select statement was sent to the database")
-                              .contains("server roundtrips")
+                              .contains("JDBC roundtrips")
                               .contains("N+1");
 
     }
@@ -208,7 +208,7 @@ public class ExpectMaxSelectTest {
 
         String testResult = printableResult.toString();
         assertThat(testResult).contains("You may think that at most <1> select statement was sent to the database")
-                              .doesNotContain("server roundtrips")
+                              .doesNotContain("JDBC roundtrips")
                               .doesNotContain("N+1");
 
     }
