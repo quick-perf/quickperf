@@ -74,7 +74,7 @@ public class QuickPerfJUnitRunnerTest {
         String report = printableResult.toString();
 
         assertThat(report).contains(
-                "Performance and functional properties not respected");
+                "Performance-related and functional properties not respected");
 
         assertThat(report).contains("Functional issue !");
 

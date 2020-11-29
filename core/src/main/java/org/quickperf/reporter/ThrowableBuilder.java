@@ -37,10 +37,10 @@ class ThrowableBuilder {
         }
 
         if (numberOfPerfIssues == 1) {
-            return "a performance property is not respected";
+            return "a performance-related property is not respected";
         }
 
-        return numberOfPerfIssues + " performance properties are not respected";
+        return numberOfPerfIssues + " performance-related properties are not respected";
 
     }
 
@@ -72,11 +72,11 @@ class ThrowableBuilder {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Performance and functional properties not respected");
+        sb.append("Performance-related and functional properties not respected");
 
         sb.append(System.lineSeparator());
         sb.append(System.lineSeparator());
-        sb.append("PERFORMANCE PROPERTIES(S)");
+        sb.append("PERFORMANCE-RELATED PROPERTIES(S)");
         String perfIssuesDescription = convertPerfIssuesToString(groupOfPerfIssuesToFormat);
         sb.append(perfIssuesDescription);
 

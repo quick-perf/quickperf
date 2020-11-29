@@ -33,8 +33,8 @@ public abstract class AbstractJUnit4SpringTestBase {
         assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
-                      .contains("java.lang.AssertionError: Performance and functional properties not respected")
-                      .contains("PERFORMANCE PROPERTIES(S)")
+                      .contains("java.lang.AssertionError: Performance-related and functional properties not respected")
+                      .contains("PERFORMANCE-RELATED PROPERTIES")
                       .contains("FUNCTIONAL PROPERTY")
                       .contains("Failing assertion !");
 
@@ -55,8 +55,8 @@ public abstract class AbstractJUnit4SpringTestBase {
         assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
-                      .contains("java.lang.AssertionError: Performance and functional properties not respected")
-                      .contains("PERFORMANCE PROPERTIES(S)")
+                      .contains("java.lang.AssertionError: Performance-related and functional properties not respected")
+                      .contains("PERFORMANCE-RELATED PROPERTIES(S)")
                       .contains("Expected no heap allocation (test method thread) but is")
                       .contains("FUNCTIONAL PROPERTY")
                       .contains("Failing assertion !");
@@ -94,7 +94,7 @@ public abstract class AbstractJUnit4SpringTestBase {
         assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString()).contains(
-                "a performance property is not respected");
+                "a performance-related property is not respected");
 
 
     }
@@ -146,7 +146,7 @@ public abstract class AbstractJUnit4SpringTestBase {
         assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString()).contains(
-                "java.lang.AssertionError: a performance property is not respected");
+                "java.lang.AssertionError: a performance-related property is not respected");
 
     }
 
@@ -166,7 +166,7 @@ public abstract class AbstractJUnit4SpringTestBase {
         softAssertions.assertThat(printableResult.failureCount()).isEqualTo(2);
 
         softAssertions.assertThat(printableResult.toString())
-                      .contains("java.lang.AssertionError: Performance and functional properties not respected")
+                      .contains("java.lang.AssertionError: Performance-related and functional properties not respected")
                       .contains("Failing assertion of first test!")
                       .contains("Failing assertion of second test!");
 
@@ -189,7 +189,7 @@ public abstract class AbstractJUnit4SpringTestBase {
         assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
-                      .contains("java.lang.AssertionError: a performance property is not respected")
+                      .contains("java.lang.AssertionError: a performance-related property is not respected")
                       .contains("insert")
                       .contains("into");
 

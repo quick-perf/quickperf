@@ -130,7 +130,7 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
                                                 , quickPerfConfigs
                                                 , NO_STATEMENT);
         }
-        // The test method is not executed in a specific JVM and performance properties
+        // The test method is not executed in a specific JVM and performance-related properties
         // are evaluated
         return springRunnerWithQuickPerfFeatures.withAfters(frameworkMethod, testInstance, statement);
     }

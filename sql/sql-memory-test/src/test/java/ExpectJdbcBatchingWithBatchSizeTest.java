@@ -150,7 +150,7 @@ public class ExpectJdbcBatchingWithBatchSizeTest {
 
         String testReport = printableResult.toString();
         assertThat(testReport).contains(
-                "a performance property is not respected");
+                "a performance-related property is not respected");
 
     }
 
