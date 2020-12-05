@@ -45,20 +45,25 @@ public class AllParametersAreBoundExtractor implements ExtractablePerformanceMea
         String queryStrippedOfQuotes = stripQuotesContent(queryString);
         final String queryInLowerCase = queryStrippedOfQuotes.toLowerCase();
         if (queryInLowerCase.contains("where") || queryInLowerCase.contains("values") || queryInLowerCase.contains("set")) {
-            String[] splitWhere = queryInLowerCase.split("where");
-            List<String> andOrParts = new ArrayList<>();
-            for (String s : splitWhere) {
-                String[] andOrPart = s.split(" and | or ");
-                Collections.addAll(andOrParts, andOrPart);
-            }
-            for (String andOrPart : andOrParts) {
-                SqlKeyWord sqlKeyWord = SqlKeyWord.wherePartSplitter(andOrPart);
-                if (sqlKeyWord.hasUnBindParameter(andOrPart)) {
+            List<String> conditions = extractConditions(queryInLowerCase);
+            for (String condition : conditions) {
+                SqlKeyWord sqlKeyWord = SqlKeyWord.wherePartSplitter(condition);
+                if (sqlKeyWord.hasUnBindParameter(condition)) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    private List<String> extractConditions(String queryInLowerCase) {
+        String[] whereParts = queryInLowerCase.split("where");
+        List<String> conditions = new ArrayList<>();
+        for (String s : whereParts) {
+            String[] andOrPart = s.split(" and | or ");
+            Collections.addAll(conditions, andOrPart);
+        }
+        return conditions;
     }
 
     private String stripQuotesContent(final String queryString) {
@@ -125,7 +130,18 @@ public class AllParametersAreBoundExtractor implements ExtractablePerformanceMea
                 if (SqlKeyWord.isReferencedNestedStatement(andOrPart)) {
                     return false;
                 }
+
+                if(isJoinWithWhereUsed(andOrPart)) {
+                    return false;
+                }
+
                 return !andOrPart.contains("?");
+            }
+
+            // Example WHERE a.title=b.title
+            private boolean isJoinWithWhereUsed(final String andOrPart) {
+                String[] equalParts = andOrPart.split("=");
+                return equalParts[0].contains(".") && equalParts.length == 2 && equalParts[1].contains(".");
             }
         };
         private final String keyWord;
