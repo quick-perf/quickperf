@@ -598,7 +598,7 @@ public class DisableQueriesWithoutBindParametersTest {
     }
 
     @Test
-    public void should_succed_when_nested_statement_with_bind_parameters() {
+    public void should_succeed_when_nested_statement_with_bind_parameters() {
 
         // GIVEN
         Class<?> testClass = NestedStatementWithBindParameters.class;
@@ -639,7 +639,7 @@ public class DisableQueriesWithoutBindParametersTest {
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
-    public static class NestedStatementWithOneBindParamete extends SqlTestBase {
+    public static class NestedStatementWithOneBindParameter extends SqlTestBase {
 
         @Test
         @DisableQueriesWithoutBindParameters
@@ -653,10 +653,10 @@ public class DisableQueriesWithoutBindParametersTest {
     }
 
     @Test
-    public void should_succed_when_nested_statement_with_one_bind_parameter() {
+    public void should_succeed_when_nested_statement_with_one_bind_parameter() {
 
         // GIVEN
-        Class<?> testClass = NestedStatementWithOneBindParamete.class;
+        Class<?> testClass = NestedStatementWithOneBindParameter.class;
 
         // WHEN
         PrintableResult printableResult = testResult(testClass);
@@ -684,7 +684,7 @@ public class DisableQueriesWithoutBindParametersTest {
     }
 
     @Test
-    public void should_succed_when_insert_statement_with_bind_parameters() {
+    public void should_succeed_when_insert_statement_with_bind_parameters() {
 
         // GIVEN
         Class<?> testClass = InsertStatementWithBindParameters.class;
@@ -931,6 +931,196 @@ public class DisableQueriesWithoutBindParametersTest {
         // THEN
         assertThat(printableResult.failureCount()).isOne();
         assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class SqlJoinStatementWithBindParameter extends SqlTestBase {
+
+        @Test
+        @DisableQueriesWithoutBindParameters
+        public void test_method() {
+            EntityManager em = emf.createEntityManager();
+            String sql = "SELECT a.title FROM Book a, Book b WHERE a.title = b.title";
+            Query nativeQuery = em.createNativeQuery(sql);
+            nativeQuery.getResultList();
+        }
+    }
+
+    @Test
+    public void should_succeed_when_sql_join_statement_with_bind_parameter() {
+
+        // GIVEN
+        Class<?> testClass = SqlJoinStatementWithBindParameter.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isZero();
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class SqlWhereWithQuotesAfterEquals extends SqlTestBase {
+
+        @DisableQueriesWithoutBindParameters
+        @Test
+        public void test_method() {
+            EntityManager em = emf.createEntityManager();
+            String sql = "SELECT a.title FROM Book a WHERE a.title = 'Effective Java'";
+            Query nativeQuery = em.createNativeQuery(sql);
+            nativeQuery.getResultList();
+        }
+    }
+
+    @Test
+    public void should_fail_when_sql_join_statement_with_quotes_after_equals_and_unbind_parameter() {
+
+        // GIVEN
+        Class<?> testClass = SqlWhereWithQuotesAfterEquals.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isOne();
+        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class SqlWhereWithQuotesBeforeEquals extends SqlTestBase {
+
+        @DisableQueriesWithoutBindParameters
+        @Test
+        public void test_method() {
+            EntityManager em = emf.createEntityManager();
+            String sql = "SELECT a.title FROM Book a WHERE 'Effective Java' = a.title";
+            Query nativeQuery = em.createNativeQuery(sql);
+            nativeQuery.getResultList();
+        }
+    }
+
+    @Test
+    public void should_fail_when_sql_join_statement_with_quotes_before_equals_and_unbind_parameter() {
+
+        // GIVEN
+        Class<?> testClass = SqlWhereWithQuotesBeforeEquals.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isOne();
+        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
+
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class SqlWhereWithNumberAfterEquals extends SqlTestBase {
+
+        @DisableQueriesWithoutBindParameters
+        @Test
+        public void test_method() {
+            EntityManager em = emf.createEntityManager();
+            String sql = "SELECT a.title FROM Book a WHERE a.id = 40";
+            Query nativeQuery = em.createNativeQuery(sql);
+            nativeQuery.getResultList();
+        }
+    }
+
+    @Test
+    public void should_fail_when_sql_join_statement_with_number_after_equals_and_unbind_parameter() {
+
+        // GIVEN
+        Class<?> testClass = SqlWhereWithNumberAfterEquals.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isOne();
+        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class SqlWhereWithNumberBeforeEquals extends SqlTestBase {
+
+        @DisableQueriesWithoutBindParameters
+        @Test
+        public void test_method() {
+            EntityManager em = emf.createEntityManager();
+            String sql = "SELECT a.title FROM Book a WHERE 40 = a.title";
+            Query nativeQuery = em.createNativeQuery(sql);
+            nativeQuery.getResultList();
+        }
+    }
+
+    @Test
+    public void should_fail_when_sql_join_statement_with_number_before_equals_and_unbind_parameter() {
+
+        // GIVEN
+        Class<?> testClass = SqlWhereWithNumberBeforeEquals.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isOne();
+        assertThat(printableResult.toString()).contains(QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE);
+
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class SqlJoinStatementWithBindParameterAfterEqual extends SqlTestBase {
+
+        @Test
+        @DisableQueriesWithoutBindParameters
+        public void test_method() {
+            EntityManager em = emf.createEntityManager();
+            String sql = "SELECT a.title FROM Book a WHERE a.title = :title";
+            Query nativeQuery = em.createNativeQuery(sql)
+                    .setParameter("title", "Effective Java");
+            nativeQuery.getResultList();
+        }
+    }
+
+    @Test
+    public void should_succeed_when_sql_join_statement_with_bind_parameter_after_equal() {
+
+        // GIVEN
+        Class<?> testClass = SqlJoinStatementWithBindParameterAfterEqual.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isZero();
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class SqlJoinStatementWithBindParameterBeforeEqual extends SqlTestBase {
+
+        @Test
+        @DisableQueriesWithoutBindParameters
+        public void test_method() {
+            EntityManager em = emf.createEntityManager();
+            String sql = "SELECT a.title FROM Book a WHERE :title = a.title";
+            Query nativeQuery = em.createNativeQuery(sql)
+                    .setParameter("title", "Effective Java");
+            nativeQuery.getResultList();
+        }
+    }
+
+    @Test
+    public void should_succeed_when_sql_join_statement_with_bind_parameter_before_equal() {
+
+        // GIVEN
+        Class<?> testClass = SqlJoinStatementWithBindParameterBeforeEqual.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isZero();
     }
 
 }
