@@ -44,8 +44,8 @@ public class AllParametersAreBoundExtractor implements ExtractablePerformanceMea
         final String queryString = query.getQuery();
         String queryStrippedOfQuotes = stripQuotesContent(queryString);
         final String queryInLowerCase = queryStrippedOfQuotes.toLowerCase();
-        if (queryInLowerCase.contains("where") || queryInLowerCase.contains("values") || queryInLowerCase.contains("set")) {
-            List<String> conditions = extractConditions(queryInLowerCase);
+        if (SqlKeyWord.hasConditions(queryInLowerCase)) {
+            List<String> conditions = SqlKeyWord.extractConditions(queryInLowerCase);
             for (String condition : conditions) {
                 SqlKeyWord sqlKeyWord = SqlKeyWord.wherePartSplitter(condition);
                 if (sqlKeyWord.hasUnBindParameter(condition)) {
@@ -54,16 +54,6 @@ public class AllParametersAreBoundExtractor implements ExtractablePerformanceMea
             }
         }
         return false;
-    }
-
-    private List<String> extractConditions(String queryInLowerCase) {
-        String[] whereParts = queryInLowerCase.split("where");
-        List<String> conditions = new ArrayList<>();
-        for (String s : whereParts) {
-            String[] andOrPart = s.split(" and | or ");
-            Collections.addAll(conditions, andOrPart);
-        }
-        return conditions;
     }
 
     private String stripQuotesContent(final String queryString) {
@@ -84,50 +74,29 @@ public class AllParametersAreBoundExtractor implements ExtractablePerformanceMea
         IN("in") {
             @Override
             boolean hasUnBindParameter(String andOrPart) {
-                if (SqlKeyWord.isReferencedNestedStatement(andOrPart)) {
+                if (isReferencedNestedStatement(andOrPart)) {
                     return false;
                 }
-                String[] inPart = andOrPart.split(SqlKeyWord.IN.getValue());
-                String[] commaParts = inPart[1].split(",");
-                for (String part : commaParts) {
-                    if (!part.contains("?")) {
-                        return true;
-                    }
-                }
-                return false;
+                return hasUnBindParameter(IN, andOrPart);
             }
         },
         VALUES("values") {
             @Override
             boolean hasUnBindParameter(String andOrPart) {
-                String[] inPart = andOrPart.split(SqlKeyWord.VALUES.getValue());
-                String[] commaParts = inPart[1].split(",");
-                for (String part : commaParts) {
-                    if (!part.contains("?")) {
-                        return true;
-                    }
-                }
-                return false;
+                return hasUnBindParameter(VALUES, andOrPart);
             }
         },
         SET("set") {
             @Override
             boolean hasUnBindParameter(String andOrPart) {
-                String[] inPart = andOrPart.split(SqlKeyWord.SET.getValue());
-                String[] commaParts = inPart[1].split(",");
-                for (String part : commaParts) {
-                    if (!part.contains("?")) {
-                        return true;
-                    }
-                }
-                return false;
+                return hasUnBindParameter(SET, andOrPart);
             }
         },
         OTHER("other") {
             @Override
             boolean hasUnBindParameter(String andOrPart) {
                 andOrPart = andOrPart.replaceAll(" ", "");
-                if (SqlKeyWord.isReferencedNestedStatement(andOrPart)) {
+                if (isReferencedNestedStatement(andOrPart)) {
                     return false;
                 }
 
@@ -135,7 +104,7 @@ public class AllParametersAreBoundExtractor implements ExtractablePerformanceMea
                     return false;
                 }
 
-                return !andOrPart.contains("?");
+                return isUnbindParameter(andOrPart);
             }
 
             // Example WHERE a.title=b.title
@@ -144,6 +113,11 @@ public class AllParametersAreBoundExtractor implements ExtractablePerformanceMea
                 return equalParts[0].contains(".") && equalParts.length == 2 && equalParts[1].contains(".");
             }
         };
+
+        private static boolean isUnbindParameter(String parameter) {
+            return !parameter.contains("?");
+        }
+
         private final String keyWord;
 
         SqlKeyWord(String keyWord) {
@@ -166,6 +140,32 @@ public class AllParametersAreBoundExtractor implements ExtractablePerformanceMea
         static boolean isReferencedNestedStatement(String andOrPart){
             return andOrPart.contains("select") || andOrPart.contains("delete");
         }
+
+        static boolean hasConditions(String queryInLowerCase) {
+            return queryInLowerCase.contains("where") || queryInLowerCase.contains("values") || queryInLowerCase.contains("set");
+        }
+
+        static List<String> extractConditions(String queryInLowerCase) {
+            String[] whereParts = queryInLowerCase.split("where");
+            List<String> conditions = new ArrayList<>();
+            for (String wherePart : whereParts) {
+                String[] andOrPart = wherePart.split(" and | or ");
+                Collections.addAll(conditions, andOrPart);
+            }
+            return conditions;
+        }
+
+        static boolean hasUnBindParameter(final SqlKeyWord sqlKeyWord, final String andOrPart) {
+            String[] sqlKeyWordParts = andOrPart.split(sqlKeyWord.getValue());
+            String[] commaParts = sqlKeyWordParts[1].split(",");
+            for (String part : commaParts) {
+                if (isUnbindParameter(part)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         abstract boolean hasUnBindParameter(String andOrPart);
     }
 }

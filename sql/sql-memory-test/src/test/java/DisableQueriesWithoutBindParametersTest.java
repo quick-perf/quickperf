@@ -940,7 +940,7 @@ public class DisableQueriesWithoutBindParametersTest {
         @DisableQueriesWithoutBindParameters
         public void test_method() {
             EntityManager em = emf.createEntityManager();
-            String sql = "SELECT a.title FROM Book a, Book b WHERE a.title=b.title;";
+            String sql = "SELECT a.title FROM Book a, Book b WHERE a.title = b.title;";
             Query nativeQuery = em.createNativeQuery(sql);
             nativeQuery.getResultList();
         }
@@ -966,7 +966,7 @@ public class DisableQueriesWithoutBindParametersTest {
         @Test
         public void test_method() {
             EntityManager em = emf.createEntityManager();
-            String sql = "SELECT a.title FROM Book a, Book b WHERE a.title='Effective Java'";
+            String sql = "SELECT a.title FROM Book a, Book b WHERE a.title = 'Effective Java'";
             Query nativeQuery = em.createNativeQuery(sql);
             nativeQuery.getResultList();
         }
