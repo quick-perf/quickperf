@@ -11,10 +11,13 @@
 
 package org.quickperf.spring.springboottest;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quickperf.annotation.DisableGlobalAnnotations;
+import org.quickperf.jvm.allocation.AllocationUnit;
+import org.quickperf.jvm.annotations.HeapSize;
 import org.quickperf.spring.junit4.QuickPerfSpringRunner;
 import org.quickperf.spring.springboottest.jpa.entity.Player;
 import org.quickperf.spring.springboottest.jpa.repository.PlayerRepository;
@@ -32,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(QuickPerfSqlConfig.class)
 @DataJpaTest()
 @DisableGlobalAnnotations
-public class QuickPerfSpringRunnerBeforeTest {
+public class QuickPerfSpringRunnerBeforeAfterNewJvmTest {
 
     @Autowired
     private TestEntityManager testEntityManager;
@@ -46,10 +49,17 @@ public class QuickPerfSpringRunnerBeforeTest {
         testEntityManager.persist(player);
     }
 
+    @HeapSize(value = 50, unit = AllocationUnit.MEGA_BYTE)
     @Test
     public void should_find_all_players() {
         List<Player> players = playerRepository.findAll();
         assertThat(players).hasSize(3);
+    }
+
+    @After
+    public void after() {
+        Player player = new Player();
+        testEntityManager.persist(player);
     }
 
 }
