@@ -56,8 +56,7 @@ class SpringRunnerWithQuickPerfFeatures extends SpringJUnit4ClassRunner {
 
     @Override
     public Statement withBefores(FrameworkMethod frameworkMethod, Object testInstance, Statement statement) {
-        Statement springBefores = super.withBefores(frameworkMethod, testInstance, statement);
-        return quickPerfJUnitRunner.withBefores(frameworkMethod, testInstance, springBefores);
+        return super.withBefores(frameworkMethod, testInstance, statement);
     }
 
     @Override
