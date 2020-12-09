@@ -20,8 +20,8 @@
          alt = "License">
   </a>
   &nbsp;&nbsp;
-  <a href="https://travis-ci.com/quick-perf/quickperf">
-    <img src="https://travis-ci.com/quick-perf/quickperf.svg?branch=master"
+  <a href="https://github.com/quick-perf/quickperf/actions?query=workflow%3ACI">
+    <img src="https://img.shields.io/github/workflow/status/quick-perf/quickperf/CI"
          alt = "Build Status">
   </a>
   &nbsp;&nbsp;
