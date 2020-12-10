@@ -24,7 +24,6 @@
     <artifactId>quick-perf-sql-testcontainers-test</artifactId>
 
     <packaging>pom</packaging>
-
     <modules>
         <module>postgresql-test</module>
         <module>mariadb-test</module>
@@ -36,6 +35,9 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <dependencies.max.jdk.version>1.8</dependencies.max.jdk.version>
         <testcontainers.version>1.15.0</testcontainers.version>
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <gpg.skip>true</gpg.skip>
+        <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
     </properties>
 
     <dependencyManagement>
