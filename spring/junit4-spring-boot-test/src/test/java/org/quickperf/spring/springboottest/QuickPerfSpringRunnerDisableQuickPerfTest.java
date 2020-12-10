@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(QuickPerfSpringRunner.class)
 @Import(QuickPerfSqlConfig.class)
-@DataJpaTest()
+@DataJpaTest(showSql=false)
 public class QuickPerfSpringRunnerDisableQuickPerfTest {
 
     @Autowired
