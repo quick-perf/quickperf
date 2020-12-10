@@ -15,13 +15,13 @@
     <parent>
         <groupId>org.quickperf</groupId>
         <artifactId>quick-perf</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>quick-perf-bom</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <dependencyManagement>
@@ -29,62 +29,62 @@
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-jfr-annotations</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-sql-annotations</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-junit4</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-junit5</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-testng</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-sql-spring4</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-sql-spring5</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-junit4-spring3</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-junit4-spring4</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-junit4-spring5</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-springboot1-sql-starter</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-springboot2-sql-starter</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

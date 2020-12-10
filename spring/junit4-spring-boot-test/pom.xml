@@ -23,7 +23,7 @@
 
     <groupId>org.quickperf</groupId>
     <artifactId>quick-perf-junit4-spring-boot-test</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -40,13 +40,13 @@
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-junit4-spring5</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-springboot2-sql-starter</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -135,7 +135,7 @@
 
 
   <scm>
-    <tag>release-1.0.1</tag>
+    <tag>HEAD</tag>
     <connection>scm:git:https://github.com/quick-perf/quickperf.git</connection>
     <developerConnection>scm:git:git@github.com:quick-perf/quickperf.git</developerConnection>
     <url>https://github.com/quick-perf/quickperf</url>

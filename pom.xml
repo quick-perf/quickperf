@@ -21,7 +21,7 @@
     <artifactId>quick-perf</artifactId>
     <packaging>pom</packaging>
     <name>quick-perf</name>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
 
     <inceptionYear>2019</inceptionYear>
 
@@ -36,7 +36,7 @@
         <connection>scm:git:https://github.com/quick-perf/quickperf.git</connection>
         <developerConnection>scm:git:git@github.com:quick-perf/quickperf.git</developerConnection>
         <url>https://github.com/quick-perf/quickperf</url>
-        <tag>release-1.0.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
@@ -53,7 +53,7 @@
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
         <javadoc-subpackages />
         <javadoc-sourceFileIncludes>**\/\*.java</javadoc-sourceFileIncludes>
-        <project.build.outputTimestamp>2020-12-10T18:32:50Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2020-12-10T18:38:10Z</project.build.outputTimestamp>
         <jar.skipIfEmpty>true</jar.skipIfEmpty>
     </properties>
 
