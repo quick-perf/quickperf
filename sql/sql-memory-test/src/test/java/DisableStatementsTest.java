@@ -33,8 +33,8 @@ public class DisableStatementsTest {
         @DisableStatements
         @Test
         public void execute_one_select_with_a_prepared_statement() {
-            Connection connection = getConnection();
-            try (PreparedStatement statement = connection.prepareStatement("select isbn from Book")) {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("select isbn from Book")) {
                 statement.executeQuery();
             } catch (SQLException sqlException) {
                 throw new IllegalStateException(sqlException);
@@ -63,8 +63,8 @@ public class DisableStatementsTest {
         @DisableStatements
         @Test
         public void execute_one_select_with_a_statement() throws SQLException {
-            Connection connection = getConnection();
-            try (Statement statement = connection.createStatement()) {
+            try (Connection connection = getConnection();
+                 Statement statement = connection.createStatement()) {
                 statement.executeQuery("select * from Book");
             }
         }
@@ -96,8 +96,8 @@ public class DisableStatementsTest {
         @HeapSize(value = 20, unit = AllocationUnit.MEGA_BYTE)
         @Test
         public void execute_one_select_with_a_prepared_statement() throws SQLException {
-            Connection connection = getConnection();
-            try (PreparedStatement statement = connection.prepareStatement("select isbn from Book")) {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("select isbn from Book")) {
                 statement.executeQuery();
             }
         }
@@ -125,8 +125,8 @@ public class DisableStatementsTest {
         @HeapSize(value = 20, unit = AllocationUnit.MEGA_BYTE)
         @Test
         public void execute_one_select_with_a_statement() throws SQLException {
-            Connection connection = getConnection();
-            try (Statement statement = connection.createStatement()) {
+            try (Connection connection = getConnection();
+                 Statement statement = connection.createStatement()) {
                 statement.executeQuery("select * from Book");
             }
         }

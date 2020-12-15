@@ -30,8 +30,8 @@ public class ExecuteMethodOnStatementTest {
         @Test
         @ExpectSelect
         public void call_execute_method_on_statement() throws SQLException {
-            Connection connection = getConnection();
-            try(Statement statement = connection.createStatement()) {
+            try(Connection connection = getConnection();
+                Statement statement = connection.createStatement()) {
                 statement.execute("select isbn from Book");
             }
         }

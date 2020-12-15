@@ -65,10 +65,9 @@ public class ExpectJdbcQueryExecutionTest {
         @Test
         public void execute_two_inserts_with_a_statement_and_batching() {
 
-            Connection connection = getConnection();
-
             executeInATransaction(entityManager -> {
-                try(Statement statement = connection.createStatement()) {
+                try(Connection connection = getConnection();
+                    Statement statement = connection.createStatement()) {
                     statement.addBatch("insert into Book (isbn, title, id) values ('isbn1', 'title1', 1)");
                     statement.addBatch("insert into Book (isbn, title, id) values ('isbn2', 'title2', 2)");
                     statement.executeBatch();
