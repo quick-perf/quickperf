@@ -32,7 +32,7 @@ import static org.junit.experimental.results.PrintableResult.testResult;
 
 public class AllocationWriterTest {
 
-    private static final String FILE_PATH = findTargetPath() + "allocation-results.txt";
+    private static final String FILE_PATH = findTargetPath() + File.separator + "allocation-results.txt";
 
     private static String findTargetPath() {
         Path targetDirectory = Paths.get("target");
