@@ -15,11 +15,18 @@ import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
+import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.jdk.memory.AllocationByClassRule;
 import org.quickperf.jvm.jmc.value.allocationrate.AllocationRate;
 import org.quickperf.jvm.jmc.value.allocationrate.AllocationRateFormatter;
 import org.quickperf.jvm.jmc.value.allocationrate.AllocationRateRetriever;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.RunnableFuture;
+
+@SuppressWarnings("rawtypes")
 public enum ProfilingInfo {
 
     TOTAL_GC_PAUSE {
@@ -284,7 +291,8 @@ public enum ProfilingInfo {
             return getLabel(JdkAggregators.OS_VERSION, String.class);
         }
 
-    },
+    }
+    ,
     ALLOCATION_RATE {
         @Override
         public String formatAsString(IItemCollection jfrEvents) {
@@ -299,6 +307,30 @@ public enum ProfilingInfo {
         @Override
         public String getLabel() {
             return "Allocation Rate";
+        }
+    }
+    ,
+    ALLOCATED_CLASSES {
+        @Override
+        public String formatAsString(IItemCollection jfrEvents) {
+            AllocationByClassRule allocationByClassRule = new AllocationByClassRule();
+            RunnableFuture<Result> allocationByClassRuleFuture = // TODO extract this computation to JMCRuleCountMeasuredExtractor
+                    allocationByClassRule.evaluate(jfrEvents, IPreferenceValueProvider.DEFAULT_VALUES);
+            allocationByClassRuleFuture.run();
+            String formatedDescription = "";
+            try {
+                Result result = allocationByClassRuleFuture.get();
+                formatedDescription = result.getShortDescription(); // TODO use JMCRuleCountMeasuredExtractor to extract rule description
+
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+            return formatedDescription;
+        }
+
+        @Override
+        public String getLabel() {
+            return "Allocated Classes";
         }
     };
 

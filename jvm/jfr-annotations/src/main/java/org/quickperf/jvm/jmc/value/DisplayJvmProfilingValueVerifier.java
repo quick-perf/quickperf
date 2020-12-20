@@ -46,6 +46,7 @@ public class DisplayJvmProfilingValueVerifier implements
             String insideTlabSum = ALLOC_INSIDE_TLAB_SUM.formatAsString(jfrEvents);
             String outsideTlabSum = ALLOC_OUTSIDE_TLAB_SUM.formatAsString(jfrEvents);
             String allocationRate = ALLOCATION_RATE.formatAsString(jfrEvents);
+            String allocatedClasses = ALLOCATED_CLASSES.formatAsString(jfrEvents);
 
             String totalGcPause = TOTAL_GC_PAUSE.formatAsString(jfrEvents);
             String gcPause = LONGEST_GC_PAUSE.formatAsString(jfrEvents);
@@ -89,6 +90,7 @@ public class DisplayJvmProfilingValueVerifier implements
                 + " Inside TLAB : " + fifteenLength.adapt(insideTlabSum)     + "|   " + twentyNineLength.adapt("Longest GC pause: " + gcPause)      + "|  Error    : " + errorCount + LINE_SEPARATOR
                 + " Outside TLAB: " + fifteenLength.adapt(outsideTlabSum)    + "|   " + twentyNineLength.adapt("Young: " + youngGcCollection)       + "|  Throwable: " + throwablesCount + LINE_SEPARATOR
                 + " Allocation rate: " + twelveLength.adapt(allocationRate)  + "|   " + twentyNineLength.adapt("Old  : " + oldGcCollection)         + "|" + LINE_SEPARATOR
+                + " " + allocatedClasses + LINE_SEPARATOR
                 + LINE
                 + thirtyLength.adapt(" COMPILATION")                    + "|   " + "CODE CACHE" + LINE_SEPARATOR
                 + thirtyLength.adapt(" Number : " + compilationsCount)  + "|   " + codeCacheFullCount + LINE_SEPARATOR
