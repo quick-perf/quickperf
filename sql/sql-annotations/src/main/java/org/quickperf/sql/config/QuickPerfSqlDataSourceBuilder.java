@@ -13,6 +13,7 @@ package org.quickperf.sql.config;
 
 import net.ttddyy.dsproxy.listener.ChainListener;
 import net.ttddyy.dsproxy.support.ProxyDataSource;
+import org.quickperf.sql.config.library.QuickPerfProxyDataSource;
 
 import javax.sql.DataSource;
 
@@ -26,7 +27,7 @@ public class QuickPerfSqlDataSourceBuilder {
 
     public ProxyDataSource buildProxy(DataSource dataSource) {
 
-        ProxyDataSource proxyDataSource = new ProxyDataSource();
+        QuickPerfProxyDataSource proxyDataSource = new QuickPerfProxyDataSource();
 
         ChainListener chainListener = new ChainListener();
 

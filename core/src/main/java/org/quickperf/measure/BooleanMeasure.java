@@ -23,6 +23,10 @@ public class BooleanMeasure extends AbstractComparablePerfMeasure<BooleanMeasure
 
     private final String comment;
 
+    public static BooleanMeasure of(boolean value) {
+        return value ? BooleanMeasure.TRUE : BooleanMeasure.FALSE;
+    }
+
     public BooleanMeasure(Boolean value) {
         this.value = value;
         this.comment = NO_COMMENT;
@@ -31,6 +35,10 @@ public class BooleanMeasure extends AbstractComparablePerfMeasure<BooleanMeasure
     @Override
     public Boolean getValue() {
         return value;
+    }
+
+    public boolean isTrue() {
+        return this == TRUE || value.equals(Boolean.TRUE);
     }
 
     @Override

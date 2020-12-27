@@ -18,6 +18,8 @@ import org.quickperf.sql.batch.SqlStatementBatchRecorder;
 import org.quickperf.sql.batch.SqlStatementBatchVerifier;
 import org.quickperf.sql.bindparams.AllParametersAreBoundExtractor;
 import org.quickperf.sql.bindparams.DisableQueriesWithoutBindParametersVerifier;
+import org.quickperf.sql.connection.ConnectionLeakListener;
+import org.quickperf.sql.connection.ConnectionLeakVerifier;
 import org.quickperf.sql.delete.DeleteCountMeasureExtractor;
 import org.quickperf.sql.delete.MaxOfDeletesPerfIssueVerifier;
 import org.quickperf.sql.delete.NumberOfSqlDeletePerfIssueVerifier;
@@ -203,10 +205,15 @@ class SqlAnnotationsConfigs {
 			.perfIssueVerifier(DisableQueriesWithoutBindParametersVerifier.INSTANCE)
 			.build(DisableQueriesWithoutBindParameters.class);
 	
-    	static final AnnotationConfig MAX_SQL_DELETE = new AnnotationConfig.Builder()
-            		.perfRecorderClass(PersistenceSqlRecorder.class)
-            		.perfMeasureExtractor(DeleteCountMeasureExtractor.INSTANCE)
-            		.perfIssueVerifier(MaxOfDeletesPerfIssueVerifier.INSTANCE)
-            		.build(ExpectMaxDelete.class);
+    static final AnnotationConfig MAX_SQL_DELETE = new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(DeleteCountMeasureExtractor.INSTANCE)
+            .perfIssueVerifier(MaxOfDeletesPerfIssueVerifier.INSTANCE)
+            .build(ExpectMaxDelete.class);
+
+	static final AnnotationConfig EXPECT_NO_CONNECTION_LEAK = new AnnotationConfig.Builder()
+			.perfRecorderClass(ConnectionLeakListener.class)
+			.perfIssueVerifier(ConnectionLeakVerifier.INSTANCE)
+			.build(ExpectNoConnectionLeak.class);
 
 }
