@@ -382,4 +382,16 @@ public class SqlAnnotationBuilder {
         };
     }
 
+    /**
+     *Allows to build {@link org.quickperf.sql.annotation.ExpectNoConnectionLeak} annotation.
+     */
+    public static ExpectNoConnectionLeak expectNoConnectionLeak() {
+        return new ExpectNoConnectionLeak() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ExpectNoConnectionLeak.class;
+            }
+        };
+    }
+
 }

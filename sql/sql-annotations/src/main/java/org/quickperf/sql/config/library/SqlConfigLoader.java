@@ -16,6 +16,7 @@ import org.quickperf.config.library.AnnotationConfig;
 import org.quickperf.config.library.QuickPerfConfigLoader;
 import org.quickperf.sql.PersistenceSqlRecorder;
 import org.quickperf.sql.batch.SqlStatementBatchRecorder;
+import org.quickperf.sql.connection.ConnectionLeakListener;
 import org.quickperf.sql.display.DisplaySqlOfTestMethodBodyRecorder;
 import org.quickperf.sql.display.DisplaySqlRecorder;
 
@@ -55,13 +56,15 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                 , SqlAnnotationsConfigs.DISABLE_QUERIES_WITHOUT_BIND_PARAMETERS
                 , SqlAnnotationsConfigs.DISABLE_STATEMENTS
                 , SqlAnnotationsConfigs.ENABLE_STATEMENTS
+                , SqlAnnotationsConfigs.EXPECT_NO_CONNECTION_LEAK
         );
     }
 
     @Override
     public Collection<RecorderExecutionOrder> loadRecorderExecutionOrdersBeforeTestMethod() {
         return Arrays.asList(
-                  new RecorderExecutionOrder(PersistenceSqlRecorder.class, 2000)
+                  new RecorderExecutionOrder(ConnectionLeakListener.class, 1999)
+                , new RecorderExecutionOrder(PersistenceSqlRecorder.class, 2000)
                 , new RecorderExecutionOrder(DisplaySqlRecorder.class, 2001)
                 , new RecorderExecutionOrder(DisplaySqlOfTestMethodBodyRecorder.class, 2002)
                 , new RecorderExecutionOrder(SqlStatementBatchRecorder.class, 2003)
@@ -72,7 +75,8 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
     @Override
     public Collection<RecorderExecutionOrder> loadRecorderExecutionOrdersAfterTestMethod() {
         return Arrays.asList(
-        		  new RecorderExecutionOrder(PersistenceSqlRecorder.class, 7000)
+                  new RecorderExecutionOrder(ConnectionLeakListener.class, 6999)
+                , new RecorderExecutionOrder(PersistenceSqlRecorder.class, 7000)
                 , new RecorderExecutionOrder(DisplaySqlRecorder.class, 7001)
                 , new RecorderExecutionOrder(DisplaySqlOfTestMethodBodyRecorder.class, 7002)
                 , new RecorderExecutionOrder(SqlStatementBatchRecorder.class, 7003)
