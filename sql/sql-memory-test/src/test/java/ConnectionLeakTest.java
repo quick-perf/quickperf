@@ -86,7 +86,7 @@ public class ConnectionLeakTest {
     public static class ConnectionLeakInNewJvm extends SqlTestBase {
 
         @ExpectNoConnectionLeak
-        @HeapSize(value = 10, unit = AllocationUnit.MEGA_BYTE)
+        @HeapSize(value = 20, unit = AllocationUnit.MEGA_BYTE)
         @Test
         public void test() throws SQLException {
             Connection connection = getConnection();
@@ -116,7 +116,7 @@ public class ConnectionLeakTest {
     @RunWith(QuickPerfJUnitRunner.class)
     public static class NoConnectionLeakInNewJvm extends SqlTestBase {
         @ExpectNoConnectionLeak
-        @HeapSize(value = 10, unit = AllocationUnit.MEGA_BYTE)
+        @HeapSize(value = 20, unit = AllocationUnit.MEGA_BYTE)
         @Test
         public void test() throws SQLException {
             try (Connection connection = getConnection();
