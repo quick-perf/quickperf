@@ -1,1 +1,0 @@
-[QUICK PERF LOCAL TEST] Measured heap allocation for ArrayList: 440 bytes
