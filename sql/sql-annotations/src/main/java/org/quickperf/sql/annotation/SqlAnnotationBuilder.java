@@ -11,6 +11,10 @@
 
 package org.quickperf.sql.annotation;
 
+import org.quickperf.sql.execution.SqlAnalysis;
+import org.quickperf.writer.DefaultWriterFactory;
+import org.quickperf.writer.WriterFactory;
+
 import java.lang.annotation.Annotation;
 
 /**
@@ -392,6 +396,15 @@ public class SqlAnnotationBuilder {
                 return ExpectNoConnectionLeak.class;
             }
         };
+    }
+
+    /**
+     * Allows to build {@link org.quickperf.sql.annotation.AnalyzeSql} annotation
+     * Default message and Writer
+     * @param defaultWriterFactoryClass
+     */
+    public static AnalyzeSql analyzeSql(Class<DefaultWriterFactory> defaultWriterFactoryClass){
+        return analyzeSql(DefaultWriterFactory.class);
     }
 
 }

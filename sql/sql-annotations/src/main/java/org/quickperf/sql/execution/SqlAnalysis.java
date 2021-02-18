@@ -12,6 +12,7 @@
 package org.quickperf.sql.execution;
 
 import org.quickperf.measure.PerfMeasure;
+import org.quickperf.sql.SqlExecutions;
 import org.quickperf.sql.select.analysis.SelectAnalysis;
 import org.quickperf.unit.Count;
 import org.quickperf.unit.NoUnit;
@@ -22,9 +23,12 @@ public class SqlAnalysis implements PerfMeasure {
 
     private final SelectAnalysis selectAnalysis;
 
-    public SqlAnalysis(Count jdbcQueryExecutionNumber, SelectAnalysis selectAnalysis) {
+    private final SqlExecutions sqlExecutions;
+
+    public SqlAnalysis(Count jdbcQueryExecutionNumber, SelectAnalysis selectAnalysis, SqlExecutions sqlExecutions) {
         this.jdbcQueryExecutionNumber = jdbcQueryExecutionNumber;
         this.selectAnalysis = selectAnalysis;
+        this.sqlExecutions = sqlExecutions;
     }
 
     @Override
@@ -50,4 +54,7 @@ public class SqlAnalysis implements PerfMeasure {
         return selectAnalysis;
     }
 
+    public SqlExecutions getSqlExecutions() {
+        return sqlExecutions;
+    }
 }

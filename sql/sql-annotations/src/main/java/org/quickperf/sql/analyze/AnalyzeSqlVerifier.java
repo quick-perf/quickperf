@@ -9,34 +9,32 @@
  * Copyright 2019-2021 the original author or authors.
  */
 
-package org.quickperf.jvm.allocation;
+package org.quickperf.sql.analyze;
 
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
-import org.quickperf.jvm.annotations.MeasureHeapAllocation;
-import org.quickperf.writer.DefaultWriterFactory;
+import org.quickperf.sql.annotation.AnalyzeSql;
+import org.quickperf.sql.execution.SqlAnalysis;
 import org.quickperf.writer.PrintWriterBuilder;
 import org.quickperf.writer.WriterFactory;
 
 import java.io.PrintWriter;
-import java.io.Writer;
 
-public class MeasureHeapAllocationPerfVerifier implements VerifiablePerformanceIssue<MeasureHeapAllocation, Allocation> {
+public class AnalyzeSqlVerifier implements VerifiablePerformanceIssue<AnalyzeSql, SqlAnalysis> {
 
-    public static final VerifiablePerformanceIssue INSTANCE = new MeasureHeapAllocationPerfVerifier();
+    public static AnalyzeSqlVerifier INSTANCE = new AnalyzeSqlVerifier();
 
-    private final ByteAllocationMeasureFormatter byteAllocationMeasureFormatter = ByteAllocationMeasureFormatter.INSTANCE;
-
-    private MeasureHeapAllocationPerfVerifier() {
+    private AnalyzeSqlVerifier() {
     }
 
     @Override
-    public PerfIssue verifyPerfIssue(MeasureHeapAllocation annotation, Allocation measuredAllocation) {
-        String allocationAsString = byteAllocationMeasureFormatter.formatAndAppendAllocationInBytes(measuredAllocation);
+    public PerfIssue verifyPerfIssue(AnalyzeSql annotation, SqlAnalysis sqlAnalysis) {
         Class<? extends WriterFactory> writerFactoryClass = annotation.writerFactory();
+
         try (PrintWriter pw = PrintWriterBuilder.INSTANCE.buildPrintWriterFrom(writerFactoryClass)) {
-            pw.printf(annotation.format(), allocationAsString);
+            SqlReport.INSTANCE.writeReport(pw, sqlAnalysis);
         }
+
         return PerfIssue.NONE;
     }
 

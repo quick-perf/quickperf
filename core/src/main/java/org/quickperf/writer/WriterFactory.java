@@ -16,7 +16,7 @@ import java.io.Writer;
 
 /**
  * The interface that models the building of a <code>Writer</code> used to write messages generated
- * by the Heap Allocation Perf Verifier of QuickPerf.
+ * by the Heap Allocation Perf and Analyze Sql Verifiers of QuickPerf.
  */
 public interface WriterFactory {
 

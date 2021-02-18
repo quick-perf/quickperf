@@ -26,7 +26,7 @@ public class SqlAnalysisExtractor implements ExtractablePerformanceMeasure<SqlEx
     public SqlAnalysis extractPerfMeasureFrom(SqlExecutions sqlExecutions) {
         SelectAnalysis selectAnalysis = SelectAnalysisExtractor.INSTANCE.extractPerfMeasureFrom(sqlExecutions);
         Count queriesSendingNumber = new Count(sqlExecutions.getNumberOfExecutions());
-        return new SqlAnalysis(queriesSendingNumber, selectAnalysis);
+        return new SqlAnalysis(queriesSendingNumber, selectAnalysis, sqlExecutions);
     }
 
 }

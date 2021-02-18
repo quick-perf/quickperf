@@ -57,6 +57,7 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                 , SqlAnnotationsConfigs.DISABLE_STATEMENTS
                 , SqlAnnotationsConfigs.ENABLE_STATEMENTS
                 , SqlAnnotationsConfigs.EXPECT_NO_CONNECTION_LEAK
+                , SqlAnnotationsConfigs.ANALYZE_SQL
         );
     }
 
