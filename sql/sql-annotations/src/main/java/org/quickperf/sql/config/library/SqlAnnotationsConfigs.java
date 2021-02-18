@@ -13,6 +13,7 @@ package org.quickperf.sql.config.library;
 
 import org.quickperf.config.library.AnnotationConfig;
 import org.quickperf.sql.PersistenceSqlRecorder;
+import org.quickperf.sql.analyze.AnalyzeSqlVerifier;
 import org.quickperf.sql.annotation.*;
 import org.quickperf.sql.batch.SqlStatementBatchRecorder;
 import org.quickperf.sql.batch.SqlStatementBatchVerifier;
@@ -25,9 +26,7 @@ import org.quickperf.sql.delete.MaxOfDeletesPerfIssueVerifier;
 import org.quickperf.sql.delete.NumberOfSqlDeletePerfIssueVerifier;
 import org.quickperf.sql.display.DisplaySqlOfTestMethodBodyRecorder;
 import org.quickperf.sql.display.DisplaySqlRecorder;
-import org.quickperf.sql.execution.JdbcQueryExecutionVerifier;
-import org.quickperf.sql.execution.MaxJdbcQueryExecutionVerifier;
-import org.quickperf.sql.execution.SqlAnalysisExtractor;
+import org.quickperf.sql.execution.*;
 import org.quickperf.sql.insert.InsertCountMeasureExtractor;
 import org.quickperf.sql.insert.InsertNumberPerfIssueVerifier;
 import org.quickperf.sql.insert.MaxOfInsertsPerfIssueVerifier;
@@ -215,5 +214,12 @@ class SqlAnnotationsConfigs {
 			.perfRecorderClass(ConnectionLeakListener.class)
 			.perfIssueVerifier(ConnectionLeakVerifier.INSTANCE)
 			.build(ExpectNoConnectionLeak.class);
+
+    	static final AnnotationConfig ANALYZE_SQL = new AnnotationConfig.Builder()
+					 .perfRecorderClass(PersistenceSqlRecorder.class)
+	  				 .perfMeasureExtractor(SqlAnalysisExtractor.INSTANCE)
+	  				 .perfIssueVerifier(AnalyzeSqlVerifier.INSTANCE)
+	  				 .build(AnalyzeSql.class);
+
 
 }

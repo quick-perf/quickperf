@@ -35,6 +35,34 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
         sqlExecutions.addLast(sqlExecution);
     }
 
+    // Workaround: avoid duplicate call to retrieveNumberOfReturnedColumns within SqlExecution constructor
+    // in add method by forcing the column count. Related commit https://github.com/quick-perf/quickperf/issues/141
+    private void addWithoutCall(ExecutionInfo executionInfo, List<QueryInfo> queries){
+        SqlExecution sqlExecution = new SqlExecution(executionInfo, queries, 0);
+        sqlExecutions.addLast(sqlExecution);
+    }
+
+    public SqlExecutions filterByQueryType(QueryType queryType) {
+        SqlExecutions filteredSqlExecutions = new SqlExecutions();
+
+        for (SqlExecution execution : this.sqlExecutions) {
+            List<QueryInfo> queries = new ArrayList<>();
+            boolean added = false;
+
+            for (QueryInfo query : execution.getQueries()) {
+                if (queryType.equals(QueryTypeRetriever.INSTANCE.typeOf(query))) {
+                    added = true;
+                    queries.add(query);
+                }
+            }
+
+            if(added){
+                filteredSqlExecutions.addWithoutCall(execution.getExecutionInfo(), queries);
+            }
+        }
+        return filteredSqlExecutions;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

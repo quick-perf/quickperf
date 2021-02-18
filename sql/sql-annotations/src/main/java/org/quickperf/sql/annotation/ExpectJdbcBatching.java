@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  *
  * <br><br>
  * <h3>Note:</h3>
- * YYou may sometimes think that you are using JDBC batching, but in fact, you are not:
+ * You may sometimes think that you are using JDBC batching, but in fact, you are not:
  * <ul>
  * <li>
  * <a href="https://abramsm.wordpress.com/2008/04/23/hibernate-batch-processing-why-you-may-not-be-using-it-even-if-you-think-you-are/"><i>Hibernate
