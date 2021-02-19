@@ -11,8 +11,9 @@
 
 package org.quickperf.sql;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.quickperf.SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM;
 
@@ -20,12 +21,13 @@ public class SqlRecorderRegistry {
 
     public static final SqlRecorderRegistry INSTANCE = new SqlRecorderRegistry();
 
-    private final Collection<SqlRecorder> sqlRecordersOfTestJvm = new ArrayList<>();
+    private final Map<Class<? extends SqlRecorder>, SqlRecorder> sqlRecorderByTypeOfTestJvm = new HashMap<>();
 
-    private static final InheritableThreadLocal<Collection<SqlRecorder>> SQL_RECORDERS_WHEN_ONE_JVM = new InheritableThreadLocal<Collection<SqlRecorder>>() {
+    private static final InheritableThreadLocal<Map<Class<? extends SqlRecorder>, SqlRecorder>> SQL_RECORDER_BY_TYPE_WHEN_ONE_JVM
+            = new InheritableThreadLocal<Map<Class<? extends SqlRecorder>, SqlRecorder>>() {
         @Override
-        protected Collection<SqlRecorder> initialValue() {
-            return new ArrayList<>();
+        protected Map<Class<? extends SqlRecorder>, SqlRecorder> initialValue() {
+            return new HashMap<>();
         }
     };
 
@@ -33,25 +35,36 @@ public class SqlRecorderRegistry {
 
     public void register(SqlRecorder sqlRecorder) {
         if(TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
-            sqlRecordersOfTestJvm.add(sqlRecorder);
+            Class<? extends SqlRecorder> sqlRecorderClass = sqlRecorder.getClass();
+            sqlRecorderByTypeOfTestJvm.put(sqlRecorderClass, sqlRecorder);
         } else {
-            Collection<SqlRecorder> sqlRecorders = SQL_RECORDERS_WHEN_ONE_JVM.get();
-            sqlRecorders.add(sqlRecorder);
+            Map<Class<? extends SqlRecorder>, SqlRecorder> sqlRecordersBytType = SQL_RECORDER_BY_TYPE_WHEN_ONE_JVM.get();
+            sqlRecordersBytType.put(sqlRecorder.getClass(), sqlRecorder);
         }
     }
 
     public static void unregister(SqlRecorder sqlRecorder) {
         if(!TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
-            Collection<SqlRecorder> sqlRecorders = SQL_RECORDERS_WHEN_ONE_JVM.get();
-            sqlRecorders.remove(sqlRecorder);
+            Map<Class<? extends SqlRecorder>, SqlRecorder> sqlRecordersByType = SQL_RECORDER_BY_TYPE_WHEN_ONE_JVM.get();
+            sqlRecordersByType.remove(sqlRecorder);
         }
     }
 
     public Collection<SqlRecorder> getSqlRecorders() {
         if(TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
-            return sqlRecordersOfTestJvm;
+            return sqlRecorderByTypeOfTestJvm.values();
         }
-        return SQL_RECORDERS_WHEN_ONE_JVM.get();
+        Map<Class<? extends SqlRecorder>, SqlRecorder> sqlRecorderByType = SQL_RECORDER_BY_TYPE_WHEN_ONE_JVM.get();
+        return sqlRecorderByType.values();
+    }
+
+    public <T extends SqlRecorder> T getSqlRecorderOfType(Class<T> type) {
+        if(TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            return type.cast(sqlRecorderByTypeOfTestJvm.get(type));
+        }
+        Map<Class<? extends SqlRecorder>, SqlRecorder> sqlRecorderByType
+                = SQL_RECORDER_BY_TYPE_WHEN_ONE_JVM.get();
+        return type.cast(sqlRecorderByType.get(type));
     }
 
 }
