@@ -13,6 +13,8 @@ package org.quickperf.sql;
 
 import org.junit.Test;
 
+import java.util.Collection;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SqlRecorderRegistryTest {
@@ -33,5 +35,20 @@ public class SqlRecorderRegistryTest {
 
     }
 
+    @Test public void
+    should_clear_sql_recorder_registry() {
+
+        // GIVEN
+        SqlRecorder registeredSqlRecorder = new PersistenceSqlRecorder();
+        SqlRecorderRegistry.INSTANCE.register(registeredSqlRecorder);
+
+        // WHEN
+        SqlRecorderRegistry.INSTANCE.clear();
+
+        // THEN
+        Collection<SqlRecorder> sqlRecorders = SqlRecorderRegistry.INSTANCE.getSqlRecorders();
+        assertThat(sqlRecorders).hasSize(0);
+
+    }
 
 }

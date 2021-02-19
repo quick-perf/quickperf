@@ -67,4 +67,11 @@ public class SqlRecorderRegistry {
         return type.cast(sqlRecorderByType.get(type));
     }
 
+    public void clear() {
+        if(TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+             sqlRecorderByTypeOfTestJvm.clear();
+        }
+        SQL_RECORDER_BY_TYPE_WHEN_ONE_JVM.remove();
+    }
+
 }
