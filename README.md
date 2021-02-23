@@ -15,6 +15,11 @@
          alt="Maven Central">
   </a>
   &nbsp;&nbsp;
+  <a href="https://github.com/jvm-repo-rebuild/reproducible-central#org.quickperf:quick-perf">
+    <img src="https://img.shields.io/badge/Reproducible_Builds-ok-success?labelColor=1e5b96"
+         alt="Reproducible Builds">
+  </a>
+  &nbsp;&nbsp;
   <a href="https://github.com/quick-perf/quickperf/blob/master/LICENSE.txt">
     <img src="https://img.shields.io/badge/license-Apache2-blue.svg"
          alt = "License">
