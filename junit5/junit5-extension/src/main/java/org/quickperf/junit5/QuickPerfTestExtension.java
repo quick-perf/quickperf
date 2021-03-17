@@ -24,6 +24,7 @@ import org.quickperf.issue.TestIssue;
 import org.quickperf.issue.JvmOrTestIssue;
 import org.quickperf.issue.PerfIssuesEvaluator;
 import org.quickperf.issue.PerfIssuesToFormat;
+import org.quickperf.jvm.JVM;
 import org.quickperf.perfrecording.PerformanceRecording;
 import org.quickperf.reporter.QuickPerfReporter;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
@@ -46,10 +47,18 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
-        int junit5AllocationOffset = 40;
+        int junit5AllocationOffset = findJunit5AllocationOffset();
         testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs
                                                             , extensionContext.getRequiredTestMethod()
                                                             , junit5AllocationOffset);
+    }
+
+    private int findJunit5AllocationOffset() {
+        JVM.Version jvmVersion = JVM.INSTANCE.version;
+        if(jvmVersion.isGreaterThanOrEqualTo16()) {
+            return  48;
+        }
+        return 40;
     }
 
     // we need to skip BeforeEach/AfterEach if we plan to fork as they will be executed in the forked VM

@@ -12,21 +12,21 @@
 package org.quickperf.junit5.jvm.jmc;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnJre;
-import org.junit.jupiter.api.condition.JRE;
+import org.junit.jupiter.api.condition.EnabledOnJre;
 import org.quickperf.junit5.JUnit5Tests;
 import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
 import org.quickperf.junit5.QuickPerfTest;
 import org.quickperf.jvm.allocation.AllocationUnit;
-import org.quickperf.jvm.jfr.annotation.ExpectNoJvmIssue;
 import org.quickperf.jvm.annotations.HeapSize;
+import org.quickperf.jvm.jfr.annotation.ExpectNoJvmIssue;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.condition.JRE.*;
 
-@DisabledOnJre(JRE.JAVA_8)
+@EnabledOnJre({ JAVA_9, JAVA_10, JAVA_11, JAVA_12, JAVA_13, JAVA_14, JAVA_15})
 public class JmcJunit5Tests {
 
     @QuickPerfTest

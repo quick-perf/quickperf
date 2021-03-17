@@ -79,17 +79,15 @@ public class JVM {
         }
 
         public boolean isGreaterThanOrEqualTo11() {
-            if (is7() || is8()) {
-                return false;
-            }
-            return findJvmVersionAsInt() >= 11;
+            return !is7() && !is8() && findJvmVersionAsInt() >= 11;
         }
 
         public boolean isGreaterThanOrEqualTo12() {
-            if (is7() || is8()) {
-                return false;
-            }
-            return findJvmVersionAsInt() >= 12;
+            return !is7() && !is8() && findJvmVersionAsInt() >= 12;
+        }
+
+        public boolean isGreaterThanOrEqualTo16() {
+            return !is7() && !is8() && findJvmVersionAsInt() >= 16;
         }
 
         @Override

@@ -11,7 +11,6 @@
 
 package org.quickperf.spring;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 
@@ -20,8 +19,14 @@ import static org.junit.experimental.results.PrintableResult.testResult;
 
 public abstract class AbstractJUnit4SpringTestBase {
 
+    boolean enableTest = true;
+
     @Test public void
     a_test_throwing_an_assertion_error_and_a_performance_issue_should_fail() {
+
+        if(!enableTest) {
+            return;
+        }
 
         // GIVEN
         Class<?> testClass = classWithTestHavingFunctionalAndPerfIssues();
@@ -44,6 +49,10 @@ public abstract class AbstractJUnit4SpringTestBase {
 
     @Test public void
     a_test_throwing_an_assertion_error_and_a_performance_issue_and_running_in_a_dedicated_jvm_should_fail() {
+
+        if(!enableTest) {
+            return;
+        }
 
         // GIVEN
         Class<?> testClass = classWithTestHavingFunctionalAndPerfIssuesAndRunningInADedicatedJvm();
@@ -68,6 +77,10 @@ public abstract class AbstractJUnit4SpringTestBase {
     @Test public void
     a_test_method_having_a_performance_property_not_respected_in_a_dedicated_jvm_should_fail() {
 
+        if(!enableTest) {
+            return;
+        }
+
         // GIVEN
         Class<?> testClass = aClassWithMethodNoAllocatingAndNoAllocationAnnotation();
 
@@ -83,6 +96,10 @@ public abstract class AbstractJUnit4SpringTestBase {
 
     @Test public void
     a_test_method_allocating_and_annotated_with_no_allocation_should_fail() {
+
+        if(!enableTest) {
+            return;
+        }
 
         // GIVEN
         Class<?> testClass = aClassWithMethodAllocatingAndNoAllocationAnnotation();
@@ -104,6 +121,10 @@ public abstract class AbstractJUnit4SpringTestBase {
     @Test public void
     disable_quick_perf_annotation_should_disable_quick_perf_features() {
 
+        if(!enableTest) {
+            return;
+        }
+
         // GIVEN
         Class<?> testClass = aClassAnnotatedWithQPSpringRunnerAndDisableQuickPerf();
 
@@ -120,6 +141,10 @@ public abstract class AbstractJUnit4SpringTestBase {
     @Test public void
     functional_iteration_annotation_should_disable_quick_perf_features() {
 
+        if(!enableTest) {
+            return;
+        }
+
         // GIVEN
         Class<?> testClass = aClassAnnotatedWithQPSpringRunnerAndFunctionalIteration();
 
@@ -135,6 +160,10 @@ public abstract class AbstractJUnit4SpringTestBase {
 
     @Test public void
     execute_quick_perf_features_with_one_jvm() {
+
+        if(!enableTest) {
+            return;
+        }
 
         // GIVEN
         Class<?> testClass = aClassAnnotatedWithQPSpringRunnerOneJvm();
@@ -155,6 +184,10 @@ public abstract class AbstractJUnit4SpringTestBase {
     @Test public void
     two_tests_having_performance_and_functional_issues() {
 
+        if(!enableTest) {
+            return;
+        }
+
         // GIVEN
         Class<?> testClass = aClassWithTwoMethodsHavingFunctionnalAndPerfIssues();
 
@@ -162,15 +195,12 @@ public abstract class AbstractJUnit4SpringTestBase {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(printableResult.failureCount()).isEqualTo(2);
+        assertThat(printableResult.failureCount()).isEqualTo(2);
 
-        softAssertions.assertThat(printableResult.toString())
-                      .contains("java.lang.AssertionError: Performance-related and functional properties not respected")
-                      .contains("Failing assertion of first test!")
-                      .contains("Failing assertion of second test!");
-
-        softAssertions.assertAll();
+        assertThat(printableResult.toString())
+                .contains("java.lang.AssertionError: Performance-related and functional properties not respected")
+                .contains("Failing assertion of first test!")
+                .contains("Failing assertion of second test!");
 
     }
 
@@ -178,6 +208,10 @@ public abstract class AbstractJUnit4SpringTestBase {
 
     @Test public void
     a_failing_test_with_transactional_test_execution_listener() {
+
+        if(!enableTest) {
+            return;
+        }
 
         // GIVEN
         Class<?> testClass = aClassWithTransactionalTestExecutionListenerAndAFailingTest();
