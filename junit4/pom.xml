@@ -28,6 +28,7 @@
         <module>junit4-12-jvm-test</module>
         <module>junit4-13-jvm-test</module>
         <module>junit4-13-1-jvm-test</module>
+        <module>junit4-13-2-jvm-test</module>
         <module>junit4-sql-test</module>
     </modules>
 
