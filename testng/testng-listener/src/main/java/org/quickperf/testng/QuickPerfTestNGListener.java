@@ -84,6 +84,9 @@ public class QuickPerfTestNGListener implements IHookable {
 
     private int findTestNGAllocationOffset() {
         JVM.Version jvmVersion = JVM.INSTANCE.version;
+        if(jvmVersion.isGreaterThanOrEqualTo16()) {
+            return 80;
+        }
         if (jvmVersion.isGreaterThanOrEqualTo12()) {
             return 72;
         }

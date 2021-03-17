@@ -11,13 +11,13 @@
 
 package org.quickperf.jvm;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.quickperf.jvm.annotations.JvmOptions;
 import org.quickperf.testlauncher.JvmOption;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -36,18 +36,13 @@ public class JvmOptionConverterTest {
         List<JvmOption> jvmOptions = jvmOptionConverter.jvmOptionFrom(jvmOptionsAsAnnotation);
 
         // THEN
-        SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(jvmOptions).hasSize(2);
+        assertThat(jvmOptions).hasSize(2);
 
         JvmOption firstJvmOption = jvmOptions.get(0);
-        softAssertions.assertThat(firstJvmOption.asString())
-                      .isEqualTo("-XX:+UseCompressedOops");
+        assertThat(firstJvmOption.asString()).isEqualTo("-XX:+UseCompressedOops");
 
         JvmOption secondJvmOption = jvmOptions.get(1);
-        softAssertions.assertThat(secondJvmOption.asString())
-                      .isEqualTo("-XX:+UseCompressedClassPointers");
-
-        softAssertions.assertAll();
+        assertThat(secondJvmOption.asString()).isEqualTo("-XX:+UseCompressedClassPointers");
 
     }
 

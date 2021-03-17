@@ -46,7 +46,7 @@ public class AllocationRateRetriever {
 
     private long computeTotalAllocationInBytes(IItemCollection jfrEvents) {
         IQuantity totalAlloc = jfrEvents.getAggregate(JdkAggregators.ALLOCATION_TOTAL);
-        return totalAlloc.longValue();
+        return totalAlloc == null ? 0 : totalAlloc.longValue();
     }
 
     private long computeAllocationDurationInMs(IItemCollection jfrEvents) throws QuantityConversionException {
