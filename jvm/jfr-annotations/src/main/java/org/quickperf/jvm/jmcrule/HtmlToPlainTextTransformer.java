@@ -15,7 +15,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.examples.HtmlToPlainText;
 import org.jsoup.nodes.Document;
 
-class HtmlToPlainTextTransformer {
+public class HtmlToPlainTextTransformer {
 
     public static final HtmlToPlainTextTransformer INSTANCE = new HtmlToPlainTextTransformer();
 

@@ -16,10 +16,14 @@ import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
+import org.quickperf.jvm.jmc.value.allocationbyclass.AllocationByClassFormatter;
+import org.quickperf.jvm.jmc.value.allocationbyclass.AllocationByClassResult;
+import org.quickperf.jvm.jmc.value.allocationbyclass.AllocationByClassResultRetriever;
 import org.quickperf.jvm.jmc.value.allocationrate.AllocationRate;
 import org.quickperf.jvm.jmc.value.allocationrate.AllocationRateFormatter;
 import org.quickperf.jvm.jmc.value.allocationrate.AllocationRateRetriever;
 
+@SuppressWarnings("rawtypes")
 public enum ProfilingInfo {
 
     TOTAL_GC_PAUSE {
@@ -284,7 +288,8 @@ public enum ProfilingInfo {
             return getLabel(JdkAggregators.OS_VERSION, String.class);
         }
 
-    },
+    }
+    ,
     ALLOCATION_RATE {
         @Override
         public String formatAsString(IItemCollection jfrEvents) {
@@ -299,6 +304,21 @@ public enum ProfilingInfo {
         @Override
         public String getLabel() {
             return "Allocation Rate";
+        }
+    }
+    ,
+    ALLOCATED_CLASSES {
+        @Override
+        public String formatAsString(IItemCollection jfrEvents) {
+            AllocationByClassResult result = AllocationByClassResultRetriever.INSTANCE
+                    .extractAllocationByClassResultFrom(jfrEvents);
+
+            return AllocationByClassFormatter.INSTANCE.format(result);
+        }
+
+        @Override
+        public String getLabel() {
+            return "Allocated Classes";
         }
     };
 
