@@ -15,6 +15,7 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.quickperf.SystemProperties;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
@@ -41,11 +42,13 @@ public class DisplayJvmProfilingValueVerifier implements
         if(!SystemProperties.SIMPLIFIED_JVM_PROFILE_DISPLAY.evaluate()) {
 
             IItemCollection jfrEvents = jfrEventsMeasure.getValue();
+            boolean tlabAndOutsideTlabEventsDisabled =  ! jfrEvents.apply(JdkFilters.ALLOC_OUTSIDE_TLAB).hasItems()
+                                                      &&! jfrEvents.apply(JdkFilters.ALLOC_INSIDE_TLAB).hasItems();
 
-            String allocationTotal = ALLOCATION_TOTAL.formatAsString(jfrEvents);
-            String insideTlabSum = ALLOC_INSIDE_TLAB_SUM.formatAsString(jfrEvents);
-            String outsideTlabSum = ALLOC_OUTSIDE_TLAB_SUM.formatAsString(jfrEvents);
-            String allocationRate = ALLOCATION_RATE.formatAsString(jfrEvents);
+            String allocationTotal = tlabAndOutsideTlabEventsDisabled ? "(*)" : ALLOCATION_TOTAL.formatAsString(jfrEvents);
+            String insideTlabSum = tlabAndOutsideTlabEventsDisabled ? "(*)" : ALLOC_INSIDE_TLAB_SUM.formatAsString(jfrEvents);
+            String outsideTlabSum = tlabAndOutsideTlabEventsDisabled ? "(*)" : ALLOC_OUTSIDE_TLAB_SUM.formatAsString(jfrEvents);
+            String allocationRate = tlabAndOutsideTlabEventsDisabled ? "(*)" : ALLOCATION_RATE.formatAsString(jfrEvents);
 
             String totalGcPause = TOTAL_GC_PAUSE.formatAsString(jfrEvents);
             String gcPause = LONGEST_GC_PAUSE.formatAsString(jfrEvents);
@@ -109,6 +112,22 @@ public class DisplayJvmProfilingValueVerifier implements
                 + " OS" + LINE_SEPARATOR
                 + osVersion + LINE_SEPARATOR
                 + LINE;
+            if(tlabAndOutsideTlabEventsDisabled){
+                text +=
+                 "(*) To see the allocation metrics, you need to enable the TLAB and outside TLAB JFR events. "
+                +"To do this, update the profile.jfc file contained into the jdk_folder\\lib\\jfr folder:" + LINE_SEPARATOR
+                + LINE_SEPARATOR
+                +"    <event name=\"jdk.ObjectAllocationInNewTLAB\">" + LINE_SEPARATOR
+                +"      <setting name=\"enabled\" control=\"memory-profiling-enabled-medium\">true</setting>" + LINE_SEPARATOR
+                +"      <setting name=\"stackTrace\">true</setting>" + LINE_SEPARATOR
+                +"    </event>" + LINE_SEPARATOR
+                + LINE_SEPARATOR
+                +"    <event name=\"jdk.ObjectAllocationOutsideTLAB\">" + LINE_SEPARATOR
+                +"      <setting name=\"enabled\" control=\"memory-profiling-enabled-medium\">true</setting>" + LINE_SEPARATOR
+                +"      <setting name=\"stackTrace\">true</setting>" + LINE_SEPARATOR
+                +"    </event>" + LINE_SEPARATOR
+                + LINE;
+            }
 
             System.out.println(text);
 
