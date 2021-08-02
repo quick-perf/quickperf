@@ -35,7 +35,7 @@ public class JvmOptionConverter {
 
     private boolean jvmOptionsExist(JvmOptions jvmOptions) {
         String jvmOptionsAsAString = jvmOptions.value();
-        return jvmOptions != null && !jvmOptionsAsAString.isEmpty();
+        return !jvmOptionsAsAString.isEmpty();
     }
 
     private List<String> extractJvmOptionsAsStrings(String jvmOptionsAsAString) {
