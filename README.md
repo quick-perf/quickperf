@@ -383,6 +383,16 @@ Many thanks to all our contributors!
             </a>
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=hboutemy" title="Packaging">📦</a>
+        </td>   
+        <td align="center">
+            <a href="https://github.com/FranckDemeyer">
+                <img src="https://avatars.githubusercontent.com/FranckDemeyer" width="100px;" alt="Franck Demeyer"/>
+                <br/>
+                <sub><b>Franck Demeyer</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=FranckDemeyer" title="Bug reports">🐛</a>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=FranckDemeyer" title="Code">💻</a>
         </td>
     </tr>
 </table>
