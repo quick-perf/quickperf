@@ -48,7 +48,7 @@ public enum GC {
      *See <a href= "https://wiki.openjdk.java.net/display/shenandoah/Main">Shenandoah documentation</a>
      */
     SHENANDOAH(asList( JvmOption.UNLOCK_EXPERIMENTAL_VM_OPTIONS
-                       , new JvmOption("-XX:+UseZGC")
+                       , new JvmOption("-XX:+UseShenandoahGC")
                        )
                 )
     ;
