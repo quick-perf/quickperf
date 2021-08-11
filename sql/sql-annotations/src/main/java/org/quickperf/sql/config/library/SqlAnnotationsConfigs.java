@@ -21,6 +21,8 @@ import org.quickperf.sql.bindparams.AllParametersAreBoundExtractor;
 import org.quickperf.sql.bindparams.DisableQueriesWithoutBindParametersVerifier;
 import org.quickperf.sql.connection.ConnectionLeakListener;
 import org.quickperf.sql.connection.ConnectionLeakVerifier;
+import org.quickperf.sql.connection.TestConnectionProfiler;
+import org.quickperf.sql.connection.ProfilingParamsExtractor;
 import org.quickperf.sql.delete.DeleteCountMeasureExtractor;
 import org.quickperf.sql.delete.MaxOfDeletesPerfIssueVerifier;
 import org.quickperf.sql.delete.NumberOfSqlDeletePerfIssueVerifier;
@@ -215,11 +217,15 @@ class SqlAnnotationsConfigs {
 			.perfIssueVerifier(ConnectionLeakVerifier.INSTANCE)
 			.build(ExpectNoConnectionLeak.class);
 
-    	static final AnnotationConfig ANALYZE_SQL = new AnnotationConfig.Builder()
-					 .perfRecorderClass(PersistenceSqlRecorder.class)
-	  				 .perfMeasureExtractor(SqlAnalysisExtractor.INSTANCE)
-	  				 .perfIssueVerifier(AnalyzeSqlVerifier.INSTANCE)
-	  				 .build(AnalyzeSql.class);
+	static final AnnotationConfig PROFILE_CONNECTION = new AnnotationConfig.Builder()
+			.perfRecorderParamsExtractorFromAnnot(new ProfilingParamsExtractor())
+			.perfRecorderClass(TestConnectionProfiler.class)
+			.build(ProfileConnection.class);
 
+	static final AnnotationConfig ANALYZE_SQL = new AnnotationConfig.Builder()
+			.perfRecorderClass(PersistenceSqlRecorder.class)
+	  		.perfMeasureExtractor(SqlAnalysisExtractor.INSTANCE)
+	  		.perfIssueVerifier(AnalyzeSqlVerifier.INSTANCE)
+	  		.build(AnalyzeSql.class);
 
 }

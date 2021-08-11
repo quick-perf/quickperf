@@ -23,7 +23,7 @@ public class QuickPerfProxyDataSource extends ProxyDataSource {
     public Connection getConnection() throws SQLException {
         Connection connection = super.getConnection();
         QuickPerfDatabaseConnection connectionProxy = QuickPerfDatabaseConnection.buildFrom(connection);
-        connectionProxy.getFromTheDatasource();
+        connectionProxy.theDatasourceGetsTheConnection();
         return connectionProxy;
     }
 
@@ -31,7 +31,7 @@ public class QuickPerfProxyDataSource extends ProxyDataSource {
     public Connection getConnection(String username, String password) throws SQLException {
         Connection connection = super.getConnection(username, password);
         QuickPerfDatabaseConnection connectionProxy = QuickPerfDatabaseConnection.buildFrom(connection);
-        connectionProxy.getFromTheDatasource();
+        connectionProxy.theDatasourceGetsTheConnection();
         return connectionProxy;
     }
 

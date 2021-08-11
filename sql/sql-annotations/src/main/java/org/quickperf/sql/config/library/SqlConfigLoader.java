@@ -17,6 +17,7 @@ import org.quickperf.config.library.QuickPerfConfigLoader;
 import org.quickperf.sql.PersistenceSqlRecorder;
 import org.quickperf.sql.batch.SqlStatementBatchRecorder;
 import org.quickperf.sql.connection.ConnectionLeakListener;
+import org.quickperf.sql.connection.TestConnectionProfiler;
 import org.quickperf.sql.display.DisplaySqlOfTestMethodBodyRecorder;
 import org.quickperf.sql.display.DisplaySqlRecorder;
 
@@ -57,6 +58,7 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                 , SqlAnnotationsConfigs.DISABLE_STATEMENTS
                 , SqlAnnotationsConfigs.ENABLE_STATEMENTS
                 , SqlAnnotationsConfigs.EXPECT_NO_CONNECTION_LEAK
+                , SqlAnnotationsConfigs.PROFILE_CONNECTION
                 , SqlAnnotationsConfigs.ANALYZE_SQL
         );
     }
@@ -64,7 +66,8 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
     @Override
     public Collection<RecorderExecutionOrder> loadRecorderExecutionOrdersBeforeTestMethod() {
         return Arrays.asList(
-                  new RecorderExecutionOrder(ConnectionLeakListener.class, 1999)
+                  new RecorderExecutionOrder(TestConnectionProfiler.class, 1998)
+                , new RecorderExecutionOrder(ConnectionLeakListener.class, 1999)
                 , new RecorderExecutionOrder(PersistenceSqlRecorder.class, 2000)
                 , new RecorderExecutionOrder(DisplaySqlRecorder.class, 2001)
                 , new RecorderExecutionOrder(DisplaySqlOfTestMethodBodyRecorder.class, 2002)
@@ -76,7 +79,8 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
     @Override
     public Collection<RecorderExecutionOrder> loadRecorderExecutionOrdersAfterTestMethod() {
         return Arrays.asList(
-                  new RecorderExecutionOrder(ConnectionLeakListener.class, 6999)
+                  new RecorderExecutionOrder(TestConnectionProfiler.class, 6998)
+                , new RecorderExecutionOrder(ConnectionLeakListener.class, 6999)
                 , new RecorderExecutionOrder(PersistenceSqlRecorder.class, 7000)
                 , new RecorderExecutionOrder(DisplaySqlRecorder.class, 7001)
                 , new RecorderExecutionOrder(DisplaySqlOfTestMethodBodyRecorder.class, 7002)

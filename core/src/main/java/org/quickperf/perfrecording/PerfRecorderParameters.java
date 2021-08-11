@@ -11,26 +11,8 @@
 
 package org.quickperf.perfrecording;
 
-public class PerfRecorderParameters {
+public interface PerfRecorderParameters {
 
-    public static final PerfRecorderParameters NONE = new PerfRecorderParameters("", false);
-
-    private final String booleanParamName;
-
-    private final boolean booleanParamValue;
-
-    public PerfRecorderParameters(String booleanParamName
-                                , boolean booleanParamValue) {
-        this.booleanParamName = booleanParamName;
-        this.booleanParamValue = booleanParamValue;
-    }
-
-
-    public boolean getBooleanParam(String paramName) {
-        if(paramName.equals(booleanParamName)) {
-            return booleanParamValue;
-        }
-        return false;
-    }
+    PerfRecorderParameters NONE = new PerfRecorderParameters() { };
 
 }

@@ -8,22 +8,13 @@
  *
  * Copyright 2019-2021 the original author or authors.
  */
+package org.quickperf.sql.connection;
 
-package org.quickperf.perfrecording;
+// A renommer ?
+// Niveaux bons, autres niveaux ?
+// enum à mettre dans l'annotation ProfileConnection ?
+public enum Level {
 
-import java.lang.annotation.Annotation;
-
-public interface ExtractablePerfRecorderParametersFromAnnotation<A extends Annotation, P extends PerfRecorderParameters> {
-
-    ExtractablePerfRecorderParametersFromAnnotation NONE = new ExtractablePerfRecorderParametersFromAnnotation() {
-
-        @Override
-        public PerfRecorderParameters extractFrom(Annotation annotation) {
-            return PerfRecorderParameters.NONE;
-        }
-
-    };
-
-    P extractFrom(A annotation);
+    INFO, TRACE
 
 }

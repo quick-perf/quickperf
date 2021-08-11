@@ -19,11 +19,9 @@ import java.util.concurrent.Executor;
 
 public class QuickPerfDatabaseConnection implements Connection {
 
-    private static final String DATABASE_CONNECTION = "DATABASE CONNECTION: ";
-
     private final Connection delegate;
 
-    private Collection<ConnectionsListener> connectionsListeners;
+    private Collection<ConnectionListener> connectionListeners;
 
     private QuickPerfDatabaseConnection(Connection connection) {
         this.delegate = connection;
@@ -31,53 +29,53 @@ public class QuickPerfDatabaseConnection implements Connection {
 
     public static QuickPerfDatabaseConnection buildFrom(Connection connection) {
         QuickPerfDatabaseConnection quickPerfDatabaseConnection = new QuickPerfDatabaseConnection(connection);
-        quickPerfDatabaseConnection.connectionsListeners =
+        quickPerfDatabaseConnection.connectionListeners =
                 ConnectionListenerRegistry.INSTANCE.getConnectionListeners();
         return quickPerfDatabaseConnection;
     }
 
-    public void getFromTheDatasource() {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.getFromTheDataSource(this);
+    public void theDatasourceGetsTheConnection() {
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.theDatasourceGetsTheConnection(this);
         }
     }
 
     @Override
     public Statement createStatement() throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.createStatement(this);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.createStatement(this);
         }
         return delegate.createStatement();
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.prepareStatement(this, sql);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.prepareStatement(this, sql);
         }
         return delegate.prepareStatement(sql);
     }
 
     @Override
     public CallableStatement prepareCall(String sql) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.prepareCall(this, sql);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.prepareCall(this, sql);
         }
         return delegate.prepareCall(sql);
     }
 
     @Override
     public String nativeSQL(String sql) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.nativeSQL(this, sql);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.nativeSQL(this, sql);
         }
         return delegate.nativeSQL(sql);
     }
 
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.setAutoCommit(this, autoCommit);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.setAutoCommit(this, autoCommit);
         }
         delegate.setAutoCommit(autoCommit);
     }
@@ -89,24 +87,24 @@ public class QuickPerfDatabaseConnection implements Connection {
 
     @Override
     public void commit() throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.commit(this);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.commit(this);
         }
         delegate.commit();
     }
 
     @Override
     public void rollback() throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.rollback(this);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.rollback(this);
         }
         delegate.rollback();
     }
 
     @Override
     public void close() throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.close(this);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.close(this);
         }
         delegate.close();
     }
@@ -123,8 +121,8 @@ public class QuickPerfDatabaseConnection implements Connection {
 
     @Override
     public void setReadOnly(boolean readOnly) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.setReadOnly(this, readOnly);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.setReadOnly(this, readOnly);
         }
         delegate.setReadOnly(readOnly);
     }
@@ -136,8 +134,8 @@ public class QuickPerfDatabaseConnection implements Connection {
 
     @Override
     public void setCatalog(String catalog) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.setCatalog(this, catalog);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.setCatalog(this, catalog);
         }
         delegate.setCatalog(catalog);
     }
@@ -149,8 +147,8 @@ public class QuickPerfDatabaseConnection implements Connection {
 
     @Override
     public void setTransactionIsolation(int level) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.setTransactionIsolation(this, level);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.setTransactionIsolation(this, level);
         }
         delegate.setTransactionIsolation(level);
     }
@@ -167,32 +165,32 @@ public class QuickPerfDatabaseConnection implements Connection {
 
     @Override
     public void clearWarnings() throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.clearWarnings(this);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.clearWarnings(this);
         }
         delegate.clearWarnings();
     }
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.createStatement(this, resultSetType, resultSetConcurrency);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.createStatement(this, resultSetType, resultSetConcurrency);
         }
         return delegate.createStatement(resultSetType, resultSetConcurrency);
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.prepareStatement(this, sql, resultSetType, resultSetConcurrency);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.prepareStatement(this, sql, resultSetType, resultSetConcurrency);
         }
         return delegate.prepareStatement(sql, resultSetType, resultSetConcurrency);
     }
 
     @Override
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.prepareCall(this, sql, resultSetType, resultSetConcurrency);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.prepareCall(this, sql, resultSetType, resultSetConcurrency);
         }
         return delegate.prepareCall(sql, resultSetType, resultSetConcurrency);
     }
@@ -205,16 +203,16 @@ public class QuickPerfDatabaseConnection implements Connection {
     @SuppressWarnings("unchecked")
     @Override
     public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.setTypeMap(this, map);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.setTypeMap(this, map);
         }
         delegate.setTypeMap(map);
     }
 
     @Override
     public void setHoldability(int holdability) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.setHoldability(this, holdability);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.setHoldability(this, holdability);
         }
         delegate.setHoldability(holdability);
     }
@@ -226,112 +224,112 @@ public class QuickPerfDatabaseConnection implements Connection {
 
     @Override
     public Savepoint setSavepoint() throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.setSavepoint(this);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.setSavepoint(this);
         }
         return delegate.setSavepoint();
     }
 
     @Override
     public Savepoint setSavepoint(String name) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.setSavepoint(this, name);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.setSavepoint(this, name);
         }
         return delegate.setSavepoint(name);
     }
 
     @Override
     public void rollback(Savepoint savepoint) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.rollback(this, savepoint);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.rollback(this, savepoint);
         }
         delegate.rollback(savepoint);
     }
 
     @Override
     public void releaseSavepoint(Savepoint savepoint) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.releaseSavepoint(this, savepoint);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.releaseSavepoint(this, savepoint);
         }
         delegate.releaseSavepoint(savepoint);
     }
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.createStatement(this, resultSetType, resultSetConcurrency, resultSetHoldability);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.createStatement(this, resultSetType, resultSetConcurrency, resultSetHoldability);
         }
         return delegate.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability) ;
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.prepareStatement(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.prepareStatement(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
         }
         return delegate.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability) ;
     }
 
     @Override
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.prepareCall(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.prepareCall(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
         }
         return delegate.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability) ;
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.prepareStatement(this, sql, autoGeneratedKeys);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.prepareStatement(this, sql, autoGeneratedKeys);
         }
         return delegate.prepareStatement(sql, autoGeneratedKeys);
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.prepareStatement(this, sql, columnIndexes);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.prepareStatement(this, sql, columnIndexes);
         }
         return delegate.prepareStatement(sql, columnIndexes);
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.prepareStatement(this, sql, columnNames);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.prepareStatement(this, sql, columnNames);
         }
         return delegate.prepareStatement(sql, columnNames);
     }
 
     @Override
     public Clob createClob() throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.createClob(this);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.createClob(this);
         }
         return delegate.createClob();
     }
 
     @Override
     public Blob createBlob() throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.createBlob(this);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.createBlob(this);
         }
         return delegate.createBlob();
     }
 
     @Override
     public NClob createNClob() throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.createNClob(this);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.createNClob(this);
         }
         return delegate.createNClob();
     }
 
     @Override
     public SQLXML createSQLXML() throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.createSQLXML(this);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.createSQLXML(this);
         }
         return delegate.createSQLXML();
     }
@@ -343,16 +341,16 @@ public class QuickPerfDatabaseConnection implements Connection {
 
     @Override
     public void setClientInfo(String name, String value) throws SQLClientInfoException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.setClientInfo(this, name, value);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.setClientInfo(this, name, value);
         }
         delegate.setClientInfo(name, value);
     }
 
     @Override
     public void setClientInfo(Properties properties) throws SQLClientInfoException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.setClientInfo(this, properties);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.setClientInfo(this, properties);
         }
         delegate.setClientInfo(properties);
     }
@@ -369,24 +367,24 @@ public class QuickPerfDatabaseConnection implements Connection {
 
     @Override
     public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.createArrayOf(this, typeName, elements);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.createArrayOf(this, typeName, elements);
         }
         return delegate.createArrayOf(typeName, elements);
     }
 
     @Override
     public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.createStruct(this, typeName, attributes);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.createStruct(this, typeName, attributes);
         }
         return delegate.createStruct(typeName, attributes);
     }
 
     @Override
     public void setSchema(String schema) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.setSchema(this, schema);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.setSchema(this, schema);
         }
         delegate.setSchema(schema);
     }
@@ -398,16 +396,16 @@ public class QuickPerfDatabaseConnection implements Connection {
 
     @Override
     public void abort(Executor executor) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.abort(this, executor);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.abort(this, executor);
         }
         delegate.abort(executor);
     }
 
     @Override
     public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
-        for (ConnectionsListener connectionsListener : connectionsListeners) {
-            connectionsListener.setNetworkTimeout(this, executor, milliseconds);
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.setNetworkTimeout(this, executor, milliseconds);
         }
         delegate.setNetworkTimeout(executor, milliseconds);
     }

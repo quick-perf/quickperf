@@ -6,12 +6,13 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  *
- * Copyright 2019-2021 the original author or authors.
+ * Copyright 2019-2020 the original author or authors.
  */
 
 package org.quickperf.testng.sql;
 
 import net.ttddyy.dsproxy.support.ProxyDataSource;
+import org.hibernate.internal.SessionImpl;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.quickperf.sql.Book;
 import org.quickperf.sql.config.MemoryDataSourceBuilder;
@@ -19,10 +20,12 @@ import org.quickperf.sql.config.MemoryDatabaseHibernateDialect;
 import org.quickperf.sql.config.PersistenceUnitInfoBuilder;
 import org.testng.annotations.BeforeTest;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceProvider;
 import javax.persistence.spi.PersistenceUnitInfo;
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -46,9 +49,15 @@ public class SqlTestBaseTestNG {
         String hibernateDialect = MemoryDatabaseHibernateDialect.INSTANCE.getHibernateDialect();
         Properties hibernateProperties = anHibernateConfig().build(hibernateDialect);
         return PersistenceUnitInfoBuilder.aPersistenceUnitInfo()
-                                         .build( proxyDataSource
-                                               , hibernateProperties
-                                               , Book.class);
+                .build( proxyDataSource
+                        , hibernateProperties
+                        , Book.class);
+    }
+
+    Connection getConnection() {
+        EntityManager em = emf.createEntityManager();
+        SessionImpl session = (SessionImpl) em.getDelegate();
+        return session.connection();
     }
 
 }
