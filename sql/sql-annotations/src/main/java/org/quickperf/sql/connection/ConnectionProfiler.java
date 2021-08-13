@@ -11,10 +11,15 @@
 
 package org.quickperf.sql.connection;
 
+import org.quickperf.sql.connection.stack.StackTraceDisplayConfig;
+import org.quickperf.sql.connection.stack.StackTracerPrinter;
+
 import java.io.PrintWriter;
 import java.sql.Connection;
 
 public class ConnectionProfiler {
+
+    private final StackTraceDisplayConfig stacktracedisplayConfig;
 
     private final PrintWriter printWriter;
 
@@ -24,10 +29,10 @@ public class ConnectionProfiler {
 
     ConnectionProfiler( StackTraceDisplayConfig stacktracedisplayConfig
                       , PrintWriter printWriter) {
+        this.stacktracedisplayConfig = stacktracedisplayConfig;
         this.printWriter = printWriter;
         this.stackTracerPrinter =
-                StackTracerPrinter.buildFrom( stacktracedisplayConfig
-                                            , printWriter);
+                new StackTracerPrinter(printWriter);
     }
 
     void enables() {
@@ -40,12 +45,30 @@ public class ConnectionProfiler {
 
     void profile(Connection connection, String eventDescription) {
         if (enabled) {
-            String connectionDescription = buildConnectionDescription(connection);
-            String eventText = connectionDescription + " - " + eventDescription;
-            printWriter.println(eventText);
-            printWriter.flush();
-            stackTracerPrinter.printStackTrace();
+            printConnectionEvent(connection, eventDescription);
+            if(stacktracedisplayConfig.isStackTraceDisplayed()) {
+                printStackTrace();
+            }
         }
+    }
+
+    private void printConnectionEvent(Connection connection, String eventDescription) {
+        String connectionDescription = buildConnectionDescription(connection);
+        String eventText = connectionDescription + " - " + eventDescription;
+        printWriter.println(eventText);
+        printWriter.flush();
+    }
+
+    private void printStackTrace() {
+        StackTraceElement[] currentStackTrace = findCurrentStackTrace();
+        StackTraceElement[] stackTraceToDisplay
+                = stacktracedisplayConfig.format(currentStackTrace);
+        stackTracerPrinter.printStackTrace(stackTraceToDisplay);
+    }
+
+    private StackTraceElement[] findCurrentStackTrace() {
+        Thread currentThead = Thread.currentThread();
+        return currentThead.getStackTrace();
     }
 
     private String buildConnectionDescription(Connection connection) {

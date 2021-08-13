@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ProfileConnectionTestNGTest {
 
     @Test public void
-    should_provide_connection() throws IOException {
+    should_profile_database_connection() throws IOException {
 
         // GIVEN
         Class<?> testClass = ProfileConnectionTestNG.class;

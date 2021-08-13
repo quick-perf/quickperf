@@ -9,30 +9,23 @@
  * Copyright 2019-2021 the original author or authors.
  */
 
-package org.quickperf.sql.connection;
+package org.quickperf.sql.connection.stack;
 
-public class StackDepth {
+import java.io.PrintWriter;
 
-    public static final StackDepth NONE = new StackDepth((short) 0);
+public class StackTracerPrinter {
 
-    public static final StackDepth ALL = new StackDepth((short) 1_000);
+    private PrintWriter printWriter;
 
-    private final short maxValue;
-
-    public StackDepth(short maxValue) {
-        this.maxValue = maxValue;
+    public StackTracerPrinter(PrintWriter printWriter) {
+        this.printWriter = printWriter;
     }
 
-    public short getMaxValue() {
-        return maxValue;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        StackDepth that = (StackDepth) o;
-        return maxValue == that.maxValue;
+    public void printStackTrace(StackTraceElement[] stackElementsToDisplay) {
+        for (StackTraceElement stackTraceElement : stackElementsToDisplay) {
+            printWriter.println("\t" + stackTraceElement);
+            printWriter.flush();
+        }
     }
 
 }

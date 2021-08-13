@@ -9,28 +9,25 @@
  * Copyright 2019-2021 the original author or authors.
  */
 
-package org.quickperf.sql.connection;
+package org.quickperf.sql.connection.stack;
 
-public class StackTraceDisplayConfig {
+public class PositionsFiltering {
 
-    public static final StackTraceDisplayConfig NONE = new StackTraceDisplayConfig(false, StackDepth.NONE);
+    final int start;
 
-    private final StackDepth stackDepth;
+    final int end;
 
-    private final boolean stackTraceFiltered;
-
-    public StackTraceDisplayConfig(boolean stackTraceFiltered
-                                 , StackDepth stackDepth) {
-        this.stackTraceFiltered = stackTraceFiltered;
-        this.stackDepth = stackDepth;
+    public PositionsFiltering(int start, int end) {
+        this.start = start;
+        this.end = end;
     }
 
-    public boolean isStackTraceFiltered() {
-        return stackTraceFiltered;
+    public int getStart() {
+        return start;
     }
 
-    public StackDepth getStackDepth() {
-        return stackDepth;
+    public int getEnd() {
+        return end;
     }
 
 }

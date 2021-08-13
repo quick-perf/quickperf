@@ -11,6 +11,8 @@
 
 package org.quickperf.sql.connection;
 
+import org.quickperf.sql.connection.stack.StackTraceDisplayConfig;
+
 import java.io.PrintWriter;
 
 public class ProfilingParameters {

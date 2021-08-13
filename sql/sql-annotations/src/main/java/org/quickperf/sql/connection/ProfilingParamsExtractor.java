@@ -13,10 +13,16 @@ package org.quickperf.sql.connection;
 
 import org.quickperf.perfrecording.ExtractablePerfRecorderParametersFromAnnotation;
 import org.quickperf.sql.annotation.ProfileConnection;
+import org.quickperf.sql.connection.stack.*;
+import org.quickperf.sql.framework.ClassPath;
 import org.quickperf.writer.PrintWriterBuilder;
 import org.quickperf.writer.WriterFactory;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static java.util.Collections.emptyList;
 
 public class ProfilingParamsExtractor implements ExtractablePerfRecorderParametersFromAnnotation<ProfileConnection, AnnotationProfilingParameters> {
 
@@ -39,19 +45,38 @@ public class ProfilingParamsExtractor implements ExtractablePerfRecorderParamete
 
     private StackTraceDisplayConfig buildStackTraceDisplayConfigFrom(ProfileConnection annotation) {
         if (annotation.displayStackTrace()) {
-            StackDepth stackDepth = extractStackDepthFrom(annotation);
-            return new StackTraceDisplayConfig( annotation.filterStackTrace()
-                                              , stackDepth);
+            Collection<StackTraceFilter> stackTraceFilters = buildStackTraceFilters(annotation);
+            StackTrace.StackDepth stackDepth = extractStackDepthFrom(annotation);
+            return StackTraceDisplayConfig.of(stackDepth, stackTraceFilters);
         }
-        return StackTraceDisplayConfig.NONE;
+        return StackTraceDisplayConfig.noStackTrace();
     }
 
-    private StackDepth extractStackDepthFrom(ProfileConnection annotation) {
+    private Collection<StackTraceFilter> buildStackTraceFilters(ProfileConnection annotation) {
+        if (annotation.filterStackTrace()) {
+            return buildStackTraceFilters();
+        }
+        return emptyList();
+    }
+
+    private Collection<StackTraceFilter> buildStackTraceFilters() {
+        Collection<StackTraceFilter> stackTraceFilters = new ArrayList<>();
+        stackTraceFilters.add(QuickPerfStackTraceTraceFilter.INSTANCE);
+        if (ClassPath.INSTANCE.containsSpringCore()) {
+            stackTraceFilters.add(SpringStackTraceTraceFilter.INSTANCE);
+        }
+        stackTraceFilters.add(JUnit4StackTraceFilter.INSTANCE);
+        stackTraceFilters.add(JUnit5StackTraceFilter.INSTANCE);
+        stackTraceFilters.add(TestNGStackTraceFilter.INSTANCE);
+        return stackTraceFilters;
+    }
+
+    private StackTrace.StackDepth extractStackDepthFrom(ProfileConnection annotation) {
         short annotationStackDepth = annotation.stackDepth();
         if (annotationStackDepth == -1) {
-            return StackDepth.ALL;
+            return StackTrace.StackDepth.ALL;
         }
-        return new StackDepth(annotationStackDepth);
+        return new StackTrace.StackDepth(annotationStackDepth);
     }
 
 }
