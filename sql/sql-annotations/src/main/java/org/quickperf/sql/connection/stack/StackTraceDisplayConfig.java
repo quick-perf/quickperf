@@ -11,8 +11,6 @@
 
 package org.quickperf.sql.connection.stack;
 
-import java.util.Collection;
-
 import static java.util.Collections.emptyList;
 
 public class StackTraceDisplayConfig {
