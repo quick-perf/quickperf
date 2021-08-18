@@ -44,8 +44,8 @@ public class ProfileConnectionJUnit5Test {
     @QuickPerfTest
     static class ProfileConnectionClass extends SqlTestBaseJUnit5 {
         @ProfileConnection(level = Level.TRACE
-                , displayStackTrace = true
-                , writerFactory = FileWriterBuilder.class
+                         , displayStackTrace = true
+                         , writerFactory = FileWriterBuilder.class
         )
         @Test
         public void test() throws SQLException {

@@ -45,7 +45,7 @@ public class ProfileConnectionJUnit4Test {
 
     @RunWith(QuickPerfJUnitRunner.class)
     public static class ProfileConnectionClass extends SqlTestBaseJUnit4 {
-        @ProfileConnection(level = Level.TRACE
+        @ProfileConnection( level = Level.TRACE
                           , displayStackTrace = true
                           , writerFactory = FileWriterBuilder.class
                           )
