@@ -10,9 +10,9 @@
  */
 package org.quickperf.sql.connection;
 
-// A renommer ?
-// Niveaux bons, autres niveaux ?
-// enum à mettre dans l'annotation ProfileConnection ?
+/**
+ * A connection profiling level.
+ */
 public enum Level {
 
     INFO, TRACE
