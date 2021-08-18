@@ -63,7 +63,7 @@ public class ProfilingParamsExtractor implements ExtractablePerfRecorderParamete
         Collection<StackTraceFilter> stackTraceFilters = new ArrayList<>();
         stackTraceFilters.add(QuickPerfStackTraceTraceFilter.INSTANCE);
         if (ClassPath.INSTANCE.containsSpringCore()) {
-            stackTraceFilters.add(SpringStackTraceTraceFilter.INSTANCE);
+           stackTraceFilters.add(QuickPerfSpringStackTraceTraceFilter.INSTANCE);
         }
         stackTraceFilters.add(JUnit4StackTraceFilter.INSTANCE);
         stackTraceFilters.add(JUnit5StackTraceFilter.INSTANCE);

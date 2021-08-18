@@ -11,9 +11,9 @@
 
 package org.quickperf.sql.connection.stack;
 
-public class SpringStackTraceTraceFilter implements StackTraceFilter {
+public class QuickPerfSpringStackTraceTraceFilter implements StackTraceFilter {
 
-    public static final SpringStackTraceTraceFilter INSTANCE = new SpringStackTraceTraceFilter();
+    public static final QuickPerfSpringStackTraceTraceFilter INSTANCE = new QuickPerfSpringStackTraceTraceFilter();
 
     @Override
     public PositionsFiltering filter(StackTraceElement[] stackElements) {
