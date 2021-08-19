@@ -25,6 +25,7 @@ import java.lang.annotation.Target;
  * <p>
  * The annotation profiles the calls to the {@link java.sql.Connection} methods and to the {@link javax.sql.DataSource}
  * <code>getConnection()</code> method.
+ * @see ExpectNoConnectionLeak
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
