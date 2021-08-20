@@ -47,8 +47,10 @@ public @interface ProfileConnection {
     boolean beforeAndAfterTestMethodExecution() default false;
 
     /**
-     * Allows displaying the stack traces of the profiled {@link java.sql.Connection} methods. The annotation does not display the stack traces by default.
-     * @return True if the annotation has to display the stack traces of the profiled {@link java.sql.Connection} methods
+     * Allows displaying the stack traces of the profiled {@link java.sql.Connection} methods and the profiled {@link javax.sql.DataSource}
+     * <code>getConnection()</code> method. The annotation does not display the stack traces by default.
+     * @return True if the annotation has to display the stack traces of the profiled {@link java.sql.Connection} methods and the profiled {@link javax.sql.DataSource}
+     * <code>getConnection()</code> method.
      */
     boolean displayStackTrace() default false;
 
