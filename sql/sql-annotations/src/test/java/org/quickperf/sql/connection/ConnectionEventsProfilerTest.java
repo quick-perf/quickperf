@@ -92,7 +92,7 @@ public class ConnectionEventsProfilerTest {
         // THEN
         String outputAsString = stringWriter.toString();
         String expectedResult
-                = "createStatement(Connection connection, int resultSetType, int resultSetConcurrency) [resultSetType: "
+                = "createStatement(int resultSetType, int resultSetConcurrency) [resultSetType: "
                 + ResultSet.TYPE_FORWARD_ONLY + ", resultSetConcurrency: " + ResultSet.CONCUR_READ_ONLY + "]"
                 + System.lineSeparator();
         assertThat(outputAsString).endsWith(expectedResult);

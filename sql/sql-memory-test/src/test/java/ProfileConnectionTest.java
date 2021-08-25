@@ -222,7 +222,8 @@ public class ProfileConnectionTest {
         assertThat(testResult.failureCount()).isZero();
 
         String profilingResult = readContentOf(FILE_PATH_STACK_WITHOUT_FILTERING);
-        assertThat(profilingResult).contains("org.junit.runners");
+        assertThat(profilingResult).contains("org.junit.runners")
+                                   .doesNotContain("null");
 
     }
 

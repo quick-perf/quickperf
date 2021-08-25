@@ -53,7 +53,7 @@ public class StackTrace {
 
     private StackTrace(StackTraceElement[] elements) {
         this.firstPos = 0;
-        this.lastPos = elements.length;
+        this.lastPos = elements.length - 1;
         this.allElements = elements;
     }
 
