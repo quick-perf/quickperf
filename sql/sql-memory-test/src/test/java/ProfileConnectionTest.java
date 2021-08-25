@@ -88,7 +88,7 @@ public class ProfileConnectionTest {
                                   .replaceAll("java:.*\\)", "java:lineNumber\\)")
                   )
         .isEqualToNormalizingNewlines(
-                        "connection id - connection gotten from the datasource\n" +
+                        "connection id - javax.sql.DataSource.getConnection()\n" +
                         "\torg.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:lineNumber)\n" +
                         "\torg.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:lineNumber)\n" +
                         "\torg.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:lineNumber)\n" +
@@ -96,11 +96,10 @@ public class ProfileConnectionTest {
                         "\torg.hibernate.internal.SessionImpl.connection(SessionImpl.java:lineNumber)\n" +
                         "\tSqlTestBase.getConnection(SqlTestBase.java:lineNumber)\n" +
                         "\tProfileConnectionTest$ProfileConnectionClass.test(ProfileConnectionTest.java:lineNumber)\n" +
-                        "connection id - prepare statement with select isbn from Book (SQL)\n" +
+                        "connection id - java.sql.Connection.prepareStatement(String sql) [sql: select isbn from Book]\n" +
                         "\tProfileConnectionTest$ProfileConnectionClass.test(ProfileConnectionTest.java:lineNumber)\n" +
-                        "connection id - closed\n" +
-                        "\tProfileConnectionTest$ProfileConnectionClass.test(ProfileConnectionTest.java:lineNumber)")
-        ;
+                        "connection id - java.sql.Connection.close()\n" +
+                        "\tProfileConnectionTest$ProfileConnectionClass.test(ProfileConnectionTest.java:lineNumber)");
 
     }
 
@@ -263,7 +262,7 @@ public class ProfileConnectionTest {
         assertThat(testResult.failureCount()).isZero();
 
         String profilingResult = readContentOf(FILE_PATH_PROFILING_BEFORE_AND_AFTER_TEST_METHOD);
-        int closedConnectionNumber = profilingResult.split("- closed").length - 1;
+        int closedConnectionNumber = profilingResult.split("- java.sql.Connection.close()").length - 1;
         // Because of connection pool initialization in SqlTestBase.before()
         assertThat(closedConnectionNumber).isGreaterThan(1);
 

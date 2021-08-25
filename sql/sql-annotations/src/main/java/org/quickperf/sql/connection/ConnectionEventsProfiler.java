@@ -24,9 +24,18 @@ import java.util.concurrent.Executor;
 
 public class ConnectionEventsProfiler extends ConnectionListener {
 
+    private static final String CONNECTION_CLASS_NAME = "java.sql.Connection";
+
     private final ProfilingParameters profilingParameters;
 
     private final ConnectionProfiler profiler;
+
+    public ConnectionEventsProfiler(ProfilingParameters profilingParameters) {
+        this.profilingParameters = profilingParameters;
+        PrintWriter printWriter = profilingParameters.getPrintWriter();
+        StackTraceDisplayConfig stacktracedisplayConfig = profilingParameters.getStackTraceDisplayConfig();
+        profiler = new ConnectionProfiler(stacktracedisplayConfig, printWriter);
+    }
 
     public void start() {
         profiler.enables();
@@ -36,16 +45,27 @@ public class ConnectionEventsProfiler extends ConnectionListener {
         profiler.disables();
     }
 
-    public ConnectionEventsProfiler(ProfilingParameters profilingParameters) {
-        this.profilingParameters = profilingParameters;
-        PrintWriter printWriter = profilingParameters.getPrintWriter();
-        StackTraceDisplayConfig stacktracedisplayConfig = profilingParameters.getStackTraceDisplayConfig();
-        profiler = new ConnectionProfiler(stacktracedisplayConfig, printWriter);
+    @Override
+    public void theDatasourceGetsTheConnection(Connection connection) {
+        profiler.profile(connection, "javax.sql.DataSource.getConnection()");
+    }
+
+    public void theDatasourceGetsTheConnectionWithUserNameAndPassword(Connection connection) {
+        profiler.profile(connection, "javax.sql.DataSource.getConnection(String username, String password)");
     }
 
     @Override
-    public void theDatasourceGetsTheConnection(Connection connection) {
-        profiler.profile(connection, "connection gotten from the datasource");
+    public void close(Connection connection) {
+        String eventDescription =
+                buildConnectionMethodDescription("close()");
+        profiler.profile(connection, eventDescription);
+    }
+
+    @Override
+    public void createStatement(Connection connection) {
+        String eventDescription =
+                buildConnectionMethodDescription("createStatement");
+        profileForTraceLevel(connection, eventDescription);
     }
 
     private void profileForTraceLevel(Connection connection, String text) {
@@ -55,197 +75,342 @@ public class ConnectionEventsProfiler extends ConnectionListener {
     }
 
     @Override
-    public void commit(Connection connection) {
-        String transactionIsolationAsString = extractTransactionIsolationOf(connection);
-        profiler.profile(connection,"commit with " + transactionIsolationAsString + " isolation");
-    }
-
-    @Override
-    public void close(Connection connection) {
-        profiler.profile(connection, "closed");
-    }
-
-    @Override
-    public void setReadOnly(Connection connection, boolean readOnly) {
-        profiler.profile(connection,"read only set to " + readOnly);
-    }
-
-    @Override
-    public void createStatement(Connection connection) {
-        profileForTraceLevel(connection, "create statement");
-    }
-
-    @Override
     public void prepareStatement(Connection connection, String sql) {
-        profileForTraceLevel(connection, "prepare statement with " + sql + " (SQL)");
+        String eventDescription =
+                buildConnectionMethodDescription("prepareStatement(String sql)"
+                                                , "sql"
+                                                , sql);
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void prepareCall(Connection connection, String sql) {
-        profileForTraceLevel(connection, "prepare callable statement with " + sql + " (SQL)");
+        String eventDescription =
+                buildConnectionMethodDescription("prepareCall(String sql)"
+                                                , "sql"
+                                                , sql);
+        profileForTraceLevel(connection, eventDescription);
     }
+
     @Override
     public void nativeSQL(Connection connection, String sql) {
-        profileForTraceLevel(connection, "native SQL " + sql);
+        String eventDescription =
+                buildConnectionMethodDescription("nativeSQL(String sql)"
+                                                , "sql"
+                                                , sql);
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void setAutoCommit(Connection connection, boolean autoCommit) {
-        profiler.profile(connection, "auto commit set to " + autoCommit);
+        String eventDescription =
+                buildConnectionMethodDescription("setAutoCommit(boolean autoCommit)"
+                                                , "autoCommit"
+                                                , "" + autoCommit);
+        profiler.profile(connection, eventDescription);
+    }
+
+    @Override
+    public void commit(Connection connection) {
+        String transactionIsolationAsString = extractTransactionIsolationOf(connection);
+        String eventDescription =
+                buildConnectionMethodDescription("commit()"
+                                                , "isolation"
+                                                , transactionIsolationAsString);
+        profiler.profile(connection, eventDescription);
     }
 
     @Override
     public void rollback(Connection connection) {
-        profiler.profile(connection, "rollback");
+        String eventDescription =
+                buildConnectionMethodDescription("rollback()");
+        profiler.profile(connection, eventDescription);
+    }
+
+    @Override
+    public void setReadOnly(Connection connection, boolean readOnly) {
+        String eventDescription =
+                buildConnectionMethodDescription("setReadOnly(boolean readOnly)"
+                                                , "readOnly"
+                                                , "" + readOnly);
+        profiler.profile(connection,eventDescription);
     }
 
     @Override
     public void setCatalog(Connection connection, String catalog) {
-        profiler.profile(connection, "set catalog: " + catalog);
+        String eventDescription =
+                buildConnectionMethodDescription("setCatalog(Connection connection, String catalog)"
+                                                , "catalog"
+                                                , "" + catalog);
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void setTransactionIsolation(Connection connection, int level) {
         String transactionIsolationAsString = extractTransactionIsolationOf(connection);
-        profiler.profile(connection, "set transaction isolation to " + level + " (" + transactionIsolationAsString + ")");
+        String eventDescription =
+                buildConnectionMethodDescription("setTransactionIsolation(int level)"
+                                                , "level"
+                                                , "" + level + " (" + transactionIsolationAsString + ")");
+        profiler.profile(connection, eventDescription);
     }
 
     @Override
     public void clearWarnings(Connection connection) {
-        profileForTraceLevel(connection, "clear warnings");
+        String eventDescription =
+                buildConnectionMethodDescription("clearWarnings()");
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void createStatement(Connection connection, int resultSetType, int resultSetConcurrency) {
-        profileForTraceLevel(connection, "create statement with " + resultSetType + " (resultSetType), " + resultSetConcurrency + " (resultSetConcurrency)");
+        String methodNameWithArguments = "createStatement(int resultSetType, int resultSetConcurrency)";
+        String[] additionalInfo = { "resultSetType" , "" + resultSetType
+                                  , "resultSetConcurrency", "" + resultSetConcurrency
+                                  };
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void prepareStatement(Connection connection, String sql, int resultSetType, int resultSetConcurrency) {
-        profileForTraceLevel(connection, "prepare statement with " + sql + "(SQL), " + resultSetType + " (resultSetType), " + resultSetConcurrency + " (resultSetConcurrency)");
-        super.prepareStatement(connection, sql, resultSetType, resultSetConcurrency);
+        String methodNameWithArguments = "prepareStatement(String sql, int resultSetType, int resultSetConcurrency)";
+        String[] additionalInfo = { "sql" , "" + sql
+                                  , "resultSetType", "" + resultSetType
+                                  , "resultSetConcurrency", "" + resultSetConcurrency
+                                  };
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profileForTraceLevel(connection,  eventDescription);
     }
 
     @Override
     public void prepareCall(Connection connection, String sql, int resultSetType, int resultSetConcurrency) {
-        profileForTraceLevel(connection, "prepare call with " + sql + "(SQL), " + resultSetType + " (resultSetType), " + resultSetConcurrency + " (resultSetConcurrency)");
+        String methodNameWithArguments = "prepareCall(String sql, int resultSetType, int resultSetConcurrency)";
+        String[] additionalInfo = { "sql" , "" + sql
+                                  , "resultSetType", "" + resultSetType
+                                  , "resultSetConcurrency", "" + resultSetConcurrency
+                                  };
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void setTypeMap(Connection connection, Map<String, Class<?>> map) {
-        profileForTraceLevel(connection, "type map set to " + map);
+        String methodNameWithArguments = "setTypeMap(Map<String, Class<?>> map)";
+        String[] additionalInfo = {"map", "" + map};
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profiler.profile(connection, eventDescription);
     }
 
     @Override
     public void setHoldability(Connection connection, int holdability) {
-        profileForTraceLevel(connection, "holdability set to " + holdability);
+        String methodNameWithArguments = "setHoldability(int holdability)";
+        String[] additionalInfo = {"holdability", "" + holdability};
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profiler.profile(connection, eventDescription);
     }
 
     @Override
     public void setSavepoint(Connection connection) {
-        profileForTraceLevel(connection, "set save point");
+        String eventDescription =
+                buildConnectionMethodDescription("setSavepoint()");
+        profiler.profile(connection, eventDescription);
     }
 
     @Override
     public void setSavepoint(Connection connection, String name) {
-        profileForTraceLevel(connection, "set save point with " + name + " (name)");
+        String methodNameWithArguments = "setSavepoint(String name)";
+        String[] additionalInfo = {"name", "" + name};
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profiler.profile(connection, eventDescription);
     }
 
     @Override
     public void rollback(Connection connection, Savepoint savepoint) {
-        profiler.profile(connection, "set rollback with " + savepoint + " (save point)");
+        String methodNameWithArguments = "rollback(Savepoint savepoint)";
+        String[] additionalInfo = {"savepoint", "" + savepoint};
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profiler.profile(connection, eventDescription);
     }
 
     @Override
     public void releaseSavepoint(Connection connection, Savepoint savepoint) {
-        profiler.profile(connection, "release " + savepoint + " (save point)");
+        String methodNameWithArguments = "releaseSavepoint(Savepoint savepoint)";
+        String[] additionalInfo = {"savepoint", "" + savepoint};
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profiler.profile(connection, eventDescription);
     }
 
     @Override
     public void createStatement(Connection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
-        profileForTraceLevel(connection, "create statement with " + resultSetType + "(resultSetType), " + resultSetConcurrency + " (resultSetConcurrency), " + resultSetHoldability + " (resultSetHoldability)");
+        String methodNameWithArguments = "createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability)";
+        String[] additionalInfo = { "resultSetType", "" + resultSetType
+                                  + "resultSetConcurrency", "" + resultSetConcurrency
+                                  + "resultSetHoldability", "" + resultSetHoldability
+                                  };
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void prepareStatement(Connection connection, String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
-        profileForTraceLevel(connection, "prepare statement with " + sql + "(sql), " + resultSetType + " (resultSetType), "
-                + resultSetConcurrency + " (resultSetConcurrency), " + resultSetHoldability + " (resultSetHoldability)");
+        String methodNameWithArguments = "prepareStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability)";
+        String[] additionalInfo = { "resultSetType", "" + resultSetType
+                                  + "resultSetConcurrency", "" + resultSetConcurrency
+                                  + "resultSetHoldability", "" + resultSetHoldability
+                                  };
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void prepareCall(Connection connection, String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
-        profileForTraceLevel(connection, "prepare callable statement with " + sql + "(sql), " + resultSetType + " (resultSetType), "
-                + resultSetConcurrency + " (resultSetConcurrency), " + resultSetHoldability + " (resultSetHoldability)");
+        String methodNameWithArguments = "prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability)";
+        String[] additionalInfo = { "resultSetType", "" + resultSetType
+                                  + "resultSetConcurrency", "" + resultSetConcurrency
+                                  + "resultSetHoldability", "" + resultSetHoldability
+                                  };
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void prepareStatement(Connection connection, String sql, int autoGeneratedKeys) {
-        profileForTraceLevel(connection, "prepare callable statement with " + sql + "(sql), " + autoGeneratedKeys + " (autoGeneratedKeys)");
+        String methodNameWithArguments = "prepareStatement(String sql, int autoGeneratedKeys)";
+        String[] additionalInfo = { "sql", "" + sql
+                                  + "autoGeneratedKeys", "" + autoGeneratedKeys
+                                  };
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void prepareStatement(Connection connection, String sql, int[] columnIndexes) {
-        profileForTraceLevel(connection, "prepare statement with " + sql + "(sql), " + Arrays.toString(columnIndexes) + " (columnIndexes)");
+        String methodNameWithArguments = "prepareStatement(String sql, int[] columnIndexes)";
+        String[] additionalInfo = { "sql", "" + sql
+                                  + "columnIndexes", "" + Arrays.toString(columnIndexes)
+                                  };
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void prepareStatement(Connection connection, String sql, String[] columnNames) {
-        profileForTraceLevel(connection, "prepare statement with " + sql + "(sql), " + Arrays.toString(columnNames) + " (columnNames)");
+        String methodNameWithArguments = "prepareStatement(String sql, String[] columnNames)";
+        String[] additionalInfo = { "sql", "" + sql
+                                  + "columnNames", "" + Arrays.toString(columnNames)
+                                  };
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void createClob(Connection connection) {
-        profileForTraceLevel(connection, "create CLOB");
+        String eventDescription =
+                buildConnectionMethodDescription("createClob()");
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void createBlob(Connection connection) {
-        profileForTraceLevel(connection, "create BLOB");
+        String eventDescription =
+                buildConnectionMethodDescription("createBlob()");
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void createNClob(Connection connection) {
-        profileForTraceLevel(connection, "create N CLOB");
+        String eventDescription =
+                buildConnectionMethodDescription("createNClob()");
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void createSQLXML(Connection connection) {
-        profileForTraceLevel(connection, "create SQL XML");
+        String eventDescription =
+                buildConnectionMethodDescription("createSQLXML()");
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void setClientInfo(Connection connection, String name, String value) {
-        profileForTraceLevel(connection, "set client info to " + name + "(name) and " + value + " (value)");
+        String methodNameWithArguments = "setClientInfo(String name, String value)";
+        String[] additionalInfo = { "name", "" + name
+                                  + "value", "" + value
+                                  };
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profiler.profile(connection, eventDescription);
     }
 
     @Override
     public void setClientInfo(Connection connection, Properties properties) {
-        profileForTraceLevel(connection, "set client info to " + properties + "(properties)");
+        String methodNameWithArguments = "setClientInfo(Properties properties)";
+        String[] additionalInfo = { "properties", "" + properties };
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void createArrayOf(Connection connection, String typeName, Object[] elements) {
-        profileForTraceLevel(connection, "create array of with " + typeName + " (type name) and " + Arrays.toString(elements) + " (elements)");
+        String methodNameWithArguments = "createArrayOf(String typeName, Object[] elements)";
+        String[] additionalInfo = { "typeName", "" + typeName
+                                  + "elements", "" + Arrays.toString(elements)
+                                  };
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void createStruct(Connection connection, String typeName, Object[] attributes) {
-        profileForTraceLevel(connection, "create struct with " + typeName + " (type name) and " + Arrays.toString(attributes) + " (attributes)");
+        String methodNameWithArguments = "createStruct(String typeName, Object[] attributes)";
+        String[] additionalInfo = { "typeName", "" + typeName
+                                  + "attributes", "" + Arrays.toString(attributes)
+                                  };
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profileForTraceLevel(connection, eventDescription);
     }
 
     @Override
     public void setSchema(Connection connection, String schema) {
-        profileForTraceLevel(connection, "set schema to " + schema);
+        String methodNameWithArguments = "setSchema(String schema)";
+        String[] additionalInfo = { "schema", "" + schema};
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profiler.profile(connection, eventDescription);
     }
 
     @Override
     public void abort(Connection connection, Executor executor) {
-        profiler.profile(connection, "set abort with executor");
+        String eventDescription =
+                buildConnectionMethodDescription("abort(Executor executor)");
+        profiler.profile(connection, eventDescription);
     }
 
     @Override
     public void setNetworkTimeout(Connection connection, Executor executor, int milliseconds) {
-        profiler.profile(connection, "set network timeout to " + milliseconds + " (milliseconds) with executor");
+        String methodNameWithArguments = "setNetworkTimeout(Executor executor, int milliseconds)";
+        String[] additionalInfo = { "milliseconds", "" + milliseconds };
+        String eventDescription =
+                buildConnectionMethodDescription(methodNameWithArguments, additionalInfo);
+        profiler.profile(connection, eventDescription);
     }
 
     private String extractTransactionIsolationOf(Connection connection) {
@@ -255,6 +420,12 @@ public class ConnectionEventsProfiler extends ConnectionListener {
         } catch (SQLException sqlException) {
             return "";
         }
+    }
+
+    private String buildConnectionMethodDescription(String methodNameWithArguments, String... additionalData) {
+        String additionalInfo = buildAdditionalInfoAsString(additionalData);
+        return CONNECTION_CLASS_NAME + "." + methodNameWithArguments
+                + (additionalInfo.isEmpty() ? "" : " [" + additionalInfo + "]");
     }
 
     private String formatTransactionIsolationAsString(int transactionIsolation) {
@@ -268,6 +439,22 @@ public class ConnectionEventsProfiler extends ConnectionListener {
             return "transaction_serializable";
         }
         return "";
+    }
+
+    private String buildAdditionalInfoAsString(String[] additionalData) {
+        StringBuilder additionalInfoBuilder = new StringBuilder();
+        boolean isLabel = true;
+        for (int i = 0, lastDatumIndex = additionalData.length; i < lastDatumIndex; i++) {
+            String labelOrDescription = additionalData[i];
+            additionalInfoBuilder.append(labelOrDescription);
+            if (isLabel) {
+                additionalInfoBuilder.append(": ");
+            } else if(i != additionalData.length -1){
+                additionalInfoBuilder.append(", ");
+            }
+            isLabel = !isLabel;
+        }
+        return additionalInfoBuilder.toString();
     }
 
 }

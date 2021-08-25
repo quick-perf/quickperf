@@ -41,7 +41,7 @@ public class ProfileConnectionTestNGTest {
                                   .replaceAll("java:.*\\)", "java:lineNumber\\)")
                   )
                 .isEqualToNormalizingNewlines(
-                         "connection id - connection gotten from the datasource\n" +
+                         "connection id - javax.sql.DataSource.getConnection()\n" +
                         "\torg.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:lineNumber)" + System.lineSeparator() +
                         "\torg.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:lineNumber)" + System.lineSeparator() +
                         "\torg.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:lineNumber)" + System.lineSeparator() +
@@ -49,9 +49,9 @@ public class ProfileConnectionTestNGTest {
                         "\torg.hibernate.internal.SessionImpl.connection(SessionImpl.java:lineNumber)" + System.lineSeparator() +
                         "\torg.quickperf.testng.sql.SqlTestBaseTestNG.getConnection(SqlTestBaseTestNG.java:lineNumber)" + System.lineSeparator() +
                         "\torg.quickperf.testng.sql.ProfileConnectionTestNG$ProfileConnectionClass.test(ProfileConnectionTestNG.java:lineNumber)" + System.lineSeparator() +
-                        "connection id - prepare statement with select isbn from Book (SQL)" + System.lineSeparator() +
+                        "connection id - java.sql.Connection.prepareStatement(String sql) [sql: select isbn from Book]" + System.lineSeparator() +
                         "\torg.quickperf.testng.sql.ProfileConnectionTestNG$ProfileConnectionClass.test(ProfileConnectionTestNG.java:lineNumber)" + System.lineSeparator() +
-                        "connection id - closed" + System.lineSeparator() +
+                        "connection id - java.sql.Connection.close()" + System.lineSeparator() +
                         "\torg.quickperf.testng.sql.ProfileConnectionTestNG$ProfileConnectionClass.test(ProfileConnectionTestNG.java:lineNumber)"
                 )
         ;

@@ -40,6 +40,12 @@ public class QuickPerfDatabaseConnection implements Connection {
         }
     }
 
+    public void theDatasourceGetsTheConnectionWithUserNameAndPassword() {
+        for (ConnectionListener connectionListener : connectionListeners) {
+            connectionListener.theDatasourceGetsTheConnectionWithUserNameAndPassword(this);
+        }
+    }
+
     @Override
     public Statement createStatement() throws SQLException {
         for (ConnectionListener connectionListener : connectionListeners) {

@@ -19,11 +19,12 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.sql.Connection;
 
 /**
  * The <code>ProfileConnection</code> annotation profiles the database connection.
  * <p>
- * The annotation profiles the calls to the {@link java.sql.Connection} methods and to the {@link javax.sql.DataSource}
+ * The annotation profiles the calls to the {@link java.sql.Connection} methods and the calls to the {@link javax.sql.DataSource}
  * <code>getConnection()</code> method.
  * @see ExpectNoConnectionLeak
  */
@@ -31,10 +32,29 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface ProfileConnection {
 
-
     /**
      * Allows defining the profiling level. The default value is <code>INFO</code>.
-     * With a <code>TRACE</code> level, the annotation profiles more {@link java.sql.Connection} methods.
+     * With a <code>TRACE</code> level, the annotation profiles more {@link java.sql.Connection} methods:
+     * <ul>
+     *     <li>{@link Connection#createStatement()}</li>
+     *     <li>{@link java.sql.Connection#createStatement(int, int)}</li>
+     *     <li>{@link Connection#createStatement(int, int, int)} </li>
+     *     <li>{@link java.sql.Connection#prepareStatement(String)}</li>
+     *     <li>{@link java.sql.Connection#prepareStatement(String, int[])}</li>
+     *     <li>{@link java.sql.Connection#prepareStatement(String, String[])}</li>
+     *     <li>{@link java.sql.Connection#prepareStatement(String, int)}</li>
+     *     <li>{@link java.sql.Connection#prepareStatement(String, int, int)}</li>
+     *     <li>{@link java.sql.Connection#prepareStatement(String, int, int, int)}</li>
+     *     <li>{@link java.sql.Connection#prepareCall(String)}</li>
+     *     <li>{@link java.sql.Connection#prepareCall(String, int, int)}</li>
+     *     <li>{@link java.sql.Connection#prepareCall(String, int, int, int)}</li>
+     *     <li>{@link Connection#createBlob()}</li>
+     *     <li>{@link Connection#createClob()}</li>
+     *     <li>{@link Connection#createNClob()}</li>
+     *     <li>{@link Connection#createSQLXML()}</li>
+     *     <li>{@link Connection#createArrayOf(String, Object[])}</li>
+     *     <li>{@link Connection#createStruct(String, Object[])}</li>
+     * </ul>
      * @return The profiling level value
      */
     Level level() default Level.INFO;

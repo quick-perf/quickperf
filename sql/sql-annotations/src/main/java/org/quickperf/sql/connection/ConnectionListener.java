@@ -23,6 +23,9 @@ public abstract class ConnectionListener {
     public void theDatasourceGetsTheConnection(Connection connection) {
     }
 
+    public void theDatasourceGetsTheConnectionWithUserNameAndPassword(Connection connection) {
+    }
+
     public void close(Connection connection){
     }
 

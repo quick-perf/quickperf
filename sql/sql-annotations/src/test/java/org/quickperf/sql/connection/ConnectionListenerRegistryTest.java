@@ -20,7 +20,6 @@ import static org.mockito.Mockito.mock;
 
 public class ConnectionListenerRegistryTest {
 
-
     @Test public void
     should_get_a_connection_listener_from_its_type() {
 

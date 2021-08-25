@@ -31,7 +31,7 @@ public class QuickPerfProxyDataSource extends ProxyDataSource {
     public Connection getConnection(String username, String password) throws SQLException {
         Connection connection = super.getConnection(username, password);
         QuickPerfDatabaseConnection connectionProxy = QuickPerfDatabaseConnection.buildFrom(connection);
-        connectionProxy.theDatasourceGetsTheConnection();
+        connectionProxy.theDatasourceGetsTheConnectionWithUserNameAndPassword();
         return connectionProxy;
     }
 
