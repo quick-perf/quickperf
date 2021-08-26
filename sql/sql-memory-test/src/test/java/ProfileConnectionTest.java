@@ -87,19 +87,18 @@ public class ProfileConnectionTest {
         assertThat(profilingResult.replaceAll("connection .* -", "connection id -")
                                   .replaceAll("java:.*\\)", "java:lineNumber\\)")
                   )
-        .isEqualToNormalizingNewlines(
-                        "connection id - javax.sql.DataSource.getConnection()\n" +
-                        "\torg.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:lineNumber)\n" +
-                        "\torg.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:lineNumber)\n" +
-                        "\torg.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:lineNumber)\n" +
-                        "\torg.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:lineNumber)\n" +
-                        "\torg.hibernate.internal.SessionImpl.connection(SessionImpl.java:lineNumber)\n" +
-                        "\tSqlTestBase.getConnection(SqlTestBase.java:lineNumber)\n" +
-                        "\tProfileConnectionTest$ProfileConnectionClass.test(ProfileConnectionTest.java:lineNumber)\n" +
-                        "connection id - java.sql.Connection.prepareStatement(String sql) [sql: select isbn from Book]\n" +
-                        "\tProfileConnectionTest$ProfileConnectionClass.test(ProfileConnectionTest.java:lineNumber)\n" +
-                        "connection id - java.sql.Connection.close()\n" +
-                        "\tProfileConnectionTest$ProfileConnectionClass.test(ProfileConnectionTest.java:lineNumber)");
+        .contains(      "connection id - javax.sql.DataSource.getConnection()" + System.lineSeparator() +
+                        "\torg.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:lineNumber)" + System.lineSeparator() +
+                        "\torg.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:lineNumber)" + System.lineSeparator() +
+                        "\torg.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:lineNumber)" + System.lineSeparator() +
+                        "\torg.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:lineNumber)" + System.lineSeparator() +
+                        "\torg.hibernate.internal.SessionImpl.connection(SessionImpl.java:lineNumber)" + System.lineSeparator() +
+                        "\tSqlTestBase.getConnection(SqlTestBase.java:lineNumber)" + System.lineSeparator() +
+                        "\tProfileConnectionTest$ProfileConnectionClass.test(ProfileConnectionTest.java:lineNumber)" + System.lineSeparator() +
+                        "connection id - java.sql.Connection.prepareStatement(String sql) [sql: select isbn from Book]" + System.lineSeparator() +
+                        "\tProfileConnectionTest$ProfileConnectionClass.test(ProfileConnectionTest.java:lineNumber)" + System.lineSeparator() +
+                        "connection id - java.sql.Connection.close()" + System.lineSeparator())
+        .contains(      "\tProfileConnectionTest$ProfileConnectionClass.test(ProfileConnectionTest.java:lineNumber)");
 
     }
 

@@ -82,7 +82,7 @@ public class ProfileConnectionJUnit5Test {
         assertThat(profilingResult.replaceAll("connection .* -", "connection id -")
                                   .replaceAll("java:.*\\)", "java:lineNumber\\)")
                   )
-                .isEqualToNormalizingNewlines(
+                .contains(
                                 "connection id - javax.sql.DataSource.getConnection()\n" +
                                 "\torg.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:lineNumber)" + System.lineSeparator() +
                                 "\torg.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:lineNumber)" + System.lineSeparator() +
@@ -93,9 +93,9 @@ public class ProfileConnectionJUnit5Test {
                                 "\torg.quickperf.sql.ProfileConnectionJUnit5Test$ProfileConnectionClass.test(ProfileConnectionJUnit5Test.java:lineNumber)" + System.lineSeparator() +
                                 "connection id - java.sql.Connection.prepareStatement(String sql) [sql: select isbn from Book]" + System.lineSeparator() +
                                 "\torg.quickperf.sql.ProfileConnectionJUnit5Test$ProfileConnectionClass.test(ProfileConnectionJUnit5Test.java:lineNumber)" + System.lineSeparator() +
-                                "connection id - java.sql.Connection.close()" + System.lineSeparator() +
-                                "\torg.quickperf.sql.ProfileConnectionJUnit5Test$ProfileConnectionClass.test(ProfileConnectionJUnit5Test.java:lineNumber)"
-                );
+                                "connection id - java.sql.Connection.close()" + System.lineSeparator())
+                .contains(      "\torg.quickperf.sql.ProfileConnectionJUnit5Test$ProfileConnectionClass.test(ProfileConnectionJUnit5Test.java:lineNumber)");
+
     }
 
     private String readContentOf(String filePath) throws IOException {
