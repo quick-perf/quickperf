@@ -22,9 +22,7 @@ public class StackTracerPrinter {
     }
 
     public void printStackTrace(StackTraceElement[] stackElementsToDisplay) {
-        System.out.println("Stack trace");
         for (StackTraceElement stackTraceElement : stackElementsToDisplay) {
-            System.out.println(stackTraceElement);
             printWriter.println("\t" + stackTraceElement);
             printWriter.flush();
         }
