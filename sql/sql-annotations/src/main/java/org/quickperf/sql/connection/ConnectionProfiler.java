@@ -61,14 +61,6 @@ public class ConnectionProfiler {
 
     private void printStackTrace() {
         StackTraceElement[] currentStackTrace = findCurrentStackTrace();
-
-        System.out.println();
-        System.out.println("STACK BEFORE FILTERING");
-        for (StackTraceElement stackTraceElement : currentStackTrace) {
-            System.out.println(stackTraceElement);
-        }
-        System.out.println();
-
         StackTraceElement[] stackTraceToDisplay
                 = stacktracedisplayConfig.format(currentStackTrace);
         stackTracerPrinter.printStackTrace(stackTraceToDisplay);
