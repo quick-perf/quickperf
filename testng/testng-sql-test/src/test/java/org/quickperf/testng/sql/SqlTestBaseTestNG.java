@@ -6,7 +6,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  *
- * Copyright 2019-2020 the original author or authors.
+ * Copyright 2019-2021 the original author or authors.
  */
 
 package org.quickperf.testng.sql;
@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import static org.quickperf.sql.config.HibernateConfigBuilder.anHibernateConfig;
+import static org.quickperf.sql.config.PersistenceUnitInfoBuilder.aPersistenceUnitInfo;
 import static org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
 
 public class SqlTestBaseTestNG {
@@ -48,10 +49,9 @@ public class SqlTestBaseTestNG {
         ProxyDataSource proxyDataSource = aDataSourceBuilder().buildProxy(baseDataSource);
         String hibernateDialect = MemoryDatabaseHibernateDialect.INSTANCE.getHibernateDialect();
         Properties hibernateProperties = anHibernateConfig().build(hibernateDialect);
-        return PersistenceUnitInfoBuilder.aPersistenceUnitInfo()
-                .build( proxyDataSource
-                        , hibernateProperties
-                        , Book.class);
+        return aPersistenceUnitInfo().build( proxyDataSource
+                                           , hibernateProperties
+                                           , Book.class);
     }
 
     Connection getConnection() {
