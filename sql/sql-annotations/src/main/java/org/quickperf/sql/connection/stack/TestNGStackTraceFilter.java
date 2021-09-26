@@ -36,7 +36,9 @@ public class TestNGStackTraceFilter implements StackTraceFilter {
     private int extractTestNGLastPos(StackTraceElement[] stackElements, int quickPerfTestNGListenerPos) {
         for (int pos = (quickPerfTestNGListenerPos - 1); pos > 0; pos--) {
             String stackTraceElementAsString = stackElements[pos].toString();
-            if (!stackTraceElementAsString.startsWith("java") && !stackTraceElementAsString.startsWith("org.testng")) {
+            if (!stackTraceElementAsString.startsWith("java")
+             && !stackTraceElementAsString.startsWith("org.testng")
+             && !stackTraceElementAsString.startsWith("sun.reflect")) {
                 return pos;
             }
         }

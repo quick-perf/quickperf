@@ -83,7 +83,7 @@ public class ProfileConnectionJUnit5Test {
                                   .replaceAll("java:.*\\)", "java:lineNumber\\)")
                   )
                 .contains(
-                                "connection id - javax.sql.DataSource.getConnection()\n" +
+                                "connection id - javax.sql.DataSource.getConnection()" + System.lineSeparator() +
                                 "\torg.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:lineNumber)" + System.lineSeparator() +
                                 "\torg.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:lineNumber)" + System.lineSeparator() +
                                 "\torg.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:lineNumber)" + System.lineSeparator() +

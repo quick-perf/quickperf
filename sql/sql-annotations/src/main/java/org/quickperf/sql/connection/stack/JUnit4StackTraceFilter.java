@@ -36,7 +36,8 @@ public class JUnit4StackTraceFilter implements StackTraceFilter {
     private int extractJUnit4LastPost(StackTraceElement[] stackElements, int quickPerMethodPos) {
         for (int pos = (quickPerMethodPos - 1); pos > 0; pos--) {
             String stackTraceElementAsString = stackElements[pos].toString();
-            if (!stackTraceElementAsString.startsWith("java")) {
+            if (!stackTraceElementAsString.startsWith("java")
+             && !stackTraceElementAsString.startsWith("sun.reflect")) {
                 return pos;
             }
         }

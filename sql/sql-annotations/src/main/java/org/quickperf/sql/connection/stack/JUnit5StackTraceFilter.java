@@ -36,7 +36,8 @@ public class JUnit5StackTraceFilter implements StackTraceFilter {
     private int extractJUnit5LastPos(StackTraceElement[] stackElements, int quickPerMethodPos) {
         for (int pos = (quickPerMethodPos - 1); pos > 0; pos--) {
             String stackTraceElementAsString = stackElements[pos].toString();
-            if (!stackTraceElementAsString.startsWith("java")) {
+            if (!stackTraceElementAsString.startsWith("java")
+             && !stackTraceElementAsString.startsWith("sun.reflect")) {
                 return pos;
             }
         }
