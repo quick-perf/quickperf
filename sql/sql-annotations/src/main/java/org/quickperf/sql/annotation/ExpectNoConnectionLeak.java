@@ -19,7 +19,9 @@ import java.lang.annotation.Target;
 /**
  * <p><code>ExpectNoConnectionLeak</code> annotation allows detecting database connection leaks.
  *
- * <p>This annotation verifies that each connection got from the data source is well closed during the test method execution.
+ * <p>The test method will fail if the tested code gets a connection from {@link javax.sql.DataSource} but does not close it.
+ *
+ * @see ProfileConnection
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
