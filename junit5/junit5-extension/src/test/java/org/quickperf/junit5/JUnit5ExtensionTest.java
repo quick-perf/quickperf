@@ -94,7 +94,6 @@ public class JUnit5ExtensionTest {
     public static class TestWithBeforeEachAndAfterEach {
         @BeforeEach
         void createLockFile() throws IOException {
-            System.out.println("Creating the file");
             File file = new File("lock");
             if(!file.createNewFile()){
                 throw new RuntimeException("Unable to create lock file");
@@ -112,7 +111,6 @@ public class JUnit5ExtensionTest {
 
         @AfterEach
         void deleteLockFile() {
-            System.out.println("Deleting the file");
             File file = new File("lock");
             if(!file.delete()){
                 throw new RuntimeException("Unable to delete lock file");
