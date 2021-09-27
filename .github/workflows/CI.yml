@@ -8,7 +8,7 @@ jobs:
     name: Java ${{ matrix.java }}
     strategy:
       matrix:
-        java: [8, 11, 12, 13, 14, 15, 16]
+        java: [8, 11, 12, 13, 14, 15, 16, 17]
     env:
       REPO_SLUG: ${{ github.repository }}
       BRANCH: ${{ github.head_ref }}
