@@ -19,12 +19,12 @@ import static org.junit.experimental.results.PrintableResult.testResult;
 
 public abstract class AbstractJUnit4SpringTestBase {
 
-    boolean enableTest = true;
+    boolean testEnabled = true;
 
     @Test public void
     a_test_throwing_an_assertion_error_and_a_performance_issue_should_fail() {
 
-        if(!enableTest) {
+        if(!testEnabled) {
             return;
         }
 
@@ -50,7 +50,7 @@ public abstract class AbstractJUnit4SpringTestBase {
     @Test public void
     a_test_throwing_an_assertion_error_and_a_performance_issue_and_running_in_a_dedicated_jvm_should_fail() {
 
-        if(!enableTest) {
+        if(!testEnabled) {
             return;
         }
 
@@ -77,7 +77,7 @@ public abstract class AbstractJUnit4SpringTestBase {
     @Test public void
     a_test_method_having_a_performance_property_not_respected_in_a_dedicated_jvm_should_fail() {
 
-        if(!enableTest) {
+        if(!testEnabled) {
             return;
         }
 
@@ -97,7 +97,7 @@ public abstract class AbstractJUnit4SpringTestBase {
     @Test public void
     a_test_method_allocating_and_annotated_with_no_allocation_should_fail() {
 
-        if(!enableTest) {
+        if(!testEnabled) {
             return;
         }
 
@@ -121,7 +121,7 @@ public abstract class AbstractJUnit4SpringTestBase {
     @Test public void
     disable_quick_perf_annotation_should_disable_quick_perf_features() {
 
-        if(!enableTest) {
+        if(!testEnabled) {
             return;
         }
 
@@ -141,7 +141,7 @@ public abstract class AbstractJUnit4SpringTestBase {
     @Test public void
     functional_iteration_annotation_should_disable_quick_perf_features() {
 
-        if(!enableTest) {
+        if(!testEnabled) {
             return;
         }
 
@@ -161,7 +161,7 @@ public abstract class AbstractJUnit4SpringTestBase {
     @Test public void
     execute_quick_perf_features_with_one_jvm() {
 
-        if(!enableTest) {
+        if(!testEnabled) {
             return;
         }
 
@@ -184,7 +184,7 @@ public abstract class AbstractJUnit4SpringTestBase {
     @Test public void
     two_tests_having_performance_and_functional_issues() {
 
-        if(!enableTest) {
+        if(!testEnabled) {
             return;
         }
 
@@ -209,7 +209,7 @@ public abstract class AbstractJUnit4SpringTestBase {
     @Test public void
     a_failing_test_with_transactional_test_execution_listener() {
 
-        if(!enableTest) {
+        if(!testEnabled) {
             return;
         }
 

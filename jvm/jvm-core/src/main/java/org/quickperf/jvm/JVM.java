@@ -90,6 +90,10 @@ public class JVM {
             return !is7() && !is8() && findJvmVersionAsInt() >= 16;
         }
 
+        public boolean isLessThanTo16() {
+            return !isGreaterThanOrEqualTo16();
+        }
+
         @Override
         public String toString() {
             return System.getProperty("java.vm.version");

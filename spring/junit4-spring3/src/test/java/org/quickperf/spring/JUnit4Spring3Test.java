@@ -28,7 +28,7 @@ public class JUnit4Spring3Test extends AbstractJUnit4SpringTestBase {
 
     {
         JVM.Version jvmVersion = JVM.INSTANCE.version;
-        enableTest = !jvmVersion.isGreaterThanOrEqualTo16();
+        testEnabled = jvmVersion.isLessThanTo16();
     }
 
     private static class TestApplicationContextInitializer

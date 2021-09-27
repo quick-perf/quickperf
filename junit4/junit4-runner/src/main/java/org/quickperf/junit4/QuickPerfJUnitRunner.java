@@ -80,7 +80,7 @@ public class QuickPerfJUnitRunner extends BlockJUnit4ClassRunner {
     private int findJUnit4AllocationOffset() {
         int allocationOffsetBeforeJava16 = findAllocationOffsetBeforeJava16();
         JVM.Version jvmVersion = JVM.INSTANCE.version;
-        if(!jvmVersion.isGreaterThanOrEqualTo16()) {
+        if(jvmVersion.isLessThanTo16()) {
             return allocationOffsetBeforeJava16;
         }
         return allocationOffsetBeforeJava16 + 8;
