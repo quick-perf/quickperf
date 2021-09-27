@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,7 +117,8 @@ public class NewJvmTestLauncher {
             Thread outDrainer = new Thread(new Runnable() {
                 public void run() {
                     try {
-                        IOUtils.copy(process.getInputStream(), messageWriter);
+                        Charset defaultCharset = Charset.defaultCharset();
+                        IOUtils.copy(process.getInputStream(), messageWriter, defaultCharset);
                     } catch (IOException e) {
                     }
                 }
@@ -125,7 +127,8 @@ public class NewJvmTestLauncher {
             Thread errorDrainer = new Thread(new Runnable() {
                 public void run() {
                     try {
-                        IOUtils.copy(process.getErrorStream(), errorWriter);
+                        Charset defaultCharset = Charset.defaultCharset();
+                        IOUtils.copy(process.getErrorStream(), errorWriter, defaultCharset);
                     } catch (IOException e) {
                     }
                 }
