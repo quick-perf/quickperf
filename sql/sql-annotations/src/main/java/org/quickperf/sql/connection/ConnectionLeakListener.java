@@ -14,13 +14,15 @@ package org.quickperf.sql.connection;
 import org.quickperf.TestExecutionContext;
 import org.quickperf.WorkingFolder;
 import org.quickperf.measure.BooleanMeasure;
+import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.repository.BooleanMeasureRepository;
 
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConnectionLeakListener extends ConnectionsListener<BooleanMeasure> {
+public class ConnectionLeakListener extends ConnectionListener
+        implements RecordablePerformance<BooleanMeasure> {
 
     private final List<Connection> connections = new ArrayList<>();
 
@@ -29,7 +31,7 @@ public class ConnectionLeakListener extends ConnectionsListener<BooleanMeasure> 
     private static final String CONNECTION_LEAK_FILE_NAME = "connection-leak.ser";
 
     @Override
-    public void getFromTheDataSource(Connection connection) {
+    public void theDatasourceGetsTheConnection(Connection connection) {
         connections.add(connection);
     }
 

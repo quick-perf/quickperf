@@ -9,21 +9,25 @@
  * Copyright 2019-2021 the original author or authors.
  */
 
-package org.quickperf.perfrecording;
+package org.quickperf.sql.connection.stack;
 
-import java.lang.annotation.Annotation;
+public class PositionsFiltering {
 
-public interface ExtractablePerfRecorderParametersFromAnnotation<A extends Annotation, P extends PerfRecorderParameters> {
+    final int start;
 
-    ExtractablePerfRecorderParametersFromAnnotation NONE = new ExtractablePerfRecorderParametersFromAnnotation() {
+    final int end;
 
-        @Override
-        public PerfRecorderParameters extractFrom(Annotation annotation) {
-            return PerfRecorderParameters.NONE;
-        }
+    public PositionsFiltering(int start, int end) {
+        this.start = start;
+        this.end = end;
+    }
 
-    };
+    public int getStart() {
+        return start;
+    }
 
-    P extractFrom(A annotation);
+    public int getEnd() {
+        return end;
+    }
 
 }

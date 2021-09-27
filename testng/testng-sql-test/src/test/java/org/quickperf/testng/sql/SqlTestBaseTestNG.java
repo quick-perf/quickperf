@@ -12,6 +12,7 @@
 package org.quickperf.testng.sql;
 
 import net.ttddyy.dsproxy.support.ProxyDataSource;
+import org.hibernate.internal.SessionImpl;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.quickperf.sql.Book;
 import org.quickperf.sql.config.MemoryDataSourceBuilder;
@@ -19,14 +20,17 @@ import org.quickperf.sql.config.MemoryDatabaseHibernateDialect;
 import org.quickperf.sql.config.PersistenceUnitInfoBuilder;
 import org.testng.annotations.BeforeTest;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceProvider;
 import javax.persistence.spi.PersistenceUnitInfo;
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Properties;
 
 import static org.quickperf.sql.config.HibernateConfigBuilder.anHibernateConfig;
+import static org.quickperf.sql.config.PersistenceUnitInfoBuilder.aPersistenceUnitInfo;
 import static org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
 
 public class SqlTestBaseTestNG {
@@ -45,10 +49,15 @@ public class SqlTestBaseTestNG {
         ProxyDataSource proxyDataSource = aDataSourceBuilder().buildProxy(baseDataSource);
         String hibernateDialect = MemoryDatabaseHibernateDialect.INSTANCE.getHibernateDialect();
         Properties hibernateProperties = anHibernateConfig().build(hibernateDialect);
-        return PersistenceUnitInfoBuilder.aPersistenceUnitInfo()
-                                         .build( proxyDataSource
-                                               , hibernateProperties
-                                               , Book.class);
+        return aPersistenceUnitInfo().build( proxyDataSource
+                                           , hibernateProperties
+                                           , Book.class);
+    }
+
+    Connection getConnection() {
+        EntityManager em = emf.createEntityManager();
+        SessionImpl session = (SessionImpl) em.getDelegate();
+        return session.connection();
     }
 
 }

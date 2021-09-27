@@ -9,21 +9,23 @@
  * Copyright 2019-2021 the original author or authors.
  */
 
-package org.quickperf.perfrecording;
+package org.quickperf.sql.connection.stack;
 
-import java.lang.annotation.Annotation;
+import java.io.PrintWriter;
 
-public interface ExtractablePerfRecorderParametersFromAnnotation<A extends Annotation, P extends PerfRecorderParameters> {
+public class StackTracerPrinter {
 
-    ExtractablePerfRecorderParametersFromAnnotation NONE = new ExtractablePerfRecorderParametersFromAnnotation() {
+    private PrintWriter printWriter;
 
-        @Override
-        public PerfRecorderParameters extractFrom(Annotation annotation) {
-            return PerfRecorderParameters.NONE;
+    public StackTracerPrinter(PrintWriter printWriter) {
+        this.printWriter = printWriter;
+    }
+
+    public void printStackTrace(StackTraceElement[] stackElementsToDisplay) {
+        for (StackTraceElement stackTraceElement : stackElementsToDisplay) {
+            printWriter.println("\t" + stackTraceElement);
+            printWriter.flush();
         }
-
-    };
-
-    P extractFrom(A annotation);
+    }
 
 }

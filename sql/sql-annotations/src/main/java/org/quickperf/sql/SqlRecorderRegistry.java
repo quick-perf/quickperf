@@ -23,7 +23,7 @@ public class SqlRecorderRegistry {
 
     private final Map<Class<? extends SqlRecorder>, SqlRecorder> sqlRecorderByTypeOfTestJvm = new HashMap<>();
 
-    private static final InheritableThreadLocal<Map<Class<? extends SqlRecorder>, SqlRecorder>> SQL_RECORDER_BY_TYPE_WHEN_ONE_JVM
+    private static final ThreadLocal<Map<Class<? extends SqlRecorder>, SqlRecorder>> SQL_RECORDER_BY_TYPE_WHEN_ONE_JVM
             = new InheritableThreadLocal<Map<Class<? extends SqlRecorder>, SqlRecorder>>() {
         @Override
         protected Map<Class<? extends SqlRecorder>, SqlRecorder> initialValue() {
@@ -59,9 +59,6 @@ public class SqlRecorderRegistry {
     }
 
     public <T extends SqlRecorder> T getSqlRecorderOfType(Class<T> type) {
-        if(TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
-            return type.cast(sqlRecorderByTypeOfTestJvm.get(type));
-        }
         Map<Class<? extends SqlRecorder>, SqlRecorder> sqlRecorderByType
                 = SQL_RECORDER_BY_TYPE_WHEN_ONE_JVM.get();
         return type.cast(sqlRecorderByType.get(type));

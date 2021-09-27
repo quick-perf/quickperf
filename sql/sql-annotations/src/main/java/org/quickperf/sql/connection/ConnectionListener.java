@@ -11,10 +11,6 @@
 
 package org.quickperf.sql.connection;
 
-import org.quickperf.TestExecutionContext;
-import org.quickperf.perfrecording.PerfRecord;
-import org.quickperf.perfrecording.RecordablePerformance;
-
 import java.sql.Connection;
 import java.sql.Savepoint;
 import java.util.Map;
@@ -22,9 +18,12 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 @SuppressWarnings({"EmptyMethod", "unused"})
-public abstract class ConnectionsListener<R extends PerfRecord> implements RecordablePerformance<R> {
+public abstract class ConnectionListener {
 
-    public void getFromTheDataSource(Connection connection) {
+    public void theDatasourceGetsTheConnection(Connection connection) {
+    }
+
+    public void theDatasourceGetsTheConnectionWithUserNameAndPassword(Connection connection) {
     }
 
     public void close(Connection connection){
@@ -140,17 +139,5 @@ public abstract class ConnectionsListener<R extends PerfRecord> implements Recor
 
     public void setNetworkTimeout(Connection connection, Executor executor, int milliseconds) {
     }
-
-    @Override
-    public abstract void startRecording(TestExecutionContext testExecutionContext);
-
-    @Override
-    public abstract void stopRecording(TestExecutionContext testExecutionContext);
-
-    @Override
-    public abstract R findRecord(TestExecutionContext testExecutionContext);
-
-    @Override
-    public abstract void cleanResources();
 
 }

@@ -13,6 +13,8 @@ package org.quickperf.sql.connection;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.quickperf.SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM;
 
@@ -20,38 +22,56 @@ public class ConnectionListenerRegistry {
 
     public static final ConnectionListenerRegistry INSTANCE = new ConnectionListenerRegistry();
 
-    private final Collection<ConnectionsListener> connectionsListenersOfTestJvm = new ArrayList<>();
+    private final Collection<ConnectionListener> connectionListenersOfTestJvm = new ArrayList<>();
 
-    private static final InheritableThreadLocal<Collection<ConnectionsListener>> CONNECTION_LISTENERS_WHEN_ONE_JVM = new InheritableThreadLocal<Collection<ConnectionsListener>>() {
+    private static final ThreadLocal<Map<Class<? extends ConnectionListener>, ConnectionListener>> CONNECTION_LISTENER_BY_TYPE_WHEN_ONE_JVM =
+            new InheritableThreadLocal<Map<Class<? extends ConnectionListener>, ConnectionListener>>() {
         @Override
-        protected Collection<ConnectionsListener> initialValue() {
-            return new ArrayList<>();
+        protected Map<Class<? extends ConnectionListener>, ConnectionListener> initialValue() {
+            return new HashMap<>();
         }
     };
 
     private ConnectionListenerRegistry() { }
 
-    public void register(ConnectionsListener connectionsListener) {
+    public void register(ConnectionListener connectionListener) {
         if(TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
-            connectionsListenersOfTestJvm.add(connectionsListener);
+            connectionListenersOfTestJvm.add(connectionListener);
         } else {
-            Collection<ConnectionsListener> connectionsListeners = CONNECTION_LISTENERS_WHEN_ONE_JVM.get();
-            connectionsListeners.add(connectionsListener);
+            Map<Class<? extends ConnectionListener>, ConnectionListener> connectionListenerByType
+                    = CONNECTION_LISTENER_BY_TYPE_WHEN_ONE_JVM.get();
+            connectionListenerByType.put(connectionListener.getClass(), connectionListener);
         }
     }
 
-    public static void unregister(ConnectionsListener connectionsListener) {
+    public static void unregister(ConnectionListener connectionListener) {
         if(!TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
-            Collection<ConnectionsListener> sqlRecorders = CONNECTION_LISTENERS_WHEN_ONE_JVM.get();
-            sqlRecorders.remove(connectionsListener);
+            Map<Class<? extends ConnectionListener>, ConnectionListener> connectionListenerByType
+                    = CONNECTION_LISTENER_BY_TYPE_WHEN_ONE_JVM.get();
+            connectionListenerByType.remove(connectionListener);
         }
     }
 
-    public Collection<ConnectionsListener> getConnectionListeners() {
+    public Collection<ConnectionListener> getConnectionListeners() {
         if(TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
-            return connectionsListenersOfTestJvm;
+            return connectionListenersOfTestJvm;
         }
-        return CONNECTION_LISTENERS_WHEN_ONE_JVM.get();
+        Map<Class<? extends ConnectionListener>, ConnectionListener> connectionListenerByType
+                = CONNECTION_LISTENER_BY_TYPE_WHEN_ONE_JVM.get();
+        return connectionListenerByType.values();
+    }
+
+    public void clear() {
+        if(TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            connectionListenersOfTestJvm.clear();
+        }
+        CONNECTION_LISTENER_BY_TYPE_WHEN_ONE_JVM.remove();
+    }
+
+    public <T extends ConnectionListener> T getConnectionListenerOfType(Class<T> type) {
+        Map<Class<? extends ConnectionListener>, ConnectionListener> connectionListenerByType
+                = CONNECTION_LISTENER_BY_TYPE_WHEN_ONE_JVM.get();
+        return type.cast(connectionListenerByType.get(type));
     }
 
 }

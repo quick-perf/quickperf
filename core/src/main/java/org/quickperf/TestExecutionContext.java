@@ -179,10 +179,11 @@ public class TestExecutionContext {
     }
 
     private static RecordablePerformance instantiatePerfRecorderFrom(Class<? extends RecordablePerformance> perfRecorderClass
-                                                                   , PerfRecorderParameters perfRecorderParameters) {
+                                                                   , PerfRecorderParameters parameters) {
         try {
-            Constructor<? extends RecordablePerformance> declaredConstructor = perfRecorderClass.getDeclaredConstructor(PerfRecorderParameters.class);
-            return declaredConstructor.newInstance(perfRecorderParameters);
+            Class<? extends PerfRecorderParameters> parametersClass = parameters.getClass();
+            Constructor<? extends RecordablePerformance> declaredConstructor = perfRecorderClass.getDeclaredConstructor(parametersClass);
+            return declaredConstructor.newInstance(parameters);
         } catch (InstantiationException | IllegalAccessException
                 | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
