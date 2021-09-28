@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.quickperf</groupId>
         <artifactId>quick-perf-testng-parent</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -37,19 +37,19 @@
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-jfr-annotations</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-testng</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-testng-test-util</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.1-SNAPSHOT</version>
             <classifier>tests</classifier>
             <type>test-jar</type>
             <scope>test</scope>
