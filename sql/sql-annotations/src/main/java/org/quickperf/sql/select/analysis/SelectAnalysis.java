@@ -20,6 +20,8 @@ import org.quickperf.sql.framework.MicronautSuggestion;
 import org.quickperf.unit.Count;
 import org.quickperf.unit.NoUnit;
 
+import static java.lang.System.*;
+
 public class SelectAnalysis implements PerfMeasure {
 
     private final Count selectNumber;
@@ -41,33 +43,32 @@ public class SelectAnalysis implements PerfMeasure {
         }
 
         public String getSuggestionToFixIt() {
-            return getSuggestionToFIxNPlusOneSelect();
+            return getNPlusOneSelectAlert();
         }
 
     }
 
-    public static String getSuggestionToFIxNPlusOneSelect() {
+    public static String getNPlusOneSelectAlert() {
 
         if(SystemProperties.SIMPLIFIED_SQL_DISPLAY.evaluate()) {
             return "";
         }
 
-        String suggestion =  System.lineSeparator()
-                           + System.lineSeparator()
-                           + JdbcSuggestion.SERVER_ROUND_TRIPS.getMessage();
+        return lineSeparator()
+             + lineSeparator()
+             + JdbcSuggestion.SERVER_ROUND_TRIPS.getMessage()
+             + getNPlusOneFrameworkMessage();
 
+    }
+
+    public static String getNPlusOneFrameworkMessage() {
         if(ClassPath.INSTANCE.containsHibernate()) {
-            suggestion += System.lineSeparator()
-                        + HibernateSuggestion.N_PLUS_ONE_SELECT.getMessage();
+            return lineSeparator() + HibernateSuggestion.N_PLUS_ONE_SELECT.getMessage();
         }
-
         if(ClassPath.INSTANCE.containsMicronautData()) {
-            suggestion += System.lineSeparator()
-                        + MicronautSuggestion.N_PLUS_ONE_SELECT.getMessage();
+            return lineSeparator() + MicronautSuggestion.N_PLUS_ONE_SELECT.getMessage();
         }
-
-        return suggestion;
-
+        return "";
     }
 
     public SelectAnalysis(int selectNumber

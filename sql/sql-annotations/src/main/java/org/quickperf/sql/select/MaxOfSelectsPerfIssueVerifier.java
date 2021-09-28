@@ -47,7 +47,7 @@ public class MaxOfSelectsPerfIssueVerifier implements VerifiablePerformanceIssue
                                                                     , "select");
 
         if (measuredCount.isGreaterThan(Count.ONE) && !selectAnalysis.hasOnlySameSelects()) {
-            description += SelectAnalysis.getSuggestionToFIxNPlusOneSelect();
+            description += SelectAnalysis.getNPlusOneSelectAlert();
         }
 
         return new PerfIssue(description);

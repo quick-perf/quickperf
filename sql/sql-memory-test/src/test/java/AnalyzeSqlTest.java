@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
+import static java.lang.System.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.experimental.results.PrintableResult.testResult;
 
@@ -51,7 +52,7 @@ public class AnalyzeSqlTest {
 
     private static String getFileContent(String filePath) throws IOException {
         return Files.lines(Paths.get(filePath))
-                    .collect(Collectors.joining(System.lineSeparator()));
+                    .collect(Collectors.joining(lineSeparator()));
     }
 
     @RunWith(QuickPerfJUnitRunner.class)
@@ -423,8 +424,17 @@ public class AnalyzeSqlTest {
         // THEN
         assertThat(printableResult.failureCount()).isZero();
         assertThat(getFileContent(DETECT_N_PLUS_ONE))
-                .contains("JDBC roundtrips")
-                .contains("N+1");
+                .contains("N+1")
+                // The JDBC roundtrip message has to be displayed after the N+1 select message
+                // , just before displaying the queries in this test case.
+                .contains("You may have even more select statements with production data." + lineSeparator()
+                        + "Be careful with the cost of JDBC roundtrips: https://blog.jooq.org/2017/12/18/the-cost-of-jdbc-server-roundtrips/"
+                        + lineSeparator()
+                        + lineSeparator()
+                        + "                                            * * * * *"
+                        + lineSeparator()
+                        + "QUERIES"
+                    );
 
     }
 
@@ -506,4 +516,5 @@ public class AnalyzeSqlTest {
                 .contains("Query without bind parameters");
 
     }
+
 }

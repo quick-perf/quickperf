@@ -46,7 +46,7 @@ public class SelectNumberPerfIssueVerifier implements VerifiablePerformanceIssue
            && executedSelectNumber.isGreaterThan(expectedSelectNumber)
            && !selectAnalysis.hasOnlySameSelects()
           ) {
-            description += SelectAnalysis.getSuggestionToFIxNPlusOneSelect();
+            description += SelectAnalysis.getNPlusOneSelectAlert();
         }
 
         return new PerfIssue(description);

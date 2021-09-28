@@ -16,6 +16,7 @@ import org.quickperf.sql.SqlExecution;
 import org.quickperf.sql.SqlExecutions;
 import org.quickperf.sql.bindparams.AllParametersAreBoundExtractor;
 import org.quickperf.sql.execution.SqlAnalysis;
+import org.quickperf.sql.framework.JdbcSuggestion;
 import org.quickperf.sql.like.ContainsLikeWithLeadingWildcardExtractor;
 import org.quickperf.sql.select.analysis.SelectAnalysis;
 import org.quickperf.time.ExecutionTime;
@@ -77,8 +78,12 @@ public class SqlReport {
 
     private String buildNPlusOneMessage(SqlAnalysis sqlAnalysis) {
         if (sqlAnalysis.getSelectAnalysis().getSameSelectTypesWithDifferentParamValues().evaluate()) {
-          return this.addSeparationString() + ALERT_MESSAGE
-                    + sqlAnalysis.getSelectAnalysis().getSameSelectTypesWithDifferentParamValues().getSuggestionToFixIt()
+            SelectAnalysis.SameSelectTypesWithDifferentParamValues sameSelectTypesWithDifferentParamValues = sqlAnalysis.getSelectAnalysis().getSameSelectTypesWithDifferentParamValues();
+            return addSeparationString() + ALERT_MESSAGE
+                    + SelectAnalysis.getNPlusOneFrameworkMessage()
+                    + System.lineSeparator()
+                    + System.lineSeparator()
+                    + JdbcSuggestion.SERVER_ROUND_TRIPS.getMessage()
                     + System.lineSeparator()
                     + System.lineSeparator();
         }
