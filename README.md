@@ -30,11 +30,7 @@
          alt = "Build Status">
   </a>
   &nbsp;&nbsp;
-  <a href="https://twitter.com/quickperf">       
-    <img alt="@QuickPerf" src="https://img.shields.io/twitter/url?label=Twitter&style=social&url=https%3A%2F%2Ftwitter.com%2Fquickperf">
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://www.youtube.com/playlist?list=PLyRtZQwOxA6ekhEr2H2nNV42ZLD8OkPEx">YouTube</a>
+  <a href="https://quickperf.io"><strong>quickperf.io</strong></a>
 </p>
 
 ---
