@@ -34,6 +34,7 @@
         <module>testng-test-util</module>
         <module>testng-sql-test</module>
         <module>testng-jvm-test</module>
+        <module>testng-sql-listener</module>
     </modules>
 
     <build>
