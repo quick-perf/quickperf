@@ -389,6 +389,24 @@ Many thanks to all our contributors!
             <br/>
             <a href="https://github.com/quick-perf/quickperf/commits?author=FranckDemeyer" title="Bug reports">🐛</a>
             <a href="https://github.com/quick-perf/quickperf/commits?author=FranckDemeyer" title="Code">💻</a>
+        </td>       
+        <td align="center">
+            <a href="https://github.com/oliver-hughes">
+                <img src="https://avatars.githubusercontent.com/oliver-hughes" width="100px;" alt="Oliver Hughes"/>
+                <br/>
+                <sub><b>Oliver Hughes</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=oliver-hughes" title="Code">💻</a>
+        </td>        
+        <td align="center">
+            <a href="https://github.com/hedleyproctor">
+                <img src="https://avatars.githubusercontent.com/hedleyproctor" width="100px;" alt="Hedley Proctor"/>
+                <br/>
+                <sub><b>Hedley Proctor</b></sub>
+            </a>
+            <br/>
+            💻
         </td>
     </tr>
 </table>
