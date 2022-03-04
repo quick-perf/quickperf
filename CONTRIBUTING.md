@@ -31,7 +31,9 @@ When you start to work on an issue, please leave a comment "*I start to work on 
 
 Please rebase your PR on master (no merge). We prefer integrating PR by squashing all the commits and rebase it to master, if your PR has diverged and needs to integrate with master, please rebase on master but do not merge as it will prevent rebasing later on.
 
-Need some help with Git or Github? Don't worry, you can watch [these videos](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github).
+Need some help with Git or Github? Don't worry, you can read [this blog spot](https://www.mgasch.com/2021/05/git-basics/) or watch [these videos](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github).
+
+Please add a license header on each new file: ```mvn license:format```
 
 ## Build QuickPerf
 
