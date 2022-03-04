@@ -552,8 +552,10 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
     public void setScheduler(RunnerScheduler scheduler) {
         if (SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
             QUICK_PERF_SPRING_RUNNER_FOR_SPECIFIC_JVM.setScheduler(scheduler);
-        }  else if (quickPerfFeaturesAreDisabled) {
+        } else if (quickPerfFeaturesAreDisabled) {
             springRunner.setScheduler(scheduler);
+        } else if (springRunnerWithQuickPerfFeatures == null) {
+            super.setScheduler(scheduler);
         } else {
             springRunnerWithQuickPerfFeatures.setScheduler(scheduler);
         }
