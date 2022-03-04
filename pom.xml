@@ -7,7 +7,7 @@
   ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
   ~ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
   ~
-  ~ Copyright 2019-2021 the original author or authors.
+  ~ Copyright 2019-2022 the original author or authors.
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -67,7 +67,6 @@
     </dependencies>
 
     <build>
-
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -149,6 +148,32 @@
                 <artifactId>ayoy-license-verifier-maven-plugin</artifactId>
             </plugin>
             -->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>4.1</version>
+                <configuration>
+                    <header>update-licence-header.txt</header>
+                    <includes>
+                        <include>src/**</include>
+                    </includes>
+                    <excludes>
+                        <exclude>src/test/resources/junit-platform.properties</exclude>
+                    </excludes>
+                    <properties>
+                        <project>${project.name}</project>
+                        <year>${project.inceptionYear}</year>
+                    </properties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
 
     </build>
