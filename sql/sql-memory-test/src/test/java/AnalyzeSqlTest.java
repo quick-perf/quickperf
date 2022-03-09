@@ -45,6 +45,7 @@ public class AnalyzeSqlTest {
     private static final String DETECT_N_PLUS_ONE = findTargetPath() + File.separator + "n-plus-one.txt";
     private static final String WILDCARD_SELECT = findTargetPath() + File.separator + "wildcard-select.txt";
     private static final String BIND_PARAMETERS = findTargetPath() + File.separator + "bind-parameters.txt";
+    private static final String MAX_QUERY_EXECUTION_TIME = findTargetPath() + File.separator + "max-query-execution-time.txt";
 
     private static String findTargetPath() {
         Path targetDirectory = Paths.get("target");
@@ -249,23 +250,6 @@ public class AnalyzeSqlTest {
         assertThat(getFileContent(DELETE_FILE_PATH))
                 .contains("[QUICK PERF] SQL ANALYSIS")
                 .contains("SQL EXECUTIONS: 1")
-                .contains("DELETE: 1");
-    }
-
-    @Test
-    public void should_display_method_body() throws IOException {
-        // GIVEN
-        Class<?> classUnderTest = DeleteExecution.class;
-
-        // WHEN
-        PrintableResult result = PrintableResult.testResult(classUnderTest);
-
-        // THEN
-        assertThat(result.failureCount()).isZero();
-
-        assertThat(getFileContent(DELETE_FILE_PATH))
-                .contains("[QUICK PERF] SQL ANALYSIS")
-                .contains("SQL EXECUTIONS: 1")
                 .contains("DELETE: 1")
                 .contains("delete")
                 .contains("from")
@@ -316,10 +300,36 @@ public class AnalyzeSqlTest {
                 .contains("INSERT: 1");
     }
 
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class MaxQueryExecutionTime extends SqlTestBase {
+
+        public static class FileWriterBuilder implements WriterFactory {
+
+            @Override
+            public Writer buildWriter() throws IOException {
+                return new FileWriter(MAX_QUERY_EXECUTION_TIME);
+            }
+        }
+
+        @AnalyzeSql(writerFactory = FileWriterBuilder.class)
+        @Test
+        public void queries() {
+            executeInATransaction(entityManager -> {
+                Query query = entityManager.createQuery("FROM " + Book.class.getCanonicalName());
+                query.getResultList();
+
+                String insertTwo = "INSERT INTO Book (id,title) VALUES (1300, 'Book title')";
+                Query secondInsertQuery = entityManager.createNativeQuery(insertTwo);
+                secondInsertQuery.executeUpdate();
+            });
+        }
+
+    }
+
     @Test
     public void should_display_max_query_execution_time() throws IOException {
         // GIVEN
-        Class<?> classUnderTest = SqlExecutions_are_properly_analyzed.class;
+        Class<?> classUnderTest = MaxQueryExecutionTime.class;
 
         // WHEN
         PrintableResult result = PrintableResult.testResult(classUnderTest);
@@ -327,7 +337,7 @@ public class AnalyzeSqlTest {
         // THEN
         assertThat(result.failureCount()).isZero();
 
-        assertThat(getFileContent(MULTIPLE_EXECUTIONS))
+        assertThat(getFileContent(MAX_QUERY_EXECUTION_TIME))
                 .contains("[QUICK PERF] SQL ANALYSIS")
                 .contains("SQL EXECUTIONS: 2")
                 .contains("SELECT: 1")
@@ -435,7 +445,7 @@ public class AnalyzeSqlTest {
                         + "                                            * * * * *"
                         + lineSeparator()
                         + "QUERIES"
-                    );
+                );
 
     }
 
