@@ -71,6 +71,8 @@ Also, the JDK must be able to profile with the JDK Flight Recorder that is avail
         
 ### Tips
   💡 To disable Spring Boot tests: ```mvn clean install -P -SpringBootTests```
+
+  💡 To disable the `jfr-annotations` module: ```mvn clean install -P -jfr```
  
   💡 To build with the Testcontainers tests: ``` mvn clean install -P testcontainers```
 

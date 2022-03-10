@@ -31,7 +31,18 @@
     <modules>
         <module>jvm-core</module>
         <module>jvm-annotations</module>
-        <module>jfr-annotations</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>jfr</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>jfr-annotations</module>
+            </modules>
+        </profile>
+    </profiles>
 
 </project>
