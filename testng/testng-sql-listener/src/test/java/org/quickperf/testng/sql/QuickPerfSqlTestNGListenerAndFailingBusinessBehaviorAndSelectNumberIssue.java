@@ -12,24 +12,20 @@
  */
 package org.quickperf.testng.sql;
 
-import org.quickperf.annotation.DisableQuickPerf;
-import org.quickperf.sql.Book;
 import org.quickperf.sql.annotation.ExpectSelect;
-import org.quickperf.testng.SqlTestBaseTestNG;
+import org.quickperf.testng.QuickPerfSqlTestNGListener;
+import org.testng.Assert;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+@Listeners({QuickPerfSqlTestNGListener.class})
+public class QuickPerfSqlTestNGListenerAndFailingBusinessBehaviorAndSelectNumberIssue {
 
-public class TestNGClassWithAMethodAnnotatedWithDisableQuickPerf extends SqlTestBaseTestNG {
-
-    @DisableQuickPerf
-    @ExpectSelect(5)
+    @ExpectSelect(1)
     @Test
-    public void execute_one_select_but_five_select_expected() {
-        EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
-        query.getResultList();
+    public void a_failing_test() {
+        Assert.assertEquals(true, false);
     }
+
 
 }

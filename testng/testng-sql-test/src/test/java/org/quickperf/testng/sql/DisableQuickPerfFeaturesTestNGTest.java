@@ -12,6 +12,7 @@
  */
 package org.quickperf.testng.sql;
 
+import org.quickperf.testng.SqlTestBaseTestNG;
 import org.quickperf.testng.TestNGTests;
 import org.testng.annotations.Test;
 

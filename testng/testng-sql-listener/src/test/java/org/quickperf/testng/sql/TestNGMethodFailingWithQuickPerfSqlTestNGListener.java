@@ -12,10 +12,13 @@
  */
 package org.quickperf.testng.sql;
 
+import org.quickperf.testng.QuickPerfSqlTestNGListener;
 import org.testng.Assert;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-public class TestNGMethodFailing {
+@Listeners({QuickPerfSqlTestNGListener.class})
+public class TestNGMethodFailingWithQuickPerfSqlTestNGListener {
 
     @Test
     public void a_failing_test() {

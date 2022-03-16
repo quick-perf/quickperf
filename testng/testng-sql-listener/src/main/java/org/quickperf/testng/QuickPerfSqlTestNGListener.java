@@ -19,6 +19,7 @@ import org.quickperf.config.library.SetOfAnnotationConfigs;
 import org.quickperf.issue.JvmOrTestIssue;
 import org.quickperf.issue.PerfIssuesEvaluator;
 import org.quickperf.issue.PerfIssuesToFormat;
+import org.quickperf.issue.TestIssue;
 import org.quickperf.perfrecording.PerformanceRecording;
 import org.quickperf.reporter.QuickPerfReporter;
 import org.testng.IInvokedMethod;
@@ -45,7 +46,6 @@ public class QuickPerfSqlTestNGListener implements IInvokedMethodListener {
     public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
         TestExecutionContext testExecutionContext = buildTestExecutionContextFrom(method);
         this.testExecutionContext = testExecutionContext;
-
         if (!this.testExecutionContext.isQuickPerfDisabled()) {
             performanceRecording.start(this.testExecutionContext);
         }
@@ -60,30 +60,44 @@ public class QuickPerfSqlTestNGListener implements IInvokedMethodListener {
 
     @Override
     public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
-
-        if(!testExecutionContext.isQuickPerfDisabled()) {
-            performanceRecording.stop(testExecutionContext);
+        if (this.testExecutionContext.isQuickPerfDisabled()) {
+            return;
         }
+        quickPerfProcessingAfterMethodExecution(testResult);
+    }
+
+    private void quickPerfProcessingAfterMethodExecution(ITestResult testResult) {
+
+        performanceRecording.stop(testExecutionContext);
 
         SetOfAnnotationConfigs testAnnotationConfigs = quickPerfConfigs.getTestAnnotationConfigs();
 
-        // Test issue should be taken into account
-        JvmOrTestIssue jvmOrTestIssue = JvmOrTestIssue.NONE;
+        JvmOrTestIssue jvmOrTestIssue = buildTestIssueFrom(testResult);
 
         Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat =
                 perfIssuesEvaluator.evaluatePerfIssuesIfNoJvmIssue( testAnnotationConfigs
-                        , testExecutionContext
-                        , jvmOrTestIssue);
+                                                                  , testExecutionContext
+                                                                  , jvmOrTestIssue);
 
         testExecutionContext.cleanResources();
 
+        reportIssues(testResult, jvmOrTestIssue, groupOfPerfIssuesToFormat);
+
+    }
+
+    private JvmOrTestIssue buildTestIssueFrom(ITestResult testResult) {
+        Throwable throwable = testResult.getThrowable();
+        TestIssue testIssue = TestIssue.buildFrom(throwable);
+        return JvmOrTestIssue.buildFrom(testIssue);
+    }
+
+    private void reportIssues(ITestResult testResult, JvmOrTestIssue jvmOrTestIssue, Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat) {
         try {
             quickPerfReporter.report(jvmOrTestIssue, groupOfPerfIssuesToFormat, testExecutionContext);
         } catch (Throwable throwable) {
             testResult.setThrowable(throwable);
             testResult.setStatus(ITestResult.FAILURE);
         }
-
     }
 
 }
