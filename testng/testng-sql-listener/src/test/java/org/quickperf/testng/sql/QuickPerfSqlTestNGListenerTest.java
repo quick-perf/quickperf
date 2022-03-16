@@ -19,11 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class QuickPerfSqlTestNGListenerTest {
 
-    @Test
-    public void a_test_with_failing_business_code_should_fail() {
+    @Test public void
+    a_test_with_failing_business_code_should_fail() {
 
         // GIVEN
-        Class<?> testClass = TestNGMethodFailing.class;
+        Class<?> testClass = TestNGMethodFailingWithQuickPerfSqlTestNGListener.class;
         TestNGTests testNGTests = TestNGTests.createInstance(testClass);
 
         // WHEN
@@ -34,6 +34,62 @@ public class QuickPerfSqlTestNGListenerTest {
 
         Throwable errorReport = testsResult.getThrowableOfFirstTest();
         assertThat(errorReport).hasMessageContaining("expected [false] but found [true]");
+
+    }
+
+    @Test public void
+    a_test_should_fail_if_the_number_of_sql_statements_is_not_as_expected() {
+
+        // GIVEN
+        Class<?> testClass = SqlSelectWithQuickPerfSqlTestNGListener.class;
+        TestNGTests testNGTests = TestNGTests.createInstance(testClass);
+
+        // WHEN
+        TestNGTests.TestNGTestsResult testsResult = testNGTests.run();
+
+        // THEN
+        assertThat(testsResult.getNumberOfFailedTest()).isOne();
+
+        Throwable errorReport = testsResult.getThrowableOfFirstTest();
+        assertThat(errorReport).hasMessageContaining("a performance-related property is not respected")
+                               .hasMessageContaining("You may think that <5> select statements were sent to the database")
+                               .hasMessageContaining("But there is in fact <1>...");
+
+    }
+
+
+    @Test public void
+    disable_quick_perf_annotation_should_disable_quick_perf_features() {
+
+        // GIVEN
+        Class<?> testClass = QuickPerfSqlTestNGListenerAndDisableQuickPerf.class;
+        TestNGTests testNGTests = TestNGTests.createInstance(testClass);
+
+        // WHEN
+        TestNGTests.TestNGTestsResult testsResult = testNGTests.run();
+
+        // THEN
+        assertThat(testsResult.getNumberOfPassedTest()).isOne();
+
+    }
+
+    @Test public void
+    quickperf_should_report_issues_on_performance_and_functional_properties() {
+
+
+        // GIVEN
+        Class<?> testClass = QuickPerfSqlTestNGListenerAndFailingBusinessBehaviorAndSelectNumberIssue.class;
+        TestNGTests testNGTests = TestNGTests.createInstance(testClass);
+
+        // WHEN
+        TestNGTests.TestNGTestsResult testsResult = testNGTests.run();
+
+        // THEN
+        assertThat(testsResult.getNumberOfFailedTest()).isOne();
+
+        Throwable errorReport = testsResult.getThrowableOfFirstTest();
+        assertThat(errorReport)
+                .hasMessageContaining("Performance-related and functional properties not respected");
 
     }
 

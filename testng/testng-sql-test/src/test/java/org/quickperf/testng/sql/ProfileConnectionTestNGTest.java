@@ -49,7 +49,7 @@ public class ProfileConnectionTestNGTest {
                         "\torg.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:lineNumber)" + System.lineSeparator() +
                         "\torg.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:lineNumber)" + System.lineSeparator() +
                         "\torg.hibernate.internal.SessionImpl.connection(SessionImpl.java:lineNumber)" + System.lineSeparator() +
-                        "\torg.quickperf.testng.sql.SqlTestBaseTestNG.getConnection(SqlTestBaseTestNG.java:lineNumber)" + System.lineSeparator() +
+                        "\torg.quickperf.testng.SqlTestBaseTestNG.getConnection(SqlTestBaseTestNG.java:lineNumber)" + System.lineSeparator() +
                         "\torg.quickperf.testng.sql.ProfileConnectionTestNG$ProfileConnectionClass.test(ProfileConnectionTestNG.java:lineNumber)" + System.lineSeparator() +
                         "connection id - java.sql.Connection.prepareStatement(String sql) [sql: select isbn from Book]" + System.lineSeparator() +
                         "\torg.quickperf.testng.sql.ProfileConnectionTestNG$ProfileConnectionClass.test(ProfileConnectionTestNG.java:lineNumber)" + System.lineSeparator() +

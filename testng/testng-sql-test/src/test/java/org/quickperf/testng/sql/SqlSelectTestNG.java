@@ -14,6 +14,7 @@ package org.quickperf.testng.sql;
 
 import org.quickperf.sql.Book;
 import org.quickperf.sql.annotation.ExpectSelect;
+import org.quickperf.testng.SqlTestBaseTestNG;
 import org.testng.annotations.Test;
 
 import javax.persistence.EntityManager;

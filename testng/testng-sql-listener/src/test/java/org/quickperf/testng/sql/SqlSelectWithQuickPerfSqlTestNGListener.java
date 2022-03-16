@@ -12,18 +12,19 @@
  */
 package org.quickperf.testng.sql;
 
-import org.quickperf.annotation.DisableQuickPerf;
 import org.quickperf.sql.Book;
 import org.quickperf.sql.annotation.ExpectSelect;
+import org.quickperf.testng.QuickPerfSqlTestNGListener;
 import org.quickperf.testng.SqlTestBaseTestNG;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-public class TestNGClassWithAMethodAnnotatedWithDisableQuickPerf extends SqlTestBaseTestNG {
+@Listeners({QuickPerfSqlTestNGListener.class})
+public class SqlSelectWithQuickPerfSqlTestNGListener extends SqlTestBaseTestNG {
 
-    @DisableQuickPerf
     @ExpectSelect(5)
     @Test
     public void execute_one_select_but_five_select_expected() {

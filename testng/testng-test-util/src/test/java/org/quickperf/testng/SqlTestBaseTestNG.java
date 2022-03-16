@@ -10,15 +10,13 @@
  *
  * Copyright 2019-2022 the original author or authors.
  */
-package org.quickperf.testng.sql;
+package org.quickperf.testng;
 
 import net.ttddyy.dsproxy.support.ProxyDataSource;
 import org.hibernate.internal.SessionImpl;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.quickperf.sql.Book;
-import org.quickperf.sql.config.MemoryDataSourceBuilder;
-import org.quickperf.sql.config.MemoryDatabaseHibernateDialect;
-import org.quickperf.sql.config.PersistenceUnitInfoBuilder;
+import org.quickperf.sql.config.*;
 import org.testng.annotations.BeforeTest;
 
 import javax.persistence.EntityManager;
@@ -29,10 +27,6 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Properties;
-
-import static org.quickperf.sql.config.HibernateConfigBuilder.anHibernateConfig;
-import static org.quickperf.sql.config.PersistenceUnitInfoBuilder.aPersistenceUnitInfo;
-import static org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
 
 public class SqlTestBaseTestNG {
 
@@ -47,15 +41,15 @@ public class SqlTestBaseTestNG {
 
     private PersistenceUnitInfo buildPersistenceUnitInfo() {
         DataSource baseDataSource = MemoryDataSourceBuilder.aDataSource().build();
-        ProxyDataSource proxyDataSource = aDataSourceBuilder().buildProxy(baseDataSource);
+        ProxyDataSource proxyDataSource = QuickPerfSqlDataSourceBuilder.aDataSourceBuilder().buildProxy(baseDataSource);
         String hibernateDialect = MemoryDatabaseHibernateDialect.INSTANCE.getHibernateDialect();
-        Properties hibernateProperties = anHibernateConfig().build(hibernateDialect);
-        return aPersistenceUnitInfo().build( proxyDataSource
-                                           , hibernateProperties
-                                           , Book.class);
+        Properties hibernateProperties = HibernateConfigBuilder.anHibernateConfig().build(hibernateDialect);
+        return PersistenceUnitInfoBuilder.aPersistenceUnitInfo().build( proxyDataSource
+                                                                      , hibernateProperties
+                                                                      , Book.class);
     }
 
-    Connection getConnection() {
+    protected Connection getConnection() {
         EntityManager em = emf.createEntityManager();
         SessionImpl session = (SessionImpl) em.getDelegate();
         return session.connection();

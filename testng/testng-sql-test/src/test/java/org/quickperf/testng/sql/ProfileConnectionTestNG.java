@@ -14,6 +14,7 @@ package org.quickperf.testng.sql;
 
 import org.quickperf.sql.annotation.ProfileConnection;
 import org.quickperf.sql.connection.Level;
+import org.quickperf.testng.SqlTestBaseTestNG;
 import org.quickperf.writer.WriterFactory;
 import org.testng.annotations.Test;
 

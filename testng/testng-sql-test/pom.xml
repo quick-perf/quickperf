@@ -51,23 +51,15 @@
         </dependency>
         <dependency>
             <groupId>org.quickperf</groupId>
-            <artifactId>quick-perf-testng-test-util</artifactId>
-            <version>1.1.1-SNAPSHOT</version>
-            <classifier>tests</classifier>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.quickperf</groupId>
-            <artifactId>quick-perf-sql-memory-test-util</artifactId>
-            <version>1.1.1-SNAPSHOT</version>
-            <classifier>tests</classifier>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-sql-hibernate-test-util</artifactId>
+            <version>1.1.1-SNAPSHOT</version>
+            <classifier>tests</classifier>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.quickperf</groupId>
+            <artifactId>quick-perf-testng-test-util</artifactId>
             <version>1.1.1-SNAPSHOT</version>
             <classifier>tests</classifier>
             <type>test-jar</type>
