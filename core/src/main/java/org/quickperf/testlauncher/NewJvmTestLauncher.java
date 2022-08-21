@@ -66,19 +66,23 @@ public class NewJvmTestLauncher {
 
         List<String> jvmOptionsAsStrings = jvmOptions.asStrings(workingFolder);
 
-        List<String> jvmCommand = buildCommand( mainClassArguments
-                                              , jvmOptionsAsStrings
-                                              , workingFolder.getPath()
-                                              , mainClassToLaunchTestInANewJvm);
-
-        return execute(jvmCommand);
+        try {
+            List<String> jvmCommand = buildCommand( mainClassArguments
+                                                  , jvmOptionsAsStrings
+                                                  , workingFolder.getPath()
+                                                  , mainClassToLaunchTestInANewJvm);
+            return execute(jvmCommand);
+        } catch (IOException e) {
+            return JvmIssue.buildFrom(e);
+        }
 
     }
 
+    //Large class path (more then 2K): fixed in ClassPathUtil using class path jar with manifest
     private List<String> buildCommand(MainClassArguments mainClassArguments
                                     , List<String> jvmOptionsAsStrings
                                     , String workingFolderPath
-                                    , Class<?> mainClassToLaunchTest) {
+                                    , Class<?> mainClassToLaunchTest) throws IOException {
         List<String> command = new ArrayList<>();
         command.add(retrieveJavaExePath());
         command.addAll(jvmOptionsAsStrings);
@@ -89,7 +93,7 @@ public class NewJvmTestLauncher {
                                     .buildForJvm(workingFolderPath)
                    );
         command.add("-cp");
-        command.add(retrieveCurrentClassPath());
+        command.add(ClassPathUtil.retrieveCurrentClassPath(workingFolderPath));
         command.add(mainClassToLaunchTest.getCanonicalName());
         List<String> mainClassArgumentsAsStringList = mainClassArguments.buildMainClassArgumentsForJvmCommand();
         command.addAll(mainClassArgumentsAsStringList);
@@ -101,10 +105,6 @@ public class NewJvmTestLauncher {
         return    javaHomeDirectoryPath
                 + File.separator + "bin"
                 + File.separator + "java";
-    }
-
-    private String retrieveCurrentClassPath() {
-        return System.getProperty("java.class.path");
     }
 
     private JvmIssue execute(List<String> cmd) {

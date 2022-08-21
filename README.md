@@ -407,6 +407,16 @@ Many thanks to all our contributors!
             </a>
             <br/>
             💻
+        </td>        
+        <td align="center">
+            <a href="https://github.com/rsassi">
+                <img src="https://avatars.githubusercontent.com/rsassi" width="100px;" alt="rsassi"/>
+                <br/>
+                <sub><b>rsassi</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=rsassi" title="Bug reports">🐛</a>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=rsassi" title="Code">💻</a>
         </td>
     </tr>
 </table>
