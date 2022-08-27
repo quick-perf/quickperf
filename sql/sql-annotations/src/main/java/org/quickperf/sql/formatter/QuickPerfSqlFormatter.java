@@ -40,10 +40,12 @@ public class QuickPerfSqlFormatter {
     public String format(ExecutionInfo executionInfo, List<QueryInfo> queries) {
         final boolean writeDataSourceName = false;
         final boolean writeConnectionId = false;
+        final boolean writeIsolation = false;
         return PRETTY_QUERY_LOG_ENTRY_CREATOR.getLogEntry(executionInfo
                                                         , queries
                                                         , writeDataSourceName
-                                                        , writeConnectionId);
+                                                        , writeConnectionId
+                                                        , writeIsolation);
     }
 
     private static final SqlFormatter SQL_FORMATTER = buildSqlFormatter();
