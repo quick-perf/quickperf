@@ -22,6 +22,8 @@ public abstract class AbstractJUnit4SpringTestBase {
 
     boolean testEnabled = true;
 
+    boolean noHeapAllocationTestEnabled = true;
+
     @Test public void
     a_test_throwing_an_assertion_error_and_a_performance_issue_should_fail() {
 
@@ -78,7 +80,7 @@ public abstract class AbstractJUnit4SpringTestBase {
     @Test public void
     a_test_method_having_a_performance_property_not_respected_in_a_dedicated_jvm_should_fail() {
 
-        if(!testEnabled) {
+        if(!testEnabled || !noHeapAllocationTestEnabled) {
             return;
         }
 
@@ -98,7 +100,7 @@ public abstract class AbstractJUnit4SpringTestBase {
     @Test public void
     a_test_method_allocating_and_annotated_with_no_allocation_should_fail() {
 
-        if(!testEnabled) {
+        if(!testEnabled || !noHeapAllocationTestEnabled) {
             return;
         }
 

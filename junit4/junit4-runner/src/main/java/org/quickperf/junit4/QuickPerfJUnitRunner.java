@@ -81,8 +81,11 @@ public class QuickPerfJUnitRunner extends BlockJUnit4ClassRunner {
     private int findJUnit4AllocationOffset() {
         int allocationOffsetBeforeJava16 = findAllocationOffsetBeforeJava16();
         JVM.Version jvmVersion = JVM.INSTANCE.version;
-        if(jvmVersion.isLessThanTo16()) {
+        if (jvmVersion.isLessThanTo16()) {
             return allocationOffsetBeforeJava16;
+        }
+        if (jvmVersion.isGreaterThanOrEqualTo18()) {
+            return findAllocationOffsetFromJava18();
         }
         return allocationOffsetBeforeJava16 + 8;
     }
@@ -98,6 +101,13 @@ public class QuickPerfJUnitRunner extends BlockJUnit4ClassRunner {
     private boolean junit4_13IsUsed() {
         String junit4Version = Version.id();
         return junit4Version.startsWith("4.13");
+    }
+
+    private int findAllocationOffsetFromJava18() {
+        if (junit4_13IsUsed()) {
+            return 56_768;
+        }
+        return 56_800;
     }
 
     @Override

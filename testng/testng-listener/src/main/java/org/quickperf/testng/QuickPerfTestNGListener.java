@@ -29,6 +29,7 @@ import org.testng.IHookCallBack;
 import org.testng.IHookable;
 import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
+import org.testng.annotations.IFactoryAnnotation;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -85,6 +86,9 @@ public class QuickPerfTestNGListener implements IHookable {
 
     private int findTestNGAllocationOffset() {
         JVM.Version jvmVersion = JVM.INSTANCE.version;
+        if(jvmVersion.isGreaterThanOrEqualTo18()) {
+            return 56_800;
+        }
         if(jvmVersion.isGreaterThanOrEqualTo16()) {
             return 80;
         }

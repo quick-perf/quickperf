@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quickperf.annotation.DisableQuickPerf;
 import org.quickperf.annotation.FunctionalIteration;
+import org.quickperf.jvm.JVM;
 import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
 import org.quickperf.spring.database.ClassWithAFailingTestAndTransactionalTestExecutionListener;
 import org.quickperf.spring.junit4.QuickPerfSpringRunner;
@@ -25,6 +26,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
 public class JUnit4Spring5Test extends AbstractJUnit4SpringTestBase {
+
+    {
+        JVM.Version jvmVersion = JVM.INSTANCE.version;
+        noHeapAllocationTestEnabled = !jvmVersion.isGreaterThanOrEqualTo18();
+    }
 
     private static class TestApplicationContextInitializer
               implements ApplicationContextInitializer<ConfigurableApplicationContext> {

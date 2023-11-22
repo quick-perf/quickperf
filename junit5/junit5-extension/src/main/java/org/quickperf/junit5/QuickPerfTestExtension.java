@@ -56,8 +56,11 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
     private int findJunit5AllocationOffset() {
         JVM.Version jvmVersion = JVM.INSTANCE.version;
+        if(jvmVersion.isGreaterThanOrEqualTo18()) {
+            return 43_224;
+        }
         if(jvmVersion.isGreaterThanOrEqualTo16()) {
-            return  48;
+            return 48;
         }
         return 40;
     }
