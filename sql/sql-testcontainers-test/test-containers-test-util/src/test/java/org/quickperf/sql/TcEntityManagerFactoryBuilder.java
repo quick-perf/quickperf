@@ -13,7 +13,7 @@
 package org.quickperf.sql;
 
 import net.ttddyy.dsproxy.support.ProxyDataSource;
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.quickperf.sql.config.HibernateConfigBuilder;
 import org.quickperf.sql.config.PersistenceUnitInfoBuilder;
@@ -63,7 +63,7 @@ public class TcEntityManagerFactoryBuilder {
             dataSource.setUrl(jdbc.getJdbcUrl());
             dataSource.setUsername(jdbc.getUsername());
             dataSource.setPassword(jdbc.getPassword());
-            dataSource.setMaxActive(4);
+            dataSource.setMaxTotal(4);
             dataSource.setPoolPreparedStatements(true);
             return dataSource;
         }
