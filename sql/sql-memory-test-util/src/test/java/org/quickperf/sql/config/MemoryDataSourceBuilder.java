@@ -12,7 +12,9 @@
  */
 package org.quickperf.sql.config;
 
-import org.apache.commons.dbcp.BasicDataSource;
+
+
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.sql.DataSource;
 import java.util.concurrent.ThreadLocalRandom;
@@ -33,7 +35,7 @@ public class MemoryDataSourceBuilder {
         dataSource.setUrl(url);
         dataSource.setUsername("qp");
         dataSource.setPassword("");
-        dataSource.setMaxActive(4);
+        dataSource.setMaxTotal(4);
         dataSource.setPoolPreparedStatements(true);
         return dataSource;
     }

@@ -21,9 +21,6 @@
     <artifactId>quick-perf-core</artifactId>
 
     <properties>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-        <dependencies.max.jdk.version>1.7</dependencies.max.jdk.version>
         <javadoc-subpackages>org.quickperf.annotation,org.quickperf.config</javadoc-subpackages>
     </properties>
 

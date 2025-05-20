@@ -10,10 +10,13 @@
   ~ Copyright 2019-2022 the original author or authors.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <description>QuickPerf is a testing library for Java providing annotations to quickly evaluate some performance properties.</description>
+    <description>QuickPerf is a testing library for Java providing annotations to quickly evaluate some performance
+        properties.
+    </description>
 
     <url>https://github.com/quick-perf/quickperf</url>
 
@@ -42,19 +45,24 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <dependencies.max.jdk.version>1.7</dependencies.max.jdk.version>
-        <junit4.test.version>4.12</junit4.test.version>
-        <mockito.core.version>2.25.0</mockito.core.version>
-        <h2.version>1.4.198</h2.version>
-        <commons-dbcp.version>1.4</commons-dbcp.version>
-        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <logback-classic.version>1.1.0</logback-classic.version>
-        <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
-        <javadoc-subpackages />
+        <dependencies.max.jdk.version>17</dependencies.max.jdk.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <junit4.test.version>4.13.2</junit4.test.version>
+        <mockito.core.version>5.17.0</mockito.core.version>
+        <h2.version>2.3.232</h2.version>
+        <commons-dbcp.version>2.13.0</commons-dbcp.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
+        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+        <logback-classic.version>1.5.18</logback-classic.version>
+        <jcl-over-slf4j.version>2.0.17</jcl-over-slf4j.version>
+        <flightrecorder-rules-jdk.version>9.1.0</flightrecorder-rules-jdk.version>
+        <javadoc-subpackages/>
         <javadoc-sourceFileIncludes>**\/\*.java</javadoc-sourceFileIncludes>
         <project.build.outputTimestamp>2023-11-21T21:44:04Z</project.build.outputTimestamp>
         <jar.skipIfEmpty>true</jar.skipIfEmpty>
+        <testng.version>7.5.1</testng.version>
     </properties>
 
     <dependencies>
@@ -65,6 +73,16 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.openjdk.jmc</groupId>
+                <artifactId>flightrecorder.rules.jdk</artifactId>
+                <version>${flightrecorder-rules-jdk.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <pluginManagement>
@@ -112,8 +130,9 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
+                <version>${maven-enforcer-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>enforce-bytecode-version</id>
@@ -122,7 +141,7 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <banCircularDependencies />
+                                <banCircularDependencies/>
                                 <enforceBytecodeVersion>
                                     <maxJdkVersion>${dependencies.max.jdk.version}</maxJdkVersion>
                                     <ignoreClasses>
@@ -138,7 +157,7 @@
                     <dependency>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>extra-enforcer-rules</artifactId>
-                        <version>1.2</version>
+                        <version>1.9.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -260,7 +279,8 @@
                         <artifactId>maven-release-plugin</artifactId>
                         <version>3.0.0-M1</version>
                         <configuration>
-                            <allowTimestampedSnapshots>true</allowTimestampedSnapshots> <!--Because of junit4-spring-base-tests-->
+                            <allowTimestampedSnapshots>true
+                            </allowTimestampedSnapshots> <!--Because of junit4-spring-base-tests-->
                             <autoVersionSubmodules>true</autoVersionSubmodules>
                             <useReleaseProfile>false</useReleaseProfile>
                             <releaseProfiles>release</releaseProfiles>
@@ -288,14 +308,6 @@
             <id>Central</id>
             <name>Central Repository</name>
             <url>https://repo.maven.apache.org/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>AdoptOpenJDK</id>
-            <name>AdoptOpenJDK</name>
-            <url>https://adoptopenjdk.jfrog.io/adoptopenjdk/jmc-libs</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>

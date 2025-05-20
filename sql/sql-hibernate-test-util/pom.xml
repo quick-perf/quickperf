@@ -20,9 +20,6 @@
     <artifactId>quick-perf-sql-hibernate-test-util</artifactId>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <dependencies.max.jdk.version>1.8</dependencies.max.jdk.version>
         <maven.deploy.skip>true</maven.deploy.skip>
         <gpg.skip>true</gpg.skip>
         <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>

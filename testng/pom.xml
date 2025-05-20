@@ -24,9 +24,6 @@
     <packaging>pom</packaging>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <dependencies.max.jdk.version>8</dependencies.max.jdk.version>
     </properties>
 
     <modules>
@@ -43,8 +40,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <parallel>all</parallel>
-                    <threadCount>5</threadCount>
+                    <!-- TODO: tests must have some kind of isolation issue because they break in parallel -->
+                    <parallel>classes</parallel>
+                    <threadCount>1</threadCount>
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>

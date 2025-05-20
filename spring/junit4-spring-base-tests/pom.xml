@@ -21,8 +21,6 @@
     <artifactId>quick-perf-junit4-spring-base-tests</artifactId>
 
     <properties>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
         <maven.deploy.skip>true</maven.deploy.skip>
         <gpg.skip>true</gpg.skip>
         <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>

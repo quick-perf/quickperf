@@ -13,7 +13,6 @@
 package org.quickperf.jvm.jmcrule;
 
 import org.jsoup.Jsoup;
-import org.jsoup.examples.HtmlToPlainText;
 import org.jsoup.nodes.Document;
 
 class HtmlToPlainTextTransformer {
@@ -21,10 +20,9 @@ class HtmlToPlainTextTransformer {
     public static final HtmlToPlainTextTransformer INSTANCE = new HtmlToPlainTextTransformer();
 
     public String convertHtmlToPlainText(String html) {
-        HtmlToPlainText htmlToPlainText = new HtmlToPlainText();
         Document jsoupDocument = Jsoup.parse(html);
         jsoupDocument.select("p").prepend("<br>");
-        return htmlToPlainText.getPlainText(jsoupDocument);
+        return jsoupDocument.text();
     }
 
 }
