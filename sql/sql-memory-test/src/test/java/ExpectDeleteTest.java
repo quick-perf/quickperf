@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.sql.Book;
 import org.quickperf.sql.annotation.ExpectDelete;
+import org.quickperf.sql.annotation.ExpectDeletes;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -44,6 +45,28 @@ public class ExpectDeleteTest {
 
     }
 
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class SqlDeletes extends SqlTestBase {
+
+        @ExpectDeletes({
+                @ExpectDelete(comment = "Delete book"),
+                @ExpectDelete(comment = "Delete users", value = 4)
+        })
+        @Test
+        public void execute_one_delete_but_five_deletes_expected() {
+
+            EntityManager em = emf.createEntityManager();
+            em.getTransaction().begin();
+
+            Query query = em.createQuery("DELETE FROM " + Book.class.getCanonicalName());
+            query.executeUpdate();
+
+            em.getTransaction().commit();
+
+        }
+
+    }
+
     @Test public void
     should_fail_if_the_number_of_delete_statements_is_not_equal_to_the_number_expected() {
 
@@ -54,6 +77,25 @@ public class ExpectDeleteTest {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
+        assertResultMatchesExpectations(printableResult);
+
+    }
+
+    @Test public void
+    should_fail_if_the_number_of_delete_statements_is_not_equal_to_the_number_expected_with_repeatable_annotation() {
+
+        // GIVEN
+        Class<?> testClass = SqlDeletes.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertResultMatchesExpectations(printableResult);
+
+    }
+
+    private static void assertResultMatchesExpectations(PrintableResult printableResult) {
         assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
@@ -61,7 +103,6 @@ public class ExpectDeleteTest {
                 .contains("delete")
                 .contains("from")
                 .contains("Book");
-
     }
 
 }

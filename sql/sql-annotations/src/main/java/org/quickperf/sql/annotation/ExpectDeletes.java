@@ -18,33 +18,28 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The <code>ExpectInsert</code> annotation verifies the number of executed insert statements corresponds to the
- * specified value.
+ * The <code>ExpectDeletes</code> annotation verifies the number of executed delete statements corresponds to the
+ * specified values.
  *
  * <br><br>
  * <h3>Example:</h3>
  * <pre>
- *      <b>&#064;ExpectInsert(6)</b>
- *      public void execute_six_insert() {
+ *      <b>&#064;ExpectDeletes({</b>
+ *          <b>&#064;ExpectDelete(comment="Delete user"),</b>
+ *          <b>&#064;ExpectDelete(comment="Delete posts",value=2)</b>
+ *      <b>})</b>
+ *      public void execute_three_delete() {
  *          <code>..</code>
  *      }
  * </pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-public @interface ExpectInsert {
+public @interface ExpectDeletes {
 
     /**
-     * Specifies a <code>value</code> (integer) to cause test method to fail if the number of insert
-     * statements is not equal. Note that if left empty, the assumed value will be one.
+     * Specifies an array of expected queries.
      */
-
-    int value() default 1;
-
-    /**
-     * To comment on the reason why we expect the specified amount of queries of this type.
-     * @return comment message
-     */
-    String comment() default "";
+    ExpectDelete[] value();
 
 }

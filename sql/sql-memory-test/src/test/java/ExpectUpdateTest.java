@@ -15,6 +15,7 @@ import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.sql.annotation.ExpectUpdate;
+import org.quickperf.sql.annotation.ExpectUpdates;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -48,6 +49,33 @@ public class ExpectUpdateTest {
 
     }
 
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class RepeatedSqlUpdate extends SqlTestBase {
+
+        @ExpectUpdates({
+                @ExpectUpdate(comment = "Update book"),
+                @ExpectUpdate(comment = "Update related objects", value = 4)
+        })
+        @Test
+        public void execute_one_update_but_five_expected_with_repeatable_annotation() {
+
+            EntityManager em = emf.createEntityManager();
+
+            em.getTransaction().begin();
+
+            String sql =   " UPDATE book"
+                         + " SET isbn ='978-0134685991'"
+                         + " WHERE id = 1";
+            Query query = em.createNativeQuery(sql);
+
+            query.executeUpdate();
+
+            em.getTransaction().commit();
+
+        }
+
+    }
+
     @Test public void
     should_fail_if_the_number_of_update_statements_is_not_equal_to_the_number_expected() {
 
@@ -58,6 +86,25 @@ public class ExpectUpdateTest {
         PrintableResult printableResult = testResult(testClass);
 
         // THEN
+        assertPrintableResultMatchesExpected(printableResult);
+
+    }
+
+    @Test public void
+    should_fail_if_the_number_of_update_statements_is_not_equal_to_the_number_expected_with_repeatable_annotation() {
+
+        // GIVEN
+        Class<?> testClass = RepeatedSqlUpdate.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertPrintableResultMatchesExpected(printableResult);
+
+    }
+
+    private static void assertPrintableResultMatchesExpected(PrintableResult printableResult) {
         assertThat(printableResult.failureCount()).isOne();
 
         assertThat(printableResult.toString())
@@ -66,7 +113,6 @@ public class ExpectUpdateTest {
                 .contains("book")
                 .contains("SET")
                 .contains("isbn");
-
     }
 
 }

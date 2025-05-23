@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.sql.Book;
 import org.quickperf.sql.annotation.ExpectSelect;
+import org.quickperf.sql.annotation.ExpectSelects;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -54,6 +55,42 @@ public class ExpectSelectTest {
         assertThat(testResult)
                 .contains("You may think that <5> select statements were sent to the database")
                 .contains("But there is in fact <1>...")
+                .contains("select")
+                .contains("book0_.id as id1_0");
+
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class AClassHavingAMethodAnnotatedWithExpectSelects extends SqlTestBase {
+
+        @ExpectSelects({
+                @ExpectSelect(comment = "Select books"),
+                @ExpectSelect(comment = "Select related entities", value = 4)
+        })
+        @Test
+        public void execute_one_select_but_five_select_expected() {
+            EntityManager em = emf.createEntityManager();
+            Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+            query.getResultList();
+        }
+
+    }
+
+    @Test public void
+    should_fail_if_the_number_of_select_statements_is_not_equal_to_the_number_expected_with_repeatable_annotation() {
+
+        // GIVEN
+        Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectSelects.class;
+
+        // WHEN
+        PrintableResult printableResult = testResult(testClass);
+
+        // THEN
+        assertThat(printableResult.failureCount()).isOne();
+
+        String testResult = printableResult.toString();
+        assertThat(testResult)
+                .contains("Expected number of SELECT statements <5> but is <1>.")
                 .contains("select")
                 .contains("book0_.id as id1_0");
 
