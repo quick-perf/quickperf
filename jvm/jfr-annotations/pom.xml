@@ -22,6 +22,9 @@
     <artifactId>quick-perf-jfr-annotations</artifactId>
 
     <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <dependencies.max.jdk.version>1.8</dependencies.max.jdk.version>
         <javadoc-subpackages>org.quickperf.jvm.jfr.annotation</javadoc-subpackages>
     </properties>
 
@@ -39,7 +42,7 @@
         <dependency>
             <groupId>org.openjdk.jmc</groupId>
             <artifactId>flightrecorder.rules.jdk</artifactId>
-            <version>7.1.1</version>
+            <version>8.3.1</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>

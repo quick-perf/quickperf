@@ -13,33 +13,45 @@
 package org.quickperf.jvm.jmcrule;
 
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
-import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
-import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.*;
+import org.openjdk.jmc.flightrecorder.rules.jdk.cpu.HighJvmCpuRule;
+import org.openjdk.jmc.flightrecorder.rules.jdk.memory.GarbageCollectionInfoRule;
+import org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcStallRule;
+import org.openjdk.jmc.flightrecorder.rules.jdk.memory.HeapInspectionRule;
+import org.openjdk.jmc.flightrecorder.rules.jdk.memory.SystemGcRule;
 import org.quickperf.ExtractablePerformanceMeasure;
 import org.quickperf.jvm.jfr.JfrRecording;
 import org.quickperf.unit.Count;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.RunnableFuture;
+import java.util.stream.Collectors;
 
 public class JmcRuleCountMeasureExtractor implements ExtractablePerformanceMeasure<JfrRecording, JmcRulesMeasure> {
 
     public static final JmcRuleCountMeasureExtractor INSTANCE = new JmcRuleCountMeasureExtractor();
+    //We need to ignore some rules which appear to throw NullPointerException in org.openjdk.jmc:flightrecorder.rules.jdk:8.x.y
+    private static final List<Class<? extends IRule>> IGNORED_RULES = Arrays.asList(
+            HighJvmCpuRule.class,
+            GcStallRule.class,
+            GarbageCollectionInfoRule.class,
+            HeapInspectionRule.class,
+            SystemGcRule.class
+    );
 
-    private JmcRuleCountMeasureExtractor() {}
+    private JmcRuleCountMeasureExtractor() {
+    }
 
     @Override
     public JmcRulesMeasure extractPerfMeasureFrom(JfrRecording jfrRecording) {
 
         IItemCollection jfrEvents = jfrRecording.getJfrEvents();
-        List<Result> ruleEvaluations = evaluateJmcRules(jfrEvents);
+        List<IResult> ruleEvaluations = evaluateJmcRules(jfrEvents);
 
         List<Count> jmcRules = buildJmcRuleCountsFrom(ruleEvaluations);
 
@@ -47,12 +59,16 @@ public class JmcRuleCountMeasureExtractor implements ExtractablePerformanceMeasu
 
     }
 
-    private List<Result> evaluateJmcRules(IItemCollection jfrEvents) {
-        List<Result> ruleEvaluations = new ArrayList<>();
-        for (IRule rule : RuleRegistry.getRules()) {
-            RunnableFuture<Result> future = rule.evaluate(jfrEvents, IPreferenceValueProvider.DEFAULT_VALUES);
+    private List<IResult> evaluateJmcRules(IItemCollection jfrEvents) {
+        List<IResult> ruleEvaluations = new ArrayList<>();
+        Collection<IRule> rules = RuleRegistry.getRules().stream()
+                .filter(r -> !IGNORED_RULES.contains(r.getClass()))
+                .collect(Collectors.toList());
+        for (IRule rule : rules) {
+            RunnableFuture<IResult> future = rule.createEvaluation(jfrEvents,
+                    IPreferenceValueProvider.DEFAULT_VALUES, new ResultProvider());
             future.run();
-            Result result;
+            IResult result;
             try {
                 result = future.get();
             } catch (InterruptedException | ExecutionException e) {
@@ -63,11 +79,11 @@ public class JmcRuleCountMeasureExtractor implements ExtractablePerformanceMeasu
         return ruleEvaluations;
     }
 
-    private List<Count> buildJmcRuleCountsFrom(List<Result> ruleEvaluations) {
+    private List<Count> buildJmcRuleCountsFrom(List<IResult> ruleEvaluations) {
         List<Count> jmcRules = new ArrayList<>();
-        for (Result ruleEvaluation : ruleEvaluations) {
+        for (IResult ruleEvaluation : ruleEvaluations) {
             Count ruleScore = buildJmcRuleCountFrom(ruleEvaluation);
-            if(!ruleToExclude(ruleScore)) {
+            if (!ruleToExclude(ruleScore)) {
                 jmcRules.add(ruleScore);
             }
         }
@@ -76,21 +92,25 @@ public class JmcRuleCountMeasureExtractor implements ExtractablePerformanceMeasu
 
     private boolean ruleToExclude(Count ruleScore) {
         String ruleDescription = ruleScore.getComment();
-        return     ruleDescription.contains("Rule: TLAB Allocation Ratio")
-                || ruleDescription.contains("Rule: Competing Processes")
-                || ruleDescription.contains("Rule: Command Line Options Check")
-                || ruleDescription.contains("Rule: Metaspace Live Set Trend");
+        return ruleDescription.contains("Rule: TLAB Allocation Ratio")
+               || ruleDescription.contains("Rule: Competing Processes")
+               || ruleDescription.contains("Rule: Command Line Options Check")
+               || ruleDescription.contains("Rule: Metaspace Live Set Trend");
     }
 
-    private Count buildJmcRuleCountFrom(Result result) {
+    private Count buildJmcRuleCountFrom(IResult result) {
         StringWriter stringWriter = new StringWriter();
 
         PrintWriter printWriter = new PrintWriter(stringWriter);
         printWriter.println("Rule: " + result.getRule().getName());
-        printWriter.println("Severity: " + Severity.get(result.getScore()));
-        long score = (long) result.getScore();
+        printWriter.println("Severity: " + result.getSeverity());
+        long score = Optional.ofNullable(result.getResult(TypedResult.SCORE))
+                .map(IQuantity::longValue)
+                .orElse(-1L);
         printWriter.println("Score: " + score);
-        String longDescriptionAsHtml = result.getLongDescription();
+        final String longDescriptionAsHtml = Optional.ofNullable(result.getSummary()).orElse("")
+                + Optional.ofNullable(result.getExplanation()).orElse("")
+                + Optional.ofNullable(result.getSolution()).orElse("");
         String textDesc = HtmlToPlainTextTransformer.INSTANCE.convertHtmlToPlainText(longDescriptionAsHtml);
         printWriter.println("Message: " + textDesc);
 

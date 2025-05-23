@@ -21,9 +21,9 @@
     <artifactId>quick-perf-junit4-12-jvm-test</artifactId>
 
     <properties>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-        <dependencies.max.jdk.version>1.7</dependencies.max.jdk.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <dependencies.max.jdk.version>1.8</dependencies.max.jdk.version>
         <jar.skipIfEmpty>true</jar.skipIfEmpty>
         <gpg.skip>true</gpg.skip>
         <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>

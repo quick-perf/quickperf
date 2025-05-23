@@ -26,6 +26,7 @@
         <gpg.skip>true</gpg.skip>
         <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
         <maven.deploy.skip>true</maven.deploy.skip>
+        <allowIncompleteProjects>true</allowIncompleteProjects>
     </properties>
 
     <dependencies>
