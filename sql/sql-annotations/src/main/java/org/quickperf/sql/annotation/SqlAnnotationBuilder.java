@@ -134,6 +134,10 @@ public class SqlAnnotationBuilder {
             public int value() {
                 return value;
             }
+            @Override
+            public String comment() {
+                return "";
+            }
         };
     }
 
