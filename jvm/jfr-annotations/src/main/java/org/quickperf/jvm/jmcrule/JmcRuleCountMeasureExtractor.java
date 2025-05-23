@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 public class JmcRuleCountMeasureExtractor implements ExtractablePerformanceMeasure<JfrRecording, JmcRulesMeasure> {
 
     public static final JmcRuleCountMeasureExtractor INSTANCE = new JmcRuleCountMeasureExtractor();
+    //We need to ignore some rules which appear to throw NullPointerException in org.openjdk.jmc:flightrecorder.rules.jdk:8.x.y
     private static final List<Class<? extends IRule>> IGNORED_RULES = Arrays.asList(
             HighJvmCpuRule.class,
             GcStallRule.class,
