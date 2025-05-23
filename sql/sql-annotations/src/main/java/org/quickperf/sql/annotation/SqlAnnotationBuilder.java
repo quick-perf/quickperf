@@ -134,6 +134,10 @@ public class SqlAnnotationBuilder {
             public int value() {
                 return value;
             }
+            @Override
+            public String comment() {
+                return "";
+            }
         };
     }
 
@@ -231,6 +235,10 @@ public class SqlAnnotationBuilder {
             public int value() {
                 return value;
             }
+            @Override
+            public String comment() {
+                return "";
+            }
         };
     }
 
@@ -246,6 +254,10 @@ public class SqlAnnotationBuilder {
             @Override
             public int value() {
                 return value;
+            }
+            @Override
+            public String comment() {
+                return "";
             }
         };
     }
@@ -263,6 +275,10 @@ public class SqlAnnotationBuilder {
             public int value() {
                 return value;
             }
+            @Override
+            public String comment() {
+                return "";
+            }
         };
     }
 
@@ -277,6 +293,74 @@ public class SqlAnnotationBuilder {
             }
             @Override
             public int value() {
+                return value;
+            }
+            @Override
+            public String comment() {
+                return "";
+            }
+        };
+    }
+
+    /**
+     *Allows to build {@link org.quickperf.sql.annotation.ExpectDeletes} annotation.
+     */
+    public static ExpectDeletes expectDeletes(final ExpectDelete... value) {
+        return new ExpectDeletes() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ExpectDeletes.class;
+            }
+            @Override
+            public ExpectDelete[] value() {
+                return value;
+            }
+        };
+    }
+
+    /**
+     *Allows to build {@link org.quickperf.sql.annotation.ExpectInserts} annotation.
+     */
+    public static ExpectInserts expectInserts(final ExpectInsert... value) {
+        return new ExpectInserts() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ExpectInserts.class;
+            }
+            @Override
+            public ExpectInsert[] value() {
+                return value;
+            }
+        };
+    }
+
+    /**
+     *Allows to build {@link org.quickperf.sql.annotation.ExpectSelects} annotation.
+     */
+    public static ExpectSelects expectSelects(final ExpectSelect... value) {
+        return new ExpectSelects() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ExpectSelects.class;
+            }
+            @Override
+            public ExpectSelect[] value() {
+                return value;
+            }
+        };
+    }
+
+    /**
+     *Allows to build {@link org.quickperf.sql.annotation.ExpectUpdates} annotation.
+     */
+    public static ExpectUpdates expectUpdates(final ExpectUpdate... value) {
+        return new ExpectUpdates() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ExpectUpdates.class;
+            }
+            @Override
+            public ExpectUpdate[] value() {
                 return value;
             }
         };

@@ -19,6 +19,7 @@ import org.quickperf.annotation.DisableQuickPerf;
 import org.quickperf.annotation.FunctionalIteration;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.sql.annotation.ExpectSelect;
+import org.quickperf.sql.annotation.ExpectSelects;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -34,6 +35,18 @@ public class DisableQuickPerfFeaturesJUnit4Test {
         @ExpectSelect(5)
         @Test
         public void execute_one_select_but_five_select_expected() {
+            EntityManager em = emf.createEntityManager();
+            Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+            query.getResultList();
+        }
+
+        @DisableQuickPerf
+        @ExpectSelects({
+                @ExpectSelect(comment = "Select books"),
+                @ExpectSelect(comment = "Select related entities", value = 4)
+        })
+        @Test
+        public void execute_one_select_but_five_select_expected_with_repeated_annotations() {
             EntityManager em = emf.createEntityManager();
             Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
             query.getResultList();
@@ -62,6 +75,18 @@ public class DisableQuickPerfFeaturesJUnit4Test {
         @ExpectSelect(5)
         @Test
         public void execute_one_select_but_five_select_expected() {
+            EntityManager em = emf.createEntityManager();
+            Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+            query.getResultList();
+        }
+
+        @FunctionalIteration
+        @ExpectSelects({
+                @ExpectSelect(comment = "Select books"),
+                @ExpectSelect(comment = "Select related entities", value = 4)
+        })
+        @Test
+        public void execute_one_select_but_five_select_expected_with_repeated_annotations() {
             EntityManager em = emf.createEntityManager();
             Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
             query.getResultList();

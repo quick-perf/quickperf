@@ -40,4 +40,10 @@ public @interface ExpectJdbcQueryExecution {
      */
     int value() default 1;
 
+    /**
+     * To comment on the reason why we expect the specified amount of queries of this type.
+     * @return comment message
+     */
+    String comment() default "";
+
 }

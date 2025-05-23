@@ -27,18 +27,17 @@ import org.quickperf.sql.connection.ProfilingParamsExtractor;
 import org.quickperf.sql.delete.DeleteCountMeasureExtractor;
 import org.quickperf.sql.delete.MaxOfDeletesPerfIssueVerifier;
 import org.quickperf.sql.delete.NumberOfSqlDeletePerfIssueVerifier;
+import org.quickperf.sql.delete.NumberOfSqlDeletesPerfIssueVerifier;
 import org.quickperf.sql.display.DisplaySqlOfTestMethodBodyRecorder;
 import org.quickperf.sql.display.DisplaySqlRecorder;
 import org.quickperf.sql.execution.*;
 import org.quickperf.sql.insert.InsertCountMeasureExtractor;
 import org.quickperf.sql.insert.InsertNumberPerfIssueVerifier;
 import org.quickperf.sql.insert.MaxOfInsertsPerfIssueVerifier;
+import org.quickperf.sql.insert.NumberOfSqlInsertsPerfIssueVerifier;
 import org.quickperf.sql.like.ContainsLikeWithLeadingWildcardExtractor;
 import org.quickperf.sql.like.HasLikeWithLeadingWildcardVerifier;
-import org.quickperf.sql.select.HasExactlySameSelectVerifier;
-import org.quickperf.sql.select.HasSameSelectTypesWithDiffParamValuesVerifier;
-import org.quickperf.sql.select.MaxOfSelectsPerfIssueVerifier;
-import org.quickperf.sql.select.SelectNumberPerfIssueVerifier;
+import org.quickperf.sql.select.*;
 import org.quickperf.sql.select.analysis.SelectAnalysisExtractor;
 import org.quickperf.sql.select.columns.MaxSelectedColumnsPerMeasureExtractor;
 import org.quickperf.sql.select.columns.MaxSelectedColumnsPerfIssueVerifier;
@@ -49,6 +48,7 @@ import org.quickperf.sql.statement.NoStatementVerifier;
 import org.quickperf.sql.time.SqlQueryExecutionTimeExtractor;
 import org.quickperf.sql.time.SqlQueryMaxExecutionTimeVerifier;
 import org.quickperf.sql.update.MaxOfUpdatesPerfIssueVerifier;
+import org.quickperf.sql.update.NumberOfSqlUpdatesPerfIssueVerifier;
 import org.quickperf.sql.update.UpdateCountMeasureExtractor;
 import org.quickperf.sql.update.UpdateNumberPerfIssueVerifier;
 import org.quickperf.sql.update.columns.MaxUpdatedColumnsPerMeasureExtractor;
@@ -87,6 +87,12 @@ class SqlAnnotationsConfigs {
             .perfMeasureExtractor(SelectAnalysisExtractor.INSTANCE)
             .perfIssueVerifier(SelectNumberPerfIssueVerifier.INSTANCE)
             .build(ExpectSelect.class);
+
+    static final AnnotationConfig NUMBER_OF_SQL_SELECTS = new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(SelectAnalysisExtractor.INSTANCE)
+            .perfIssueVerifier(NumberOfSqlSelectsPerfIssueVerifier.INSTANCE)
+            .build(ExpectSelects.class);
 
     static final AnnotationConfig MAX_SQL_SELECT = new AnnotationConfig.Builder()
             .perfRecorderClass(PersistenceSqlRecorder.class)
@@ -134,6 +140,12 @@ class SqlAnnotationsConfigs {
             .perfIssueVerifier(InsertNumberPerfIssueVerifier.INSTANCE)
             .build(ExpectInsert.class);
 
+    static final AnnotationConfig NUMBER_OF_SQL_INSERTS = new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(InsertCountMeasureExtractor.INSTANCE)
+            .perfIssueVerifier(NumberOfSqlInsertsPerfIssueVerifier.INSTANCE)
+            .build(ExpectInserts.class);
+
     static final AnnotationConfig SQL_STATEMENTS_BATCHED = new AnnotationConfig.Builder()
             .perfRecorderClass(SqlStatementBatchRecorder.class)
             .perfIssueVerifier(SqlStatementBatchVerifier.INSTANCE)
@@ -145,11 +157,23 @@ class SqlAnnotationsConfigs {
             .perfIssueVerifier(NumberOfSqlDeletePerfIssueVerifier.INSTANCE)
             .build(ExpectDelete.class);
 
+    static final AnnotationConfig NUMBER_OF_SQL_DELETES = new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(DeleteCountMeasureExtractor.INSTANCE)
+            .perfIssueVerifier(NumberOfSqlDeletesPerfIssueVerifier.INSTANCE)
+            .build(ExpectDeletes.class);
+
     static final AnnotationConfig NUMBER_OF_SQL_UPDATE = new AnnotationConfig.Builder()
             .perfRecorderClass(PersistenceSqlRecorder.class)
             .perfMeasureExtractor(UpdateCountMeasureExtractor.INSTANCE)
             .perfIssueVerifier(UpdateNumberPerfIssueVerifier.INSTANCE)
             .build(ExpectUpdate.class);
+
+    static final AnnotationConfig NUMBER_OF_SQL_UPDATES = new AnnotationConfig.Builder()
+            .perfRecorderClass(PersistenceSqlRecorder.class)
+            .perfMeasureExtractor(UpdateCountMeasureExtractor.INSTANCE)
+            .perfIssueVerifier(NumberOfSqlUpdatesPerfIssueVerifier.INSTANCE)
+            .build(ExpectUpdates.class);
 
 	static final AnnotationConfig MAX_SQL_UPDATE = new AnnotationConfig.Builder()
 			.perfRecorderClass(PersistenceSqlRecorder.class)

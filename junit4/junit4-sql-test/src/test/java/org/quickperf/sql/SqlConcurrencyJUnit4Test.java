@@ -19,6 +19,7 @@ import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.sql.annotation.ExpectSelect;
+import org.quickperf.sql.annotation.ExpectSelects;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -39,9 +40,21 @@ public class SqlConcurrencyJUnit4Test {
             query.getResultList();
         }
 
+        @ExpectSelects({
+                @ExpectSelect(comment = "Select books.")
+        })
+        @Test
+        public void execute_one_select_with_repeatable_annotation() {
+            EntityManager em = emf.createEntityManager();
+            Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+            query.getResultList();
+        }
+
     }
-    
-    @ThreadCount(100) @Test public void
+
+    @ThreadCount(100)
+    @Test
+    public void
     sql_performance_property_is_ok() {
 
         Class<?> testClass = AClassHavingAMethodWithoutSqlPerformanceIssue.class;
