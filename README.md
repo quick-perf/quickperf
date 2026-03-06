@@ -11,7 +11,7 @@
 ---
 <p align="center">	
   <a href="https://search.maven.org/search?q=org.quickperf">
-    <img src="https://maven-badges.herokuapp.com/maven-central/org.quickperf/quick-perf/badge.svg"
+    <img src="https://img.shields.io/maven-central/v/org.quickperf/quick-perf.svg"
          alt="Maven Central">
   </a>
   &nbsp;&nbsp;
