@@ -19,12 +19,7 @@ jobs:
       with:
         java-version: ${{ matrix.java }}
         distribution: temurin
-    - name: Cache Maven dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
+        cache: maven
     - name: Build with Maven
       run: mvn verify
 
@@ -44,12 +39,7 @@ jobs:
       with:
         java-version: ${{ matrix.java }}
         distribution: temurin
-    - name: Cache Maven dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
+        cache: maven
     - name: Tests
       run: mvn verify
 
@@ -69,12 +59,7 @@ jobs:
       with:
         java-version: ${{ matrix.java }}
         distribution: temurin
-    - name: Cache Maven dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
+        cache: maven
     - name: Tests
       run: mvn verify
 
@@ -94,12 +79,7 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
           distribution: temurin
-      - name: Cache Maven dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+          cache: maven
       - name: Build
         run: mvn install -DskipTests
       - name: Tests
