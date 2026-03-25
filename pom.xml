@@ -414,6 +414,14 @@
             <name>rsassi</name>
             <url>https://github.com/rsassi</url>
         </contributor>
+        <contributor>
+            <name>Klaus Lehner</name>
+            <url>https://github.com/klu2</url>
+        </contributor>
+        <contributor>
+            <name>Esta Nagy</name>
+            <url>https://github.com/nagyesta</url>
+        </contributor>
     </contributors>
 
 </project>
