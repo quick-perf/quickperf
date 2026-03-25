@@ -419,12 +419,28 @@ Many thanks to all our contributors!
             <a href="https://github.com/quick-perf/quickperf/commits?author=rsassi" title="Code">💻</a>
         </td>
     </tr>
+    <tr>
+        <td align="center">
+            <a href="https://github.com/klu2">
+                <img src="https://avatars.githubusercontent.com/klu2" width="100px;" alt="Klaus Lehner"/>
+                <br/>
+                <sub><b>Klaus Lehner</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=klu2" title="Code">💻</a>
+        </td>
+        <td align="center">
+            <a href="https://github.com/nagyesta">
+                <img src="https://avatars.githubusercontent.com/nagyesta" width="100px;" alt="Esta Nagy"/>
+                <br/>
+                <sub><b>Esta Nagy</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/commits?author=nagyesta" title="Code">💻</a>
+        </td>
+    </tr>
 </table>
 <a href = "https://allcontributors.org/docs/en/emoji-key">emoji key</a>
-
-## Sponsors
-Many thanks Zenika for sponsoring this project! <br><br>
-[![with love by zenika](https://img.shields.io/badge/With%20%E2%9D%A4%EF%B8%8F%20by-Zenika-b51432.svg)](https://oss.zenika.com)
 
 ## License
 [Apache License 2.0](/LICENSE.txt)
