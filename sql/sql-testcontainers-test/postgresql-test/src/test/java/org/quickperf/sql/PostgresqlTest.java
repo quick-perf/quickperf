@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PostgresqlTest {
 
     private static final PostgreSQLContainer jdbcDatabaseContainer
-            = new PostgreSQLContainer<>("postgres:12.3")
+            = new PostgreSQLContainer<>("postgres:18.3")
              .withDatabaseName("testcontainers")
              .withUsername("nes")
              .withPassword("quick");
