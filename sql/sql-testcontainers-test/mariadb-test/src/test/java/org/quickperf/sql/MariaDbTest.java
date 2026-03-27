@@ -34,7 +34,7 @@ public class MariaDbTest {
     public static class Select3ColumnsBut2Expected {
 
         @Container
-        static final MariaDBContainer jdbcDatabaseContainer = new MariaDBContainer<>("mariadb:10.5.2")
+        static final MariaDBContainer jdbcDatabaseContainer = new MariaDBContainer<>("mariadb:11.8.6")
                                                         .withDatabaseName("testcontainers")
                                                         .withUsername("nes")
                                                         .withPassword("quick");
