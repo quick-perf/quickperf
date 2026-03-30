@@ -22,6 +22,12 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn verify
+    - name: Upload Maven Timeline
+      if: always()
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      with:
+        name: maven-timeline-linux-java-${{ matrix.java }}
+        path: target/timeline/
 
   macOS:
     runs-on: macOS-latest
@@ -42,6 +48,12 @@ jobs:
         cache: maven
     - name: Tests
       run: mvn verify
+    - name: Upload Maven Timeline
+      if: always()
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      with:
+        name: maven-timeline-macos-java-${{ matrix.java }}
+        path: target/timeline/
 
   windows:
     runs-on: windows-latest
@@ -62,6 +74,12 @@ jobs:
         cache: maven
     - name: Tests
       run: mvn verify
+    - name: Upload Maven Timeline
+      if: always()
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      with:
+        name: maven-timeline-windows-java-${{ matrix.java }}
+        path: target/timeline/
 
   testcontainers:
     runs-on: ubuntu-latest
@@ -84,4 +102,10 @@ jobs:
         run: mvn install -DskipTests
       - name: Tests
         run: mvn verify -P testcontainers -f ./sql/sql-testcontainers-test/pom.xml
-  
+      - name: Upload Maven Timeline
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: maven-timeline-testcontainers-java-${{ matrix.java }}
+          path: sql/sql-testcontainers-test/target/timeline/
+
