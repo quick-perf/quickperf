@@ -17,6 +17,7 @@ import org.hibernate.internal.SessionImpl;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.quickperf.sql.Book;
 import org.quickperf.sql.config.*;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 
 import javax.persistence.EntityManager;
@@ -31,6 +32,13 @@ import java.util.Properties;
 public class SqlTestBaseTestNG {
 
     protected EntityManagerFactory emf;
+
+    @AfterTest
+    public void after() {
+        if (emf != null) {
+            emf.close();
+        }
+    }
 
     @BeforeTest
     public void before() {
