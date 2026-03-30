@@ -31,6 +31,10 @@ public class ConnectionListenerRegistry {
         protected Map<Class<? extends ConnectionListener>, ConnectionListener> initialValue() {
             return new HashMap<>();
         }
+        @Override
+        protected Map<Class<? extends ConnectionListener>, ConnectionListener> childValue(Map<Class<? extends ConnectionListener>, ConnectionListener> parentValue) {
+            return new HashMap<>(parentValue);
+        }
     };
 
     private ConnectionListenerRegistry() { }
@@ -49,7 +53,7 @@ public class ConnectionListenerRegistry {
         if(!TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
             Map<Class<? extends ConnectionListener>, ConnectionListener> connectionListenerByType
                     = CONNECTION_LISTENER_BY_TYPE_WHEN_ONE_JVM.get();
-            connectionListenerByType.remove(connectionListener);
+            connectionListenerByType.remove(connectionListener.getClass());
         }
     }
 
