@@ -46,9 +46,12 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
     private TestExecutionContext testExecutionContext;
 
+    private Class<?> testClass;
+
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
         int junit5AllocationOffset = findJunit5AllocationOffset();
+        this.testClass = extensionContext.getRequiredTestClass();
         testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs
                                                             , extensionContext.getRequiredTestMethod()
                                                             , junit5AllocationOffset);
@@ -199,7 +202,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
     private JvmOrTestIssue executeTestMethodAndRecordPerformance(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext) {
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
             Method testMethod = invocationContext.getExecutable();
-            JvmOrTestIssue jvmOrTestIssue = executeTestMethodInNewJwm(testMethod);
+            JvmOrTestIssue jvmOrTestIssue = executeTestMethodInNewJvm(testMethod);
             tryToSkipInvocation(invocation); // because the test method is invoked directly inside the 'newJvmTestLauncher'
             return jvmOrTestIssue;
         }
@@ -216,9 +219,10 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         }
     }
 
-    private JvmOrTestIssue executeTestMethodInNewJwm(Method testMethod) {
+    private JvmOrTestIssue executeTestMethodInNewJvm(Method testMethod) {
         NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
-        return newJvmTestLauncher.executeTestMethodInNewJwm(testMethod
+        return newJvmTestLauncher.executeTestMethodInNewJvm(testClass
+                                                          , testMethod
                                                           , testExecutionContext
                                                           , QuickPerfJunit5Core.class);
     }

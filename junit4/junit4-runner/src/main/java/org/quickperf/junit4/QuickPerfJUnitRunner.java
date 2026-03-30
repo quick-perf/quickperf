@@ -122,6 +122,7 @@ public class QuickPerfJUnitRunner extends BlockJUnit4ClassRunner {
             return junitAfters;
         }
         return new MainJvmAfterJUnitStatement(  frameworkMethod
+                                              , getTestClass().getJavaClass()
                                               , testExecutionContext
                                               , quickPerfConfigs
                                               , junitAfters);
