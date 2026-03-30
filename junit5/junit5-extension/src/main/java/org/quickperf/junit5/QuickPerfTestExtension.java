@@ -36,6 +36,9 @@ import java.util.Collection;
 
 public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInterceptor {
 
+    private static final ExtensionContext.Namespace NAMESPACE =
+            ExtensionContext.Namespace.create(QuickPerfTestExtension.class);
+
     private final QuickPerfConfigs quickPerfConfigs =  QuickPerfConfigsLoader.INSTANCE.loadQuickPerfConfigs();
 
     private final PerformanceRecording performanceRecording = PerformanceRecording.INSTANCE;
@@ -44,17 +47,17 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
     private final QuickPerfReporter quickPerfReporter = QuickPerfReporter.INSTANCE;
 
-    private TestExecutionContext testExecutionContext;
-
-    private Class<?> testClass;
-
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
         int junit5AllocationOffset = findJunit5AllocationOffset();
-        this.testClass = extensionContext.getRequiredTestClass();
-        testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs
+        TestExecutionContext testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs
                                                             , extensionContext.getRequiredTestMethod()
                                                             , junit5AllocationOffset);
+        extensionContext.getStore(NAMESPACE).put(TestExecutionContext.class, testExecutionContext);
+    }
+
+    private TestExecutionContext getTestExecutionContext(ExtensionContext extensionContext) {
+        return extensionContext.getStore(NAMESPACE).get(TestExecutionContext.class, TestExecutionContext.class);
     }
 
     private int findJunit5AllocationOffset() {
@@ -75,7 +78,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
             // maybe it's a bug in JUnit or maybe not but we keep this as a safeguard.
             invocation.proceed();
         }
-        else if (testExecutionContext.testExecutionUsesTwoJVMs() && !SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+        else if (getTestExecutionContext(extensionContext).testExecutionUsesTwoJVMs() && !SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
             // we skip the BeforeEach if the test will fork
             invocation.skip();
         }
@@ -86,7 +89,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
     @Override
     public void interceptAfterEachMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
-        if (testExecutionContext.testExecutionUsesTwoJVMs() && !SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+        if (getTestExecutionContext(extensionContext).testExecutionUsesTwoJVMs() && !SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
             // we skip the AfterEach if the test will fork
             invocation.skip();
         }
@@ -100,6 +103,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         // Be careful that this method will be called by each invocation of the test template defines by a single test template method.
         // Normal lifecycle will apply.
         // There is no allocation offset with template method
+        TestExecutionContext testExecutionContext = getTestExecutionContext(extensionContext);
         testExecutionContext.setRunnerAllocationOffset(0);
 
         if (testExecutionContext.isQuickPerfDisabled()) {
@@ -108,30 +112,31 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         }
 
         if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
-            executeTestMethodInNewJvmAndRecordPerformance(invocation, invocationContext);
+            executeTestMethodInNewJvmAndRecordPerformance(invocation, invocationContext, testExecutionContext);
             return;
         }
 
-        JvmOrTestIssue jvmOrTestIssue = executeTestMethodAndRecordPerformance(invocation, invocationContext);
-        processJvmOrTestIssue(jvmOrTestIssue);
+        JvmOrTestIssue jvmOrTestIssue = executeTestMethodAndRecordPerformance(invocation, invocationContext, testExecutionContext);
+        processJvmOrTestIssue(jvmOrTestIssue, testExecutionContext);
     }
 
     @Override
     public void interceptTestMethod(  Invocation<Void> invocation
                                     , ReflectiveInvocationContext<Method> invocationContext
                                     , ExtensionContext extensionContext) throws Throwable {
+        TestExecutionContext testExecutionContext = getTestExecutionContext(extensionContext);
         if (testExecutionContext.isQuickPerfDisabled()) {
             invocation.proceed();
             return;
         }
 
         if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
-            executeTestMethodInNewJvmAndRecordPerformance(invocation, invocationContext);
+            executeTestMethodInNewJvmAndRecordPerformance(invocation, invocationContext, testExecutionContext);
             return;
         }
 
-        JvmOrTestIssue jvmOrTestIssue = executeTestMethodAndRecordPerformance(invocation, invocationContext);
-        processJvmOrTestIssue(jvmOrTestIssue);
+        JvmOrTestIssue jvmOrTestIssue = executeTestMethodAndRecordPerformance(invocation, invocationContext, testExecutionContext);
+        processJvmOrTestIssue(jvmOrTestIssue, testExecutionContext);
     }
 
     @Override
@@ -141,6 +146,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         // This means that we will use the same TestExecutionContext for all dynamic tests produced by a test factory method.
         // So the annotation from the test factory method will be used on all dynamic tests produced by it.
 
+        TestExecutionContext testExecutionContext = getTestExecutionContext(extensionContext);
         if (testExecutionContext.isQuickPerfDisabled()) {
             invocation.proceed();
             return;
@@ -156,12 +162,12 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
             throw new RuntimeException("Cannot run a dynamic test on a forked JVM");
         }
 
-        TestIssue testIssue = executeTestMethodAndRecordPerformanceInSameJvm(invocation);
+        TestIssue testIssue = executeTestMethodAndRecordPerformanceInSameJvm(invocation, testExecutionContext);
         JvmOrTestIssue jvmOrTestIssue = JvmOrTestIssue.buildFrom(testIssue);
-        processJvmOrTestIssue(jvmOrTestIssue);
+        processJvmOrTestIssue(jvmOrTestIssue, testExecutionContext);
     }
 
-    private void processJvmOrTestIssue(JvmOrTestIssue jvmOrTestIssue) throws Throwable {
+    private void processJvmOrTestIssue(JvmOrTestIssue jvmOrTestIssue, TestExecutionContext testExecutionContext) throws Throwable {
         SetOfAnnotationConfigs testAnnotationConfigs = quickPerfConfigs.getTestAnnotationConfigs();
 
         Collection<PerfIssuesToFormat> groupOfPerfIssuesToFormat
@@ -175,7 +181,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
                                , testExecutionContext);
     }
 
-    private void executeTestMethodInNewJvmAndRecordPerformance(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext) throws IllegalAccessException, InvocationTargetException {
+    private void executeTestMethodInNewJvmAndRecordPerformance(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, TestExecutionContext testExecutionContext) throws IllegalAccessException, InvocationTargetException {
         Object[] args = invocationContext.getArguments().toArray();
         Object target = invocationContext.getTarget().orElse(null);
         Method method = makeAccessible(invocationContext.getExecutable());
@@ -199,14 +205,15 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         return executable;
     }
 
-    private JvmOrTestIssue executeTestMethodAndRecordPerformance(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext) {
+    private JvmOrTestIssue executeTestMethodAndRecordPerformance(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, TestExecutionContext testExecutionContext) {
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
             Method testMethod = invocationContext.getExecutable();
-            JvmOrTestIssue jvmOrTestIssue = executeTestMethodInNewJvm(testMethod);
+            Class<?> testClass = invocationContext.getTargetClass();
+            JvmOrTestIssue jvmOrTestIssue = executeTestMethodInNewJvm(testClass, testMethod, testExecutionContext);
             tryToSkipInvocation(invocation); // because the test method is invoked directly inside the 'newJvmTestLauncher'
             return jvmOrTestIssue;
         }
-        TestIssue testIssue = executeTestMethodAndRecordPerformanceInSameJvm(invocation);
+        TestIssue testIssue = executeTestMethodAndRecordPerformanceInSameJvm(invocation, testExecutionContext);
         return JvmOrTestIssue.buildFrom(testIssue);
     }
 
@@ -219,7 +226,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         }
     }
 
-    private JvmOrTestIssue executeTestMethodInNewJvm(Method testMethod) {
+    private JvmOrTestIssue executeTestMethodInNewJvm(Class<?> testClass, Method testMethod, TestExecutionContext testExecutionContext) {
         NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
         return newJvmTestLauncher.executeTestMethodInNewJvm(testClass
                                                           , testMethod
@@ -227,7 +234,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
                                                           , QuickPerfJunit5Core.class);
     }
 
-    private TestIssue executeTestMethodAndRecordPerformanceInSameJvm(Invocation<Void> invocation) {
+    private TestIssue executeTestMethodAndRecordPerformanceInSameJvm(Invocation<Void> invocation, TestExecutionContext testExecutionContext) {
         performanceRecording.start(testExecutionContext);
         try {
             invocation.proceed();
