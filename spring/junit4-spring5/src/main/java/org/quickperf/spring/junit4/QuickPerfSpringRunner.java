@@ -129,6 +129,7 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
         }
         if(testMethodToBeLaunchedInASpecificJvm) {
             return new MainJvmAfterJUnitStatement(frameworkMethod
+                                                , testClass
                                                 , testExecutionContext
                                                 , quickPerfConfigs
                                                 , NO_STATEMENT);

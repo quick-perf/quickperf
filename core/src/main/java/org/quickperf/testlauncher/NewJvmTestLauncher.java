@@ -37,11 +37,13 @@ public class NewJvmTestLauncher {
 
     private NewJvmTestLauncher() { }
 
-    public JvmOrTestIssue executeTestMethodInNewJwm(Method testMethod
+    public JvmOrTestIssue executeTestMethodInNewJvm(Class<?> testClass
+                                                             , Method testMethod
                                                              , TestExecutionContext testExecutionContext
                                                              , Class<?> mainClassToLaunchTestInANewJvm) {
 
-        JvmIssue jvmIssue = executeTestInNewJvm(testMethod
+        JvmIssue jvmIssue = executeTestInNewJvm(testClass
+                                              , testMethod
                                               , testExecutionContext
                                               , mainClassToLaunchTestInANewJvm);
         if (!jvmIssue.isNone()) {
@@ -55,12 +57,13 @@ public class NewJvmTestLauncher {
 
     }
 
-    private JvmIssue executeTestInNewJvm(Method testMethod
+    private JvmIssue executeTestInNewJvm(Class<?> testClass
+                                       , Method testMethod
                                        , TestExecutionContext testExecutionContext
                                        , Class<?> mainClassToLaunchTestInANewJvm) {
 
         WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
-        MainClassArguments mainClassArguments = MainClassArguments.buildFrom(testMethod, workingFolder);
+        MainClassArguments mainClassArguments = MainClassArguments.buildFrom(testClass, testMethod, workingFolder);
 
         AllJvmOptions jvmOptions = testExecutionContext.getJvmOptions();
 

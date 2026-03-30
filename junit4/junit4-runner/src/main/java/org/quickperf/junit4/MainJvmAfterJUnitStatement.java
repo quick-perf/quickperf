@@ -37,6 +37,8 @@ public class MainJvmAfterJUnitStatement extends Statement {
 
     private final FrameworkMethod frameworkMethod;
 
+    private final Class<?> testClass;
+
     private final TestExecutionContext testExecutionContext;
 
     private final SetOfAnnotationConfigs testAnnotationConfigs;
@@ -45,11 +47,13 @@ public class MainJvmAfterJUnitStatement extends Statement {
 
     public MainJvmAfterJUnitStatement(
               FrameworkMethod frameworkMethod
+            , Class<?> testClass
             , TestExecutionContext testExecutionContext
             , QuickPerfConfigs quickPerfConfigs
             , Statement junitAfters) {
         this.testExecutionContext = testExecutionContext;
         this.frameworkMethod = frameworkMethod;
+        this.testClass = testClass;
         this.testAnnotationConfigs = quickPerfConfigs.getTestAnnotationConfigs();
         this.junitAfters = junitAfters;
     }
@@ -75,7 +79,8 @@ public class MainJvmAfterJUnitStatement extends Statement {
     private JvmOrTestIssue evaluateBusinessOrTechnicalIssue() {
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
             Method testMethod = frameworkMethod.getMethod();
-            return newJvmTestLauncher.executeTestMethodInNewJwm(testMethod
+            return newJvmTestLauncher.executeTestMethodInNewJvm(testClass
+                                                              , testMethod
                                                               , testExecutionContext
                                                               , QuickPerfJunit4Core.class);
 

@@ -124,17 +124,20 @@ public class QuickPerfTestNGListener implements IHookable {
                                                                          , TestExecutionContext testExecutionContext) {
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
             Method testMethod = extractTestMethod(testResult);
-            return executeTestMethodInNewJwm(testMethod, testExecutionContext);
+            Class<?> testClass = testResult.getInstance().getClass();
+            return executeTestMethodInNewJvm(testClass, testMethod, testExecutionContext);
         }
 
         TestIssue testIssue = executeTestMethodAndRecordPerformanceInSameJvm(hookCallBack, testResult, testExecutionContext);
         return JvmOrTestIssue.buildFrom(testIssue);
     }
 
-    private JvmOrTestIssue executeTestMethodInNewJwm(Method testMethod
+    private JvmOrTestIssue executeTestMethodInNewJvm(Class<?> testClass
+                                                             , Method testMethod
                                                              , TestExecutionContext testExecutionContext) {
         NewJvmTestLauncher newJvmTestLauncher = NewJvmTestLauncher.INSTANCE;
-        return newJvmTestLauncher.executeTestMethodInNewJwm(testMethod
+        return newJvmTestLauncher.executeTestMethodInNewJvm(testClass
+                                                          , testMethod
                                                           , testExecutionContext
                                                           , QuickPerfTestNGCore.class);
     }

@@ -44,17 +44,13 @@ public class MainClassArguments {
         return workingFolderPath;
     }
 
-    public static MainClassArguments buildFrom(Method testMethod
+    public static MainClassArguments buildFrom(Class<?> testClass
+                                             , Method testMethod
                                              , WorkingFolder workingFolder) {
-        String className = retrieveClassNameOf(testMethod);
+        String className = testClass.getName();
         String methodName = testMethod.getName();
         String workingFolderPath = workingFolder.getPath();
         return new MainClassArguments(className, methodName, workingFolderPath);
-    }
-
-    private static String retrieveClassNameOf(Method method) {
-        Class<?> classOfTestMethod = method.getDeclaringClass();
-        return classOfTestMethod.getName();
     }
 
     public static MainClassArguments buildFromMainArguments(String... args) {
