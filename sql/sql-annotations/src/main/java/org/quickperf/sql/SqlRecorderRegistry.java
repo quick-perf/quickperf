@@ -30,6 +30,10 @@ public class SqlRecorderRegistry {
         protected Map<Class<? extends SqlRecorder>, SqlRecorder> initialValue() {
             return new HashMap<>();
         }
+        @Override
+        protected Map<Class<? extends SqlRecorder>, SqlRecorder> childValue(Map<Class<? extends SqlRecorder>, SqlRecorder> parentValue) {
+            return new HashMap<>(parentValue);
+        }
     };
 
     private SqlRecorderRegistry() {}
@@ -47,7 +51,7 @@ public class SqlRecorderRegistry {
     public static void unregister(SqlRecorder sqlRecorder) {
         if(!TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
             Map<Class<? extends SqlRecorder>, SqlRecorder> sqlRecordersByType = SQL_RECORDER_BY_TYPE_WHEN_ONE_JVM.get();
-            sqlRecordersByType.remove(sqlRecorder);
+            sqlRecordersByType.remove(sqlRecorder.getClass());
         }
     }
 
