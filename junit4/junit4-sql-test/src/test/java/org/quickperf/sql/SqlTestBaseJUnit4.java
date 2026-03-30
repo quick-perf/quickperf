@@ -15,6 +15,7 @@ package org.quickperf.sql;
 import net.ttddyy.dsproxy.support.ProxyDataSource;
 import org.hibernate.internal.SessionImpl;
 import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.junit.After;
 import org.junit.Before;
 import org.quickperf.sql.config.MemoryDataSourceBuilder;
 import org.quickperf.sql.config.MemoryDatabaseHibernateDialect;
@@ -37,6 +38,13 @@ import static org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder.aDataSource
 public class SqlTestBaseJUnit4 {
 
     protected EntityManagerFactory emf;
+
+    @After
+    public void after() {
+        if (emf != null) {
+            emf.close();
+        }
+    }
 
     @Before
     public void before() {
