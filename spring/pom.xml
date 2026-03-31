@@ -49,6 +49,15 @@
                 <module>junit4-spring-boot-test</module>
             </modules>
         </profile>
+        <profile>
+            <id>SpringBoot3Tests</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <modules>
+                <module>junit5-spring-boot-3-test</module>
+            </modules>
+        </profile>
     </profiles>
 
 </project>
