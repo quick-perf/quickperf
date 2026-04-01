@@ -155,13 +155,17 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <version>4.1</version>
                 <configuration>
-                    <header>update-licence-header.txt</header>
-                    <includes>
-                        <include>src/**</include>
-                    </includes>
-                    <excludes>
-                        <exclude>src/test/resources/junit-platform.properties</exclude>
-                    </excludes>
+                    <licenseSets>
+                        <licenseSet>
+                            <header>update-licence-header.txt</header>
+                            <includes>
+                                <include>src/**</include>
+                            </includes>
+                            <excludes>
+                                <exclude>src/test/resources/junit-platform.properties</exclude>
+                            </excludes>
+                        </licenseSet>
+                    </licenseSets>
                     <properties>
                         <project>${project.name}</project>
                         <year>${project.inceptionYear}</year>
