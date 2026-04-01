@@ -1,0 +1,66 @@
+name: 'Setup Maven Daemon'
+description: 'Install and cache the mvnd native GraalVM binary'
+inputs:
+  version:
+    description: 'mvnd version to install'
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Determine mvnd archive name
+      id: platform
+      shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+        RUNNER_OS_NAME: ${{ runner.os }}
+      run: |
+        case "${RUNNER_OS_NAME}" in
+          Linux)   echo "archive=maven-mvnd-${VERSION}-linux-amd64" >> $GITHUB_OUTPUT ;;
+          macOS)   echo "archive=maven-mvnd-${VERSION}-darwin-aarch64" >> $GITHUB_OUTPUT ;;
+          Windows) echo "archive=maven-mvnd-${VERSION}-windows-amd64" >> $GITHUB_OUTPUT ;;
+        esac
+
+    - name: Cache mvnd archive
+      id: cache-mvnd
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+      with:
+        path: ${{ runner.temp }}/mvnd.zip
+        key: mvnd-v2-${{ runner.os }}-${{ inputs.version }}
+
+    - name: Download mvnd
+      if: steps.cache-mvnd.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+        ARCHIVE: ${{ steps.platform.outputs.archive }}
+      run: |
+        curl -fsL "https://downloads.apache.org/maven/mvnd/${VERSION}/${ARCHIVE}.zip" \
+          -o "${RUNNER_TEMP}/mvnd.zip"
+
+    - name: Verify and extract mvnd
+      shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+        ARCHIVE: ${{ steps.platform.outputs.archive }}
+      run: |
+        curl -fsL "https://downloads.apache.org/maven/mvnd/${VERSION}/${ARCHIVE}.zip.sha512" \
+          -o "${RUNNER_TEMP}/mvnd.zip.sha512"
+        echo "$(cat "${RUNNER_TEMP}/mvnd.zip.sha512")  ${RUNNER_TEMP}/mvnd.zip" | sha512sum -c -
+
+        # GPG signature verification
+        curl -fsL "https://downloads.apache.org/maven/KEYS" | gpg --import --quiet 2>/dev/null
+        curl -fsL "https://downloads.apache.org/maven/mvnd/${VERSION}/${ARCHIVE}.zip.asc" \
+          -o "${RUNNER_TEMP}/mvnd.zip.asc"
+        gpg --verify "${RUNNER_TEMP}/mvnd.zip.asc" "${RUNNER_TEMP}/mvnd.zip"
+
+        unzip -q "${RUNNER_TEMP}/mvnd.zip" -d "${RUNNER_TEMP}/mvnd"
+
+    - name: Add mvnd to PATH
+      shell: bash
+      env:
+        ARCHIVE: ${{ steps.platform.outputs.archive }}
+      run: echo "${RUNNER_TEMP}/mvnd/${ARCHIVE}/bin" >> $GITHUB_PATH
+
+    - name: Verify mvnd
+      shell: bash
+      run: mvnd --version
