@@ -4,6 +4,10 @@ inputs:
   version:
     description: 'mvnd version to install'
     required: true
+outputs:
+  mvn_cmd:
+    description: 'Command to use: mvnd if available, mvn as fallback'
+    value: ${{ steps.verify.outputs.mvnd_available == 'true' && 'mvnd' || 'mvn' }}
 runs:
   using: composite
   steps:
@@ -62,5 +66,12 @@ runs:
       run: echo "${RUNNER_TEMP}/mvnd/${ARCHIVE}/bin" >> $GITHUB_PATH
 
     - name: Verify mvnd
+      id: verify
       shell: bash
-      run: mvnd --version
+      run: |
+        if mvnd --version; then
+          echo "mvnd_available=true" >> $GITHUB_OUTPUT
+        else
+          echo "::warning::mvnd daemon failed to start, falling back to mvn"
+          echo "mvnd_available=false" >> $GITHUB_OUTPUT
+        fi

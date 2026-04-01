@@ -21,11 +21,12 @@ jobs:
         distribution: temurin
         cache: maven
     - name: Install mvnd
+      id: mvnd
       uses: ./.github/actions/setup-mvnd
       with:
         version: ${{ env.MVND_VERSION }}
     - name: Build
-      run: mvnd verify
+      run: ${{ steps.mvnd.outputs.mvn_cmd }} verify
     - name: Upload Maven Timeline
       if: always()
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -48,11 +49,12 @@ jobs:
         distribution: temurin
         cache: maven
     - name: Install mvnd
+      id: mvnd
       uses: ./.github/actions/setup-mvnd
       with:
         version: ${{ env.MVND_VERSION }}
     - name: Tests
-      run: mvnd verify
+      run: ${{ steps.mvnd.outputs.mvn_cmd }} verify
     - name: Upload Maven Timeline
       if: always()
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -75,11 +77,12 @@ jobs:
         distribution: temurin
         cache: maven
     - name: Install mvnd
+      id: mvnd
       uses: ./.github/actions/setup-mvnd
       with:
         version: ${{ env.MVND_VERSION }}
     - name: Tests
-      run: mvnd verify
+      run: ${{ steps.mvnd.outputs.mvn_cmd }} verify
     - name: Upload Maven Timeline
       if: always()
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -102,13 +105,14 @@ jobs:
           distribution: temurin
           cache: maven
       - name: Install mvnd
+        id: mvnd
         uses: ./.github/actions/setup-mvnd
         with:
           version: ${{ env.MVND_VERSION }}
       - name: Build
-        run: mvnd install -DskipTests
+        run: ${{ steps.mvnd.outputs.mvn_cmd }} install -DskipTests
       - name: Tests
-        run: mvnd verify -P testcontainers -f ./sql/sql-testcontainers-test/pom.xml
+        run: ${{ steps.mvnd.outputs.mvn_cmd }} verify -P testcontainers -f ./sql/sql-testcontainers-test/pom.xml
       - name: Upload Maven Timeline
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
