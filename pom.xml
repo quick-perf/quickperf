@@ -163,6 +163,7 @@
                             </includes>
                             <excludes>
                                 <exclude>src/test/resources/junit-platform.properties</exclude>
+                                <exclude>**/META-INF/**</exclude>
                             </excludes>
                         </licenseSet>
                     </licenseSets>
