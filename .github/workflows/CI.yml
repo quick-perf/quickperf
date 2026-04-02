@@ -26,7 +26,9 @@ jobs:
       with:
         version: ${{ env.MVND_VERSION }}
     - name: Build
-      run: ${{ steps.mvnd.outputs.mvn_cmd }} verify
+      env:
+        MVND_CMD: ${{ steps.mvnd.outputs.mvnd_cmd }}
+      run: $MVND_CMD --no-daemon verify
     - name: Upload Maven Timeline
       if: always()
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -54,7 +56,9 @@ jobs:
       with:
         version: ${{ env.MVND_VERSION }}
     - name: Tests
-      run: ${{ steps.mvnd.outputs.mvn_cmd }} verify
+      env:
+        MVND_CMD: ${{ steps.mvnd.outputs.mvnd_cmd }}
+      run: $MVND_CMD --no-daemon verify
     - name: Upload Maven Timeline
       if: always()
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -82,7 +86,10 @@ jobs:
       with:
         version: ${{ env.MVND_VERSION }}
     - name: Tests
-      run: ${{ steps.mvnd.outputs.mvn_cmd }} verify
+      shell: cmd
+      env:
+        MVND_CMD: ${{ steps.mvnd.outputs.mvnd_cmd }}
+      run: '"%MVND_CMD%" --no-daemon verify'
     - name: Upload Maven Timeline
       if: always()
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -110,9 +117,13 @@ jobs:
         with:
           version: ${{ env.MVND_VERSION }}
       - name: Build
-        run: ${{ steps.mvnd.outputs.mvn_cmd }} install -DskipTests
+        env:
+          MVND_CMD: ${{ steps.mvnd.outputs.mvnd_cmd }}
+        run: $MVND_CMD --no-daemon install -DskipTests
       - name: Tests
-        run: ${{ steps.mvnd.outputs.mvn_cmd }} verify -P testcontainers -f ./sql/sql-testcontainers-test/pom.xml
+        env:
+          MVND_CMD: ${{ steps.mvnd.outputs.mvnd_cmd }}
+        run: $MVND_CMD --no-daemon verify -P testcontainers -f ./sql/sql-testcontainers-test/pom.xml
       - name: Upload Maven Timeline
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

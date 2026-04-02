@@ -1,17 +1,17 @@
 name: 'Setup Maven Daemon'
-description: 'Install and cache the mvnd native GraalVM binary'
+description: 'Install and cache mvnd, using the JVM-based client'
 inputs:
   version:
     description: 'mvnd version to install'
     required: true
 outputs:
-  mvn_cmd:
-    description: 'Command to use: mvnd if available, mvn as fallback'
-    value: ${{ steps.verify.outputs.mvnd_available == 'true' && 'mvnd' || 'mvn' }}
+  mvnd_cmd:
+    description: 'The mvnd JVM-based command (mvnd.sh on Linux/macOS, mvnd.cmd on Windows)'
+    value: ${{ steps.platform.outputs.cmd }}
 runs:
   using: composite
   steps:
-    - name: Determine mvnd archive name
+    - name: Determine mvnd archive and command
       id: platform
       shell: bash
       env:
@@ -22,7 +22,13 @@ runs:
           Linux)   echo "archive=maven-mvnd-${VERSION}-linux-amd64" >> $GITHUB_OUTPUT ;;
           macOS)   echo "archive=maven-mvnd-${VERSION}-darwin-aarch64" >> $GITHUB_OUTPUT ;;
           Windows) echo "archive=maven-mvnd-${VERSION}-windows-amd64" >> $GITHUB_OUTPUT ;;
+          *)       echo "::error::Unsupported runner OS: ${RUNNER_OS_NAME}"; exit 1 ;;
         esac
+        if [[ "${RUNNER_OS_NAME}" == "Windows" ]]; then
+          echo "cmd=mvnd.cmd" >> $GITHUB_OUTPUT
+        else
+          echo "cmd=mvnd.sh" >> $GITHUB_OUTPUT
+        fi
 
     - name: Cache mvnd archive
       id: cache-mvnd
@@ -52,7 +58,7 @@ runs:
         echo "$(cat "${RUNNER_TEMP}/mvnd.zip.sha512")  ${RUNNER_TEMP}/mvnd.zip" | sha512sum -c -
 
         # GPG signature verification
-        curl -fsL "https://downloads.apache.org/maven/KEYS" | gpg --import --quiet 2>/dev/null
+        curl -fsL "https://downloads.apache.org/maven/KEYS" | gpg --import --quiet
         curl -fsL "https://downloads.apache.org/maven/mvnd/${VERSION}/${ARCHIVE}.zip.asc" \
           -o "${RUNNER_TEMP}/mvnd.zip.asc"
         gpg --verify "${RUNNER_TEMP}/mvnd.zip.asc" "${RUNNER_TEMP}/mvnd.zip"
@@ -65,13 +71,16 @@ runs:
         ARCHIVE: ${{ steps.platform.outputs.archive }}
       run: echo "${RUNNER_TEMP}/mvnd/${ARCHIVE}/bin" >> $GITHUB_PATH
 
-    - name: Verify mvnd
-      id: verify
+    - name: Smoke-test mvnd
+      if: runner.os != 'Windows'
       shell: bash
-      run: |
-        if mvnd --version; then
-          echo "mvnd_available=true" >> $GITHUB_OUTPUT
-        else
-          echo "::warning::mvnd daemon failed to start, falling back to mvn"
-          echo "mvnd_available=false" >> $GITHUB_OUTPUT
-        fi
+      env:
+        MVND_CMD: ${{ steps.platform.outputs.cmd }}
+      run: $MVND_CMD --version
+
+    - name: Smoke-test mvnd
+      if: runner.os == 'Windows'
+      shell: cmd
+      env:
+        MVND_CMD: ${{ steps.platform.outputs.cmd }}
+      run: '"%MVND_CMD%" --version'
