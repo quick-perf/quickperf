@@ -43,7 +43,7 @@
         <profile>
             <id>SpringBootTests</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <jdk>[1.8,)</jdk>
             </activation>
             <modules>
                 <module>junit4-spring-boot-test</module>
