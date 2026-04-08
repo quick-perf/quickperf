@@ -7,6 +7,10 @@ on:
   schedule:
     - cron: '0 7 * * *'
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   MVND_VERSION: '1.0.5'
 
