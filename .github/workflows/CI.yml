@@ -1,6 +1,11 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 7 * * *'
 
 env:
   MVND_VERSION: '1.0.5'
@@ -35,6 +40,7 @@ jobs:
         path: target/timeline/
 
   macOS:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: macOS-latest
     name: Java ${{ matrix.java }}
     strategy:
@@ -63,6 +69,7 @@ jobs:
         path: target/timeline/
 
   windows:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: windows-latest
     name: Java ${{ matrix.java }}
     strategy:
