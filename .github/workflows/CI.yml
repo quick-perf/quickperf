@@ -75,6 +75,12 @@ jobs:
     strategy:
       matrix:
         java: [11]
+    env:
+      # Force UTF-8 so the mvnd daemon log is written in UTF-8,
+      # matching DaemonDiagnostics.tail() which reads it as UTF-8.
+      # Without this, Windows Cp1252 bytes in the log cause
+      # MalformedInputException when mvnd reports diagnostics.
+      JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
     steps:
     - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
     - name: Set up JDK ${{ matrix.java }}
