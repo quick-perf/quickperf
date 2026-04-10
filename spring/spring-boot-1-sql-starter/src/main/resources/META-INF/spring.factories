@@ -1,2 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 org.quickperf.spring.boot.QuickPerfProxyBeanAutoConfiguration
+
+org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa=\
+org.quickperf.spring.boot.QuickPerfProxyBeanAutoConfiguration

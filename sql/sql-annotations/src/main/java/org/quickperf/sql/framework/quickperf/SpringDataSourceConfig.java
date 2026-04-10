@@ -32,19 +32,15 @@ class SpringDataSourceConfig implements QuickPerfSuggestion {
 
         if (classPath.containsSpringBoot1()) {
             if (classPath.contains(QUICKPERF_SPRING_BOOT_1_SQL_STARTER)) {
-                return    buildDataJpaTestAnnotationMessage()
-                        + LINE_SEPARATOR
-                        + LINE_SEPARATOR + buildSpringRESTControllerMessage();
+                return LINE_SEPARATOR + buildSpringRESTControllerMessage();
             }
             return "To configure it, add the following dependency: "
                   + LINE_SEPARATOR + format(QUICKPERF_SPRING_BOOT_1_SQL_STARTER);
         }
 
-        if (classPath.containsSpringBoot2()) {
+        if (classPath.containsSpringBoot2() || classPath.containsSpringBoot3()) {
             if (classPath.contains(QUICKPERF_SPRING_BOOT_2_SQL_STARTER)) {
-                return    buildDataJpaTestAnnotationMessage()
-                        + LINE_SEPARATOR
-                        + LINE_SEPARATOR + buildSpringRESTControllerMessage();
+                return LINE_SEPARATOR + buildSpringRESTControllerMessage();
             }
             return   "To configure it, add the following dependency: "
                     + LINE_SEPARATOR + format(QUICKPERF_SPRING_BOOT_2_SQL_STARTER);
@@ -78,16 +74,6 @@ class SpringDataSourceConfig implements QuickPerfSuggestion {
 
         return "";
 
-    }
-
-    private String buildDataJpaTestAnnotationMessage() {
-        return    "Do you use @DataJpaTest? This annotation disables Spring auto-configuration."
-                + LINE_SEPARATOR + "So, QuickPerf Spring auto-configuration is disabled."
-                + LINE_SEPARATOR + "To allow QuickPerf to intercept the SQL queries, you have two possibilities: "
-                + LINE_SEPARATOR + "1) Import QuickPerfSqlConfig (recommended): "
-                + LINE_SEPARATOR + buildImportQuickPerfSqlConfigExample()
-                + LINE_SEPARATOR + "2) Force to enable Spring auto-configuration by adding"
-                + LINE_SEPARATOR + "   " + "@OverrideAutoConfiguration(enabled = true) on the test class";
     }
 
     private String buildSpringRESTControllerMessage() {
