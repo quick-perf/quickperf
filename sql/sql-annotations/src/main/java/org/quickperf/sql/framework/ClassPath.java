@@ -49,6 +49,10 @@ public class ClassPath {
         return value.contains("spring-boot-2");
     }
 
+    public boolean containsSpringBoot3() {
+        return value.contains("spring-boot-3");
+    }
+
     public boolean containsSpringCore() {
         return containsSpringframework() && value.contains("spring-core");
     }

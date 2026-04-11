@@ -50,6 +50,15 @@
             </modules>
         </profile>
         <profile>
+            <id>SpringBoot1Tests</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <modules>
+                <module>junit4-spring-boot-1-test</module>
+            </modules>
+        </profile>
+        <profile>
             <id>SpringBoot3Tests</id>
             <activation>
                 <jdk>[17,)</jdk>
