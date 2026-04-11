@@ -3,3 +3,6 @@ org.quickperf.spring.boot.QuickPerfProxyBeanAutoConfiguration
 
 org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa=\
 org.quickperf.spring.boot.QuickPerfProxyBeanAutoConfiguration
+
+org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureJdbc=\
+org.quickperf.spring.boot.QuickPerfProxyBeanAutoConfiguration
