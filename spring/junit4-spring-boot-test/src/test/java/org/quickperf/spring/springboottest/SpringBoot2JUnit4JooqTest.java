@@ -12,30 +12,28 @@
  */
 package org.quickperf.spring.springboottest;
 
-import org.junit.jupiter.api.Test;
-import org.quickperf.junit5.JUnit5Tests;
-import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
-import org.quickperf.spring.springboottest.jdbctest.ExpectSelectWithJdbc;
+import org.junit.Test;
+import org.junit.experimental.results.PrintableResult;
+import org.quickperf.spring.springboottest.jooqtest.ExpectSelectWithJooq;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SpringBoot3JUnit5JdbcTest {
+public class SpringBoot2JUnit4JooqTest {
 
     @Test
-    void should_detect_select_with_jdbc_test() {
+    public void should_detect_select_with_jooqtest() {
 
-        // GIVEN
-        Class<?> testClass = ExpectSelectWithJdbc.class;
-        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+       // GIVEN
+        Class<?> testClass = ExpectSelectWithJooq.class;
 
         // WHEN
-        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+        PrintableResult printableResult = PrintableResult.testResult(testClass);
 
         // THEN
-        assertThat(jUnit5TestsResult.getNumberOfFailures()).isOne();
+        assertThat(printableResult.failureCount()).isOne();
 
-        String errorReport = jUnit5TestsResult.getErrorReport();
-        assertThat(errorReport)
+        String testReport = printableResult.toString();
+        assertThat(testReport)
                       .contains("You may think that <1> select statement was sent to the database");
 
     }
