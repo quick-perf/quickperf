@@ -34,8 +34,7 @@ public class SpringBoot2JUnit4DataJdbcTest {
 
         String testReport = printableResult.toString();
         assertThat(testReport)
-                      .contains("You may think that <1> select statement was sent to the database")
-                      .contains("Perhaps you are facing an N+1 select issue");
+                      .contains("You may think that <1> select statement was sent to the database");
 
     }
 

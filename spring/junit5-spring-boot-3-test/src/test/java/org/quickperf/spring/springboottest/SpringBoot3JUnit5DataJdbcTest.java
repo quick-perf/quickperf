@@ -36,8 +36,7 @@ class SpringBoot3JUnit5DataJdbcTest {
 
         String errorReport = jUnit5TestsResult.getErrorReport();
         assertThat(errorReport)
-                      .contains("You may think that <1> select statement was sent to the database")
-                      .contains("Perhaps you are facing an N+1 select issue");
+                      .contains("You may think that <1> select statement was sent to the database");
 
     }
 

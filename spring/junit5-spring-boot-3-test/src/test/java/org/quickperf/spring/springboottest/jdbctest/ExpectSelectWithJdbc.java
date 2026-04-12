@@ -36,7 +36,7 @@ public class ExpectSelectWithJdbc {
 
     @ExpectSelect(1)
     @Test
-    public void should_detect_two_selects() {
+    public void execute_two_selects() {
 
         java.util.List<java.util.Map<String, Object>> player1 =
                 jdbcTemplate.queryForList("SELECT id, name FROM PLAYER_JDBC_TEST WHERE id = 1");

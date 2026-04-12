@@ -10,40 +10,40 @@
  *
  * Copyright 2019-2022 the original author or authors.
  */
-package org.quickperf.spring.springboottest.jdbctest;
+package org.quickperf.spring.springboottest.jooqtest;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.quickperf.spring.junit4.QuickPerfSpringRunner;
+import org.jooq.DSLContext;
+import org.jooq.Result;
+import org.junit.jupiter.api.Test;
+import org.quickperf.junit5.QuickPerfTest;
 import org.quickperf.sql.annotation.ExpectSelect;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.autoconfigure.jooq.JooqTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(QuickPerfSpringRunner.class)
-@JdbcTest
+@QuickPerfTest
+@JooqTest
 @Sql(statements = {
-        "CREATE TABLE IF NOT EXISTS PLAYER_JDBC_TEST (id BIGINT PRIMARY KEY, name VARCHAR(255))",
-        "INSERT INTO PLAYER_JDBC_TEST VALUES (1, 'Paul Pogba')",
-        "INSERT INTO PLAYER_JDBC_TEST VALUES (2, 'Antoine Griezmann')"
+        "CREATE TABLE IF NOT EXISTS PLAYER_JOOQ_TEST (id BIGINT PRIMARY KEY, name VARCHAR(255))",
+        "INSERT INTO PLAYER_JOOQ_TEST VALUES (1, 'Paul Pogba')",
+        "INSERT INTO PLAYER_JOOQ_TEST VALUES (2, 'Antoine Griezmann')"
 })
-public class ExpectSelectWithJdbc {
+public class ExpectSelectWithJooq {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private DSLContext dslContext;
 
     @ExpectSelect(1)
     @Test
     public void execute_two_selects() {
 
-        java.util.List<java.util.Map<String, Object>> player1 =
-                jdbcTemplate.queryForList("SELECT id, name FROM PLAYER_JDBC_TEST WHERE id = 1");
+        Result<?> player1 =
+                dslContext.fetch("SELECT id, name FROM PLAYER_JOOQ_TEST WHERE id = 1");
 
-        java.util.List<java.util.Map<String, Object>> player2 =
-                jdbcTemplate.queryForList("SELECT id, name FROM PLAYER_JDBC_TEST WHERE id = 2");
+        Result<?> player2 =
+                dslContext.fetch("SELECT id, name FROM PLAYER_JOOQ_TEST WHERE id = 2");
 
         assertThat(player1).hasSize(1);
         assertThat(player2).hasSize(1);

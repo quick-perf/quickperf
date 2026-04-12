@@ -15,17 +15,17 @@ package org.quickperf.spring.springboottest;
 import org.junit.jupiter.api.Test;
 import org.quickperf.junit5.JUnit5Tests;
 import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
-import org.quickperf.spring.springboottest.jdbctest.ExpectSelectWithJdbc;
+import org.quickperf.spring.springboottest.jooqtest.ExpectSelectWithJooq;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SpringBoot3JUnit5JdbcTest {
+class SpringBoot3JUnit5JooqTest {
 
     @Test
-    void should_detect_select_with_jdbc_test() {
+    void should_detect_select_with_jooq_test() {
 
         // GIVEN
-        Class<?> testClass = ExpectSelectWithJdbc.class;
+        Class<?> testClass = ExpectSelectWithJooq.class;
         JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
 
         // WHEN
