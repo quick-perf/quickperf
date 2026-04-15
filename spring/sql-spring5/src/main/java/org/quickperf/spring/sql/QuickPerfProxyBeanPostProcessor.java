@@ -18,17 +18,19 @@ import org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.core.Ordered;
+import org.springframework.core.PriorityOrdered;
 import org.springframework.util.ReflectionUtils;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
 
-/*
-Inspiration from https://blog.arnoldgalovics.com/configuring-a-datasource-proxy-in-spring-boot/
-and https://github.com/gavlyukovskiy/spring-boot-data-source-decorator
-*/
-public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, Ordered {
+// Inspiration from https://blog.arnoldgalovics.com/configuring-a-datasource-proxy-in-spring-boot/
+// and https://github.com/gavlyukovskiy/spring-boot-data-source-decorator
+
+// Implements PriorityOrdered (not Ordered) so this BeanPostProcessor is registered before any
+// Ordered BeanPostProcessor that depends on the DataSource. Spring instantiates PriorityOrdered
+// bean post-processors first.
+public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, PriorityOrdered {
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
@@ -48,7 +50,7 @@ public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, Order
 
     @Override
     public int getOrder() {
-        return Ordered.LOWEST_PRECEDENCE - 1;
+        return PriorityOrdered.LOWEST_PRECEDENCE - 1;
     }
 
     private static class ProxyDataSourceInterceptor implements MethodInterceptor {
