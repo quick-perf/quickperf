@@ -65,6 +65,7 @@
             </activation>
             <modules>
                 <module>junit5-spring-boot-3-test</module>
+                <module>testng-spring-boot-3-test</module>
             </modules>
         </profile>
     </profiles>
