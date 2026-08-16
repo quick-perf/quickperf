@@ -40,6 +40,9 @@ import java.lang.reflect.Method;
 // injection fails.
 public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, PriorityOrdered {
 
+    // Bounds the walk so that DataSource beans pointing at each other cannot loop forever.
+    private static final int MAX_DELEGATION_DEPTH = 16;
+
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
         return bean;
@@ -47,13 +50,49 @@ public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, Prior
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) {
-        if (bean instanceof DataSource && !ScopedProxyUtils.isScopedTarget(beanName)) {
+        if (bean instanceof DataSource
+                && !ScopedProxyUtils.isScopedTarget(beanName)
+                && !isAlreadyProxied((DataSource) bean)) {
             final ProxyFactory factory = new ProxyFactory(bean);
             factory.setProxyTargetClass(true);
+            factory.addInterface(QuickPerfProxiedDataSource.class);
             factory.addAdvice(new ProxyDataSourceInterceptor((DataSource) bean));
             return factory.getProxy();
         }
         return bean;
+    }
+
+    // A delegate is proxied before the bean delegating to it is created, so proxying both would
+    // record every query twice. Skipping the delegating bean still records the queries: they go
+    // through the proxied delegate.
+    private boolean isAlreadyProxied(DataSource dataSource) {
+        DataSource currentDataSource = dataSource;
+        for (int depth = 0; currentDataSource != null && depth < MAX_DELEGATION_DEPTH; depth++) {
+            if (currentDataSource instanceof QuickPerfProxiedDataSource) {
+                return true;
+            }
+            currentDataSource = targetDataSourceOf(currentDataSource);
+        }
+        return false;
+    }
+
+    // The accessor is looked up rather than reached through DelegatingDataSource because
+    // spring-jdbc is not a dependency of this module. Calling it must never break the
+    // application context, so a failure falls back to proxying the bean.
+    private DataSource targetDataSourceOf(DataSource dataSource) {
+        Method targetDataSourceMethod = ReflectionUtils.findMethod(dataSource.getClass(), "getTargetDataSource");
+        if (targetDataSourceMethod == null
+                || !DataSource.class.isAssignableFrom(targetDataSourceMethod.getReturnType())) {
+            return null;
+        }
+        try {
+            ReflectionUtils.makeAccessible(targetDataSourceMethod);
+            Object targetDataSource = ReflectionUtils.invokeMethod(targetDataSourceMethod, dataSource);
+            return targetDataSource instanceof DataSource ? (DataSource) targetDataSource : null;
+        }
+        catch (RuntimeException e) {
+            return null;
+        }
     }
 
     @Override
