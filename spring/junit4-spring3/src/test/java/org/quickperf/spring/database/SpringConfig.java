@@ -58,7 +58,7 @@ public class SpringConfig {
     }
 
     @Bean
-    public QuickPerfProxyBeanPostProcessor dataSourceBeanPostProcessor() {
+    public static QuickPerfProxyBeanPostProcessor dataSourceBeanPostProcessor() {
         return new QuickPerfProxyBeanPostProcessor();
     }
 
