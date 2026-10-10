@@ -30,6 +30,12 @@ import java.lang.reflect.Method;
 // Implements PriorityOrdered (not Ordered) so this BeanPostProcessor is registered before any
 // Ordered BeanPostProcessor that depends on the DataSource. Spring instantiates PriorityOrdered
 // bean post-processors first.
+
+// Declare this bean with a static @Bean method or in XML. A @Bean method must declare
+// QuickPerfProxyBeanPostProcessor as its return type, because Spring looks for PriorityOrdered on
+// that type before creating the bean. With a non-static @Bean method, Spring creates the declaring
+// @Configuration class before registering the bean post-processors that handle @Autowired, @Value
+// and @PostConstruct, so these are ignored there.
 public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, PriorityOrdered {
 
     @Override
