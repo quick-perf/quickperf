@@ -22,6 +22,8 @@ class JdkFlightRecorderProfilerFromJava9 implements JvmProfiler {
 
     private final ObjectName objectName;
 
+    private Long recordingId;
+
     JdkFlightRecorderProfilerFromJava9() {
         this.mBeanServer = ManagementFactory.getPlatformMBeanServer();
         this.objectName = getObjectName();
@@ -45,6 +47,8 @@ class JdkFlightRecorderProfilerFromJava9 implements JvmProfiler {
 
             Object[] startRecordingArgs = new Object[]{recordingId};
             mBeanServer.invoke(objectName, "startRecording", startRecordingArgs, new String[]{long.class.getName()});
+
+            this.recordingId = recordingId;
         } catch (InstanceNotFoundException | MBeanException | ReflectionException e) {
             throw new IllegalStateException(e);
         }
@@ -55,19 +59,27 @@ class JdkFlightRecorderProfilerFromJava9 implements JvmProfiler {
         String jfrPath = workingFolderPath + File.separator + FlightRecorder.FILE_NAME;
         try {
 
-            long recordingId = (long) mBeanServer.invoke(objectName
-                                                       , "takeSnapshot"
-                                                       , new Object[]{}
-                                                       , new String[0]
-                                                        );
+            Object[] stopRecordingArgs = new Object[]{recordingId};
+            mBeanServer.invoke(objectName, "stopRecording", stopRecordingArgs, new String[]{long.class.getName()});
 
             Object[] copyToArgs = new Object[]{recordingId, jfrPath};
             mBeanServer.invoke(objectName, "copyTo", copyToArgs, new String[]{long.class.getName(), String.class.getName()});
 
         } catch (InstanceNotFoundException | MBeanException | ReflectionException e) {
             throw new IllegalStateException(e);
+        } finally {
+            closeRecording();
         }
 
+    }
+
+    private void closeRecording() {
+        try {
+            Object[] closeRecordingArgs = new Object[]{recordingId};
+            mBeanServer.invoke(objectName, "closeRecording", closeRecordingArgs, new String[]{long.class.getName()});
+        } catch (InstanceNotFoundException | MBeanException | ReflectionException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
 }
