@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 public class QuickPerfSqlConfig {
 
     @Bean
-    public QuickPerfProxyBeanPostProcessor quickPerfProxyBeanPostProcessor() {
+    public static QuickPerfProxyBeanPostProcessor quickPerfProxyBeanPostProcessor() {
         return new QuickPerfProxyBeanPostProcessor();
     }
 

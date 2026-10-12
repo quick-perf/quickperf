@@ -32,12 +32,12 @@ import java.lang.reflect.Method;
 // Ordered BeanPostProcessor that depends on the DataSource. Spring instantiates PriorityOrdered
 // bean post-processors first.
 
-// Declare this bean with a static @Bean method, in XML, or by importing QuickPerfSqlConfig (which
-// has nothing to inject). A @Bean method must declare QuickPerfProxyBeanPostProcessor as its return
-// type, because Spring looks for PriorityOrdered on that type before creating the bean. With a
-// non-static @Bean method, Spring creates the declaring @Configuration class before registering the
-// bean post-processors that handle @Autowired, @Value and @PostConstruct: they are ignored there,
-// and constructor injection fails.
+// Declare this bean with a static @Bean method, in XML, or by importing QuickPerfSqlConfig. A @Bean
+// method must declare QuickPerfProxyBeanPostProcessor as its return type, because Spring looks for
+// PriorityOrdered on that type before creating the bean. With a non-static @Bean method, Spring
+// creates the declaring @Configuration class before registering the bean post-processors that
+// handle @Autowired, @Value and @PostConstruct: they are ignored there, and constructor
+// injection fails.
 public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, PriorityOrdered {
 
     @Override
