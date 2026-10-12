@@ -20,6 +20,7 @@ import org.openjdk.jmc.flightrecorder.rules.jdk.cpu.HighJvmCpuRule;
 import org.openjdk.jmc.flightrecorder.rules.jdk.memory.GarbageCollectionInfoRule;
 import org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcStallRule;
 import org.openjdk.jmc.flightrecorder.rules.jdk.memory.HeapInspectionRule;
+import org.openjdk.jmc.flightrecorder.rules.jdk.memory.StringDeduplicationRule;
 import org.openjdk.jmc.flightrecorder.rules.jdk.memory.SystemGcRule;
 import org.quickperf.ExtractablePerformanceMeasure;
 import org.quickperf.jvm.jfr.JfrRecording;
@@ -41,7 +42,9 @@ public class JmcRuleCountMeasureExtractor implements ExtractablePerformanceMeasu
             GcStallRule.class,
             GarbageCollectionInfoRule.class,
             HeapInspectionRule.class,
-            SystemGcRule.class
+            SystemGcRule.class,
+            //Throws a NullPointerException when no GC happens during the test (no "after GC" jdk.GCHeapSummary event)
+            StringDeduplicationRule.class
     );
 
     private JmcRuleCountMeasureExtractor() {
