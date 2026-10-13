@@ -29,19 +29,24 @@ jobs:
         java-version: ${{ matrix.java }}
         distribution: temurin
         cache: maven
+    - name: Pre-resolve the mvn-lens extension
+      working-directory: .mvn
+      run: mvn -B -ntp -U dependency:resolve
     - name: Install mvnd
       id: mvnd
       uses: ./.github/actions/setup-mvnd
       with:
         version: ${{ env.MVND_VERSION }}
     - name: Build
-      run: ${{ steps.mvnd.outputs.mvn_cmd }} verify
-    - name: Upload Maven Timeline
+      run: ${{ steps.mvnd.outputs.mvn_cmd }} --global-settings .mvn/settings.xml verify
+    - name: Upload mvn-lens report
       if: always()
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
-        name: maven-timeline-linux-java-${{ matrix.java }}
-        path: target/timeline/
+        name: mvn-lens-linux-java-${{ matrix.java }}
+        path: |
+          target/mvnlens/
+          !target/mvnlens/jfr/**
 
   macOS:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
@@ -58,19 +63,24 @@ jobs:
         java-version: ${{ matrix.java }}
         distribution: temurin
         cache: maven
+    - name: Pre-resolve the mvn-lens extension
+      working-directory: .mvn
+      run: mvn -B -ntp -U dependency:resolve
     - name: Install mvnd
       id: mvnd
       uses: ./.github/actions/setup-mvnd
       with:
         version: ${{ env.MVND_VERSION }}
     - name: Tests
-      run: ${{ steps.mvnd.outputs.mvn_cmd }} verify
-    - name: Upload Maven Timeline
+      run: ${{ steps.mvnd.outputs.mvn_cmd }} --global-settings .mvn/settings.xml verify
+    - name: Upload mvn-lens report
       if: always()
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
-        name: maven-timeline-macos-java-${{ matrix.java }}
-        path: target/timeline/
+        name: mvn-lens-macos-java-${{ matrix.java }}
+        path: |
+          target/mvnlens/
+          !target/mvnlens/jfr/**
 
   windows:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
@@ -93,19 +103,24 @@ jobs:
         java-version: ${{ matrix.java }}
         distribution: temurin
         cache: maven
+    - name: Pre-resolve the mvn-lens extension
+      working-directory: .mvn
+      run: mvn -B -ntp -U dependency:resolve
     - name: Install mvnd
       id: mvnd
       uses: ./.github/actions/setup-mvnd
       with:
         version: ${{ env.MVND_VERSION }}
     - name: Tests
-      run: ${{ steps.mvnd.outputs.mvn_cmd }} verify
-    - name: Upload Maven Timeline
+      run: ${{ steps.mvnd.outputs.mvn_cmd }} --global-settings .mvn/settings.xml verify
+    - name: Upload mvn-lens report
       if: always()
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
-        name: maven-timeline-windows-java-${{ matrix.java }}
-        path: target/timeline/
+        name: mvn-lens-windows-java-${{ matrix.java }}
+        path: |
+          target/mvnlens/
+          !target/mvnlens/jfr/**
 
   testcontainers:
     runs-on: ubuntu-latest
@@ -121,19 +136,23 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: temurin
           cache: maven
+      - name: Pre-resolve the mvn-lens extension
+        working-directory: .mvn
+        run: mvn -B -ntp -U dependency:resolve
       - name: Install mvnd
         id: mvnd
         uses: ./.github/actions/setup-mvnd
         with:
           version: ${{ env.MVND_VERSION }}
       - name: Build
-        run: ${{ steps.mvnd.outputs.mvn_cmd }} install -DskipTests
+        run: ${{ steps.mvnd.outputs.mvn_cmd }} --global-settings .mvn/settings.xml install -DskipTests
       - name: Tests
-        run: ${{ steps.mvnd.outputs.mvn_cmd }} verify -P testcontainers -f ./sql/sql-testcontainers-test/pom.xml
-      - name: Upload Maven Timeline
+        run: ${{ steps.mvnd.outputs.mvn_cmd }} --global-settings .mvn/settings.xml verify -P testcontainers -f ./sql/sql-testcontainers-test/pom.xml
+      - name: Upload mvn-lens report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: maven-timeline-testcontainers-java-${{ matrix.java }}
-          path: sql/sql-testcontainers-test/target/timeline/
-
+          name: mvn-lens-testcontainers-java-${{ matrix.java }}
+          path: |
+            sql/sql-testcontainers-test/target/mvnlens/
+            !sql/sql-testcontainers-test/target/mvnlens/jfr/**
