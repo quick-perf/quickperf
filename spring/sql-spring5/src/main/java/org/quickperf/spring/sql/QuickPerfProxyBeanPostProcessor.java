@@ -22,6 +22,7 @@ import org.springframework.core.PriorityOrdered;
 import org.springframework.util.ReflectionUtils;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 // Inspiration from https://blog.arnoldgalovics.com/configuring-a-datasource-proxy-in-spring-boot/
@@ -49,16 +50,55 @@ public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, Prior
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) {
-        if (bean instanceof DataSource
-                && !ScopedProxyUtils.isScopedTarget(beanName)
-                && !isAlreadyProxied((DataSource) bean)) {
-            final ProxyFactory factory = new ProxyFactory(bean);
-            factory.setProxyTargetClass(true);
-            factory.addInterface(QuickPerfProxiedDataSource.class);
-            factory.addAdvice(new ProxyDataSourceInterceptor((DataSource) bean));
-            return factory.getProxy();
+        if (bean instanceof DataSource && !ScopedProxyUtils.isScopedTarget(beanName)) {
+            DataSource dataSource = (DataSource) bean;
+            if (isAlreadyProxied(dataSource)) {
+                proxyReadOnlyDataSourcesAlong(dataSource);
+                return bean;
+            }
+            return proxy(dataSource, true);
         }
         return bean;
+    }
+
+    private DataSource proxy(DataSource dataSource, boolean proxyTargetClass) {
+        final ProxyFactory factory = new ProxyFactory(dataSource);
+        factory.setProxyTargetClass(proxyTargetClass);
+        factory.addInterface(QuickPerfProxiedDataSource.class);
+        factory.addAdvice(new ProxyDataSourceInterceptor(dataSource));
+        return (DataSource) factory.getProxy();
+    }
+
+    // LazyConnectionDataSourceProxy sends read-only connections to a DataSource that getTargetDataSource
+    // does not reach, and delegates that are not beans can hold one too, so the whole chain is visited.
+    private void proxyReadOnlyDataSourcesAlong(DataSource dataSource) {
+        DataSource currentDataSource = dataSource;
+        for (int depth = 0;
+             currentDataSource != null && !(currentDataSource instanceof QuickPerfProxiedDataSource) && depth < MAX_DELEGATION_DEPTH;
+             depth++) {
+            proxyReadOnlyDataSourceOf(currentDataSource);
+            currentDataSource = targetDataSourceOf(currentDataSource);
+        }
+    }
+
+    // Proxied in place so read-only queries are recorded once; a failure leaves it untouched. The setter
+    // takes a DataSource, so an interface proxy is enough and also works when the class is final.
+    private void proxyReadOnlyDataSourceOf(DataSource dataSource) {
+        Field readOnlyDataSourceField = ReflectionUtils.findField(dataSource.getClass(), "readOnlyDataSource", DataSource.class);
+        Method readOnlyDataSourceSetter = ReflectionUtils.findMethod(dataSource.getClass(), "setReadOnlyDataSource", DataSource.class);
+        if (readOnlyDataSourceField == null || readOnlyDataSourceSetter == null) {
+            return;
+        }
+        try {
+            ReflectionUtils.makeAccessible(readOnlyDataSourceField);
+            ReflectionUtils.makeAccessible(readOnlyDataSourceSetter);
+            Object readOnlyDataSource = ReflectionUtils.getField(readOnlyDataSourceField, dataSource);
+            if (readOnlyDataSource instanceof DataSource && !isAlreadyProxied((DataSource) readOnlyDataSource)) {
+                ReflectionUtils.invokeMethod(readOnlyDataSourceSetter, dataSource, proxy((DataSource) readOnlyDataSource, false));
+            }
+        }
+        catch (RuntimeException ignored) {
+        }
     }
 
     // A delegate is proxied before the bean delegating to it is created, so proxying both would

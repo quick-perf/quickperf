@@ -17,6 +17,9 @@ import org.quickperf.junit5.JUnit5Tests;
 import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
 import org.quickperf.spring.springboottest.datasourcedelegation.QueryCountingWithDelegatingDataSource;
 import org.quickperf.spring.springboottest.datasourcedelegation.QueryCountingWithIndependentDataSources;
+import org.quickperf.spring.springboottest.datasourcedelegation.QueryCountingWithNestedReadOnlyDataSource;
+import org.quickperf.spring.springboottest.datasourcedelegation.QueryCountingWithReadOnlyDataSource;
+import org.quickperf.spring.springboottest.datasourcedelegation.QueryCountingWithReadOnlyDataSourceBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,6 +32,66 @@ class SpringBoot3DataSourceDelegationJunit5Test {
 
         // GIVEN
         Class<?> testClass = QueryCountingWithDelegatingDataSource.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isOne();
+
+        String errorReport = jUnit5TestsResult.getErrorReport();
+        assertThat(errorReport)
+                      .contains("You may think that <2> select statements were sent to the database")
+                      .contains("But there is in fact <1>");
+
+    }
+
+    @Test
+    void should_count_a_select_once_through_a_read_only_datasource_that_is_not_a_bean() {
+
+        // GIVEN
+        Class<?> testClass = QueryCountingWithReadOnlyDataSource.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isOne();
+
+        String errorReport = jUnit5TestsResult.getErrorReport();
+        assertThat(errorReport)
+                      .contains("You may think that <2> select statements were sent to the database")
+                      .contains("But there is in fact <1>");
+
+    }
+
+    @Test
+    void should_count_a_select_once_through_a_read_only_datasource_bean() {
+
+        // GIVEN
+        Class<?> testClass = QueryCountingWithReadOnlyDataSourceBean.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isOne();
+
+        String errorReport = jUnit5TestsResult.getErrorReport();
+        assertThat(errorReport)
+                      .contains("You may think that <2> select statements were sent to the database")
+                      .contains("But there is in fact <1>");
+
+    }
+
+    @Test
+    void should_count_a_select_once_through_a_read_only_datasource_held_by_a_nested_delegate() {
+
+        // GIVEN
+        Class<?> testClass = QueryCountingWithNestedReadOnlyDataSource.class;
         JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
 
         // WHEN
