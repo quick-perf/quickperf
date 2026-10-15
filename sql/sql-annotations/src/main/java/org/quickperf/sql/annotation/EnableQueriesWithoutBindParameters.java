@@ -32,7 +32,10 @@ import java.lang.annotation.Target;
  *
  * @see <a href="https://medium.com/@FranckPachot/postgresql-bind-variable-peeking-fb4be4942252"><i>PostgreSQL
  * “bind variable peeking”</i></a>
+ *
+ * @deprecated Use {@link AllowInlinedParameters} instead.
  */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface EnableQueriesWithoutBindParameters {

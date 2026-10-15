@@ -22,6 +22,7 @@ import javax.persistence.Query;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.experimental.results.PrintableResult.testResult;
 
+@SuppressWarnings("deprecation")
 public class DisableQueriesWithoutBindParametersWithSelectTest {
 
     private static final String QUERY_WITHOUT_BIND_PARAMETERS_MESSAGE = "[PERF] Query without bind parameters";

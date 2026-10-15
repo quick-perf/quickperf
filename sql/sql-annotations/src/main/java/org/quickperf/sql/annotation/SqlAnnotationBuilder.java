@@ -123,8 +123,23 @@ public class SqlAnnotationBuilder {
     }
 
     /**
-     *Allows to build {@link org.quickperf.sql.annotation.DisableQueriesWithoutBindParameters} annotation.
+     *Allows to build {@link org.quickperf.sql.annotation.ExpectNoInlinedParameters} annotation.
      */
+    public static ExpectNoInlinedParameters expectNoInlinedParameters() {
+        return new ExpectNoInlinedParameters() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ExpectNoInlinedParameters.class;
+            }
+        };
+    }
+
+    /**
+     *Allows to build {@link org.quickperf.sql.annotation.DisableQueriesWithoutBindParameters} annotation.
+     *
+     * @deprecated Use {@link #expectNoInlinedParameters()} instead.
+     */
+    @Deprecated
     public static DisableQueriesWithoutBindParameters disableQueriesWithoutBindParameters() {
         return new DisableQueriesWithoutBindParameters() {
             @Override

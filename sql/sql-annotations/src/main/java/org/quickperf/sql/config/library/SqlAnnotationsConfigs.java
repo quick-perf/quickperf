@@ -243,8 +243,23 @@ class SqlAnnotationsConfigs {
     		.perfIssueVerifier(UpdatedColumnsPerfIssueVerifier.INSTANCE)
     		.build(ExpectUpdatedColumn.class);
 
+	static final AnnotationConfig EXPECT_NO_INLINED_PARAMETERS = new AnnotationConfig.Builder()
+			.perfRecorderClass(PersistenceSqlRecorder.class)
+			.perfMeasureExtractor(AllParametersAreBoundExtractor.INSTANCE)
+			.perfIssueVerifier(DisableQueriesWithoutBindParametersVerifier.INSTANCE)
+			.replace(DisableQueriesWithoutBindParameters.class)
+			.build(ExpectNoInlinedParameters.class);
+
+	// AllowInlinedParameters and the deprecated EnableQueriesWithoutBindParameters cancel both the new and the
+	// deprecated annotations, so that they can be mixed (for example, global and method annotations).
+	static final AnnotationConfig ALLOW_INLINED_PARAMETERS = new AnnotationConfig.Builder()
+			.cancelBehaviorOf(ExpectNoInlinedParameters.class)
+			.cancelBehaviorOf(DisableQueriesWithoutBindParameters.class)
+			.build(AllowInlinedParameters.class);
+
     static final AnnotationConfig ENABLE_QUERIES_WITHOUT_BIND_PARAMETERS = new AnnotationConfig.Builder()
 			.cancelBehaviorOf(DisableQueriesWithoutBindParameters.class)
+			.cancelBehaviorOf(ExpectNoInlinedParameters.class)
 			.build(EnableQueriesWithoutBindParameters.class);
 
 	static final AnnotationConfig DISABLE_QUERIES_WITHOUT_BIND_PARAMETERS = new AnnotationConfig.Builder()

@@ -58,6 +58,8 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                 , SqlAnnotationsConfigs.ENABLE_SAME_SQL_SELECTS
                 , SqlAnnotationsConfigs.EXPECT_MAX_QUERY_EXECUTION_TIME
                 , SqlAnnotationsConfigs.EXPECT_UPDATED_COLUMN
+                , SqlAnnotationsConfigs.EXPECT_NO_INLINED_PARAMETERS
+                , SqlAnnotationsConfigs.ALLOW_INLINED_PARAMETERS
                 , SqlAnnotationsConfigs.ENABLE_QUERIES_WITHOUT_BIND_PARAMETERS
                 , SqlAnnotationsConfigs.DISABLE_QUERIES_WITHOUT_BIND_PARAMETERS
                 , SqlAnnotationsConfigs.EXPECT_NO_STATEMENTS
