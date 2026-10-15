@@ -60,6 +60,8 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                 , SqlAnnotationsConfigs.EXPECT_UPDATED_COLUMN
                 , SqlAnnotationsConfigs.ENABLE_QUERIES_WITHOUT_BIND_PARAMETERS
                 , SqlAnnotationsConfigs.DISABLE_QUERIES_WITHOUT_BIND_PARAMETERS
+                , SqlAnnotationsConfigs.EXPECT_NO_STATEMENTS
+                , SqlAnnotationsConfigs.ALLOW_STATEMENTS
                 , SqlAnnotationsConfigs.DISABLE_STATEMENTS
                 , SqlAnnotationsConfigs.ENABLE_STATEMENTS
                 , SqlAnnotationsConfigs.EXPECT_NO_CONNECTION_LEAK

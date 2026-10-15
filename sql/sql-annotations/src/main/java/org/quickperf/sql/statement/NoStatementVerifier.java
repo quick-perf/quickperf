@@ -15,16 +15,21 @@ package org.quickperf.sql.statement;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.measure.BooleanMeasure;
-import org.quickperf.sql.annotation.DisableStatements;
 
-public class NoStatementVerifier implements VerifiablePerformanceIssue<DisableStatements, BooleanMeasure> {
+import java.lang.annotation.Annotation;
+
+/**
+ * Verifier of {@link org.quickperf.sql.annotation.ExpectNoStatements} and of the deprecated
+ * {@link org.quickperf.sql.annotation.DisableStatements}.
+ */
+public class NoStatementVerifier implements VerifiablePerformanceIssue<Annotation, BooleanMeasure> {
 
     public static final NoStatementVerifier INSTANCE = new NoStatementVerifier();
 
     private NoStatementVerifier() { }
 
     @Override
-    public PerfIssue verifyPerfIssue(DisableStatements annotation, BooleanMeasure noStatementExist) {
+    public PerfIssue verifyPerfIssue(Annotation annotation, BooleanMeasure noStatementExist) {
 
         Boolean noStatement = noStatementExist.getValue();
         if(noStatement) {

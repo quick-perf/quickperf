@@ -96,8 +96,23 @@ public class SqlAnnotationBuilder {
     }
 
     /**
-     *Allows to build {@link org.quickperf.sql.annotation.DisableStatements} annotation.
+     *Allows to build {@link org.quickperf.sql.annotation.ExpectNoStatements} annotation.
      */
+    public static ExpectNoStatements expectNoStatements() {
+        return new ExpectNoStatements() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ExpectNoStatements.class;
+            }
+        };
+    }
+
+    /**
+     *Allows to build {@link org.quickperf.sql.annotation.DisableStatements} annotation.
+     *
+     * @deprecated Use {@link #expectNoStatements()} instead.
+     */
+    @Deprecated
     public static DisableStatements disableStatements() {
         return new DisableStatements() {
             @Override

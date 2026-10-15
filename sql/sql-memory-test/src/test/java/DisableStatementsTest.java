@@ -26,6 +26,7 @@ import java.sql.Statement;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.experimental.results.PrintableResult.testResult;
 
+@SuppressWarnings("deprecation")
 public class DisableStatementsTest {
 
     @RunWith(QuickPerfJUnitRunner.class)
