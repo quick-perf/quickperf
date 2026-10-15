@@ -48,6 +48,8 @@ public class SqlConfigLoader implements QuickPerfConfigLoader {
                 , SqlAnnotationsConfigs.SQL_STATEMENTS_BATCHED
                 , SqlAnnotationsConfigs.DISPLAY_SQL_OF_TEST_METHOD_BODY
                 , SqlAnnotationsConfigs.DISPLAY_ALL_SQL
+                , SqlAnnotationsConfigs.EXPECT_NO_N_PLUS_ONE_SELECTS
+                , SqlAnnotationsConfigs.ALLOW_N_PLUS_ONE_SELECTS
                 , SqlAnnotationsConfigs.DISABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS
                 , SqlAnnotationsConfigs.ENABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS
                 , SqlAnnotationsConfigs.DISABLE_SAME_SQL_SELECTS

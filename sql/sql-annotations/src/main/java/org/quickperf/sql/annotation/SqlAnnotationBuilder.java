@@ -42,8 +42,23 @@ public class SqlAnnotationBuilder {
     }
 
     /**
-     *Allows to build {@link org.quickperf.sql.annotation.DisableSameSelectTypesWithDifferentParamValues} annotation.
+     *Allows to build {@link org.quickperf.sql.annotation.ExpectNoNPlusOneSelects} annotation.
      */
+    public static ExpectNoNPlusOneSelects expectNoNPlusOneSelects() {
+        return new ExpectNoNPlusOneSelects() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ExpectNoNPlusOneSelects.class;
+            }
+        };
+    }
+
+    /**
+     *Allows to build {@link org.quickperf.sql.annotation.DisableSameSelectTypesWithDifferentParamValues} annotation.
+     *
+     * @deprecated Use {@link #expectNoNPlusOneSelects()} instead.
+     */
+    @Deprecated
     public static DisableSameSelectTypesWithDifferentParamValues disableSameSelectTypesWithDifferentParamValues() {
         return new DisableSameSelectTypesWithDifferentParamValues() {
             @Override

@@ -37,7 +37,9 @@ public class SetOfAnnotationConfigs {
 
     private final Map<Class<? extends Annotation>, AnnotationToJvmOptionConverter> annotationToJvmParamConverterByAnnotationClass = new HashMap<>();
 
-    private final Map<Class<? extends Annotation>, Class<? extends Annotation>> classOfAnnotationToDisableByAnnotationClass = new HashMap<>();
+    private final Map<Class<? extends Annotation>, List<Class<? extends Annotation>>> classesOfAnnotationsToDisableByAnnotationClass = new HashMap<>();
+
+    private final Map<Class<? extends Annotation>, Class<? extends Annotation>> classOfReplacedAnnotationByAnnotationClass = new HashMap<>();
 
     private final Map<Class<? extends Annotation>, ExtractablePerfRecorderParametersFromAnnotation> perfRecorderParamsExtractorFromAnnotByAnnotationClass = new HashMap<>();
 
@@ -50,9 +52,14 @@ public class SetOfAnnotationConfigs {
     private void addAnnotationConfig(AnnotationConfig annotationConfig) {
         Class<? extends Annotation> annotationClass = annotationConfig.getClazz();
 
-        Class<? extends Annotation> classOfAnnotationToDisable = annotationConfig.getClassOfAnnotationToDisable();
-        if(classOfAnnotationToDisable != null) {
-            classOfAnnotationToDisableByAnnotationClass.put(annotationClass, classOfAnnotationToDisable);
+        List<Class<? extends Annotation>> classesOfAnnotationsToDisable = annotationConfig.getClassesOfAnnotationsToDisable();
+        if(!classesOfAnnotationsToDisable.isEmpty()) {
+            classesOfAnnotationsToDisableByAnnotationClass.put(annotationClass, classesOfAnnotationsToDisable);
+        }
+
+        Class<? extends Annotation> classOfReplacedAnnotation = annotationConfig.getClassOfReplacedAnnotation();
+        if(classOfReplacedAnnotation != null) {
+            classOfReplacedAnnotationByAnnotationClass.put(annotationClass, classOfReplacedAnnotation);
         }
 
         Class<? extends RecordablePerformance> perfRecorderClass = annotationConfig.getPerfRecorderClass();
@@ -130,7 +137,7 @@ public class SetOfAnnotationConfigs {
 
     public List<Annotation> removeDisabledAndAndDisablingAnnotationsIn(Collection<Annotation> annotations) {
 
-        List<Annotation> result = new ArrayList<>();
+        List<Annotation> notDisabledAnnotations = new ArrayList<>();
 
         Collection<Annotation> disablingAnnotations = retrieveDisablingAnnotationsOf(annotations);
         Collection<Class<? extends Annotation>> classesOfDisabledAnnotations = retrieveClassesOfDisabledAnnotations(disablingAnnotations);
@@ -138,11 +145,11 @@ public class SetOfAnnotationConfigs {
         for (Annotation annotation : annotations) {
             if(   !disablingAnnotations.contains(annotation)
                && !classesOfDisabledAnnotations.contains(annotation.annotationType())) {
-                result.add(annotation);
+                notDisabledAnnotations.add(annotation);
             }
         }
 
-        return result;
+        return removeReplacedAnnotationsIn(notDisabledAnnotations);
     }
 
     private Collection<Annotation> retrieveDisablingAnnotationsOf(Collection<Annotation> annotations) {
@@ -157,17 +164,34 @@ public class SetOfAnnotationConfigs {
     }
 
     private boolean isDisablingAnnotation(Class<? extends Annotation> clazz) {
-        return classOfAnnotationToDisableByAnnotationClass.get(clazz) != null;
+        return classesOfAnnotationsToDisableByAnnotationClass.get(clazz) != null;
     }
 
     private Collection<Class<? extends Annotation>> retrieveClassesOfDisabledAnnotations(Collection<Annotation> disablingAnnotations) {
         List<Class<? extends Annotation>> classesOfDisabledAnnotations = new ArrayList<>();
         for (Annotation disablingAnnotation : disablingAnnotations) {
             Class<? extends Annotation> clazz = disablingAnnotation.annotationType();
-            Class<? extends Annotation> classOfDisabledAnnotation = classOfAnnotationToDisableByAnnotationClass.get(clazz);
-            classesOfDisabledAnnotations.add(classOfDisabledAnnotation);
+            List<Class<? extends Annotation>> classesOfAnnotationsDisabledBy = classesOfAnnotationsToDisableByAnnotationClass.get(clazz);
+            classesOfDisabledAnnotations.addAll(classesOfAnnotationsDisabledBy);
         }
         return classesOfDisabledAnnotations;
+    }
+
+    private List<Annotation> removeReplacedAnnotationsIn(List<Annotation> annotations) {
+        List<Class<? extends Annotation>> classesOfReplacedAnnotations = new ArrayList<>();
+        for (Annotation annotation : annotations) {
+            Class<? extends Annotation> classOfReplacedAnnotation = classOfReplacedAnnotationByAnnotationClass.get(annotation.annotationType());
+            if(classOfReplacedAnnotation != null) {
+                classesOfReplacedAnnotations.add(classOfReplacedAnnotation);
+            }
+        }
+        List<Annotation> result = new ArrayList<>();
+        for (Annotation annotation : annotations) {
+            if(!classesOfReplacedAnnotations.contains(annotation.annotationType())) {
+                result.add(annotation);
+            }
+        }
+        return result;
     }
 
     public Collection<Annotation> keepQuickPerfAnnotationsIn(Annotation[] annotations) {

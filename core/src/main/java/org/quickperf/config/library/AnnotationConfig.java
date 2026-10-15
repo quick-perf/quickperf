@@ -19,6 +19,9 @@ import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.testlauncher.AnnotationToJvmOptionConverter;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class AnnotationConfig {
 
@@ -34,7 +37,9 @@ public class AnnotationConfig {
 
     private boolean testHasToBeLaunchedInASpecificJvm;
 
-    private Class<? extends Annotation> classOfAnnotationToDisable;
+    private List<Class<? extends Annotation>> classesOfAnnotationsToDisable;
+
+    private Class<? extends Annotation> classOfReplacedAnnotation;
 
     private AnnotationToJvmOptionConverter annotationToJvmOptionConverter;
 
@@ -68,8 +73,12 @@ public class AnnotationConfig {
         return perfRecorderParamsExtractorFromAnnot;
     }
 
-    Class<? extends Annotation> getClassOfAnnotationToDisable() {
-        return classOfAnnotationToDisable;
+    List<Class<? extends Annotation>> getClassesOfAnnotationsToDisable() {
+        return classesOfAnnotationsToDisable;
+    }
+
+    Class<? extends Annotation> getClassOfReplacedAnnotation() {
+        return classOfReplacedAnnotation;
     }
 
     public static class Builder {
@@ -80,7 +89,9 @@ public class AnnotationConfig {
 
         private boolean testHasToBeLaunchedInASpecificJvm;
 
-        private Class<? extends Annotation> classOfAnnotationToDisable;
+        private final List<Class<? extends Annotation>> classesOfAnnotationsToDisable = new ArrayList<>();
+
+        private Class<? extends Annotation> classOfReplacedAnnotation;
 
         private AnnotationToJvmOptionConverter annotationToJvmOptionConverter
                 = AnnotationToJvmOptionConverter.NONE;
@@ -116,8 +127,20 @@ public class AnnotationConfig {
             return this;
         }
 
+        /**
+         * Can be called several times to cancel the behavior of several annotations.
+         */
         public Builder cancelBehaviorOf(Class<? extends Annotation> annotationToDisable) {
-            this.classOfAnnotationToDisable = annotationToDisable;
+            this.classesOfAnnotationsToDisable.add(annotationToDisable);
+            return this;
+        }
+
+        /**
+         * Declares that the annotation replaces another one (typically a deprecated one). If both annotations apply to
+         * a test, only the replacing annotation is kept, so that the same verification is not done twice.
+         */
+        public Builder replace(Class<? extends Annotation> replacedAnnotation) {
+            this.classOfReplacedAnnotation = replacedAnnotation;
             return this;
         }
 
@@ -143,7 +166,9 @@ public class AnnotationConfig {
             }
             annotationConfig.testHasToBeLaunchedInASpecificJvm = testHasToBeLaunchedInASpecificJvm;
             annotationConfig.annotationToJvmOptionConverter = annotationToJvmOptionConverter;
-            annotationConfig.classOfAnnotationToDisable = classOfAnnotationToDisable;
+            annotationConfig.classesOfAnnotationsToDisable =
+                    Collections.unmodifiableList(new ArrayList<>(classesOfAnnotationsToDisable));
+            annotationConfig.classOfReplacedAnnotation = classOfReplacedAnnotation;
             annotationConfig.perfRecorderParamsExtractorFromAnnot = perfRecorderParamsExtractorFromAnnot;
             return annotationConfig;
         }
