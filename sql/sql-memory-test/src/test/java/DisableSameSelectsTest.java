@@ -23,6 +23,7 @@ import javax.persistence.Query;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.experimental.results.PrintableResult.testResult;
 
+@SuppressWarnings("deprecation")
 public class DisableSameSelectsTest {
 
     @RunWith(QuickPerfJUnitRunner.class)

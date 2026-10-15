@@ -69,8 +69,23 @@ public class SqlAnnotationBuilder {
     }
 
     /**
-     *Allows to build {@link DisableSameSelects} annotation.
+     *Allows to build {@link org.quickperf.sql.annotation.ExpectNoDuplicateSelects} annotation.
      */
+    public static ExpectNoDuplicateSelects expectNoDuplicateSelects() {
+        return new ExpectNoDuplicateSelects() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ExpectNoDuplicateSelects.class;
+            }
+        };
+    }
+
+    /**
+     *Allows to build {@link DisableSameSelects} annotation.
+     *
+     * @deprecated Use {@link #expectNoDuplicateSelects()} instead.
+     */
+    @Deprecated
     public static DisableSameSelects disableSameSelects() {
         return new DisableSameSelects() {
             @Override

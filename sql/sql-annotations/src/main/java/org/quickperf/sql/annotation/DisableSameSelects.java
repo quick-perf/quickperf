@@ -31,8 +31,10 @@ import java.lang.annotation.Target;
  *      }
  * </pre>
  *
+ * @deprecated Use {@link ExpectNoDuplicateSelects} instead.
  * @see EnableSameSelects
  */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DisableSameSelects {

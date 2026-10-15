@@ -14,17 +14,22 @@ package org.quickperf.sql.select;
 
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
-import org.quickperf.sql.annotation.DisableSameSelects;
 import org.quickperf.sql.select.analysis.SelectAnalysis;
 
-public class HasExactlySameSelectVerifier implements VerifiablePerformanceIssue<DisableSameSelects, SelectAnalysis> {
+import java.lang.annotation.Annotation;
+
+/**
+ * Verifier of {@link org.quickperf.sql.annotation.ExpectNoDuplicateSelects} and of the deprecated
+ * {@link org.quickperf.sql.annotation.DisableSameSelects}.
+ */
+public class HasExactlySameSelectVerifier implements VerifiablePerformanceIssue<Annotation, SelectAnalysis> {
 
     public static final HasExactlySameSelectVerifier INSTANCE = new HasExactlySameSelectVerifier();
 
     private HasExactlySameSelectVerifier() { }
 
     @Override
-    public PerfIssue verifyPerfIssue(DisableSameSelects annotation
+    public PerfIssue verifyPerfIssue(Annotation annotation
                                    , SelectAnalysis selectAnalysis) {
 
         if(selectAnalysis.hasSameSelects()) {

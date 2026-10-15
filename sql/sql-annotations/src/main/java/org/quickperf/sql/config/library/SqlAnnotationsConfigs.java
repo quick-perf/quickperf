@@ -73,6 +73,20 @@ class SqlAnnotationsConfigs {
 			.perfIssueVerifier(MaxJdbcQueryExecutionVerifier.INSTANCE)
 			.build(ExpectMaxJdbcQueryExecution.class);
 
+	static final AnnotationConfig EXPECT_NO_DUPLICATE_SELECTS = new AnnotationConfig.Builder()
+			.perfRecorderClass(PersistenceSqlRecorder.class)
+			.perfMeasureExtractor(SelectAnalysisExtractor.INSTANCE)
+			.perfIssueVerifier(HasExactlySameSelectVerifier.INSTANCE)
+			.replace(DisableSameSelects.class)
+			.build(ExpectNoDuplicateSelects.class);
+
+	// AllowDuplicateSelects and the deprecated EnableSameSelects cancel both the new and the deprecated annotations, so
+	// that they can be mixed (for example, global and method annotations).
+	static final AnnotationConfig ALLOW_DUPLICATE_SELECTS = new AnnotationConfig.Builder()
+			.cancelBehaviorOf(ExpectNoDuplicateSelects.class)
+			.cancelBehaviorOf(DisableSameSelects.class)
+			.build(AllowDuplicateSelects.class);
+
 	static final AnnotationConfig DISABLE_SAME_SQL_SELECTS = new AnnotationConfig.Builder()
 			.perfRecorderClass(PersistenceSqlRecorder.class)
 			.perfMeasureExtractor(SelectAnalysisExtractor.INSTANCE)
@@ -81,6 +95,7 @@ class SqlAnnotationsConfigs {
 
 	static final AnnotationConfig ENABLE_SAME_SQL_SELECTS = new AnnotationConfig.Builder()
 			.cancelBehaviorOf(DisableSameSelects.class)
+			.cancelBehaviorOf(ExpectNoDuplicateSelects.class)
 			.build(EnableSameSelects.class);
 
     static final AnnotationConfig NUMBER_OF_SQL_SELECT = new AnnotationConfig.Builder()

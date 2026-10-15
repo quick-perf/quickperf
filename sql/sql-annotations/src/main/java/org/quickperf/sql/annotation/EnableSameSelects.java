@@ -19,7 +19,10 @@ import java.lang.annotation.Target;
 
 /**
  * Cancels behavior of {@link DisableSameSelects}.
+ *
+ * @deprecated Use {@link AllowDuplicateSelects} instead.
  */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface EnableSameSelects {
