@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * <h3>Example:</h3>
  * <pre>
  *      <b>&#064;DisableQuickPerf</b>
- *      <b>&#064;DisableSameSelectTypesWithDifferentParamValues</b>
+ *      <b>&#064;ExpectNoNPlusOneSelects</b>
  *      public void execute() {
  *          <code>...</code>
  *      }

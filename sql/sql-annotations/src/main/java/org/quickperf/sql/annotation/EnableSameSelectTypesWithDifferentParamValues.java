@@ -19,7 +19,10 @@ import java.lang.annotation.Target;
 
 /**
  * Cancels behavior of {@link DisableSameSelectTypesWithDifferentParamValues}.
+ *
+ * @deprecated Use {@link AllowNPlusOneSelects} instead.
  */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface EnableSameSelectTypesWithDifferentParamValues {

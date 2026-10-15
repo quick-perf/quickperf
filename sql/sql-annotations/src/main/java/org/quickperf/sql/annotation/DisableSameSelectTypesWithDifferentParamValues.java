@@ -47,8 +47,10 @@ import java.lang.annotation.Target;
 *Params:[(2)]
 * </pre>
 *
+* @deprecated Use {@link ExpectNoNPlusOneSelects} instead.
 * @see EnableSameSelectTypesWithDifferentParamValues
 */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DisableSameSelectTypesWithDifferentParamValues {

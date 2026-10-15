@@ -56,6 +56,7 @@ import org.quickperf.sql.update.columns.MaxUpdatedColumnsPerfIssueVerifier;
 import org.quickperf.sql.update.columns.UpdatedColumnsMeasureExtractor;
 import org.quickperf.sql.update.columns.UpdatedColumnsPerfIssueVerifier;
 
+@SuppressWarnings("deprecation")
 class SqlAnnotationsConfigs {
 
     private SqlAnnotationsConfigs() { }
@@ -118,6 +119,20 @@ class SqlAnnotationsConfigs {
 			.cancelBehaviorOf(DisableStatements.class)
 			.build(EnableStatements.class);
 
+	static final AnnotationConfig EXPECT_NO_N_PLUS_ONE_SELECTS = new AnnotationConfig.Builder()
+			.perfRecorderClass(PersistenceSqlRecorder.class)
+			.perfMeasureExtractor(SelectAnalysisExtractor.INSTANCE)
+			.perfIssueVerifier(HasSameSelectTypesWithDiffParamValuesVerifier.INSTANCE)
+			.replace(DisableSameSelectTypesWithDifferentParamValues.class)
+			.build(ExpectNoNPlusOneSelects.class);
+
+	// AllowNPlusOneSelects and the deprecated EnableSameSelectTypesWithDifferentParamValues cancel both the new and the
+	// deprecated annotations, so that they can be mixed (for example, global and method annotations).
+	static final AnnotationConfig ALLOW_N_PLUS_ONE_SELECTS = new AnnotationConfig.Builder()
+			.cancelBehaviorOf(ExpectNoNPlusOneSelects.class)
+			.cancelBehaviorOf(DisableSameSelectTypesWithDifferentParamValues.class)
+			.build(AllowNPlusOneSelects.class);
+
 	static final AnnotationConfig DISABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS = new AnnotationConfig.Builder()
 			.perfRecorderClass(PersistenceSqlRecorder.class)
 			.perfMeasureExtractor(SelectAnalysisExtractor.INSTANCE)
@@ -126,6 +141,7 @@ class SqlAnnotationsConfigs {
 
 	static final AnnotationConfig ENABLE_SAME_SELECT_TYPES_WITH_DIFFERENT_PARAMS = new AnnotationConfig.Builder()
 			.cancelBehaviorOf(DisableSameSelectTypesWithDifferentParamValues.class)
+			.cancelBehaviorOf(ExpectNoNPlusOneSelects.class)
 			.build(EnableSameSelectTypesWithDifferentParamValues.class);
 
     static final AnnotationConfig NUMBER_OF_SQL_INSERT = new AnnotationConfig.Builder()

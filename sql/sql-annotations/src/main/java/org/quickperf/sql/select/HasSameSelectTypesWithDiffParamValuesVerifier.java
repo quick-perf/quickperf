@@ -14,18 +14,23 @@ package org.quickperf.sql.select;
 
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
-import org.quickperf.sql.annotation.DisableSameSelectTypesWithDifferentParamValues;
 import org.quickperf.sql.select.analysis.SelectAnalysis;
 import org.quickperf.sql.select.analysis.SelectAnalysis.SameSelectTypesWithDifferentParamValues;
 
-public class HasSameSelectTypesWithDiffParamValuesVerifier implements VerifiablePerformanceIssue<DisableSameSelectTypesWithDifferentParamValues, SelectAnalysis> {
+import java.lang.annotation.Annotation;
+
+/**
+ * Verifier of {@link org.quickperf.sql.annotation.ExpectNoNPlusOneSelects} and of the deprecated
+ * {@link org.quickperf.sql.annotation.DisableSameSelectTypesWithDifferentParamValues}.
+ */
+public class HasSameSelectTypesWithDiffParamValuesVerifier implements VerifiablePerformanceIssue<Annotation, SelectAnalysis> {
 
     public static final HasSameSelectTypesWithDiffParamValuesVerifier INSTANCE = new HasSameSelectTypesWithDiffParamValuesVerifier();
 
     private HasSameSelectTypesWithDiffParamValuesVerifier() { }
 
     @Override
-    public PerfIssue verifyPerfIssue(DisableSameSelectTypesWithDifferentParamValues annotation
+    public PerfIssue verifyPerfIssue(Annotation annotation
                                    , SelectAnalysis selectAnalysis) {
 
         SameSelectTypesWithDifferentParamValues sameSelectTypesWithDifferentParamValues =
