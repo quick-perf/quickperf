@@ -31,35 +31,52 @@ runs:
         path: ${{ runner.temp }}/mvnd.zip
         key: mvnd-v2-${{ runner.os }}-${{ inputs.version }}
 
-    - name: Download mvnd
-      if: steps.cache-mvnd.outputs.cache-hit != 'true'
+    # Failures here must not fail the job: the mvn_cmd output falls back to mvn.
+    # downloads.apache.org only keeps the latest releases, so older versions
+    # are fetched from archive.apache.org.
+    - name: Download, verify and extract mvnd
+      id: install
       shell: bash
       env:
         VERSION: ${{ inputs.version }}
         ARCHIVE: ${{ steps.platform.outputs.archive }}
+        CACHE_HIT: ${{ steps.cache-mvnd.outputs.cache-hit }}
       run: |
-        curl -fsL "https://downloads.apache.org/maven/mvnd/${VERSION}/${ARCHIVE}.zip" \
-          -o "${RUNNER_TEMP}/mvnd.zip"
+        fetch() {
+          for base in https://downloads.apache.org/maven https://archive.apache.org/dist/maven; do
+            curl -fsL "${base}/$1" -o "$2" && return 0
+          done
+          return 1
+        }
 
-    - name: Verify and extract mvnd
-      shell: bash
-      env:
-        VERSION: ${{ inputs.version }}
-        ARCHIVE: ${{ steps.platform.outputs.archive }}
-      run: |
-        curl -fsL "https://downloads.apache.org/maven/mvnd/${VERSION}/${ARCHIVE}.zip.sha512" \
-          -o "${RUNNER_TEMP}/mvnd.zip.sha512"
-        echo "$(cat "${RUNNER_TEMP}/mvnd.zip.sha512")  ${RUNNER_TEMP}/mvnd.zip" | sha512sum -c -
+        install_mvnd() {
+          if [ "${CACHE_HIT}" != 'true' ]; then
+            fetch "mvnd/${VERSION}/${ARCHIVE}.zip" "${RUNNER_TEMP}/mvnd.zip" || return 1
+          fi
 
-        # GPG signature verification
-        curl -fsL "https://downloads.apache.org/maven/KEYS" | gpg --import --quiet 2>/dev/null
-        curl -fsL "https://downloads.apache.org/maven/mvnd/${VERSION}/${ARCHIVE}.zip.asc" \
-          -o "${RUNNER_TEMP}/mvnd.zip.asc"
-        gpg --verify "${RUNNER_TEMP}/mvnd.zip.asc" "${RUNNER_TEMP}/mvnd.zip"
+          fetch "mvnd/${VERSION}/${ARCHIVE}.zip.sha512" "${RUNNER_TEMP}/mvnd.zip.sha512" || return 1
+          echo "$(cat "${RUNNER_TEMP}/mvnd.zip.sha512")  ${RUNNER_TEMP}/mvnd.zip" | sha512sum -c - || return 1
 
-        unzip -q "${RUNNER_TEMP}/mvnd.zip" -d "${RUNNER_TEMP}/mvnd"
+          # GPG signature verification
+          fetch "KEYS" "${RUNNER_TEMP}/KEYS" || return 1
+          gpg --import --quiet "${RUNNER_TEMP}/KEYS" 2>/dev/null || return 1
+          fetch "mvnd/${VERSION}/${ARCHIVE}.zip.asc" "${RUNNER_TEMP}/mvnd.zip.asc" || return 1
+          gpg --verify "${RUNNER_TEMP}/mvnd.zip.asc" "${RUNNER_TEMP}/mvnd.zip" || return 1
+
+          unzip -q "${RUNNER_TEMP}/mvnd.zip" -d "${RUNNER_TEMP}/mvnd" || return 1
+        }
+
+        if install_mvnd; then
+          echo "installed=true" >> $GITHUB_OUTPUT
+        else
+          echo "::warning::mvnd ${VERSION} could not be downloaded or verified, falling back to mvn"
+          # Do not let the post-job cache step save a missing or corrupted archive
+          rm -f "${RUNNER_TEMP}/mvnd.zip"
+          echo "installed=false" >> $GITHUB_OUTPUT
+        fi
 
     - name: Add mvnd to PATH
+      if: steps.install.outputs.installed == 'true'
       shell: bash
       env:
         ARCHIVE: ${{ steps.platform.outputs.archive }}
@@ -67,6 +84,7 @@ runs:
 
     - name: Verify mvnd
       id: verify
+      if: steps.install.outputs.installed == 'true'
       shell: bash
       run: |
         if mvnd --version; then
