@@ -47,8 +47,10 @@ import java.lang.annotation.Target;
  * </li>
  * </ul>
  *
+ * @deprecated Use {@link ExpectNoInlinedParameters} instead.
  * @see EnableQueriesWithoutBindParameters
  */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DisableQueriesWithoutBindParameters {

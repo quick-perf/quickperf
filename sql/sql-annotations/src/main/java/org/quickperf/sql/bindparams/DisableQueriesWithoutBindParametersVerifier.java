@@ -15,9 +15,14 @@ package org.quickperf.sql.bindparams;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
 import org.quickperf.measure.BooleanMeasure;
-import org.quickperf.sql.annotation.DisableQueriesWithoutBindParameters;
 
-public class DisableQueriesWithoutBindParametersVerifier implements VerifiablePerformanceIssue<DisableQueriesWithoutBindParameters, BooleanMeasure> {
+import java.lang.annotation.Annotation;
+
+/**
+ * Verifier of {@link org.quickperf.sql.annotation.ExpectNoInlinedParameters} and of the deprecated
+ * {@link org.quickperf.sql.annotation.DisableQueriesWithoutBindParameters}.
+ */
+public class DisableQueriesWithoutBindParametersVerifier implements VerifiablePerformanceIssue<Annotation, BooleanMeasure> {
 
     public static final DisableQueriesWithoutBindParametersVerifier INSTANCE = new DisableQueriesWithoutBindParametersVerifier();
 
@@ -25,7 +30,7 @@ public class DisableQueriesWithoutBindParametersVerifier implements VerifiablePe
     }
 
     @Override
-    public PerfIssue verifyPerfIssue(final DisableQueriesWithoutBindParameters annotation, final BooleanMeasure areAllParametersBound) {
+    public PerfIssue verifyPerfIssue(final Annotation annotation, final BooleanMeasure areAllParametersBound) {
 
         if(!areAllParametersBound.getValue()) {
             return new PerfIssue("Query without bind parameters");
