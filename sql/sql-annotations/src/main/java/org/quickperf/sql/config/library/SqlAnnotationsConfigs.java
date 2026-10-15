@@ -124,6 +124,20 @@ class SqlAnnotationsConfigs {
             .perfRecorderClass(DisplaySqlOfTestMethodBodyRecorder.class)
             .build(DisplaySqlOfTestMethodBody.class);
 
+	static final AnnotationConfig EXPECT_NO_STATEMENTS = new AnnotationConfig.Builder()
+			.perfRecorderClass(PersistenceSqlRecorder.class)
+			.perfMeasureExtractor(NoStatementExtractor.INSTANCE)
+			.perfIssueVerifier(NoStatementVerifier.INSTANCE)
+			.replace(DisableStatements.class)
+			.build(ExpectNoStatements.class);
+
+	// AllowStatements and the deprecated EnableStatements cancel both the new and the deprecated annotations, so that
+	// they can be mixed (for example, global and method annotations).
+	static final AnnotationConfig ALLOW_STATEMENTS = new AnnotationConfig.Builder()
+			.cancelBehaviorOf(ExpectNoStatements.class)
+			.cancelBehaviorOf(DisableStatements.class)
+			.build(AllowStatements.class);
+
 	static final AnnotationConfig DISABLE_STATEMENTS = new AnnotationConfig.Builder()
 			.perfRecorderClass(PersistenceSqlRecorder.class)
 			.perfMeasureExtractor(NoStatementExtractor.INSTANCE)
@@ -132,6 +146,7 @@ class SqlAnnotationsConfigs {
 
 	static final AnnotationConfig ENABLE_STATEMENTS = new AnnotationConfig.Builder()
 			.cancelBehaviorOf(DisableStatements.class)
+			.cancelBehaviorOf(ExpectNoStatements.class)
 			.build(EnableStatements.class);
 
 	static final AnnotationConfig EXPECT_NO_N_PLUS_ONE_SELECTS = new AnnotationConfig.Builder()

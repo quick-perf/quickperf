@@ -19,7 +19,10 @@ import java.lang.annotation.Target;
 
 /**
  * Cancels behavior of {@link DisableStatements}.
+ *
+ * @deprecated Use {@link AllowStatements} instead.
  */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface EnableStatements {

@@ -23,8 +23,10 @@ import java.lang.annotation.Target;
  * is used to execute the queries. The test will fail with a
  * {@link java.sql.Statement}.
  *
+ * @deprecated Use {@link ExpectNoStatements} instead.
  * @see EnableStatements
  */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DisableStatements {
