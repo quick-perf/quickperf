@@ -59,6 +59,24 @@ public class FormatExecutionTimeTest {
     }
 
     @Test public void
+    should_not_format_to_one_second_when_micro_seconds_are_rounded_down() {
+        assertThat(formatter.format(new ExecutionTime(999_999_499, TimeUnit.NANOSECONDS)))
+                .isEqualTo("999 ms 999 µs");
+    }
+
+    @Test public void
+    should_format_nanoseconds_to_one_second_with_rounding_on_micro_seconds() {
+        assertThat(formatter.format(new ExecutionTime(999_999_500, TimeUnit.NANOSECONDS)))
+                .isEqualTo("1 s 0 ms");
+    }
+
+    @Test public void
+    should_format_one_nanosecond_less_than_one_second_to_one_second() {
+        assertThat(formatter.format(new ExecutionTime(999_999_999, TimeUnit.NANOSECONDS)))
+                .isEqualTo("1 s 0 ms");
+    }
+
+    @Test public void
     should_format_nanoseconds_to_minutes_and_seconds_and_milliseconds_and_append_nanoseconds() {
         long nanoSeconds = (long) ( ((3 * 60 + 18) * Math.pow(10, 9)) + (5 * Math.pow(10, 6)) );
         assertThat(formatter.format(new ExecutionTime(nanoSeconds, TimeUnit.NANOSECONDS)))

@@ -90,19 +90,18 @@ class ExecutionTimeFormatter {
     }
 
     private boolean isMilliSecondOrder(long valueInNanoseconds) {
-        return valueInNanoseconds < Math.pow(10, 9);
+        return computeRoundedMicroSeconds(valueInNanoseconds) < Math.pow(10, 6);
     }
 
     private String formatWithMillisecondsAndMicroSeconds(long valueInNanoseconds) {
-        long us = (valueInNanoseconds / 1_000) % 1_000;
-        long ms = (((valueInNanoseconds / 1_000)) - us) / 1_000;
-        long roundedUs = Math.round((valueInNanoseconds - (ms * Math.pow(10, 6))) / 1_000);
-        long roundedMs = ms;
-        if (roundedUs == 1_000) {
-            roundedMs += 1;
-            roundedUs = 0;
-        }
+        long roundedMicroSeconds = computeRoundedMicroSeconds(valueInNanoseconds);
+        long roundedMs = roundedMicroSeconds / 1_000;
+        long roundedUs = roundedMicroSeconds % 1_000;
         return roundedMs + " " + MILLI_SECOND + " " + roundedUs + " " + MICRO_SECOND;
+    }
+
+    private long computeRoundedMicroSeconds(long valueInNanoseconds) {
+        return Math.round(valueInNanoseconds / 1_000d);
     }
 
     private String formatWithSecondsMinutesOrHours(long valueInNanoseconds) {
