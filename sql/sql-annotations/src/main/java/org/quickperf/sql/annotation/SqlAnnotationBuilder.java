@@ -460,12 +460,22 @@ public class SqlAnnotationBuilder {
     }
 
     /**
-     * Allows to build {@link org.quickperf.sql.annotation.AnalyzeSql} annotation
-     * Default message and Writer
-     * @param defaultWriterFactoryClass
+     *Allows to build {@link org.quickperf.sql.annotation.AnalyzeSql} annotation.
+     *
+     * @param writerFactoryClass the class building the writer of the SQL report, for example
+     *                           {@link DefaultWriterFactory} to display the report in the console
      */
-    public static AnalyzeSql analyzeSql(Class<DefaultWriterFactory> defaultWriterFactoryClass){
-        return analyzeSql(DefaultWriterFactory.class);
+    public static AnalyzeSql analyzeSql(final Class<? extends WriterFactory> writerFactoryClass) {
+        return new AnalyzeSql() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return AnalyzeSql.class;
+            }
+            @Override
+            public Class<? extends WriterFactory> writerFactory() {
+                return writerFactoryClass;
+            }
+        };
     }
 
 }
