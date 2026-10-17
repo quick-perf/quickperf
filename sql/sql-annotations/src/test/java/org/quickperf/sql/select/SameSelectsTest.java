@@ -54,7 +54,7 @@ public class SameSelectsTest {
         when(execInfo.getResult()).thenReturn(resultSet);
         when(resultSet.getMetaData()).thenReturn(mock(ResultSetMetaData.class));
 
-        SqlExecutions sqlExecutions = SqlExecutions.NONE;
+        SqlExecutions sqlExecutions = new SqlExecutions();
         sqlExecutions.add(execInfo
                         , asList(queryInfo1, queryInfo2));
 
