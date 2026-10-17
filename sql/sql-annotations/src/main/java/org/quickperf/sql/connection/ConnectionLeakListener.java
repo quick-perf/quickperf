@@ -37,6 +37,11 @@ public class ConnectionLeakListener extends ConnectionListener
     }
 
     @Override
+    public void theDatasourceGetsTheConnectionWithUserNameAndPassword(Connection connection) {
+        connections.add(connection);
+    }
+
+    @Override
     public void close(Connection connection) {
         connections.remove(connection);
     }
