@@ -113,16 +113,17 @@ class ExecutionTimeFormatter {
                     + secondsMilliSeconds.getRoundedMilliseconds() + " " + MILLI_SECOND;
         }
 
+        if (secondsMilliSeconds.isLessThanOneHour()) {
+            long seconds = secondsMilliSeconds.getRoundedSeconds();
+            return seconds / 60 + " " + MINUTE
+                    + " " + seconds % 60 + " " + SECOND
+                    + " " + secondsMilliSeconds.getRoundedMilliseconds() + " " + MILLI_SECOND;
+        }
+
         long secondsToReturn = Math.round(valueInNanoseconds * Math.pow(10, -9) % 60);
 
         long totalSeconds = Math.round(valueInNanoseconds * Math.pow(10, -9));
         long minutes = (totalSeconds - secondsToReturn) / 60;
-
-        if (minutes < 60) {
-            return minutes + " " + MINUTE
-                    + " " + secondsToReturn + " " + SECOND
-                    + " " + secondsMilliSeconds.getRoundedMilliseconds() + " " + MILLI_SECOND;
-        }
 
         long minutesToReturn = minutes % 60;
         long hours = (totalSeconds - (minutesToReturn * 60) - secondsToReturn) / 3600;
@@ -174,6 +175,10 @@ class ExecutionTimeFormatter {
 
         boolean isLessThanOneMinute() {
             return getRoundedSeconds() < 60;
+        }
+
+        boolean isLessThanOneHour() {
+            return getRoundedSeconds() < 3600;
         }
 
         long getRoundedSeconds() {

@@ -148,7 +148,43 @@ public class FormatExecutionTimeTest {
         long nanoSecondsToTest =    threeMinutesInNanoSeconds + fifteenSecondsInNanoSeconds
                                   + fiveHundredMilliSeconds + fiveHundredMicroSeconds;
         assertThat(formatter.format(new ExecutionTime(nanoSecondsToTest, TimeUnit.NANOSECONDS)))
-                .isEqualTo("3 m 16 s 501 ms");
+                .isEqualTo("3 m 15 s 501 ms");
+    }
+
+    @Test public void
+    should_not_round_seconds_when_milliseconds_are_displayed_with_minutes() {
+        assertThat(formatter.format(new ExecutionTime(61_600, TimeUnit.MILLISECONDS)))
+                .isEqualTo("1 m 1 s 600 ms");
+    }
+
+    @Test public void
+    should_format_milliseconds_just_below_two_minutes() {
+        assertThat(formatter.format(new ExecutionTime(119_999, TimeUnit.MILLISECONDS)))
+                .isEqualTo("1 m 59 s 999 ms");
+    }
+
+    @Test public void
+    should_format_milliseconds_just_below_one_hour() {
+        assertThat(formatter.format(new ExecutionTime(3_599_600, TimeUnit.MILLISECONDS)))
+                .isEqualTo("59 m 59 s 600 ms");
+    }
+
+    @Test public void
+    should_format_nanoseconds_to_one_minute_with_rounding_on_milli_seconds() {
+        assertThat(formatter.format(new ExecutionTime(59_999_600_000L, TimeUnit.NANOSECONDS)))
+                .isEqualTo("1 m 0 s 0 ms");
+    }
+
+    @Test public void
+    should_format_nanoseconds_to_minutes_with_rounding_on_milli_seconds_up_to_the_next_minute() {
+        assertThat(formatter.format(new ExecutionTime(119_999_600_000L, TimeUnit.NANOSECONDS)))
+                .isEqualTo("2 m 0 s 0 ms");
+    }
+
+    @Test public void
+    should_format_nanoseconds_to_hours_with_rounding_on_milli_seconds_up_to_the_next_hour() {
+        assertThat(formatter.format(new ExecutionTime(3_599_999_600_000L, TimeUnit.NANOSECONDS)))
+                .isEqualTo("1 h 0 m 0 s");
     }
 
     @Test public void
