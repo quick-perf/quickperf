@@ -36,6 +36,12 @@ public class FormatExecutionTimeAndAppendNsTest {
     }
 
     @Test public void
+    should_format_to_one_second_with_nanoseconds_appended() {
+        assertThat(formatter.formatAndAppendNanoSeconds(new ExecutionTime(999_999_500, TimeUnit.NANOSECONDS)))
+                .isEqualTo("1 s 0 ms (999 999 500 ns)");
+    }
+
+    @Test public void
     should_format_to_minutes_seconds_with_nanoseconds_appended() {
         long oneBillion = (long) Math.pow(10, 9);
         assertThat(formatter.formatAndAppendNanoSeconds(new ExecutionTime(((3 * 60) + 12) * oneBillion + 27, TimeUnit.NANOSECONDS)))
