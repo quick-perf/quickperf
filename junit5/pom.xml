@@ -35,6 +35,7 @@
         <module>junit5-test-util</module>
         <module>junit5-jvm-test</module>
         <module>junit5-sql-test</module>
+        <module>junit5-14-4-jvm-test</module>
     </modules>
 
 </project>
