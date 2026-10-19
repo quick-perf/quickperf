@@ -47,7 +47,8 @@ public class QuickPerfUserConfigClasses {
         List<File> dirs = new ArrayList<>();
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
-            String classPath = URLDecoder.decode(resource.getPath(), "UTF-8");
+            // URLDecoder would decode + to a space, but in a URL path + is a plus sign
+            String classPath = URLDecoder.decode(resource.getPath().replace("+", "%2B"), "UTF-8");
             File file = new File(classPath);
             dirs.add(file);
         }
