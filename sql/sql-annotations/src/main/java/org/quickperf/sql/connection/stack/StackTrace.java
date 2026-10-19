@@ -28,10 +28,6 @@ public class StackTrace {
             this.maxValue = maxValue;
         }
 
-        private boolean isLessThan(int value) {
-            return maxValue < value;
-        }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -87,9 +83,9 @@ public class StackTrace {
     }
 
     private void limitTo(StackDepth stackDepth) {
-        int allStackLength = allElements.length;
-        if (stackDepth.isLessThan(allStackLength)) {
-           this.lastPos = this.firstPos + stackDepth.maxValue - 1;
+        int lastPosForStackDepth = this.firstPos + stackDepth.maxValue - 1;
+        if (lastPosForStackDepth < this.lastPos) {
+            this.lastPos = lastPosForStackDepth;
         }
     }
 
