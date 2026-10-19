@@ -68,6 +68,9 @@ public class SqlStatementBatchRecorder implements SqlRecorder<SqlBatchSizes> {
 
     @Override
     public void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries, int listenerIdentifier) {
+        if (isEmptyBatch(execInfo)) {
+            return;
+        }
         for (QueryInfo query : queries) {
             if (       previousStatementsAreBatched
                     && isRequestTypeInsertOrUpdateOrDeleteType(query)
@@ -79,6 +82,12 @@ public class SqlStatementBatchRecorder implements SqlRecorder<SqlBatchSizes> {
                 previousStatementsAreBatched = execInfo.isBatch();
             }
         }
+    }
+
+    private boolean isEmptyBatch(ExecutionInfo execInfo) {
+        // An executeBatch() with nothing added sends no SQL, but its batch size is 0, like an unbatched execution.
+        // It is ignored, so that a recorded 0 batch size always means an unbatched execution
+        return execInfo.isBatch() && execInfo.getBatchSize() == 0;
     }
 
     private int[] createTableWithNewBatchSize(int batchSize) {
