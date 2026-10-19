@@ -21,6 +21,9 @@ import org.quickperf.sql.annotation.ExpectJdbcBatching;
 import org.quickperf.sql.config.MemoryDatabaseHibernateDialect;
 
 import javax.persistence.Query;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -234,6 +237,92 @@ public class ExpectJdbcBatchingWithBatchSizeTest {
         assertThat(testReport)
                 .contains("[PERF] Expected batch size <30> but is <0>.")
                 .doesNotContain(".contains(hibernate.jdbc.batch_size)");
+
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingANotBatchedInsertAfterABatch extends SqlTestBase {
+
+        private static final int BATCH_SIZE = 30;
+
+        @Override
+        protected Properties getHibernateProperties() {
+            String hibernateDialect = MemoryDatabaseHibernateDialect.INSTANCE.getHibernateDialect();
+            return   anHibernateConfig()
+                    .withBatchSize(BATCH_SIZE)
+                    .build(hibernateDialect);
+        }
+
+        @Test
+        @ExpectJdbcBatching(batchSize = BATCH_SIZE)
+        public void execute_a_not_batched_insert_query_after_a_batch() {
+
+            executeInATransaction(entityManager -> {
+                for (int i = 0; i < BATCH_SIZE; i++) {
+                    Book newBook = new Book();
+                    newBook.setTitle("new book");
+                    entityManager.persist(newBook);
+                }
+                entityManager.flush();
+
+                String insertQueryAsString = "INSERT INTO Book (id,title) VALUES (1200, 'Book title')";
+                Query insertQuery = entityManager.createNativeQuery(insertQueryAsString);
+                insertQuery.executeUpdate();
+            });
+
+        }
+
+    }
+
+    @Test public void
+    should_fail_with_a_not_batched_insert_query_executed_after_a_batch() {
+
+        Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingANotBatchedInsertAfterABatch.class;
+
+        PrintableResult printableResult = testResult(testClass);
+
+        assertThat(printableResult.failureCount()).isOne();
+
+        String testReport = printableResult.toString();
+        assertThat(testReport).contains("[PERF] Expected batch size <30> but is <0>.");
+
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingAnEmptyBatchAfterBatches extends SqlTestBase {
+
+        private static final int BATCH_SIZE = 30;
+
+        @Test
+        @ExpectJdbcBatching(batchSize = BATCH_SIZE)
+        public void execute_an_empty_batch_after_batches() throws SQLException {
+
+            try (Connection connection = getConnection();
+                 PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO Book (id,title) VALUES (?, ?)")) {
+                for (int i = 1; i <= 2 * BATCH_SIZE; i++) {
+                    insertStatement.setLong(1, 1200 + i);
+                    insertStatement.setString(2, "Book title");
+                    insertStatement.addBatch();
+                    if (i % BATCH_SIZE == 0) {
+                        insertStatement.executeBatch();
+                    }
+                }
+                // Executes the remaining statements: none here
+                insertStatement.executeBatch();
+            }
+
+        }
+
+    }
+
+    @Test public void
+    should_pass_with_an_empty_batch_executed_after_batches() {
+
+        Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingAnEmptyBatchAfterBatches.class;
+
+        PrintableResult printableResult = testResult(testClass);
+
+        assertThat(printableResult.failureCount()).isZero();
 
     }
 

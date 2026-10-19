@@ -55,10 +55,19 @@ public class SqlStatementBatchVerifier implements VerifiablePerformanceIssue<Exp
     }
 
     private int findNumberOfBatchSizeToCheck(int[] measuredBatchSizesAsArray) {
-        if(measuredBatchSizesAsArray.length == 1) {
-            return 1;
+        if(measuredBatchSizesAsArray.length <= 1) {
+            return measuredBatchSizesAsArray.length;
+        }
+        // The last batch can contain fewer statements, but a 0 batch size means that the last execution is not batched
+        if(lastExecutionIsNotBatched(measuredBatchSizesAsArray)) {
+            return measuredBatchSizesAsArray.length;
         }
         return measuredBatchSizesAsArray.length - 1;
+    }
+
+    private boolean lastExecutionIsNotBatched(int[] measuredBatchSizesAsArray) {
+        int lastBatchSize = measuredBatchSizesAsArray[measuredBatchSizesAsArray.length - 1];
+        return lastBatchSize == 0;
     }
 
     private PerfIssue verifyBatchSize(int expectedBatchSize, int[] measuredBatchSizesAsArray) {

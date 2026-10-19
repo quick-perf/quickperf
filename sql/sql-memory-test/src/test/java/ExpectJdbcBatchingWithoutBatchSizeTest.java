@@ -21,6 +21,9 @@ import org.quickperf.sql.annotation.ExpectJdbcBatching;
 import org.quickperf.sql.config.MemoryDatabaseHibernateDialect;
 
 import javax.persistence.Query;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -173,6 +176,38 @@ public class ExpectJdbcBatchingWithoutBatchSizeTest {
     should_pass_with_one_insert_and_batch_mode() {
 
         Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingOneInsertBatched.class;
+
+        PrintableResult testResult = testResult(testClass);
+
+        assertThat(testResult.failureCount()).isZero();
+
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingAnEmptyBatchAfterABatch extends SqlTestBase {
+
+        @Test
+        @ExpectJdbcBatching()
+        public void execute_an_empty_batch_after_a_batch() throws SQLException {
+
+            try (Connection connection = getConnection();
+                 PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO Book (id,title) VALUES (?, ?)")) {
+                insertStatement.setLong(1, 1200);
+                insertStatement.setString(2, "Book title");
+                insertStatement.addBatch();
+                insertStatement.executeBatch();
+
+                insertStatement.executeBatch();
+            }
+
+        }
+
+    }
+
+    @Test public void
+    should_pass_with_an_empty_batch_executed_after_a_batch() {
+
+        Class<?> testClass = AClassHavingAMethodAnnotatedWithExpectJdbcBatchingAndExecutingAnEmptyBatchAfterABatch.class;
 
         PrintableResult testResult = testResult(testClass);
 
