@@ -74,6 +74,11 @@ public class ProfilingParamsExtractor implements ExtractablePerfRecorderParamete
 
     private StackTrace.StackDepth extractStackDepthFrom(ProfileConnection annotation) {
         short annotationStackDepth = annotation.stackDepth();
+        if (annotationStackDepth < -1) {
+            String message = "The stackDepth of @ProfileConnection should be a positive value"
+                           + " or -1 to not limit the stack depth, but it is " + annotationStackDepth + ".";
+            throw new IllegalArgumentException(message);
+        }
         if (annotationStackDepth == -1) {
             return StackTrace.StackDepth.ALL;
         }
