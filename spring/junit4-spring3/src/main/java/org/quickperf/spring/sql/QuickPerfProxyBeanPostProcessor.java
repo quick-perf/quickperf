@@ -22,6 +22,7 @@ import org.springframework.core.PriorityOrdered;
 import org.springframework.util.ReflectionUtils;
 
 import javax.sql.DataSource;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 // Inspiration from https://blog.arnoldgalovics.com/configuring-a-datasource-proxy-in-spring-boot/
@@ -78,7 +79,13 @@ public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, Prior
             Method proxyMethod = ReflectionUtils.findMethod( this.datasourceProxy.getClass()
                                                            , invocation.getMethod().getName());
             if (proxyMethod != null) {
-                return proxyMethod.invoke(this.datasourceProxy, invocation.getArguments());
+                // Unwrapped so that the caller gets what the DataSource threw, such as an SQLException.
+                try {
+                    return proxyMethod.invoke(this.datasourceProxy, invocation.getArguments());
+                }
+                catch (InvocationTargetException e) {
+                    throw e.getTargetException();
+                }
             }
             return invocation.proceed();
         }
