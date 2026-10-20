@@ -13,8 +13,8 @@
 package org.quickperf.junit5;
 
 /**
- * The new JVM executes one test. There, the QuickPerf extension records whether it invoked the test method and what
- * the test method threw, and {@link JUnit5TestRunner} reads it once JUnit has executed the test.
+ * The new JVM executes one test. There, the QuickPerf extension records whether it executed the test method or the
+ * dynamic test, and what this test threw. {@link JUnit5TestRunner} reads it once JUnit has executed the test.
  */
 class TestMethodInvocationInNewJvm {
 

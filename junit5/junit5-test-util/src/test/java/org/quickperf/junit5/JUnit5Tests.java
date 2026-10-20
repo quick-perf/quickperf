@@ -13,10 +13,12 @@
 package org.quickperf.junit5;
 
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
@@ -25,7 +27,9 @@ import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
@@ -52,14 +56,22 @@ public class JUnit5Tests {
     }
 
     public static JUnit5Tests createInstance(Class<?> testClass) {
+        return createInstance(testClass, Collections.<String, String>emptyMap());
+    }
+
+    /**
+     * @param configurationParameters JUnit configuration parameters, for example to execute the tests concurrently
+     */
+    public static JUnit5Tests createInstance(Class<?> testClass, Map<String, String> configurationParameters) {
         SummaryGeneratingListener listener = new SummaryGeneratingListener();
         TestAbortListener testAbortListener = new TestAbortListener();
         LauncherDiscoveryRequest request =
                 LauncherDiscoveryRequestBuilder.request()
                 .selectors(selectClass(testClass))
+                .configurationParameters(configurationParameters)
                 .build();
         Launcher launcher = LauncherFactory.create();
-        launcher.registerTestExecutionListeners(listener, testAbortListener);
+        launcher.registerTestExecutionListeners(new SynchronizedListener(listener), testAbortListener);
         return new JUnit5Tests(launcher, request, listener, testAbortListener);
     }
 
@@ -67,6 +79,52 @@ public class JUnit5Tests {
         launcher.execute(request);
         TestExecutionSummary testExecutionSummary = listener.getSummary();
         return new JUnit5TestsResult(testExecutionSummary, testAbortListener.testAborts);
+    }
+
+    // SummaryGeneratingListener does not collect the failures in a thread-safe way: the tests can be executed concurrently
+    private static class SynchronizedListener implements TestExecutionListener {
+
+        private final TestExecutionListener listener;
+
+        private SynchronizedListener(TestExecutionListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public synchronized void testPlanExecutionStarted(TestPlan testPlan) {
+            listener.testPlanExecutionStarted(testPlan);
+        }
+
+        @Override
+        public synchronized void testPlanExecutionFinished(TestPlan testPlan) {
+            listener.testPlanExecutionFinished(testPlan);
+        }
+
+        @Override
+        public synchronized void dynamicTestRegistered(TestIdentifier testIdentifier) {
+            listener.dynamicTestRegistered(testIdentifier);
+        }
+
+        @Override
+        public synchronized void executionSkipped(TestIdentifier testIdentifier, String reason) {
+            listener.executionSkipped(testIdentifier, reason);
+        }
+
+        @Override
+        public synchronized void executionStarted(TestIdentifier testIdentifier) {
+            listener.executionStarted(testIdentifier);
+        }
+
+        @Override
+        public synchronized void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+            listener.executionFinished(testIdentifier, testExecutionResult);
+        }
+
+        @Override
+        public synchronized void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
+            listener.reportingEntryPublished(testIdentifier, entry);
+        }
+
     }
 
     private static class TestAbortListener implements TestExecutionListener {

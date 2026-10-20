@@ -18,8 +18,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Tests of JUnit features that the JUnit version of the other JUnit 5 modules, the oldest version that QuickPerf
-         supports, does not have: @ParameterizedClass (JUnit 5.13), @BeforeSuite (JUnit Platform 1.11) -->
+    <!-- Tests of JUnit features that JUnit 5.6.2, the oldest version that QuickPerf supports and the version of
+         junit5-jvm-test and junit5-sql-test, does not have: @ParameterizedClass (JUnit 5.13), @BeforeSuite (JUnit
+         Platform 1.11), the interception of dynamic tests with a DynamicTestInvocationContext (JUnit 5.8). -->
     <artifactId>quick-perf-junit5-14-4-jvm-test</artifactId>
 
     <properties>

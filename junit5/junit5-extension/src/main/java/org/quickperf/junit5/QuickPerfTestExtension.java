@@ -12,10 +12,12 @@
  */
 package org.quickperf.junit5;
 
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
+import org.junit.platform.commons.support.AnnotationSupport;
 import org.quickperf.SystemProperties;
 import org.quickperf.TestExecutionContext;
 import org.quickperf.config.library.QuickPerfConfigs;
@@ -42,6 +44,9 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
     private static final ExtensionContext.Namespace NAMESPACE =
             ExtensionContext.Namespace.create(QuickPerfTestExtension.class);
 
+    // A dynamic test is not invoked by reflection: there is no allocation to subtract
+    private static final int DYNAMIC_TEST_ALLOCATION_OFFSET = 0;
+
     private final QuickPerfConfigs quickPerfConfigs =  QuickPerfConfigsLoader.INSTANCE.loadQuickPerfConfigs();
 
     private final PerformanceRecording performanceRecording = PerformanceRecording.INSTANCE;
@@ -52,11 +57,24 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
+        Method testMethod = extensionContext.getRequiredTestMethod();
+        if (isTestFactory(testMethod)) {
+            // A test factory has no TestExecutionContext: each of its dynamic tests has its own, see
+            // executeDynamicTestAndRecordPerformance. QuickPerf measures neither the test factory method nor its
+            // @BeforeEach and @AfterEach methods.
+            return;
+        }
         int junit5AllocationOffset = findJunit5AllocationOffset();
         TestExecutionContext testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs
-                                                            , extensionContext.getRequiredTestMethod()
+                                                            , testMethod
                                                             , junit5AllocationOffset);
         extensionContext.getStore(NAMESPACE).put(TestExecutionContext.class, testExecutionContext);
+    }
+
+    // As JUnit, which executes a method returning void, and annotated with @TestFactory and @Test, as a test method
+    private static boolean isTestFactory(Method testMethod) {
+        return     AnnotationSupport.isAnnotated(testMethod, TestFactory.class)
+                && !testMethod.getReturnType().equals(void.class);
     }
 
     private TestExecutionContext getTestExecutionContext(ExtensionContext extensionContext) {
@@ -71,7 +89,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         return 40;
     }
 
-    // we need to skip BeforeEach/AfterEach if we plan to fork as they will be executed in the forked VM
+    // we need to skip BeforeEach/AfterEach if we plan to fork as they will be executed in the forked VM, except for a test factory, see testWillFork
     // FIXME we should also do this for BeforeAll/AfterAll but the TestExecutionContext is not yet created so we don't know at this stage that we need to fork.
     @Override
     public void interceptBeforeEachMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
@@ -81,7 +99,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
             // maybe it's a bug in JUnit or maybe not but we keep this as a safeguard.
             invocation.proceed();
         }
-        else if (getTestExecutionContext(extensionContext).testExecutionUsesTwoJVMs() && !SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+        else if (testWillFork(extensionContext)) {
             // we skip the BeforeEach if the test will fork
             invocation.skip();
         }
@@ -92,13 +110,23 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
     @Override
     public void interceptAfterEachMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
-        if (getTestExecutionContext(extensionContext).testExecutionUsesTwoJVMs() && !SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+        if (testWillFork(extensionContext)) {
             // we skip the AfterEach if the test will fork
             invocation.skip();
         }
         else {
             invocation.proceed();
         }
+    }
+
+    // A test factory method has no TestExecutionContext. It is executed in the test JVM, and again in the JVM of each of
+    // its dynamic tests needing a specific JVM: its BeforeEach/AfterEach are executed in every JVM, so that it provides
+    // the same dynamic tests in every JVM.
+    private boolean testWillFork(ExtensionContext extensionContext) {
+        TestExecutionContext testExecutionContext = getTestExecutionContext(extensionContext);
+        return     testExecutionContext != null
+                && testExecutionContext.testExecutionUsesTwoJVMs()
+                && !SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate();
     }
 
     @Override
@@ -118,7 +146,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         }
 
         TestToExecuteInNewJvm testToExecuteInNewJvm = TestToExecuteInNewJvm.buildFrom(extensionContext);
-        JvmOrTestIssue jvmOrTestIssue = executeTestMethodAndRecordPerformance(invocation, invocationContext, testExecutionContext, testToExecuteInNewJvm);
+        JvmOrTestIssue jvmOrTestIssue = executeTestMethodAndRecordPerformance(invocation, invocationContext.getTargetClass(), invocationContext.getExecutable(), testExecutionContext, testToExecuteInNewJvm);
         processJvmOrTestIssue(jvmOrTestIssue, testExecutionContext);
     }
 
@@ -138,36 +166,65 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         }
 
         TestToExecuteInNewJvm testToExecuteInNewJvm = TestToExecuteInNewJvm.buildFrom(extensionContext);
-        JvmOrTestIssue jvmOrTestIssue = executeTestMethodAndRecordPerformance(invocation, invocationContext, testExecutionContext, testToExecuteInNewJvm);
+        JvmOrTestIssue jvmOrTestIssue = executeTestMethodAndRecordPerformance(invocation, invocationContext.getTargetClass(), invocationContext.getExecutable(), testExecutionContext, testToExecuteInNewJvm);
         processJvmOrTestIssue(jvmOrTestIssue, testExecutionContext);
     }
 
+    // JUnit 5.8 to 5.14, which deprecate this method, call it through the default implementation of
+    // interceptDynamicTest(Invocation, DynamicTestInvocationContext, ExtensionContext).
     @Override
     public void interceptDynamicTest(Invocation<Void> invocation, ExtensionContext extensionContext) throws Throwable {
-        // Be careful that this method will be called by each dynamic tests defines by a single test factory method.
-        // And that @BeforeEach and @AfterEach methods will be invoked onces for all dynamic test produced by a test factory method.
-        // This means that we will use the same TestExecutionContext for all dynamic tests produced by a test factory method.
-        // So the annotation from the test factory method will be used on all dynamic tests produced by it.
+        // Be careful that this method will be called by each dynamic test produced by a single test factory method.
+        // The annotations of the test factory method apply to each of its dynamic tests. Each dynamic test has its own
+        // TestExecutionContext, so its own recorders and working folder: the measures of the dynamic tests must not mix,
+        // whether JUnit executes them one after the other or concurrently. When the annotations need a specific JVM,
+        // the JVM of the dynamic test executes the test factory method again, and then only this dynamic test.
+        if (isAlreadyInterceptedByAnotherInstance(extensionContext)) {
+            invocation.proceed();
+            return;
+        }
 
-        TestExecutionContext testExecutionContext = getTestExecutionContext(extensionContext);
+        ExtensionContext testFactoryContext = findTestFactoryContext(extensionContext);
+        Method testFactoryMethod = testFactoryContext.getRequiredTestMethod();
+        TestExecutionContext testExecutionContext = TestExecutionContext.buildFrom(quickPerfConfigs
+                                                            , testFactoryMethod
+                                                            , DYNAMIC_TEST_ALLOCATION_OFFSET);
+        extensionContext.getStore(NAMESPACE).put(TestExecutionContext.class, testExecutionContext);
         if (testExecutionContext.isQuickPerfDisabled()) {
             invocation.proceed();
             return;
         }
 
         if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
-            // FIXME unable to fork the VM for dynamic test, see https://github.com/junit-team/junit5/issues/2399
-            throw new RuntimeException("Cannot run a dynamic test on a forked JVM");
+            executeDynamicTestInNewJvmAndRecordPerformance(invocation, testExecutionContext);
+            return;
         }
 
-        if (testExecutionContext.testExecutionUsesTwoJVMs()) {
-            // FIXME unable to fork the VM for dynamic test, see https://github.com/junit-team/junit5/issues/2399
-            throw new RuntimeException("Cannot run a dynamic test on a forked JVM");
-        }
-
-        TestIssue testIssue = executeTestMethodAndRecordPerformanceInSameJvm(invocation, testExecutionContext);
-        JvmOrTestIssue jvmOrTestIssue = JvmOrTestIssue.buildFrom(testIssue);
+        Class<?> testClass = testFactoryContext.getRequiredTestClass();
+        TestToExecuteInNewJvm testToExecuteInNewJvm = TestToExecuteInNewJvm.buildFrom(extensionContext);
+        JvmOrTestIssue jvmOrTestIssue = executeTestMethodAndRecordPerformance(invocation, testClass, testFactoryMethod, testExecutionContext, testToExecuteInNewJvm);
         processJvmOrTestIssue(jvmOrTestIssue, testExecutionContext);
+    }
+
+    // JUnit registers an extension type once, but also registers the instance of a @RegisterExtension field: so
+    // QuickPerfTestExtension can be registered twice, with @QuickPerfTest and such a field for example. The first instance
+    // intercepting the dynamic test executes the other one when it executes the invocation, in the test JVM or in the
+    // specific JVM. Only the first instance measures the dynamic test, otherwise the recorders of both would mix: the
+    // SQL recorders are registered by type, for example.
+    private boolean isAlreadyInterceptedByAnotherInstance(ExtensionContext dynamicTestContext) {
+        // In the specific JVM, the first instance records the invocation before it starts recording the performance: this
+        // check does not allocate inside its recording
+        return     TestMethodInvocationInNewJvm.INSTANCE.isTestMethodInvoked()
+                || getTestExecutionContext(dynamicTestContext) != null;
+    }
+
+    // The extension contexts of a dynamic test and of a dynamic container have no test method
+    private static ExtensionContext findTestFactoryContext(ExtensionContext dynamicTestContext) {
+        ExtensionContext extensionContext = dynamicTestContext;
+        while (!extensionContext.getTestMethod().isPresent()) {
+            extensionContext = extensionContext.getParent().get();
+        }
+        return extensionContext;
     }
 
     private void processJvmOrTestIssue(JvmOrTestIssue jvmOrTestIssue, TestExecutionContext testExecutionContext) throws Throwable {
@@ -227,12 +284,29 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         return executable;
     }
 
-    private JvmOrTestIssue executeTestMethodAndRecordPerformance(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, TestExecutionContext testExecutionContext, TestToExecuteInNewJvm testToExecuteInNewJvm) {
+    private void executeDynamicTestInNewJvmAndRecordPerformance(Invocation<Void> invocation, TestExecutionContext testExecutionContext) throws Throwable {
+        TestMethodInvocationInNewJvm testMethodInvocation = TestMethodInvocationInNewJvm.INSTANCE;
+        testMethodInvocation.recordInvocation();
+
+        performanceRecording.start(testExecutionContext);
+
+        try {
+            // Unlike a test method, which QuickPerf directly invokes, the dynamic test is executed through the JUnit
+            // invocation: the interceptors registered after QuickPerf are executed with it, and measured with it
+            invocation.proceed();
+        } catch (Throwable dynamicTestThrowable) {
+            // As JUnit, throw what the dynamic test threw: JUnit and the other extensions handle it as usual
+            testMethodInvocation.recordThrowable(dynamicTestThrowable);
+            throw dynamicTestThrowable;
+        } finally {
+            performanceRecording.stop(testExecutionContext);
+        }
+    }
+
+    private JvmOrTestIssue executeTestMethodAndRecordPerformance(Invocation<Void> invocation, Class<?> testClass, Method testMethod, TestExecutionContext testExecutionContext, TestToExecuteInNewJvm testToExecuteInNewJvm) {
         if (testExecutionContext.testExecutionUsesTwoJVMs()) {
-            Method testMethod = invocationContext.getExecutable();
-            Class<?> testClass = invocationContext.getTargetClass();
             JvmOrTestIssue jvmOrTestIssue = executeTestMethodInNewJvm(testClass, testMethod, testExecutionContext, testToExecuteInNewJvm);
-            tryToSkipInvocation(invocation); // because the test method is invoked directly inside the 'newJvmTestLauncher'
+            tryToSkipInvocation(invocation); // because the test is executed inside the 'newJvmTestLauncher'
             return jvmOrTestIssue;
         }
         TestIssue testIssue = executeTestMethodAndRecordPerformanceInSameJvm(invocation, testExecutionContext);

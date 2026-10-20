@@ -134,6 +134,8 @@ public class TestExecutionChecksInNewJvmJUnit5Test {
         assertThat(errorReport).contains("JUnit started 0 tests instead of 1 in the specific JVM")
                                .contains("[test-template-invocation:#3]")
                                .contains("provides other arguments in the specific JVM")
+                               .contains("If the arguments come from the methods of a class, sort these methods, for example by Method.toString()")
+                               .contains("Class.getDeclaredMethods() and Class.getMethods() return them in an order that changes from one JVM to another")
                                .doesNotContain("UnexpectedQuickPerfException");
 
     }

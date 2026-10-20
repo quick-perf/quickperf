@@ -12,7 +12,9 @@
  */
 package org.quickperf.sql;
 
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.quickperf.annotation.DisableQuickPerf;
 import org.quickperf.annotation.FunctionalIteration;
 import org.quickperf.junit5.JUnit5Tests;
@@ -53,6 +55,41 @@ public class DisableQuickPerfFeaturesJUnit5Test {
 
         // THEN
         assertThat(jUnit5TestsResult.getNumberOfFailures()).isZero();
+
+    }
+
+    @QuickPerfTest
+    public static class AClassWithATestFactoryAnnotatedWithDisableQuickPerf extends SqlTestBaseJUnit5 {
+
+        @DisableQuickPerf
+        @ExpectSelect(5)
+        @TestFactory
+        public DynamicTest execute_one_select_but_five_select_expected() {
+            return DynamicTest.dynamicTest("Dynamic test executing one select", () -> {
+                EntityManager em = emf.createEntityManager();
+                Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+                query.getResultList();
+            });
+        }
+
+    }
+
+    @Test public void
+    should_disable_quick_perf_features_of_dynamic_tests_with_disable_quick_perf_annotation() {
+
+        // GIVEN
+        Class<?> testClass = AClassWithATestFactoryAnnotatedWithDisableQuickPerf.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        assertThat(jUnit5TestsResult.getNumberOfFailures())
+                .as(jUnit5TestsResult.getErrorReport())
+                .isZero();
+
+        assertThat(jUnit5TestsResult.getNumberOfSucceededTests()).isOne();
 
     }
 
