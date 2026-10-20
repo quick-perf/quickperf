@@ -85,7 +85,7 @@ public @interface ProfileConnection {
     boolean filterStackTrace() default true;
 
     /**
-     *If the stack trace display is enabled, the <code>stackDepth</code> element allows configuring the number of elements to display on the stack traces. With a <code>-1</code> value, the annotation does not limit the stack depth.
+     *If the stack trace display is enabled, the <code>stackDepth</code> element allows configuring the number of elements to display on the stack traces. With a <code>-1</code> value, the annotation displays at most 1000 elements.
      * @return The number of elements to display on the stack traces
      */
     short stackDepth() default -1;
