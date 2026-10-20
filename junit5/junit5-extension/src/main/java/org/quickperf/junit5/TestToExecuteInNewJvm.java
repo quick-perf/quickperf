@@ -23,7 +23,14 @@ import java.io.Serializable;
  * The test JVM saves the JUnit unique id of the test in the working folder, and the new JVM executes the test having
  * this unique id. The unique id of a test template invocation contains its index, for example
  * <code>[test-template-invocation:#2]</code>: so the arguments source of a parameterized test has to provide the same
- * arguments, in the same order, in every JVM.
+ * arguments, in the same order, in every JVM. Likewise, the unique id of a dynamic test contains its index and the
+ * indexes of its dynamic containers, for example <code>[dynamic-container:#1]/[dynamic-test:#2]</code>: the new JVM
+ * executes the test factory method again, and then only this dynamic test. So the test factory method has to provide
+ * the same dynamic tests and dynamic containers, in the same order, in every JVM. The other dynamic tests of the test
+ * factory are not executed in the new JVM: a dynamic test cannot depend on the dynamic tests executed before it.
+ * <p>
+ * The test JVM also saves the display name of the test: the new JVM fails the test when the dynamic test having the
+ * unique id has another display name there.
  */
 class TestToExecuteInNewJvm implements Serializable {
 
@@ -33,12 +40,15 @@ class TestToExecuteInNewJvm implements Serializable {
 
     private final String uniqueId;
 
-    private TestToExecuteInNewJvm(String uniqueId) {
+    private final String displayName;
+
+    private TestToExecuteInNewJvm(String uniqueId, String displayName) {
         this.uniqueId = uniqueId;
+        this.displayName = displayName;
     }
 
     static TestToExecuteInNewJvm buildFrom(ExtensionContext extensionContext) {
-        return new TestToExecuteInNewJvm(extensionContext.getUniqueId());
+        return new TestToExecuteInNewJvm(extensionContext.getUniqueId(), extensionContext.getDisplayName());
     }
 
     void saveIn(WorkingFolder workingFolder) {
@@ -55,6 +65,10 @@ class TestToExecuteInNewJvm implements Serializable {
 
     String getUniqueId() {
         return uniqueId;
+    }
+
+    String getDisplayName() {
+        return displayName;
     }
 
 }

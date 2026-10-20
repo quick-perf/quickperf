@@ -44,6 +44,12 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
 
     private static final String JUPITER_ENGINE_SEGMENT = "[engine:junit-jupiter]";
 
+    private static final String TEST_FACTORY_SEGMENT = "[test-factory:";
+
+    private static final String DYNAMIC_TEST_SEGMENT = "[dynamic-test:";
+
+    private static final String PARALLEL_EXECUTION_ENABLED = "junit.jupiter.execution.parallel.enabled";
+
     // Jupiter also aborts a test throwing this JUnit 4 exception, when JUnit 4 is on the classpath
     private static final String JUNIT4_ASSUMPTION_VIOLATED_EXCEPTION = "org.junit.internal.AssumptionViolatedException";
 
@@ -57,8 +63,9 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
             return TestIssue.buildFrom(JvmError.buildFrom(message));
         }
 
-        String uniqueId = testToExecute.getUniqueId();
-        TestExecutionRecorder testExecutionRecorder = new TestExecutionRecorder();
+        // The unique id that this JVM executes, given by all the messages
+        String uniqueId = removeSuiteSegments(testToExecute.getUniqueId());
+        TestExecutionRecorder testExecutionRecorder = new TestExecutionRecorder(uniqueId);
         try {
             runTest(uniqueId, testExecutionRecorder);
         } catch (Throwable unrecoverableError) {
@@ -77,9 +84,16 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
             return TestIssue.buildFrom(jvmError);
         }
 
-        List<Throwable> failures = testExecutionRecorder.failures;
-        if (!failures.isEmpty()) {
-            return TestIssue.buildInNewJvmFrom(failures);
+        String executedDisplayName = testExecutionRecorder.startedTestDisplayName;
+        if (isDynamicTest(uniqueId) && !testToExecute.getDisplayName().equals(executedDisplayName)) {
+            // This JVM may have measured another dynamic test than the one reported by the test JVM
+            JvmError jvmError = buildOtherDisplayNameError(uniqueId, testToExecute.getDisplayName(), executedDisplayName);
+            return TestIssue.buildFrom(jvmError);
+        }
+
+        List<Throwable> testFailures = testExecutionRecorder.testFailures;
+        if (!testFailures.isEmpty()) {
+            return TestIssue.buildInNewJvmFrom(testFailures);
         }
 
         List<Throwable> testAborts = testExecutionRecorder.testAborts;
@@ -90,8 +104,14 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
         return TestIssue.NONE;
     }
 
+    // This JVM executes one test. The parallel execution can still be enabled here, by a junit-platform.properties file
+    // of the class path or by a system property. In the concurrent mode (junit.jupiter.execution.parallel.mode.default or
+    // @Execution), JUnit would then execute a dynamic test, or a test template invocation, in another thread while the
+    // test factory method, or the arguments source, goes on providing the next ones, and QuickPerf would also measure
+    // what they do meanwhile. A configuration parameter of the request takes precedence over both.
     private static void runTest(String uniqueId, TestExecutionListener listener) {
-        LauncherDiscoveryRequest request = request().selectors(selectUniqueId(removeSuiteSegments(uniqueId)))
+        LauncherDiscoveryRequest request = request().selectors(selectUniqueId(uniqueId))
+                                          .configurationParameter(PARALLEL_EXECUTION_ENABLED, "false")
                                           .build();
 
         Launcher launcher = LauncherFactory.create();
@@ -188,14 +208,31 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
             message.append(lineSeparator)
                    .append("- The arguments source of a parameterized test provides other arguments in the specific")
                    .append(" JVM. It has to provide the same arguments, in the same order, in every JVM: do not use")
-                   .append(" Set.of(...), a HashSet or random values.")
+                   .append(" Set.of(...), a HashSet or random values. If the arguments come from the methods of a")
+                   .append(" class, sort these methods, for example by Method.toString(): Class.getDeclaredMethods()")
+                   .append(" and Class.getMethods() return them in an order that changes from one JVM to another.")
                    .append(lineSeparator)
                    .append("- The invocations of a test template depend on the results of the previous invocations, as")
                    .append(" with retry extensions such as junit-pioneer @RetryingTest: only the first attempt exists in")
                    .append(" the specific JVM.");
         }
-        message.append(lineSeparator)
-               .append("- A failure before the test, for example in a @BeforeAll method.");
+        if (isDynamicTest(uniqueId)) {
+            message.append(lineSeparator)
+                   .append("- The test factory method provides other dynamic tests in the specific JVM. It has to provide")
+                   .append(" the same dynamic tests and dynamic containers, in the same order, in every JVM: do not use")
+                   .append(" Set.of(...), Map.of(...), a HashSet or random values. If the dynamic tests come from the")
+                   .append(" methods of a class, sort these methods, for example by Method.toString():")
+                   .append(" Class.getDeclaredMethods() and Class.getMethods() return them in an order that changes")
+                   .append(" from one JVM to another.")
+                   .append(lineSeparator)
+                   .append("- A failure before the dynamic test, for example in a @BeforeAll method, in a @BeforeEach")
+                   .append(" method or in the test factory method. The test JVM also executes the @BeforeEach methods of")
+                   .append(" the test factory: it holds what they acquire, a lock, a port or a file for example, until its")
+                   .append(" @AfterEach methods, while the specific JVM executes the dynamic test.");
+        } else {
+            message.append(lineSeparator)
+                   .append("- A failure before the test, for example in a @BeforeAll method.");
+        }
         return JvmError.buildFrom(message.toString());
     }
 
@@ -203,19 +240,80 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
         return uniqueId.contains("[test-template-invocation:") || uniqueId.contains("[class-template-invocation:");
     }
 
+    private static boolean isDynamicTest(String uniqueId) {
+        return uniqueId.contains(DYNAMIC_TEST_SEGMENT);
+    }
+
+    // When the test factory method provides its dynamic tests in another order in this JVM, JUnit executes another dynamic
+    // test than the one of the test JVM. QuickPerf cannot tell it from a display name changing from one JVM to another.
+    private static JvmError buildOtherDisplayNameError(String uniqueId, String displayName, String executedDisplayName) {
+        String lineSeparator = System.lineSeparator();
+        StringBuilder message = new StringBuilder();
+        message.append("In the specific JVM where QuickPerf executes ").append(uniqueId)
+               .append(", the display name of the dynamic test is \"").append(executedDisplayName)
+               .append("\", and not \"").append(displayName).append("\": QuickPerf cannot report the measures and")
+               .append(" the failures of this JVM for \"").append(displayName).append("\".")
+               .append(lineSeparator).append("Possible causes:")
+               .append(lineSeparator)
+               .append("- The test factory method provides other dynamic tests, or the same ones in another order, in")
+               .append(" the specific JVM. It has to provide the same dynamic tests and dynamic containers, in the same")
+               .append(" order, in every JVM: do not use Set.of(...), Map.of(...), a HashSet or random values. If the")
+               .append(" dynamic tests come from the methods of a class, sort these methods, for example by")
+               .append(" Method.toString(): Class.getDeclaredMethods() and Class.getMethods() return them in an order")
+               .append(" that changes from one JVM to another.")
+               .append(lineSeparator)
+               .append("- The display name of the dynamic test changes from one JVM to another, for example because it")
+               .append(" contains an Object.toString() that is not overridden, a time, a random value or a @TempDir")
+               .append(" path. Give the dynamic test a display name that does not change.")
+               .append(lineSeparator)
+               .append("- The display name of the dynamic test depends on a system property of the test JVM,")
+               .append(" user.language or user.timezone for example: the specific JVM does not get the system")
+               .append(" properties of the test JVM. Give the dynamic test a display name that does not depend on them,")
+               .append(" for example with String.format(Locale.ROOT, ...), or set the same system property with")
+               .append(" @JvmOptions(\"-Dname=value\").");
+        return JvmError.buildFrom(message.toString());
+    }
+
+    // For example [engine:junit-jupiter]/[class:...]/[test-factory:dynamic_tests()] for the dynamic test
+    // [engine:junit-jupiter]/[class:...]/[test-factory:dynamic_tests()]/[dynamic-container:#1]/[dynamic-test:#2]
+    private static String findTestFactoryUniqueId(String dynamicTestUniqueId) {
+        int testFactorySegmentIndex = dynamicTestUniqueId.indexOf(TEST_FACTORY_SEGMENT);
+        int testFactorySegmentEndIndex = dynamicTestUniqueId.indexOf(']', testFactorySegmentIndex);
+        return dynamicTestUniqueId.substring(0, testFactorySegmentEndIndex + 1);
+    }
+
     private static class TestExecutionRecorder implements TestExecutionListener {
 
+        private final String uniqueId;
+
+        // null if the test is not a dynamic test
+        private final String testFactoryUniqueId;
+
         private final AtomicInteger startedTestCount = new AtomicInteger();
+
+        private volatile String startedTestDisplayName;
 
         private final AtomicInteger skippedCount = new AtomicInteger();
 
         private final List<Throwable> failures = new CopyOnWriteArrayList<>();
+
+        // The test JVM executes the test factory method of a dynamic test, with its @BeforeEach and @AfterEach methods,
+        // but not the dynamic test. This JVM executes them with this dynamic test only. A failure of the test factory, or
+        // of a dynamic container, after the dynamic test may only happen here, so it fails the dynamic test. It can come
+        // from the dynamic test, for example an @AfterEach method checking what it did, or from the other dynamic tests,
+        // not executed here, for example a check that all the Mockito stubs were used.
+        private final List<Throwable> testFailures = new CopyOnWriteArrayList<>();
 
         private final List<Throwable> testAborts = new CopyOnWriteArrayList<>();
 
         private final List<Throwable> containerAborts = new CopyOnWriteArrayList<>();
 
         private final List<String> unsuccessfulExecutions = new CopyOnWriteArrayList<>();
+
+        private TestExecutionRecorder(String uniqueId) {
+            this.uniqueId = uniqueId;
+            this.testFactoryUniqueId = isDynamicTest(uniqueId) ? findTestFactoryUniqueId(uniqueId) : null;
+        }
 
         @Override
         public void executionSkipped(TestIdentifier testIdentifier, String reason) {
@@ -227,6 +325,7 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
         public void executionStarted(TestIdentifier testIdentifier) {
             if (testIdentifier.isTest()) {
                 startedTestCount.incrementAndGet();
+                startedTestDisplayName = testIdentifier.getDisplayName();
             }
         }
 
@@ -238,6 +337,9 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
             Throwable throwable = testExecutionResult.getThrowable().get();
             if (testExecutionResult.getStatus() == FAILED) {
                 failures.add(throwable);
+                testFailures.add(isTestFactoryOrDynamicContainer(testIdentifier)
+                                 ? buildFailureAfterTheDynamicTest(testIdentifier, throwable)
+                                 : throwable);
                 unsuccessfulExecutions.add(testIdentifier.getDisplayName() + " failed: " + rootCauseOf(throwable));
             } else {
                 if (testIdentifier.isTest()) {
@@ -247,6 +349,19 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
                 }
                 unsuccessfulExecutions.add(testIdentifier.getDisplayName() + " aborted: " + throwable);
             }
+        }
+
+        private boolean isTestFactoryOrDynamicContainer(TestIdentifier testIdentifier) {
+            return testFactoryUniqueId != null
+                && testIdentifier.isContainer()
+                && testIdentifier.getUniqueId().startsWith(testFactoryUniqueId);
+        }
+
+        // The test JVM keeps the root cause of a failure only: the message gives the failure
+        private AssertionError buildFailureAfterTheDynamicTest(TestIdentifier testIdentifier, Throwable throwable) {
+            String message = "JUnit reported a failure of " + testIdentifier.getDisplayName() + " after the dynamic test"
+                           + " in the specific JVM where QuickPerf executes " + uniqueId + ": " + rootCauseOf(throwable);
+            return new AssertionError(message);
         }
 
         private boolean onlyContainersAborted() {

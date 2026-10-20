@@ -17,14 +17,19 @@ import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.quickperf.junit5.JUnit5Tests;
 import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
 import org.quickperf.junit5.QuickPerfTest;
+import org.quickperf.junit5.QuickPerfTestExtension;
+import org.quickperf.sql.annotation.ExpectJdbcBatching;
 import org.quickperf.sql.annotation.ExpectSelect;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,6 +115,96 @@ public class QuickPerfJUnit5SqlDynamicTest {
             dynamicNodes.add(DynamicContainer.dynamicContainer("Dynamic container 2", dynamicTests));
             return dynamicNodes;
         }
+    }
+
+    @QuickPerfTest
+    public static class SqlJdbcBatchingJUnit5DynamicTests extends SqlTestBaseJUnit5 {
+
+        @ExpectJdbcBatching
+        @TestFactory
+        public List<DynamicTest> execute_an_insert_not_batched_then_inserts_in_batch() {
+            List<DynamicTest> dynamicTests = new ArrayList<>();
+            dynamicTests.add(DynamicTest.dynamicTest("Insert not batched", () -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO Book (id,title) VALUES (?, ?)")) {
+                    insertStatement.setLong(1, 1000);
+                    insertStatement.setString(2, "Book title");
+                    insertStatement.executeUpdate();
+                }
+            }));
+            dynamicTests.add(DynamicTest.dynamicTest("Inserts in batch", () -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO Book (id,title) VALUES (?, ?)")) {
+                    for (int i = 1; i <= 3; i++) {
+                        insertStatement.setLong(1, 1000 + i);
+                        insertStatement.setString(2, "Book title");
+                        insertStatement.addBatch();
+                    }
+                    insertStatement.executeBatch();
+                }
+            }));
+            return dynamicTests;
+        }
+    }
+
+    @Test public void
+    should_record_the_sql_executions_of_each_dynamic_test_separately() {
+
+        // GIVEN
+        Class<?> testClass = SqlJdbcBatchingJUnit5DynamicTests.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        String errorReport = jUnit5TestsResult.getErrorReport();
+
+        assertThat(jUnit5TestsResult.getNumberOfFailures())
+                .as("Only the dynamic test executing an insert not batched should fail.%s", errorReport)
+                .isOne();
+
+        assertThat(errorReport).contains("Insert not batched")
+                               .contains("JDBC batching is disabled")
+                               .doesNotContain("Inserts in batch");
+
+    }
+
+    @QuickPerfTest
+    public static class SqlSelectJUnit5DynamicTestWithQuickPerfRegisteredTwice extends SqlTestBaseJUnit5 {
+
+        // Registered in addition to the extension of @QuickPerfTest
+        @RegisterExtension
+        static QuickPerfTestExtension quickPerfTestExtension = new QuickPerfTestExtension();
+
+        @ExpectSelect(1)
+        @TestFactory
+        public DynamicTest execute_one_select() {
+            return DynamicTest.dynamicTest("Dynamic test", () -> {
+                EntityManager em = emf.createEntityManager();
+                Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+                query.getResultList();
+            });
+        }
+    }
+
+    @Test public void
+    should_record_the_sql_executions_of_a_dynamic_test_with_quickperf_registered_twice() {
+
+        // GIVEN
+        Class<?> testClass = SqlSelectJUnit5DynamicTestWithQuickPerfRegisteredTwice.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        assertThat(jUnit5TestsResult.getNumberOfFailures())
+                .as(jUnit5TestsResult.getErrorReport())
+                .isZero();
+
+        assertThat(jUnit5TestsResult.getNumberOfSucceededTests()).isOne();
+
     }
 
     @Test public void
