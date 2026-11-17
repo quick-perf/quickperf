@@ -19,7 +19,10 @@ import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.suite.api.BeforeSuite;
+import org.junit.platform.suite.api.ConfigurationParameter;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 import org.quickperf.SystemProperties;
@@ -37,6 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.quickperf.junit5.JvmExecutionReport.assertThatEachTestWasExecutedInItsOwnNewJvm;
+import static org.quickperf.junit5.JvmExecutionReport.assertThatEachTestWasTheTestExecutedInItsNewJvm;
 import static org.quickperf.junit5.JvmExecutionReport.reportExecutionOf;
 
 /**
@@ -170,6 +174,49 @@ public class SuiteInNewJvmJUnit5Test {
                                .contains("JUnit started 0 tests instead of 1 in the specific JVM where QuickPerf executes "
                                        + testFactoryUniqueId + "/[dynamic-test:#2]")
                                .doesNotContain("[engine:junit-platform-suite]");
+
+    }
+
+    @QuickPerfTest
+    static class ParameterizedTestInASpecificJvm {
+
+        @HeapSize(value = 50, unit = AllocationUnit.MEGA_BYTE)
+        @ParameterizedTest
+        @ValueSource(ints = {1, 2})
+        public void parameterized_test(int value, TestInfo testInfo) {
+            throw reportExecutionOf(testInfo.getDisplayName());
+        }
+
+    }
+
+    @Suite
+    @SelectClasses(ParameterizedTestInASpecificJvm.class)
+    @ConfigurationParameter(key = "junit.jupiter.params.displayname.default", value = "invocation {index} with {arguments}")
+    static class SuiteConfiguringTheDisplayNames {
+    }
+
+    @Test public void
+    should_execute_each_invocation_of_a_suite_with_the_display_names_configured_by_the_suite() {
+
+        // GIVEN
+        Class<?> suiteClass = SuiteConfiguringTheDisplayNames.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(suiteClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        String errorReport = jUnit5TestsResult.getErrorReport();
+
+        assertThat(jUnit5TestsResult.getNumberOfFailures())
+                .as("Each invocation should fail with the report of its execution.%s", errorReport)
+                .isEqualTo(2);
+
+        List<JvmExecutionReport> jvmExecutionReports = jUnit5TestsResult.getJvmExecutionReports();
+        assertThat(jvmExecutionReports).as(errorReport)
+                                       .extracting("executedTest")
+                                       .containsExactlyInAnyOrder("invocation 1 with 1", "invocation 2 with 2");
+        assertThatEachTestWasTheTestExecutedInItsNewJvm(jvmExecutionReports);
 
     }
 
