@@ -22,7 +22,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.quickperf.SystemProperties;
 import org.quickperf.junit5.JUnit5Tests;
 import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
 import org.quickperf.junit5.JvmExecutionReport;
@@ -346,44 +345,6 @@ public class TestTemplateInNewJvmJUnit5Test {
                                        .containsExactlyInAnyOrder("[apple, banana]", "[cherry]");
         assertThatEachTestWasExecutedInItsOwnNewJvm(jvmExecutionReports);
         assertThatEachTestWasTheTestExecutedInItsNewJvm(jvmExecutionReports);
-
-    }
-
-    @QuickPerfTest
-    static class ParameterizedTestHavingAnotherDisplayNameInTheSpecificJvm {
-
-        // The argument, so the display name, changes from one JVM to another, as with an Object.toString() that is not
-        // overridden
-        static Stream<String> jvms() {
-            return Stream.of(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate() ? "specific JVM" : "test JVM");
-        }
-
-        @HeapSize(value = 50, unit = AllocationUnit.MEGA_BYTE)
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("jvms")
-        public void parameterized_test(String jvm) {
-            assertThat(jvm).as("Argument in the JVM executing the invocation").isEqualTo("specific JVM");
-        }
-
-    }
-
-    @Test public void
-    should_not_fail_an_invocation_of_a_parameterized_test_having_another_display_name_in_the_specific_jvm() {
-
-        // GIVEN
-        Class<?> testClass = ParameterizedTestHavingAnotherDisplayNameInTheSpecificJvm.class;
-        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
-
-        // WHEN
-        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
-
-        // THEN
-        assertThat(jUnit5TestsResult.getNumberOfFailures())
-                .as("Only the display name of a dynamic test is checked in the specific JVM.%s"
-                  , jUnit5TestsResult.getErrorReport())
-                .isZero();
-
-        assertThat(jUnit5TestsResult.getNumberOfSucceededTests()).isOne();
 
     }
 

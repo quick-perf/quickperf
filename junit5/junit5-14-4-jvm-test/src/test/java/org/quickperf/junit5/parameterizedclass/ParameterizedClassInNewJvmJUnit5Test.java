@@ -12,13 +12,22 @@
  */
 package org.quickperf.junit5.parameterizedclass;
 
+import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.Parameter;
 import org.junit.jupiter.params.ParameterizedClass;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.quickperf.SystemProperties;
 import org.quickperf.junit5.JUnit5Tests;
 import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
 import org.quickperf.junit5.JvmExecutionReport;
@@ -27,10 +36,14 @@ import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.annotations.ExpectMaxHeapAllocation;
 import org.quickperf.jvm.annotations.HeapSize;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.quickperf.junit5.JvmExecutionReport.assertThatEachTestWasExecutedInItsOwnNewJvm;
@@ -44,7 +57,8 @@ import static org.quickperf.junit5.JvmExecutionReport.reportExecutionOf;
  * <p>
  * Some test methods of the nested test classes fail on purpose with a {@link JvmExecutionReport}, to tell where they
  * were executed. Others fail if their JVM executes them more than once. QuickPerf fails a test that JUnit does not
- * execute in the specific JVM. The argument of the invocation #n of each parameterized class is n.
+ * execute in the specific JVM. In the test JVM, the argument of the invocation #n of each parameterized class having
+ * int arguments is n.
  */
 public class ParameterizedClassInNewJvmJUnit5Test {
 
@@ -327,6 +341,189 @@ public class ParameterizedClassInNewJvmJUnit5Test {
                                .contains("Expected heap allocation (test method thread) to be less than 2.50 Mega bytes but is 3.")
                                .doesNotContain("allocating 1 MB")
                                .doesNotContain("allocating 2 MB");
+
+    }
+
+    @QuickPerfTest
+    @ParameterizedClass
+    @MethodSource("values")
+    static class ParameterizedClassWithReorderedArgumentsInTheSpecificJvm {
+
+        static IntStream values() {
+            boolean executingInTheSpecificJvm = SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate();
+            return executingInTheSpecificJvm ? IntStream.of(2, 1) : IntStream.of(1, 2);
+        }
+
+        private final int value;
+
+        public ParameterizedClassWithReorderedArgumentsInTheSpecificJvm(int value) {
+            this.value = value;
+        }
+
+        @HeapSize(value = 50, unit = AllocationUnit.MEGA_BYTE)
+        @Test
+        public void test_method() {
+            throw reportExecutionOf("test_method() with value " + value);
+        }
+
+    }
+
+    @Test public void
+    should_fail_the_test_of_a_class_invocation_executed_with_other_arguments_in_the_specific_jvm() {
+
+        // GIVEN
+        Class<?> testClass = ParameterizedClassWithReorderedArgumentsInTheSpecificJvm.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        String errorReport = jUnit5TestsResult.getErrorReport();
+
+        assertThat(jUnit5TestsResult.getNumberOfFailures())
+                .as("The test of each class invocation should fail, because the specific JVM executes it with other"
+                  + " arguments.%s", errorReport)
+                .isEqualTo(2);
+
+        assertThat(jUnit5TestsResult.getJvmExecutionReports())
+                .as("No test should be executed with the arguments of another class invocation.%s", errorReport)
+                .isEmpty();
+
+        assertThat(errorReport).contains("[class-template-invocation:#1]/[method:test_method()], the display name of the"
+                                       + " class invocation is \"[1] 2\", and not \"[1] 1\": QuickPerf cannot report the"
+                                       + " measures and the failures of this JVM for \"test_method()\".")
+                               .contains("[class-template-invocation:#2]/[method:test_method()], the display name of the"
+                                       + " class invocation is \"[2] 1\", and not \"[2] 2\"")
+                               .contains("@ParameterizedClass(name = \"...\")")
+                               .doesNotContain("UnexpectedQuickPerfException");
+
+    }
+
+    @QuickPerfTest
+    @ParameterizedClass
+    @ValueSource(strings = {"apple", "banana"})
+    static class ParameterizedClassHavingADefaultDisplayNameInASpecificJvm {
+
+        // The display name of the class invocation, in the JVM executing the test
+        private static String classInvocationDisplayName;
+
+        @RegisterExtension
+        static BeforeEachCallback classInvocationDisplayNameRecorder =
+                context -> classInvocationDisplayName = context.getParent().get().getDisplayName();
+
+        private final String fruit;
+
+        public ParameterizedClassHavingADefaultDisplayNameInASpecificJvm(String fruit) {
+            this.fruit = fruit;
+        }
+
+        @HeapSize(value = 50, unit = AllocationUnit.MEGA_BYTE)
+        @Test
+        public void test_method() {
+            throw reportExecutionOf("test_method() with " + fruit + " in " + classInvocationDisplayName);
+        }
+
+    }
+
+    @Test public void
+    should_execute_the_test_of_each_class_invocation_with_the_display_name_configuration_of_the_test_jvm() {
+
+        // GIVEN
+        Class<?> testClass = ParameterizedClassHavingADefaultDisplayNameInASpecificJvm.class;
+        Map<String, String> configurationParameters = new HashMap<>();
+        configurationParameters.put("junit.jupiter.params.displayname.default", "invocation {index} with {arguments}");
+        configurationParameters.put("junit.jupiter.params.displayname.argument.maxlength", "3");
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass, configurationParameters);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        String errorReport = jUnit5TestsResult.getErrorReport();
+
+        assertThat(jUnit5TestsResult.getNumberOfFailures())
+                .as("The test of each class invocation should fail with the report of its execution.%s", errorReport)
+                .isEqualTo(2);
+
+        assertThat(errorReport).contains("invocation 1 with ap…")
+                               .contains("invocation 2 with ba…");
+
+        List<JvmExecutionReport> jvmExecutionReports = jUnit5TestsResult.getJvmExecutionReports();
+        assertThat(jvmExecutionReports).as(errorReport)
+                                       .extracting("executedTest")
+                                       .containsExactlyInAnyOrder("test_method() with apple in invocation 1 with ap…"
+                                                                , "test_method() with banana in invocation 2 with ba…");
+
+    }
+
+    // Its display names number the class invocations that it created in the JVM. The specific JVM creates only the
+    // class invocation of the test that it executes: there, each class invocation is the first one.
+    static class CountingClassTemplate implements ClassTemplateInvocationContextProvider {
+
+        private static final AtomicInteger CREATED_INVOCATIONS = new AtomicInteger();
+
+        @Override
+        public boolean supportsClassTemplate(ExtensionContext extensionContext) {
+            return true;
+        }
+
+        @Override
+        public Stream<ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(ExtensionContext extensionContext) {
+            return Stream.of("apple", "banana").map(fruit -> new ClassTemplateInvocationContext() {
+                @Override
+                public String getDisplayName(int invocationIndex) {
+                    return "class invocation " + CREATED_INVOCATIONS.incrementAndGet() + " with " + fruit;
+                }
+            });
+        }
+
+    }
+
+    @QuickPerfTest
+    @ClassTemplate
+    @ExtendWith(CountingClassTemplate.class)
+    static class ClassTemplateNamedByACountingProviderInASpecificJvm {
+
+        // The display name of the class invocation, in the JVM executing the test
+        private static String classInvocationDisplayName;
+
+        @RegisterExtension
+        static BeforeEachCallback classInvocationDisplayNameRecorder =
+                context -> classInvocationDisplayName = context.getParent().get().getDisplayName();
+
+        @HeapSize(value = 50, unit = AllocationUnit.MEGA_BYTE)
+        @Test
+        public void test_method() {
+            throw reportExecutionOf("test_method() in " + classInvocationDisplayName);
+        }
+
+    }
+
+    @Test public void
+    should_execute_the_test_of_each_class_invocation_of_a_custom_provider_having_another_display_name_in_the_specific_jvm() {
+
+        // GIVEN
+        Class<?> testClass = ClassTemplateNamedByACountingProviderInASpecificJvm.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        String errorReport = jUnit5TestsResult.getErrorReport();
+
+        assertThat(jUnit5TestsResult.getNumberOfFailures())
+                .as("The test of each class invocation should fail with the report of its execution.%s", errorReport)
+                .isEqualTo(2);
+
+        List<JvmExecutionReport> jvmExecutionReports = jUnit5TestsResult.getJvmExecutionReports();
+        assertThat(jvmExecutionReports).as(errorReport)
+                                       .extracting("executedTest")
+                                       .containsExactlyInAnyOrder("test_method() in class invocation 1 with apple"
+                                                                , "test_method() in class invocation 1 with banana");
+        assertThatEachTestWasExecutedInItsOwnNewJvm(jvmExecutionReports);
+        assertThat(errorReport).doesNotContain("another display name");
 
     }
 

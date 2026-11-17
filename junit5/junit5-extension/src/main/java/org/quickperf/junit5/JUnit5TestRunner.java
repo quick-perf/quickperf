@@ -32,7 +32,9 @@ import java.io.StringWriter;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -67,7 +69,7 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
         String uniqueId = removeSuiteSegments(testToExecute.getUniqueId());
         TestExecutionRecorder testExecutionRecorder = new TestExecutionRecorder(uniqueId);
         try {
-            runTest(uniqueId, testExecutionRecorder);
+            runTest(uniqueId, testToExecute.getDisplayNameConfigurationParameters(), testExecutionRecorder);
         } catch (Throwable unrecoverableError) {
             // JUnit rethrows the errors that it does not recover from, an OutOfMemoryError for example. Reporting them
             // lets this JVM end with System.exit, even if the test left non-daemon threads.
@@ -82,6 +84,12 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
             }
             JvmError jvmError = buildNotOneStartedTestError(uniqueId, testExecutionRecorder);
             return TestIssue.buildFrom(jvmError);
+        }
+
+        JvmError otherInvocationError = findOtherInvocationError(uniqueId, testToExecute, testExecutionRecorder);
+        if (otherInvocationError != null) {
+            // This JVM may have measured another invocation than the one reported by the test JVM
+            return TestIssue.buildFrom(otherInvocationError);
         }
 
         String executedDisplayName = testExecutionRecorder.startedTestDisplayName;
@@ -109,8 +117,10 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
     // @Execution), JUnit would then execute a dynamic test, or a test template invocation, in another thread while the
     // test factory method, or the arguments source, goes on providing the next ones, and QuickPerf would also measure
     // what they do meanwhile. A configuration parameter of the request takes precedence over both.
-    private static void runTest(String uniqueId, TestExecutionListener listener) {
+    private static void runTest(String uniqueId, Map<String, String> displayNameConfigurationParameters
+                              , TestExecutionListener listener) {
         LauncherDiscoveryRequest request = request().selectors(selectUniqueId(uniqueId))
+                                          .configurationParameters(displayNameConfigurationParameters)
                                           .configurationParameter(PARALLEL_EXECUTION_ENABLED, "false")
                                           .build();
 
@@ -244,6 +254,56 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
         return uniqueId.contains(DYNAMIC_TEST_SEGMENT);
     }
 
+    // The test JVM saved the display names of the invocations of parameterized tests and parameterized classes of the
+    // test and of its ancestors, from the outermost one: null if this JVM executed them with the same display names
+    private static JvmError findOtherInvocationError(String uniqueId, TestToExecuteInNewJvm testToExecute
+                                                   , TestExecutionRecorder testExecutionRecorder) {
+        for (Map.Entry<String, String> invocation : testToExecute.getParameterizedInvocationDisplayNames().entrySet()) {
+            String invocationUniqueId = removeSuiteSegments(invocation.getKey());
+            String displayName = invocation.getValue();
+            String executedDisplayName = testExecutionRecorder.displayNameByUniqueId.get(invocationUniqueId);
+            if (executedDisplayName != null && !executedDisplayName.equals(displayName)) {
+                boolean classInvocation = !invocationUniqueId.equals(uniqueId);
+                return buildOtherInvocationError(uniqueId, classInvocation, displayName, executedDisplayName
+                                               , testToExecute.getDisplayName());
+            }
+        }
+        return null;
+    }
+
+    // When the arguments source provides its arguments in another order in this JVM, JUnit executes another invocation
+    // than the one of the test JVM. QuickPerf cannot tell it from a display name changing from one JVM to another.
+    private static JvmError buildOtherInvocationError(String uniqueId, boolean classInvocation, String displayName
+                                                    , String executedDisplayName, String testDisplayName) {
+        String lineSeparator = System.lineSeparator();
+        StringBuilder message = new StringBuilder();
+        message.append("In the specific JVM where QuickPerf executes ").append(uniqueId)
+               .append(", the display name of the ").append(classInvocation ? "class invocation" : "invocation")
+               .append(" is \"").append(executedDisplayName)
+               .append("\", and not \"").append(displayName).append("\": QuickPerf cannot report the measures and")
+               .append(" the failures of this JVM for \"").append(testDisplayName).append("\".")
+               .append(lineSeparator).append("Possible causes:")
+               .append(lineSeparator)
+               .append("- The arguments source provides other arguments, or the same arguments in another order, in")
+               .append(" the specific JVM. It has to provide the same arguments, in the same order, in every JVM: do")
+               .append(" not use Set.of(...), Map.of(...), a HashSet or random values. If the arguments come from the")
+               .append(" methods of a class, sort these methods, for example by Method.toString():")
+               .append(" Class.getDeclaredMethods() and Class.getMethods() return them in an order that changes from")
+               .append(" one JVM to another.")
+               .append(lineSeparator)
+               .append("- The display name of the invocation changes from one JVM to another, for example because an")
+               .append(" argument has an Object.toString() that is not overridden, or contains a time, a random value")
+               .append(" or a @TempDir path. Give the invocation a display name that does not change, for example with")
+               .append(" @ParameterizedTest(name = \"...\"), @ParameterizedClass(name = \"...\") or")
+               .append(" Named.of(\"...\", argument).")
+               .append(lineSeparator)
+               .append("- The display name of the invocation depends on a system property of the test JVM,")
+               .append(" user.language or user.timezone for example: the specific JVM does not get the system")
+               .append(" properties of the test JVM. Give the invocation a display name that does not depend on them,")
+               .append(" or set the same system property with @JvmOptions(\"-Dname=value\").");
+        return JvmError.buildFrom(message.toString());
+    }
+
     // When the test factory method provides its dynamic tests in another order in this JVM, JUnit executes another dynamic
     // test than the one of the test JVM. QuickPerf cannot tell it from a display name changing from one JVM to another.
     private static JvmError buildOtherDisplayNameError(String uniqueId, String displayName, String executedDisplayName) {
@@ -310,6 +370,9 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
 
         private final List<String> unsuccessfulExecutions = new CopyOnWriteArrayList<>();
 
+        // The tests and the containers that JUnit started
+        private final Map<String, String> displayNameByUniqueId = new ConcurrentHashMap<>();
+
         private TestExecutionRecorder(String uniqueId) {
             this.uniqueId = uniqueId;
             this.testFactoryUniqueId = isDynamicTest(uniqueId) ? findTestFactoryUniqueId(uniqueId) : null;
@@ -323,6 +386,7 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
 
         @Override
         public void executionStarted(TestIdentifier testIdentifier) {
+            displayNameByUniqueId.put(testIdentifier.getUniqueId(), testIdentifier.getDisplayName());
             if (testIdentifier.isTest()) {
                 startedTestCount.incrementAndGet();
                 startedTestDisplayName = testIdentifier.getDisplayName();
