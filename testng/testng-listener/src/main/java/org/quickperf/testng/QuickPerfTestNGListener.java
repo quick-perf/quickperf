@@ -23,17 +23,20 @@ import org.quickperf.issue.PerfIssuesToFormat;
 import org.quickperf.issue.TestIssue;
 import org.quickperf.jvm.JVM;
 import org.quickperf.perfrecording.PerformanceRecording;
+import org.quickperf.perfrecording.TestThreads;
 import org.quickperf.reporter.QuickPerfReporter;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
 import org.testng.IHookCallBack;
 import org.testng.IHookable;
+import org.testng.IInvokedMethod;
+import org.testng.IInvokedMethodListener;
 import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
 
-public class QuickPerfTestNGListener implements IHookable {
+public class QuickPerfTestNGListener implements IHookable, IInvokedMethodListener {
 
     private final QuickPerfConfigs quickPerfConfigs = QuickPerfConfigsLoader.INSTANCE.loadQuickPerfConfigs();
 
@@ -43,8 +46,43 @@ public class QuickPerfTestNGListener implements IHookable {
 
     private final QuickPerfReporter quickPerfReporter = QuickPerfReporter.INSTANCE;
 
+    /**
+     * Claim the current Surefire pool thread as a QuickPerf test thread BEFORE
+     * any TestNG method runs. {@code IInvokedMethodListener.beforeInvocation} is
+     * invoked before every method TestNG dispatches, including {@code @BeforeSuite},
+     * {@code @BeforeClass}, {@code @BeforeMethod}, {@code @Test}, {@code @AfterMethod},
+     * etc., so this naturally covers both class-level and method-level setup SQL
+     * (Spring {@code ApplicationContext} startup, Hibernate
+     * {@code EntityManagerFactory} creation, schema generation, {@code @Sql}
+     * fixture loading, ...).
+     * <p>
+     * The {@link IHookable#run} path is too late: it only wraps {@code @Test} and
+     * runs after {@code @BeforeMethod}. Without this listener, SQL emitted from
+     * a user {@code @BeforeMethod} would fall through {@code SqlRecorderRegistry}'s
+     * worker fallback and broadcast to every recorder currently live in the
+     * process - contaminating sibling tests running concurrently under TestNG
+     * {@code parallel=methods} / Surefire {@code parallel=all}.
+     * <p>
+     * Marking a thread again has no effect, so calling it on every invocation
+     * is safe.
+     */
+    @Override
+    public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
+        TestThreads.markCurrentThread();
+    }
+
+    @Override
+    public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
+        // No-op: kept explicit because some older TestNG variants do not
+        // provide a default afterInvocation method on IInvokedMethodListener.
+    }
+
     @Override
     public void run(IHookCallBack hookCallBack, ITestResult testResult) {
+
+        // TestNG executes a @Test(timeOut = ...) method on a thread started for
+        // it, after beforeInvocation claimed the thread invoking the method
+        TestThreads.markCurrentThread();
 
         TestExecutionContext testExecutionContext = buildTestExecutionContext(testResult);
 

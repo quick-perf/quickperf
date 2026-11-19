@@ -13,6 +13,7 @@
 package org.quickperf.junit5;
 
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
@@ -31,15 +32,17 @@ import org.quickperf.issue.PerfIssuesEvaluator;
 import org.quickperf.issue.PerfIssuesToFormat;
 import org.quickperf.jvm.JVM;
 import org.quickperf.perfrecording.PerformanceRecording;
+import org.quickperf.perfrecording.TestThreads;
 import org.quickperf.reporter.QuickPerfReporter;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 
-public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInterceptor {
+public class QuickPerfTestExtension implements BeforeAllCallback, BeforeEachCallback, InvocationInterceptor {
 
     private static final ExtensionContext.Namespace NAMESPACE =
             ExtensionContext.Namespace.create(QuickPerfTestExtension.class);
@@ -55,8 +58,43 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
     private final QuickPerfReporter quickPerfReporter = QuickPerfReporter.INSTANCE;
 
+    // The callbacks and interceptors of this extension mark the threads executing the code of the test class as test
+    // threads, even if QuickPerf is disabled for the test: without that, the SQL of this code would be recorded for the
+    // tests recording at the same time. JUnit may execute this code on several threads: with concurrent execution, the
+    // class and each of its tests can be executed by different threads; with @Timeout(threadMode = SEPARATE_THREAD),
+    // each lifecycle method and test method is executed on a thread started for it.
+
+    // JUnit creates the test instance before calling beforeAll with @TestInstance(PER_CLASS), and before calling
+    // beforeEach otherwise. SpringExtension loads its ApplicationContext when it post-processes the test instance, after
+    // this interceptor: Hibernate or Flyway may execute SQL when the context starts.
+    @Override
+    public <T> T interceptTestClassConstructor(Invocation<T> invocation, ReflectiveInvocationContext<Constructor<T>> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        TestThreads.markCurrentThread();
+        return invocation.proceed();
+    }
+
+    // Before the beforeAll callbacks of the extensions registered after this one, and the @BeforeAll methods
+    @Override
+    public void beforeAll(ExtensionContext extensionContext) {
+        TestThreads.markCurrentThread();
+    }
+
+    @Override
+    public void interceptBeforeAllMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        TestThreads.markCurrentThread();
+        invocation.proceed();
+    }
+
+    @Override
+    public void interceptAfterAllMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        TestThreads.markCurrentThread();
+        invocation.proceed();
+    }
+
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
+        // Before the beforeEach callbacks of the extensions registered after this one, and the @BeforeEach methods
+        TestThreads.markCurrentThread();
         Method testMethod = extensionContext.getRequiredTestMethod();
         if (isTestFactory(testMethod)) {
             // A test factory has no TestExecutionContext: each of its dynamic tests has its own, see
@@ -93,6 +131,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
     // FIXME we should also do this for BeforeAll/AfterAll but the TestExecutionContext is not yet created so we don't know at this stage that we need to fork.
     @Override
     public void interceptBeforeEachMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        TestThreads.markCurrentThread();
         if(invocationContext.getTargetClass().equals(QuickPerfTestExtension.class)){
             // We proceed with our own BeforeEach as we need it for all cases.
             // Note that currently this never happens as our BeforeEach is not intercepted by our own extension,
@@ -110,6 +149,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
 
     @Override
     public void interceptAfterEachMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        TestThreads.markCurrentThread();
         if (testWillFork(extensionContext)) {
             // we skip the AfterEach if the test will fork
             invocation.skip();
@@ -130,9 +170,16 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
     }
 
     @Override
+    public <T> T interceptTestFactoryMethod(Invocation<T> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        TestThreads.markCurrentThread();
+        return invocation.proceed();
+    }
+
+    @Override
     public void interceptTestTemplateMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
         // Be careful that this method will be called by each invocation of the test template defines by a single test template method.
         // Normal lifecycle will apply.
+        TestThreads.markCurrentThread();
         TestExecutionContext testExecutionContext = getTestExecutionContext(extensionContext);
 
         if (testExecutionContext.isQuickPerfDisabled()) {
@@ -154,6 +201,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
     public void interceptTestMethod(  Invocation<Void> invocation
                                     , ReflectiveInvocationContext<Method> invocationContext
                                     , ExtensionContext extensionContext) throws Throwable {
+        TestThreads.markCurrentThread();
         TestExecutionContext testExecutionContext = getTestExecutionContext(extensionContext);
         if (testExecutionContext.isQuickPerfDisabled()) {
             invocation.proceed();
@@ -179,6 +227,7 @@ public class QuickPerfTestExtension implements BeforeEachCallback, InvocationInt
         // TestExecutionContext, so its own recorders and working folder: the measures of the dynamic tests must not mix,
         // whether JUnit executes them one after the other or concurrently. When the annotations need a specific JVM,
         // the JVM of the dynamic test executes the test factory method again, and then only this dynamic test.
+        TestThreads.markCurrentThread();
         if (isAlreadyInterceptedByAnotherInstance(extensionContext)) {
             invocation.proceed();
             return;

@@ -15,6 +15,11 @@ package org.quickperf.testng.sql;
 import org.quickperf.testng.TestNGTests;
 import org.testng.annotations.Test;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class QuickPerfSqlTestNGListenerTest {
@@ -90,6 +95,36 @@ public class QuickPerfSqlTestNGListenerTest {
         Throwable errorReport = testsResult.getThrowableOfFirstTest();
         assertThat(errorReport)
                 .hasMessageContaining("Performance-related and functional properties not respected");
+
+    }
+
+    // QuickPerf marks the threads executing the code of a test class as test
+    // threads, even if QuickPerf is disabled for the test: their SQL is
+    // recorded for their own test only, and not for the tests recording at
+    // the same time.
+    @Test public void
+    should_mark_the_thread_executing_the_code_of_a_test_class() throws Exception {
+
+        // GIVEN
+        final TestNGTests testNGTests = TestNGTests.createInstance(TestNGCodeWithQuickPerfSqlTestNGListener.class);
+
+        // WHEN: on a thread that executed no test yet
+        ExecutorService newThread = Executors.newSingleThreadExecutor();
+        TestNGTests.TestNGTestsResult testsResult;
+        try {
+            testsResult = newThread.submit(new Callable<TestNGTests.TestNGTestsResult>() {
+                @Override
+                public TestNGTests.TestNGTestsResult call() {
+                    return testNGTests.run();
+                }
+            }).get(60, TimeUnit.SECONDS);
+        } finally {
+            newThread.shutdownNow();
+        }
+
+        // THEN
+        assertThat(testsResult.getNumberOfFailedTest()).isZero();
+        assertThat(testsResult.getNumberOfPassedTest()).isEqualTo(2);
 
     }
 

@@ -10,14 +10,18 @@
  *
  * Copyright 2019-2022 the original author or authors.
  */
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.results.PrintableResult;
 import org.junit.runner.RunWith;
 import org.quickperf.junit4.QuickPerfJUnitRunner;
 import org.quickperf.sql.annotation.ProfileConnection;
+import org.quickperf.sql.config.MemoryDataSourceBuilder;
 import org.quickperf.sql.connection.Level;
 import org.quickperf.writer.WriterFactory;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -32,6 +36,7 @@ import java.sql.SQLException;
 import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.experimental.results.PrintableResult.testResult;
+import static org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder.aDataSourceBuilder;
 
 public class ProfileConnectionTest {
 
@@ -44,6 +49,8 @@ public class ProfileConnectionTest {
     private static final String FILE_PATH_STACK_WITHOUT_FILTERING = findTargetPath() + File.separator + "connection-profiling-stack-without-filtering.txt";
 
     private static final String FILE_PATH_PROFILING_BEFORE_AND_AFTER_TEST_METHOD = findTargetPath() + File.separator + "connection-profiling-before-after-test-method.txt";
+
+    private static final String FILE_PATH_CONNECTION_OBTAINED_IN_BEFORE_CLASS = findTargetPath() + File.separator + "connection-profiling-connection-obtained-in-before-class.txt";
 
     private static String findTargetPath() {
         Path targetDirectory = Paths.get("target");
@@ -266,6 +273,60 @@ public class ProfileConnectionTest {
         int closedConnectionNumber = profilingResult.split("- java.sql.Connection.close()").length - 1;
         // Because of connection pool initialization in SqlTestBase.before()
         assertThat(closedConnectionNumber).isGreaterThan(1);
+
+    }
+
+    public static class FileWriterBuilderForConnectionObtainedInBeforeClass implements WriterFactory {
+        @Override
+        public Writer buildWriter() throws IOException {
+            return new FileWriter(FILE_PATH_CONNECTION_OBTAINED_IN_BEFORE_CLASS);
+        }
+    }
+
+    @RunWith(QuickPerfJUnitRunner.class)
+    public static class ProfileConnectionObtainedInBeforeClass {
+
+        private static final DataSource DATA_SOURCE =
+                aDataSourceBuilder().buildProxy(MemoryDataSourceBuilder.aDataSource().build());
+
+        private static Connection connection;
+
+        @BeforeClass
+        public static void obtain_a_connection() throws SQLException {
+            connection = DATA_SOURCE.getConnection();
+        }
+
+        @ProfileConnection(level = Level.TRACE
+                         , writerFactory = FileWriterBuilderForConnectionObtainedInBeforeClass.class
+                          )
+        @Test
+        public void test() throws SQLException {
+            try (PreparedStatement statement = connection.prepareStatement("select 1")) {
+                statement.executeQuery();
+            }
+        }
+
+        @AfterClass
+        public static void close_the_connection() throws SQLException {
+            connection.close();
+        }
+
+    }
+
+    @Test public void
+    should_profile_a_connection_obtained_before_the_test() throws IOException {
+
+        // GIVEN
+        Class<?> testClass = ProfileConnectionObtainedInBeforeClass.class;
+
+        // WHEN
+        PrintableResult testResult = testResult(testClass);
+
+        // THEN
+        assertThat(testResult.failureCount()).isZero();
+
+        String profilingResult = readContentOf(FILE_PATH_CONNECTION_OBTAINED_IN_BEFORE_CLASS);
+        assertThat(profilingResult).contains("java.sql.Connection.prepareStatement(String sql) [sql: select 1]");
 
     }
 

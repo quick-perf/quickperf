@@ -19,13 +19,15 @@ import org.quickperf.perfrecording.RecordablePerformance;
 import org.quickperf.repository.BooleanMeasureRepository;
 
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionLeakListener extends ConnectionListener
         implements RecordablePerformance<BooleanMeasure> {
 
-    private final List<Connection> connections = new ArrayList<>();
+    private final Set<Connection> connections =
+            Collections.newSetFromMap(new ConcurrentHashMap<Connection, Boolean>());
 
     private BooleanMeasure connectionLeak;
 

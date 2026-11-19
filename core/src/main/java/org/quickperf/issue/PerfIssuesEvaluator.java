@@ -17,6 +17,7 @@ import org.quickperf.config.library.SetOfAnnotationConfigs;
 import org.quickperf.measure.PerfMeasure;
 import org.quickperf.perfrecording.PerfRecord;
 import org.quickperf.perfrecording.RecordablePerformance;
+import org.quickperf.perfrecording.SelfVerifiablePerfRecord;
 import org.quickperf.perfrecording.ViewablePerfRecordIfPerfIssue;
 import org.quickperf.repository.TestIssueRepository;
 
@@ -123,24 +124,69 @@ public class PerfIssuesEvaluator {
     }
 
     private Map<PerfRecord, List<PerfIssue>> buildPerfIssuesByPerfRecord(Map<Annotation, PerfRecord> perfRecordByAnnotation, Map<Annotation, PerfIssue> perfIssuesByAnnotation) {
-        Map<PerfRecord, List<PerfIssue>> perfIssuesByPerfRecord = new HashMap<>();
+        Map<PerfRecord, List<PerfIssue>> perfIssuesByPerfRecord = new LinkedHashMap<>();
+        addIssuesOfRecordsThemselves(perfRecordByAnnotation.values(), perfIssuesByPerfRecord);
         for (Annotation annotation : perfRecordByAnnotation.keySet()) {
-
-            PerfRecord perfRecord = perfRecordByAnnotation.get(annotation);
-
-            List<PerfIssue> perfIssues = perfIssuesByPerfRecord.get(perfRecord);
-            if(perfIssues == null) {
-                perfIssues = new ArrayList<>();
-            }
             PerfIssue perfIssue = perfIssuesByAnnotation.get(annotation);
             if(perfIssue != null) {
+                PerfRecord perfRecord = perfRecordByAnnotation.get(annotation);
+                List<PerfIssue> perfIssues = perfIssuesByPerfRecord.get(perfRecord);
+                if(perfIssues == null) {
+                    perfIssues = new ArrayList<>();
+                    perfIssuesByPerfRecord.put(perfRecord, perfIssues);
+                }
                 perfIssues.add(perfIssue);
-            }
-            if(!perfIssues.isEmpty()) {
-                perfIssuesByPerfRecord.put(perfRecord, perfIssues);
             }
         }
         return perfIssuesByPerfRecord;
+    }
+
+    // Adds the issues that the records report about their own content,
+    // independently of the annotations. For example, the recorded SQL can
+    // include SQL executed by another test running in parallel: the
+    // annotations would then be verified against wrong measures, so the
+    // test fails with this issue even if the annotations are respected.
+    // These issues are added before the annotation issues, so they're
+    // displayed first.
+    // Several records of a test can report the same issue (e.g. both the SQL
+    // executions and the JDBC batch sizes containing SQL of another test).
+    // It is then added only once, preferably to a record formatting its
+    // issues itself, so that the failure message also displays the recorded
+    // SQL.
+    private void addIssuesOfRecordsThemselves(Collection<PerfRecord> perfRecords, Map<PerfRecord, List<PerfIssue>> perfIssuesByPerfRecord) {
+        Set<String> reportedIssueDescriptions = new HashSet<>();
+        for (PerfRecord perfRecord : distinctRecordsFormattingTheirIssuesFirst(perfRecords)) {
+            PerfIssue recordIssue = verifyRecordItself(perfRecord);
+            boolean isNotYetReported =    recordIssue != PerfIssue.NONE
+                                       && reportedIssueDescriptions.add(recordIssue.getDescription());
+            if (isNotYetReported) {
+                List<PerfIssue> perfIssues = new ArrayList<>();
+                perfIssues.add(recordIssue);
+                perfIssuesByPerfRecord.put(perfRecord, perfIssues);
+            }
+        }
+    }
+
+    private List<PerfRecord> distinctRecordsFormattingTheirIssuesFirst(Collection<PerfRecord> perfRecords) {
+        List<PerfRecord> recordsFormattingTheirIssues = new ArrayList<>();
+        List<PerfRecord> otherRecords = new ArrayList<>();
+        for (PerfRecord perfRecord : new LinkedHashSet<>(perfRecords)) {
+            if (perfRecord instanceof PerfIssuesFormat) {
+                recordsFormattingTheirIssues.add(perfRecord);
+            } else {
+                otherRecords.add(perfRecord);
+            }
+        }
+        recordsFormattingTheirIssues.addAll(otherRecords);
+        return recordsFormattingTheirIssues;
+    }
+
+    private PerfIssue verifyRecordItself(PerfRecord perfRecord) {
+        if (!(perfRecord instanceof SelfVerifiablePerfRecord)) {
+            return PerfIssue.NONE;
+        }
+        PerfIssue recordIssue = ((SelfVerifiablePerfRecord) perfRecord).verifyRecord();
+        return recordIssue == null ? PerfIssue.NONE : recordIssue;
     }
 
     @SuppressWarnings("unchecked")

@@ -32,7 +32,8 @@ class SpringDataSourceConfig implements QuickPerfSuggestion {
 
         if (classPath.containsSpringBoot1()) {
             if (classPath.contains(QUICKPERF_SPRING_BOOT_1_SQL_STARTER)) {
-                return LINE_SEPARATOR + buildSpringRESTControllerMessage();
+                // The starter configures the proxy
+                return "";
             }
             return "To configure it, add the following dependency: "
                   + LINE_SEPARATOR + format(QUICKPERF_SPRING_BOOT_1_SQL_STARTER);
@@ -40,7 +41,8 @@ class SpringDataSourceConfig implements QuickPerfSuggestion {
 
         if (classPath.containsSpringBoot2() || classPath.containsSpringBoot3()) {
             if (classPath.contains(QUICKPERF_SPRING_BOOT_2_SQL_STARTER)) {
-                return LINE_SEPARATOR + buildSpringRESTControllerMessage();
+                // The starter configures the proxy
+                return "";
             }
             return   "To configure it, add the following dependency: "
                     + LINE_SEPARATOR + format(QUICKPERF_SPRING_BOOT_2_SQL_STARTER);
@@ -50,8 +52,7 @@ class SpringDataSourceConfig implements QuickPerfSuggestion {
             if (classPath.contains(QUICKPERF_SQL_SPRING_4)) {
                 return    "Import QuickPerfSqlConfig:"
                         + LINE_SEPARATOR + buildImportQuickPerfSqlConfigExample()
-                        + LINE_SEPARATOR
-                        + LINE_SEPARATOR + buildSpringRESTControllerMessage();
+                        + LINE_SEPARATOR;
             }
             return   "To configure the proxy, add the following dependency: "
                     + LINE_SEPARATOR + format(QUICKPERF_SQL_SPRING_4)
@@ -63,8 +64,7 @@ class SpringDataSourceConfig implements QuickPerfSuggestion {
             if (classPath.contains(QUICKPERF_SQL_SPRING_5)) {
                 return    "Import QuickPerfSqlConfig:"
                         + LINE_SEPARATOR + buildImportQuickPerfSqlConfigExample()
-                        + LINE_SEPARATOR
-                        + LINE_SEPARATOR + buildSpringRESTControllerMessage();
+                        + LINE_SEPARATOR;
             }
             return  "To configure the proxy, add the following dependency: "
                     + LINE_SEPARATOR + format(QUICKPERF_SQL_SPRING_5)
@@ -74,12 +74,6 @@ class SpringDataSourceConfig implements QuickPerfSuggestion {
 
         return "";
 
-    }
-
-    private String buildSpringRESTControllerMessage() {
-        return                     "Are you testing a REST controller without MockMvc? Execute the test in"
-                + LINE_SEPARATOR + "a dedicated JVM by adding" + " @HeapSize(value = ..., unit = AllocationUnit.MEGA_BYTE)."
-                + LINE_SEPARATOR + "A heap size value around 50 megabytes may allow the test to run.";
     }
 
     private String buildImportQuickPerfSqlConfigExample() {

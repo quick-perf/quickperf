@@ -22,6 +22,7 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
+import org.quickperf.junit4.TestThreadMarkingStatement;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.lang.annotation.Annotation;
@@ -58,7 +59,11 @@ class SpringRunnerWithCallableProtectedMethods extends SpringJUnit4ClassRunner {
 
     @Override
     protected Statement withAfters(FrameworkMethod frameworkMethod, Object testInstance, Statement statement) {
-        return super.withAfters(frameworkMethod, testInstance, statement);
+        // Executes the tests for which QuickPerf is disabled. Under
+        // @Test(timeout = ...) or a Timeout rule, JUnit executes the @Before
+        // methods, the test method and the @After methods on a thread started
+        // for the test: claim it.
+        return new TestThreadMarkingStatement(super.withAfters(frameworkMethod, testInstance, statement));
     }
 
     @Override

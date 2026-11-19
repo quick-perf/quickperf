@@ -14,8 +14,6 @@ package org.quickperf.spring.springboottest.controller;
 
 import org.junit.jupiter.api.Test;
 import org.quickperf.junit5.QuickPerfTest;
-import org.quickperf.jvm.allocation.AllocationUnit;
-import org.quickperf.jvm.annotations.HeapSize;
 import org.quickperf.spring.springboottest.FootballApplication;
 import org.quickperf.spring.springboottest.dto.PlayerWithTeamName;
 import org.quickperf.sql.annotation.ExpectSelect;
@@ -45,11 +43,6 @@ public class DetectionOfNPlusOneSelectInWebService {
     private TestRestTemplate restTemplate;
 
     @ExpectSelect(1)
-    // @HeapSize is needed because commit 0155f61 introduced a childValue() copy
-    // in SqlRecorderRegistry's InheritableThreadLocal, breaking the shared Map
-    // reference between the test thread and Tomcat worker threads.
-    // Without @HeapSize, SQL executed on Tomcat threads goes unrecorded.
-    @HeapSize(value = 50, unit = AllocationUnit.MEGA_BYTE)
     @Test
     void should_find_all_players() {
 

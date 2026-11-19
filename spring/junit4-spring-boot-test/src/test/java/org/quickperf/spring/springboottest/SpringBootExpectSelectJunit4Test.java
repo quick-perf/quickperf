@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SpringBootExpectSelectJunit4Test {
 
     @Test
-    public void should_fail_if_select_number_is_greater_than_expected_from_web_service_and_with_test_launched_in_a_dedicated_jvm() {
+    public void should_fail_if_select_number_is_greater_than_expected_from_web_service() {
 
         // GIVEN
         Class<?> testClass = DetectionOfNPlusOneSelectInWebService.class;

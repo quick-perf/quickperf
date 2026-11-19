@@ -18,29 +18,79 @@ import net.ttddyy.dsproxy.QueryType;
 import org.quickperf.SystemProperties;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.PerfIssuesFormat;
+import org.quickperf.perfrecording.SelfVerifiablePerfRecord;
 import org.quickperf.perfrecording.ViewablePerfRecordIfPerfIssue;
 import org.quickperf.sql.framework.quickperf.DataSourceConfig;
 import org.quickperf.sql.update.columns.NumberOfUpdatedColumnsStatistics;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecordIfPerfIssue, Serializable {
+public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecordIfPerfIssue, SelfVerifiablePerfRecord, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public static final SqlExecutions NONE = new SqlExecutions();
 
-    private final Deque<SqlExecution> sqlExecutions = new ArrayDeque<>();
+    /** Description of the perf issue failing a test whose measure was
+     * recorded under a cross-test contamination scenario (SQL executed on a
+     * thread that is not a test thread while two or more tests were
+     * recording SQL). See {@link #verifyRecord()}. */
+    public static final String CROSS_TEST_CONTAMINATION_MESSAGE =
+              "Cross-test SQL contamination: QuickPerf cannot reliably attribute the SQL recorded for this test."
+            + System.lineSeparator()
+            + "       " + "SQL was executed on a thread that is not a QuickPerf test thread (a worker thread such as"
+            + " @Async, @Scheduled, Tomcat HTTP, JMS / Kafka listener, gRPC, virtual thread, ..., a thread started by a test,"
+            + " or the thread of a test not run by QuickPerf) while several QuickPerf tests were recording SQL,"
+            + " so this SQL was recorded for each of them."
+            + System.lineSeparator()
+            + "       " + "The SQL properties of this test cannot be verified, even if they look respected."
+            + System.lineSeparator()
+            + "       " + "Run this test in isolation (disable parallel execution), or annotate it with @HeapSize / @Xmx"
+            + " (or another JVM-forking annotation) to force a dedicated JVM.";
+
+    private final Deque<SqlExecution> sqlExecutions = new ConcurrentLinkedDeque<SqlExecution>();
+
+    /** O(1) size counter. ConcurrentLinkedDeque#size is O(n); we maintain an AtomicInteger
+     * incremented after addLast(...) so {@link #getNumberOfExecutions()} is constant time and
+     * thread-safe under concurrent writers. The pinned write order (addLast first, then
+     * incrementAndGet) keeps the counter as a lower bound on the deque size during the
+     * tearing window — never an upper bound. Not serialized: a record can be serialized while
+     * a worker thread adds an execution, so the counter is computed again from the deserialized
+     * executions, see {@link #readObject(ObjectInputStream)}. */
+    private transient AtomicInteger executionCount = new AtomicInteger();
+
+    /** True when this measure was tagged by
+     * {@link #markCrossTestContamination()} after the recorder it was
+     * extracted from was observed in a multi-owner active-set fallback. The
+     * tag is turned into a failing perf issue by {@link #verifyRecord()}.
+     * NONE is guarded so the shared singleton can never carry a
+     * contamination tag. */
+    private volatile boolean crossTestContamination;
 
     public void add(ExecutionInfo execInfo, List<QueryInfo> queries) {
+        if (this == NONE) {
+            // Defence-in-depth: NONE is a JVM-wide-shared singleton; never mutate it.
+            return;
+        }
         SqlExecution sqlExecution = new SqlExecution(execInfo, queries);
         sqlExecutions.addLast(sqlExecution);
+        executionCount.incrementAndGet();
     }
 
     // Workaround: avoid duplicate call to retrieveNumberOfReturnedColumns within SqlExecution constructor
     // in add method by forcing the column count. Related commit https://github.com/quick-perf/quickperf/issues/141
     private void addWithoutCall(ExecutionInfo executionInfo, List<QueryInfo> queries){
+        if (this == NONE) {
+            return;
+        }
         SqlExecution sqlExecution = new SqlExecution(executionInfo, queries, 0);
         sqlExecutions.addLast(sqlExecution);
+        executionCount.incrementAndGet();
     }
 
     public SqlExecutions filterByQueryType(QueryType queryType) {
@@ -173,8 +223,54 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
                                      : toString());
     }
 
+    /** Tag this measure as observed under cross-test contamination. NONE is
+     * a JVM-wide-shared singleton; tagging it would fail every test that
+     * subsequently reads NONE, so the call is silently ignored on NONE. */
+    public void markCrossTestContamination() {
+        if (this == NONE) {
+            return;
+        }
+        crossTestContamination = true;
+    }
+
+    /** True when this measure has been tagged via
+     * {@link #markCrossTestContamination()}. */
+    public boolean hasCrossTestContamination() {
+        return crossTestContamination;
+    }
+
+    /** A measure recorded under cross-test contamination may include SQL of
+     * a sibling test: the test fails with
+     * {@link #CROSS_TEST_CONTAMINATION_MESSAGE}, even if its SQL annotations
+     * are respected. */
+    @Override
+    public PerfIssue verifyRecord() {
+        if (crossTestContamination) {
+            return new PerfIssue(CROSS_TEST_CONTAMINATION_MESSAGE);
+        }
+        return PerfIssue.NONE;
+    }
+
+    // The executions added so far, and the contamination tag: the executions
+    // added afterwards are not in the copy. Never NONE, so that the copy can
+    // be tagged.
+    SqlExecutions copy() {
+        SqlExecutions copy = new SqlExecutions();
+        for (SqlExecution sqlExecution : sqlExecutions) {
+            copy.sqlExecutions.addLast(sqlExecution);
+            copy.executionCount.incrementAndGet();
+        }
+        copy.crossTestContamination = crossTestContamination;
+        return copy;
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        executionCount = new AtomicInteger(sqlExecutions.size());
+    }
+
     private boolean noJdbcExecution() {
-        return sqlExecutions.size() == 0;
+        return executionCount.get() == 0;
     }
 
     @Override
@@ -183,7 +279,7 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
     }
 
     public int getNumberOfExecutions() {
-        return sqlExecutions.size();
+        return executionCount.get();
     }
 
 }

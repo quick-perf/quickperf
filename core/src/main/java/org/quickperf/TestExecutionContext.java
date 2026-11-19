@@ -22,6 +22,7 @@ import org.quickperf.perfrecording.ExecutionOrderOfPerfRecorders;
 import org.quickperf.perfrecording.ExtractablePerfRecorderParametersFromAnnotation;
 import org.quickperf.perfrecording.PerfRecorderParameters;
 import org.quickperf.perfrecording.RecordablePerformance;
+import org.quickperf.perfrecording.ThreadBoundPerfRecorder;
 import org.quickperf.testlauncher.AllJvmOptions;
 import org.quickperf.testlauncher.JvmOption;
 
@@ -280,6 +281,20 @@ public class TestExecutionContext {
 
     public int getRunnerAllocationOffset() {
         return runnerAllocationOffset;
+    }
+
+    /**
+     * To call on a thread executing the code of the test before it executes
+     * it, when it may not be the thread that built this context.
+     *
+     * @see ThreadBoundPerfRecorder
+     */
+    public void bindRecordersToCurrentThread() {
+        for (RecordablePerformance perfRecorder : perfRecordersToExecuteAfterTestMethod) {
+            if (perfRecorder instanceof ThreadBoundPerfRecorder) {
+                ((ThreadBoundPerfRecorder) perfRecorder).bindToCurrentThread();
+            }
+        }
     }
 
     public void cleanResources() {

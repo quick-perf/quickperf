@@ -16,9 +16,9 @@ public class DataSourceProxyVerifier {
 
     public static final String SEVERAL_PROXIES_WARNING = "[WARNING] QuickPerf has built several datasource proxies";
 
-    private int listenerIdentifier;
+    private volatile int listenerIdentifier;
 
-    private boolean quickPerfBuiltSeveralDataSourceProxies;
+    private volatile boolean quickPerfBuiltSeveralDataSourceProxies;
 
     public void addListenerIdentifier(int newListenerIdentifier) {
         initListenerIdentifierIfNotAlreadyInitialized(newListenerIdentifier);

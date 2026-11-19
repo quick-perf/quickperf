@@ -29,6 +29,7 @@ import org.quickperf.annotation.DisableQuickPerf;
 import org.quickperf.config.library.QuickPerfConfigs;
 import org.quickperf.config.library.SetOfAnnotationConfigs;
 import org.quickperf.junit4.MainJvmAfterJUnitStatement;
+import org.quickperf.perfrecording.TestThreads;
 import org.quickperf.SystemProperties;
 
 import java.lang.annotation.Annotation;
@@ -150,6 +151,10 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
 
     @Override
     public void run(RunNotifier notifier) {
+        // Claim the thread executing the class-level code (class rules,
+        // @BeforeClass and @AfterClass methods). With a parallel computer, it
+        // may run no test method itself.
+        TestThreads.markCurrentThread();
         if(quickPerfFeaturesAreDisabled) {
             springRunner.run(notifier);
             return;
@@ -196,6 +201,15 @@ public class QuickPerfSpringRunner extends BlockJUnit4ClassRunner {
 
     @Override
     protected void runChild(FrameworkMethod frameworkMethod, RunNotifier notifier) {
+
+        // Claim the current Surefire pool thread as a QuickPerf test thread
+        // BEFORE methodBlock runs createTest() (which loads the Spring
+        // ApplicationContext - a Spring Boot @SpringBootTest context startup
+        // emits substantial DDL/DML on the test pool thread). Without this,
+        // that pre-recording SQL would fall through the registry's worker
+        // fallback and broadcast to sibling tests running concurrently
+        // under Surefire parallel=all.
+        TestThreads.markCurrentThread();
 
         Annotation[] annotations = retrieveAnnotations(frameworkMethod);
 

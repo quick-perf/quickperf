@@ -12,18 +12,25 @@
  */
 package org.quickperf.spring;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quickperf.annotation.DisableQuickPerf;
 import org.quickperf.annotation.FunctionalIteration;
 import org.quickperf.jvm.JVM;
 import org.quickperf.jvm.annotations.ExpectNoHeapAllocation;
+import org.quickperf.perfrecording.TestThreads;
 import org.quickperf.spring.database.ClassWithAFailingTestAndTransactionalTestExecutionListener;
 import org.quickperf.spring.junit4.QuickPerfSpringRunner;
 import org.quickperf.sql.annotation.ExpectSelect;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
+
+import static org.junit.Assert.assertTrue;
 
 public class JUnit4Spring4Test extends AbstractJUnit4SpringTestBase {
 
@@ -192,6 +199,57 @@ public class JUnit4Spring4Test extends AbstractJUnit4SpringTestBase {
     @Override
     protected Class<?> aClassWithTransactionalTestExecutionListenerAndAFailingTest() {
         return ClassWithAFailingTestAndTransactionalTestExecutionListener.class;
+    }
+
+    @RunWith(QuickPerfSpringRunner.class)
+    @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
+    public static class ClassCheckingThatItsCodeIsExecutedOnTestThreads {
+
+        public ClassCheckingThatItsCodeIsExecutedOnTestThreads() {
+            assertIsATestThread("constructor");
+        }
+
+        @BeforeClass
+        public static void before_class() {
+            assertIsATestThread("@BeforeClass method");
+        }
+
+        @Before
+        public void before() {
+            assertIsATestThread("@Before method");
+        }
+
+        @Test(timeout = 20000)
+        public void a_test_with_a_timeout() {
+            assertIsATestThread("test method with a timeout");
+        }
+
+        @DisableQuickPerf
+        @Test(timeout = 20000)
+        public void a_test_with_a_timeout_and_quickperf_disabled() {
+            assertIsATestThread("test method with a timeout and QuickPerf disabled");
+        }
+
+        @After
+        public void after() {
+            assertIsATestThread("@After method");
+        }
+
+        @AfterClass
+        public static void after_class() {
+            assertIsATestThread("@AfterClass method");
+        }
+
+        private static void assertIsATestThread(String testCode) {
+            assertTrue("test thread executing the " + testCode + ": " + Thread.currentThread().getName()
+                     , TestThreads.isCurrentThreadMarked());
+        }
+
+    }
+
+    @Override
+    protected Class<?> aClassCheckingThatItsCodeIsExecutedOnTestThreads() {
+        return ClassCheckingThatItsCodeIsExecutedOnTestThreads.class;
     }
 
 }

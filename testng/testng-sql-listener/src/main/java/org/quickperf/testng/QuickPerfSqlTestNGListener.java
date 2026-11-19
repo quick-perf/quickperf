@@ -21,6 +21,7 @@ import org.quickperf.issue.PerfIssuesEvaluator;
 import org.quickperf.issue.PerfIssuesToFormat;
 import org.quickperf.issue.TestIssue;
 import org.quickperf.perfrecording.PerformanceRecording;
+import org.quickperf.perfrecording.TestThreads;
 import org.quickperf.reporter.QuickPerfReporter;
 import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
@@ -44,6 +45,10 @@ public class QuickPerfSqlTestNGListener implements IInvokedMethodListener {
 
     @Override
     public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
+        // Claim the thread invoking the method, configuration methods
+        // included, even if QuickPerf is disabled for the test: without that,
+        // its SQL would be recorded for the tests recording at the same time.
+        TestThreads.markCurrentThread();
         TestExecutionContext testExecutionContext = buildTestExecutionContextFrom(method);
         this.testExecutionContext = testExecutionContext;
         if (!this.testExecutionContext.isQuickPerfDisabled()) {
