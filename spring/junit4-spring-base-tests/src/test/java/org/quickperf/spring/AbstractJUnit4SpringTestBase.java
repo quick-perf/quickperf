@@ -13,7 +13,15 @@
 package org.quickperf.spring;
 
 import org.junit.Test;
+import org.junit.experimental.ParallelComputer;
 import org.junit.experimental.results.PrintableResult;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.experimental.results.PrintableResult.testResult;
@@ -231,5 +239,60 @@ public abstract class AbstractJUnit4SpringTestBase {
     }
 
     protected abstract Class<?> aClassWithTransactionalTestExecutionListenerAndAFailingTest();
+
+    // QuickPerf marks the threads executing the code of a test class as test
+    // threads, even if QuickPerf is disabled for the test: their SQL is
+    // recorded for their own test only, and not for the tests recording at
+    // the same time. Under @Test(timeout = ...), the Spring runner executes
+    // the @Before methods, the test method and the @After methods on a thread
+    // started for the test.
+    @Test public void
+    the_code_of_a_test_class_should_be_executed_on_test_threads() throws Exception {
+
+        if(!testEnabled) {
+            return;
+        }
+
+        // GIVEN
+        final Class<?> testClass = aClassCheckingThatItsCodeIsExecutedOnTestThreads();
+
+        // WHEN: on a thread that executed no test yet
+        ExecutorService newThread = Executors.newSingleThreadExecutor();
+        PrintableResult printableResult;
+        try {
+            printableResult = newThread.submit(new Callable<PrintableResult>() {
+                @Override
+                public PrintableResult call() {
+                    return testResult(testClass);
+                }
+            }).get(60, TimeUnit.SECONDS);
+        } finally {
+            newThread.shutdownNow();
+        }
+
+        // THEN
+        assertThat(printableResult.failureCount()).as(printableResult.toString()).isZero();
+
+    }
+
+    @Test public void
+    the_test_instances_should_be_created_on_test_threads() {
+
+        if(!testEnabled) {
+            return;
+        }
+
+        // GIVEN
+        Class<?> testClass = aClassCheckingThatItsCodeIsExecutedOnTestThreads();
+
+        // WHEN: the test methods on other threads than the class
+        Result result = JUnitCore.runClasses(new ParallelComputer(false, true), testClass);
+
+        // THEN
+        assertThat(result.getFailures()).isEmpty();
+
+    }
+
+    protected abstract Class<?> aClassCheckingThatItsCodeIsExecutedOnTestThreads();
 
 }

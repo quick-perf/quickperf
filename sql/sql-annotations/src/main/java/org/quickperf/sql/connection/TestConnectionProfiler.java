@@ -15,10 +15,15 @@ package org.quickperf.sql.connection;
 import org.quickperf.TestExecutionContext;
 import org.quickperf.measure.BooleanMeasure;
 import org.quickperf.perfrecording.RecordablePerformance;
+import org.quickperf.perfrecording.ThreadBoundPerfRecorder;
 
-public class TestConnectionProfiler implements RecordablePerformance<BooleanMeasure> {
+public class TestConnectionProfiler implements RecordablePerformance<BooleanMeasure>, ThreadBoundPerfRecorder {
 
     private final ConnectionEventsProfiler connectionEventsProfiler;
+
+    // True while the profiler is also a listener of the recording thread,
+    // because another thread registered it. Only used by the recording thread.
+    private boolean addedToRecordingThread;
 
     public TestConnectionProfiler(AnnotationProfilingParameters annotationProfilingParameters) {
         ProfilingParameters profilingParameters = annotationProfilingParameters.getProfilingParameters();
@@ -29,14 +34,30 @@ public class TestConnectionProfiler implements RecordablePerformance<BooleanMeas
         ConnectionListenerRegistry.INSTANCE.register(connectionEventsProfiler);
     }
 
+    // The code executed before and after the test method may be executed on
+    // another thread than the one that registered the profiler (JUnit 4
+    // Timeout rule). cleanResources(), on the same thread, unbinds it.
+    @Override
+    public void bindToCurrentThread() {
+        ConnectionListenerRegistry.INSTANCE.addToListenersOfCurrentThread(connectionEventsProfiler);
+    }
+
     @Override
     public void startRecording(TestExecutionContext testExecutionContext) {
+        // The test method may be executed on another thread than the one that
+        // registered the profiler (JUnit 4 timeout, JUnit 5 @Timeout on a
+        // separate thread): make it a listener of the recording thread too.
+        addedToRecordingThread = ConnectionListenerRegistry.INSTANCE.addToListenersOfCurrentThread(connectionEventsProfiler);
         connectionEventsProfiler.start();
     }
 
     @Override
     public void stopRecording(TestExecutionContext testExecutionContext) {
         connectionEventsProfiler.stop();
+        if (addedToRecordingThread) {
+            ConnectionListenerRegistry.INSTANCE.removeFromListenersOfCurrentThread(connectionEventsProfiler);
+            addedToRecordingThread = false;
+        }
     }
 
     @Override

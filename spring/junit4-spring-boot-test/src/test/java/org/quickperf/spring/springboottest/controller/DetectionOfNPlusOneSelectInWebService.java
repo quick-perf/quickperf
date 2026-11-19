@@ -14,8 +14,6 @@ package org.quickperf.spring.springboottest.controller;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.quickperf.jvm.allocation.AllocationUnit;
-import org.quickperf.jvm.annotations.HeapSize;
 import org.quickperf.spring.junit4.QuickPerfSpringRunner;
 import org.quickperf.spring.springboottest.FootballApplication;
 import org.quickperf.spring.springboottest.dto.PlayerWithTeamName;
@@ -44,7 +42,6 @@ public class DetectionOfNPlusOneSelectInWebService {
     private TestRestTemplate restTemplate;
 
     @ExpectSelect(1)
-    @HeapSize(value = 50, unit = AllocationUnit.MEGA_BYTE)
     @Test
     public void should_find_all_players() {
 

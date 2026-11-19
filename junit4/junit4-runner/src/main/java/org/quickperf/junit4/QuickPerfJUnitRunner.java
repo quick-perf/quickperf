@@ -14,6 +14,7 @@ package org.quickperf.junit4;
 
 import junit.runner.Version;
 import org.junit.Test;
+import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
@@ -23,6 +24,7 @@ import org.quickperf.TestExecutionContext;
 import org.quickperf.config.library.QuickPerfConfigs;
 import org.quickperf.config.library.QuickPerfConfigsLoader;
 import org.quickperf.jvm.JVM;
+import org.quickperf.perfrecording.TestThreads;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -43,6 +45,25 @@ public class QuickPerfJUnitRunner extends BlockJUnit4ClassRunner {
         super(klass);
     }
 
+    // Marks the thread executing the class-level code (class rules,
+    // @BeforeClass and @AfterClass methods) as a test thread. With a parallel
+    // computer, it may run no test method itself.
+    @Override
+    protected Statement classBlock(RunNotifier notifier) {
+        return new TestThreadMarkingStatement(super.classBlock(notifier));
+    }
+
+    // Marks the thread as a test thread before JUnit creates the test
+    // instance, even if QuickPerf is disabled for the test. Otherwise, the
+    // SQL that the test executes on this thread before starting its own
+    // recording, or all its SQL if QuickPerf is disabled, would be recorded
+    // by the tests recording at the same time.
+    @Override
+    protected void runChild(FrameworkMethod method, RunNotifier notifier) {
+        TestThreads.markCurrentThread();
+        super.runChild(method, notifier);
+    }
+
     @Override
     protected void validateTestMethods(List<Throwable> errors) {
         validatePublicVoidNoArgMethods(Test.class, false, errors);
@@ -53,6 +74,9 @@ public class QuickPerfJUnitRunner extends BlockJUnit4ClassRunner {
         return getTestClass().getAnnotatedMethods(Test.class);
     }
 
+    // Under @Test(timeout = ...), JUnit executes the returned statement on a
+    // thread started for the test method: the statement marks it as a test
+    // thread before the test method executes, even if QuickPerf is disabled.
     @Override
     public Statement methodInvoker(FrameworkMethod frameworkMethod, Object test) {
         Method testMethod = frameworkMethod.getMethod();
@@ -64,7 +88,7 @@ public class QuickPerfJUnitRunner extends BlockJUnit4ClassRunner {
                                                             , runnerAllocationOffset);
 
         if(testExecutionContext.isQuickPerfDisabled()) {
-            return super.methodInvoker(frameworkMethod, test);
+            return new TestThreadMarkingStatement(super.methodInvoker(frameworkMethod, test));
         }
 
         if  (       SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()
@@ -72,7 +96,7 @@ public class QuickPerfJUnitRunner extends BlockJUnit4ClassRunner {
             ) {
             QuickPerfMethod quickPerfMethod = new QuickPerfMethod( testMethod
                                                                  , testExecutionContext);
-            return super.methodInvoker(quickPerfMethod, test);
+            return new TestThreadMarkingStatement(super.methodInvoker(quickPerfMethod, test));
         }
 
         return NO_STATEMENT;
@@ -117,9 +141,14 @@ public class QuickPerfJUnitRunner extends BlockJUnit4ClassRunner {
     @Override
     public Statement withAfters(FrameworkMethod frameworkMethod, Object testInstance, Statement statement) {
         Statement junitAfters = super.withAfters(frameworkMethod, testInstance, statement);
-        if(   SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()
-           || testExecutionContext.isQuickPerfDisabled() ) {
+        if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
             return junitAfters;
+        }
+        if(testExecutionContext.isQuickPerfDisabled()) {
+            // Under a Timeout rule, JUnit executes the @Before methods, the
+            // test method and the @After methods on a thread started for the
+            // test. MainJvmAfterJUnitStatement marks it if QuickPerf is enabled.
+            return new TestThreadMarkingStatement(junitAfters);
         }
         return new MainJvmAfterJUnitStatement(  frameworkMethod
                                               , getTestClass().getJavaClass()

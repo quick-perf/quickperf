@@ -21,6 +21,7 @@ import org.quickperf.issue.TestIssue;
 import org.quickperf.issue.JvmOrTestIssue;
 import org.quickperf.issue.PerfIssuesEvaluator;
 import org.quickperf.issue.PerfIssuesToFormat;
+import org.quickperf.perfrecording.TestThreads;
 import org.quickperf.reporter.QuickPerfReporter;
 import org.quickperf.testlauncher.NewJvmTestLauncher;
 
@@ -90,6 +91,13 @@ public class MainJvmAfterJUnitStatement extends Statement {
     }
 
     private TestIssue evaluateInSameJvm(Statement junitAfters) {
+        // This statement wraps the @Before methods, the test method and the
+        // @After methods. Under a Timeout rule, JUnit executes it on a thread
+        // started for the test, not on the thread that built the test
+        // execution context. testExecutionContext.cleanResources(), called
+        // afterwards on the same thread, unbinds the recorders from it.
+        TestThreads.markCurrentThread();
+        testExecutionContext.bindRecordersToCurrentThread();
         try {
             junitAfters.evaluate();
             return TestIssue.NONE;

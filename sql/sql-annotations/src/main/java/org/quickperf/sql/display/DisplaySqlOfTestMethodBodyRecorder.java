@@ -50,7 +50,14 @@ public class DisplaySqlOfTestMethodBodyRecorder implements SqlRecorder<SqlExecut
     }
 
     @Override
-    public void cleanResources() {}
+    public void cleanResources() {
+        // The thread recording the SQL of a timed-out test can keep running,
+        // for example in a JDBC call ignoring the interrupt, and never stop
+        // recording. Without this, the test would stay a recording test, and
+        // the SQL of the worker threads of the next tests would be attributed
+        // to several tests. Unregistering again has no effect.
+        SqlRecorderRegistry.unregister(this);
+    }
 
     @Override
     public void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries, int listenerIdentifier) {

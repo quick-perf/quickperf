@@ -144,6 +144,27 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <!--
+                        Spring Boot tests that share an embedded HTTP server (Jetty / Tomcat)
+                        and Hibernate / Hikari pools cannot safely run under the root POM's
+                        parallel=all configuration. Surefire pool threads serialise their own
+                        test methods, but each Spring context emits SQL on framework-owned
+                        worker threads (qtp* HTTP workers, async executors, ...) that do not
+                        belong to the calling test pool thread. Under parallel=all those worker
+                        threads observe several concurrently-active QuickPerf recorders and
+                        broadcast SQL to all of them, contaminating sibling tests' counts and
+                        failing them with the cross-test contamination error. Pinning to parallel=none
+                        keeps this module deterministic - this matches the stance already taken
+                        in the Spring Boot 3 test modules (junit5-spring-boot-3-test,
+                        testng-spring-boot-3-test).
+                    -->
+                    <parallel>none</parallel>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
