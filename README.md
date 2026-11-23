@@ -437,6 +437,15 @@ Many thanks to all our contributors!
             <a href="https://github.com/quick-perf/quickperf/commits?author=jjh75607" title="Bug reports">🐛</a>
             <a href="https://github.com/quick-perf/quickperf/commits?author=jjh75607" title="Code">💻</a>
         </td>
+        <td align="center">
+            <a href="https://github.com/tuannx">
+                <img src="https://avatars.githubusercontent.com/tuannx" width="100px;" alt="Tony Nguyen"/>
+                <br/>
+                <sub><b>Tony Nguyen</b></sub>
+            </a>
+            <br/>
+            <a href="https://github.com/quick-perf/quickperf/issues?q=author%3Atuannx" title="Bug reports">🐛</a>
+        </td>
     </tr>
 </table>
 <a href = "https://allcontributors.org/docs/en/emoji-key">emoji key</a>
