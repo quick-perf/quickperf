@@ -12,11 +12,15 @@
  */
 package org.quickperf.junit4;
 
+import org.junit.Test;
+import org.junit.internal.AssumptionViolatedException;
 import org.junit.internal.runners.model.ReflectiveCallable;
 import org.junit.runners.model.FrameworkMethod;
+import org.quickperf.SystemProperties;
 import org.quickperf.TestExecutionContext;
 import org.quickperf.perfrecording.PerformanceRecording;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 class QuickPerfMethod extends FrameworkMethod {
@@ -27,11 +31,16 @@ class QuickPerfMethod extends FrameworkMethod {
 
     private final PerformanceRecording performanceRecording = PerformanceRecording.INSTANCE;
 
+    // Test.None if the test method does not expect an exception with @Test(expected = ...)
+    private final Class<? extends Throwable> expectedException;
+
     public QuickPerfMethod(Method method
                         , TestExecutionContext testExecutionContext) {
         super(method);
         this.method = method;
         this.testExecutionContext = testExecutionContext;
+        Test test = method.getAnnotation(Test.class);
+        this.expectedException = test == null ? Test.None.class : test.expected();
     }
 
     public Object invokeExplosively(final Object target, final Object... params)
@@ -39,14 +48,37 @@ class QuickPerfMethod extends FrameworkMethod {
         return new ReflectiveCallable() {
             @Override
             protected Object runReflectiveCall() throws Throwable {
+                boolean testMethodCompleted = false;
                 performanceRecording.start(testExecutionContext);
                 try {
-                    return method.invoke(target, params);
+                    Object result = method.invoke(target, params);
+                    testMethodCompleted = true;
+                    return result;
+                } catch (InvocationTargetException invocationTargetException) {
+                    // The test method completed as expected by @Test(expected = ...). A failing assumption does not
+                    // complete it, even if it is an instance of the expected exception: JUnit 4.11 and 4.12 then
+                    // report the test as aborted, other versions as passed.
+                    Throwable testMethodThrowable = invocationTargetException.getTargetException();
+                    testMethodCompleted =    expectedException.isInstance(testMethodThrowable)
+                                          && !(testMethodThrowable instanceof AssumptionViolatedException);
+                    throw invocationTargetException;
                 } finally {
                     performanceRecording.stop(testExecutionContext);
+                    // Once the recording is stopped, so that it does not measure the allocations of this call
+                    recordCompletion(testMethodCompleted);
                 }
             }
         }.run();
+    }
+
+    // An assumption failing once the test method has completed, in an @After method for example, leaves the
+    // performance recording complete: QuickPerf then evaluates it, unlike when the assumption fails before the end of
+    // the test method
+    private void recordCompletion(boolean testMethodCompleted) {
+        testExecutionContext.setTestMethodCompleted(testMethodCompleted);
+        if (SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
+            TestMethodCompletionInNewJvm.INSTANCE.record(testMethodCompleted);
+        }
     }
 
 }

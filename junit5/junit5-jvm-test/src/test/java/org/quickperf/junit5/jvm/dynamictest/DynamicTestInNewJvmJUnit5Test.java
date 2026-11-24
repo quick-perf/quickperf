@@ -762,7 +762,7 @@ public class DynamicTestInNewJvmJUnit5Test {
     }
 
     @Test public void
-    should_report_the_performance_issue_of_a_dynamic_test_aborted_in_the_specific_jvm() {
+    should_not_report_the_performance_issue_of_a_dynamic_test_aborted_in_the_specific_jvm() {
 
         // GIVEN
         Class<?> testClass = AssumptionFailingInADynamicTestAllocatingInTheSpecificJvm.class;
@@ -775,12 +775,18 @@ public class DynamicTestInNewJvmJUnit5Test {
         String errorReport = jUnit5TestsResult.getErrorReport();
 
         assertThat(jUnit5TestsResult.getNumberOfFailures())
-                .as("The performance issue should fail the dynamic test, as when it does not need a specific JVM.%s"
-                  , errorReport)
+                .as("The abort cut the measurement short: the dynamic test should be aborted, as when an assumption"
+                  + " aborts a dynamic test that does not need a specific JVM.%s", errorReport)
+                .isZero();
+
+        assertThat(jUnit5TestsResult.getNumberOfAbortedTests())
+                .as("The dynamic test should be aborted, as in the specific JVM.")
                 .isOne();
 
-        assertThat(errorReport).contains("Expected heap allocation (test method thread) to be less than 1.00 Mega bytes")
-                               .contains("Assumption failing in a dynamic test of the specific JVM");
+        assertThat(jUnit5TestsResult.getAbortReport())
+                .contains("Assumption failing in a dynamic test of the specific JVM");
+
+        assertThat(errorReport).doesNotContain("Expected heap allocation");
 
     }
 

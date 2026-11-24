@@ -98,10 +98,18 @@ public class MainJvmAfterJUnitStatement extends Statement {
         // afterwards on the same thread, unbinds the recorders from it.
         TestThreads.markCurrentThread();
         testExecutionContext.bindRecordersToCurrentThread();
+        // A rule retrying the test evaluates this statement again: an abort of a @Before method must not be taken
+        // for an abort thrown after the test method of a previous attempt
+        testExecutionContext.setTestMethodCompleted(false);
         try {
             junitAfters.evaluate();
             return TestIssue.NONE;
         } catch (Throwable throwable) {
+            if (testExecutionContext.isTestMethodCompleted()) {
+                // Thrown by an @After method, for example: the performance recording of the test method is complete
+                return TestIssue.buildFromThrowableAfterTestMethod(throwable);
+            }
+            // Thrown by a @Before method or by the test method, for example
             return TestIssue.buildFrom(throwable);
         }
     }

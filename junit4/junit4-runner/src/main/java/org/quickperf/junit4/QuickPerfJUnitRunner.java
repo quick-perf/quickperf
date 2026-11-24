@@ -142,7 +142,7 @@ public class QuickPerfJUnitRunner extends BlockJUnit4ClassRunner {
     public Statement withAfters(FrameworkMethod frameworkMethod, Object testInstance, Statement statement) {
         Statement junitAfters = super.withAfters(frameworkMethod, testInstance, statement);
         if(SystemProperties.TEST_CODE_EXECUTING_IN_NEW_JVM.evaluate()) {
-            return junitAfters;
+            return new TestMethodCompletionResettingStatement(junitAfters);
         }
         if(testExecutionContext.isQuickPerfDisabled()) {
             // Under a Timeout rule, JUnit executes the @Before methods, the
