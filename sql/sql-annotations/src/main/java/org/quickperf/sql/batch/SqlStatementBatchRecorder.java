@@ -102,7 +102,7 @@ public class SqlStatementBatchRecorder implements SqlRecorder<SqlBatchSizes> {
     }
 
     @Override
-    public void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries, int listenerIdentifier) {
+    public void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries) {
         if (isEmptyBatch(execInfo)) {
             return;
         }

@@ -15,6 +15,7 @@ package org.quickperf.spring.sql;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder;
+import org.quickperf.sql.config.library.QuickPerfProxyDataSource;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -75,7 +76,7 @@ public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, Prior
     private void proxyReadOnlyDataSourcesAlong(DataSource dataSource) {
         DataSource currentDataSource = dataSource;
         for (int depth = 0;
-             currentDataSource != null && !(currentDataSource instanceof QuickPerfProxiedDataSource) && depth < MAX_DELEGATION_DEPTH;
+             currentDataSource != null && !isAQuickPerfProxy(currentDataSource) && depth < MAX_DELEGATION_DEPTH;
              depth++) {
             proxyReadOnlyDataSourceOf(currentDataSource);
             currentDataSource = targetDataSourceOf(currentDataSource);
@@ -108,12 +109,19 @@ public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, Prior
     private boolean isAlreadyProxied(DataSource dataSource) {
         DataSource currentDataSource = dataSource;
         for (int depth = 0; currentDataSource != null && depth < MAX_DELEGATION_DEPTH; depth++) {
-            if (currentDataSource instanceof QuickPerfProxiedDataSource) {
+            if (isAQuickPerfProxy(currentDataSource)) {
                 return true;
             }
             currentDataSource = targetDataSourceOf(currentDataSource);
         }
         return false;
+    }
+
+    // Built by this post-processor, or with QuickPerfSqlDataSourceBuilder, for example in a
+    // DataSource bean method: the queries going through it are recorded.
+    private static boolean isAQuickPerfProxy(DataSource dataSource) {
+        return dataSource instanceof QuickPerfProxiedDataSource
+            || dataSource instanceof QuickPerfProxyDataSource;
     }
 
     // The accessor is looked up rather than reached through DelegatingDataSource because

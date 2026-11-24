@@ -55,6 +55,10 @@ public class StackTrace {
     }
 
     StackTraceElement[] getElements() {
+        // The filters can cross, for example when a test framework calls a connection method by reflection
+        if (firstPos > lastPos) {
+            return new StackTraceElement[0];
+        }
         return Arrays.copyOfRange(allElements, firstPos, lastPos + 1);
     }
 

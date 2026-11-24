@@ -12,10 +12,10 @@
  */
 package org.quickperf.spring.sql;
 
-import net.ttddyy.dsproxy.support.ProxyDataSource;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.quickperf.sql.config.QuickPerfSqlDataSourceBuilder;
+import org.quickperf.sql.config.library.QuickPerfProxyDataSource;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.PriorityOrdered;
@@ -46,7 +46,7 @@ public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, Prior
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) {
-        if (bean instanceof DataSource && !isProxyDataSourceBean(bean)) {
+        if (bean instanceof DataSource && !isAQuickPerfProxy(bean)) {
             final ProxyFactory factory = new ProxyFactory(bean);
             factory.setProxyTargetClass(true);
             factory.addAdvice(new ProxyDataSourceInterceptor((DataSource) bean));
@@ -55,8 +55,10 @@ public class QuickPerfProxyBeanPostProcessor implements BeanPostProcessor, Prior
         return bean;
     }
 
-    private boolean isProxyDataSourceBean(Object bean) {
-        return bean.toString().contains(ProxyDataSource.class.getName());
+    // Built with QuickPerfSqlDataSourceBuilder, for example in a DataSource bean method:
+    // the queries going through it are recorded.
+    private static boolean isAQuickPerfProxy(Object bean) {
+        return bean instanceof QuickPerfProxyDataSource;
     }
 
     @Override

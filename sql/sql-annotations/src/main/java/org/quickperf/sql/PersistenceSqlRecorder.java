@@ -24,8 +24,6 @@ import java.util.List;
 
 public class PersistenceSqlRecorder implements SqlRecorder<SqlExecutions> {
 
-    private final DataSourceProxyVerifier datasourceProxyVerifier = new DataSourceProxyVerifier();
-
     private SqlRepository sqlRepository;
 
     // True when SQL was recorded while it was attributed to several recording
@@ -46,12 +44,11 @@ public class PersistenceSqlRecorder implements SqlRecorder<SqlExecutions> {
     }
 
     @Override
-    public void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries, int listenerIdentifier) {
+    public void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries) {
         // Before adding the execution, see findRecord
         if (SqlRecorderRegistry.isSqlOfCurrentThreadAttributedToSeveralTests()) {
             crossTestContamination = true;
         }
-        datasourceProxyVerifier.addListenerIdentifier(listenerIdentifier);
         sqlRepository.addQueryExecution(execInfo, queries);
     }
 
@@ -60,10 +57,6 @@ public class PersistenceSqlRecorder implements SqlRecorder<SqlExecutions> {
         SqlRecorderRegistry.unregister(this);
         WorkingFolder workingFolder = testExecutionContext.getWorkingFolder();
         sqlRepository.flush(workingFolder);
-        if(datasourceProxyVerifier.hasQuickPerfBuiltSeveralDataSourceProxies()) {
-            System.out.println();
-            System.err.println(DataSourceProxyVerifier.SEVERAL_PROXIES_WARNING);
-        }
     }
 
     // A worker thread that found this recorder before the test stopped
