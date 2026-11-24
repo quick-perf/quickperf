@@ -50,7 +50,7 @@ public class PersistenceSqlRecorderCrossTestContaminationTest {
         SqlExecutions recordedSql = new SqlExecutions();
         PersistenceSqlRecorder recorder = recorderWithRepositoryReturning(recordedSql);
         SqlRecorderRegistry.setSqlOfCurrentThreadAttributedToSeveralTests(true);
-        recorder.addQueryExecution(new ExecutionInfo(), anInsert(), 0);
+        recorder.addQueryExecution(new ExecutionInfo(), anInsert());
 
         // WHEN
         SqlExecutions result = recorder.findRecord(mock(TestExecutionContext.class));
@@ -67,7 +67,7 @@ public class PersistenceSqlRecorderCrossTestContaminationTest {
 
         // GIVEN
         PersistenceSqlRecorder recorder = recorderWithRepositoryReturning(new SqlExecutions());
-        recorder.addQueryExecution(new ExecutionInfo(), anInsert(), 0);
+        recorder.addQueryExecution(new ExecutionInfo(), anInsert());
 
         // WHEN
         SqlExecutions result = recorder.findRecord(mock(TestExecutionContext.class));
@@ -89,7 +89,7 @@ public class PersistenceSqlRecorderCrossTestContaminationTest {
         // WHEN a worker thread that found the recorder before the test
         // stopped recording adds SQL attributed to several tests
         SqlRecorderRegistry.setSqlOfCurrentThreadAttributedToSeveralTests(true);
-        recorder.addQueryExecution(new ExecutionInfo(), anInsert(), 0);
+        recorder.addQueryExecution(new ExecutionInfo(), anInsert());
         recordedSql.add(new ExecutionInfo(), anInsert());
         SqlExecutions secondRecord = recorder.findRecord(mock(TestExecutionContext.class));
 
@@ -109,7 +109,7 @@ public class PersistenceSqlRecorderCrossTestContaminationTest {
         // singleton, which must stay untagged
         PersistenceSqlRecorder recorder = recorderWithRepositoryReturning(SqlExecutions.NONE);
         SqlRecorderRegistry.setSqlOfCurrentThreadAttributedToSeveralTests(true);
-        recorder.addQueryExecution(new ExecutionInfo(), anInsert(), 0);
+        recorder.addQueryExecution(new ExecutionInfo(), anInsert());
 
         // WHEN
         SqlExecutions result = recorder.findRecord(mock(TestExecutionContext.class));

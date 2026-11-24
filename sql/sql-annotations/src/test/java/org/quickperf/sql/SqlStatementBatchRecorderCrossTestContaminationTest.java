@@ -48,7 +48,7 @@ public class SqlStatementBatchRecorderCrossTestContaminationTest {
         // GIVEN
         SqlStatementBatchRecorder recorder = new SqlStatementBatchRecorder();
         SqlRecorderRegistry.setSqlOfCurrentThreadAttributedToSeveralTests(true);
-        recorder.addQueryExecution(batchExecution(), queries("INSERT INTO Book(title) VALUES (?)"), 0);
+        recorder.addQueryExecution(batchExecution(), queries("INSERT INTO Book(title) VALUES (?)"));
 
         // WHEN
         SelfVerifiablePerfRecord batchSizes = recorder.findRecord(mock(TestExecutionContext.class));
@@ -65,7 +65,7 @@ public class SqlStatementBatchRecorderCrossTestContaminationTest {
         // GIVEN a select, which does not change the batch sizes
         SqlStatementBatchRecorder recorder = new SqlStatementBatchRecorder();
         SqlRecorderRegistry.setSqlOfCurrentThreadAttributedToSeveralTests(true);
-        recorder.addQueryExecution(batchExecution(), queries("SELECT title FROM Book"), 0);
+        recorder.addQueryExecution(batchExecution(), queries("SELECT title FROM Book"));
 
         // WHEN
         SelfVerifiablePerfRecord batchSizes = recorder.findRecord(mock(TestExecutionContext.class));
@@ -80,7 +80,7 @@ public class SqlStatementBatchRecorderCrossTestContaminationTest {
 
         // GIVEN
         SqlStatementBatchRecorder recorder = new SqlStatementBatchRecorder();
-        recorder.addQueryExecution(batchExecution(), queries("INSERT INTO Book(title) VALUES (?)"), 0);
+        recorder.addQueryExecution(batchExecution(), queries("INSERT INTO Book(title) VALUES (?)"));
 
         // WHEN
         SelfVerifiablePerfRecord batchSizes = recorder.findRecord(mock(TestExecutionContext.class));
@@ -96,7 +96,7 @@ public class SqlStatementBatchRecorderCrossTestContaminationTest {
         // GIVEN a recorder read twice: findRecord returns new batch sizes on every call
         SqlStatementBatchRecorder recorder = new SqlStatementBatchRecorder();
         SqlRecorderRegistry.setSqlOfCurrentThreadAttributedToSeveralTests(true);
-        recorder.addQueryExecution(batchExecution(), queries("INSERT INTO Book(title) VALUES (?)"), 0);
+        recorder.addQueryExecution(batchExecution(), queries("INSERT INTO Book(title) VALUES (?)"));
 
         // WHEN
         recorder.findRecord(mock(TestExecutionContext.class));

@@ -12,6 +12,7 @@
  */
 package org.quickperf.sql.config.library;
 
+import net.ttddyy.dsproxy.proxy.ProxyJdbcObject;
 import net.ttddyy.dsproxy.support.ProxyDataSource;
 import org.quickperf.sql.connection.QuickPerfDatabaseConnection;
 
@@ -23,6 +24,9 @@ public class QuickPerfProxyDataSource extends ProxyDataSource {
     @Override
     public Connection getConnection() throws SQLException {
         Connection connection = super.getConnection();
+        if (wrapsAQuickPerfConnection(connection)) {
+            return connection;
+        }
         QuickPerfDatabaseConnection connectionProxy = QuickPerfDatabaseConnection.buildFrom(connection);
         connectionProxy.theDatasourceGetsTheConnection();
         return connectionProxy;
@@ -31,9 +35,22 @@ public class QuickPerfProxyDataSource extends ProxyDataSource {
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
         Connection connection = super.getConnection(username, password);
+        if (wrapsAQuickPerfConnection(connection)) {
+            return connection;
+        }
         QuickPerfDatabaseConnection connectionProxy = QuickPerfDatabaseConnection.buildFrom(connection);
         connectionProxy.theDatasourceGetsTheConnectionWithUserNameAndPassword();
         return connectionProxy;
+    }
+
+    // The connection of another QuickPerf proxy, handed over by the wrapped
+    // datasource: that proxy already reports the connection events.
+    private static boolean wrapsAQuickPerfConnection(Connection connection) {
+        Object target = connection;
+        while (target instanceof ProxyJdbcObject) {
+            target = ((ProxyJdbcObject) target).getTarget();
+        }
+        return target instanceof QuickPerfDatabaseConnection;
     }
 
 }

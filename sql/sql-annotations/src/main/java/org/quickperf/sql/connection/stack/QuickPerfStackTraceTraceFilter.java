@@ -32,14 +32,28 @@ public class QuickPerfStackTraceTraceFilter implements StackTraceFilter {
         String quickPerfProxyDataSourcePackage = QuickPerfProxyDataSource.class.getPackage().getName();
         String connectionProfilerPackageName = TestConnectionProfiler.class.getPackage().getName();
         for (short pos = 0; pos < stackElements.length; pos++) {
-            String stackTraceElementAsString = stackElements[pos].toString();
+            StackTraceElement stackElement = stackElements[pos];
+            String stackTraceElementAsString = stackElement.toString();
             if (  !stackTraceElementAsString.contains("java.lang.Thread")
                && !stackTraceElementAsString.contains(connectionProfilerPackageName)
-               && !stackTraceElementAsString.contains(quickPerfProxyDataSourcePackage)) {
+               && !stackTraceElementAsString.contains(quickPerfProxyDataSourcePackage)
+               && !isAnElementOfAProxyCall(stackElement)) {
                 return pos;
             }
         }
         return 0;
+    }
+
+    // With nested QuickPerf proxies, the inner proxy reports the connection events.
+    // The outer proxy, a datasource-proxy proxy, calls the inner one by reflection.
+    private static boolean isAnElementOfAProxyCall(StackTraceElement stackElement) {
+        String className = stackElement.getClassName();
+        String simpleClassName = className.substring(className.lastIndexOf('.') + 1);
+        return className.startsWith("net.ttddyy.dsproxy.")
+            || className.startsWith("java.lang.reflect.")
+            || className.startsWith("jdk.internal.reflect.")
+            || className.startsWith("sun.reflect.")
+            || simpleClassName.startsWith("$Proxy");
     }
 
 }

@@ -136,6 +136,73 @@ public class StackTraceDisplayConfigTest {
 
     }
 
+    // Simplified Java 8 stack trace of Connection.prepareStatement(String) called through two nested QuickPerf proxies:
+    // the inner QuickPerfDatabaseConnection is called by the connection proxy of the outer QuickPerf proxy
+    private static final StackTraceElement[] NESTED_PROXIES_STACK_TRACE = concat(QUICKPERF_ELEMENTS, new StackTraceElement[] {
+            new StackTraceElement("sun.reflect.NativeMethodAccessorImpl", "invoke0", null, -2),
+            new StackTraceElement("sun.reflect.NativeMethodAccessorImpl", "invoke", "NativeMethodAccessorImpl.java", 62),
+            new StackTraceElement("sun.reflect.DelegatingMethodAccessorImpl", "invoke", "DelegatingMethodAccessorImpl.java", 43),
+            new StackTraceElement("java.lang.reflect.Method", "invoke", "Method.java", 498),
+            new StackTraceElement("net.ttddyy.dsproxy.proxy.ProxyLogicSupport", "proceedExecution", "ProxyLogicSupport.java", 72),
+            new StackTraceElement("net.ttddyy.dsproxy.proxy.ConnectionProxyLogic", "performProxyLogic", "ConnectionProxyLogic.java", 69),
+            new StackTraceElement("net.ttddyy.dsproxy.proxy.ProxyLogicSupport", "proceedMethodExecution", "ProxyLogicSupport.java", 103),
+            new StackTraceElement("net.ttddyy.dsproxy.proxy.ConnectionProxyLogic", "invoke", "ConnectionProxyLogic.java", 33),
+            new StackTraceElement("net.ttddyy.dsproxy.proxy.jdk.ConnectionInvocationHandler", "invoke", "ConnectionInvocationHandler.java", 25),
+            new StackTraceElement("com.sun.proxy.$Proxy12", "prepareStatement", null, -1),
+            REPOSITORY_ELEMENT,
+            SERVICE_ELEMENT,
+            TEST_METHOD_ELEMENT,
+            new StackTraceElement("sun.reflect.NativeMethodAccessorImpl", "invoke0", null, -2),
+            new StackTraceElement("java.lang.reflect.Method", "invoke", "Method.java", 498),
+            new StackTraceElement("org.junit.platform.commons.util.ReflectionUtils", "invokeMethod", "ReflectionUtils.java", 686),
+            new StackTraceElement("org.quickperf.junit5.QuickPerfTestExtension", "interceptTestMethod", "QuickPerfTestExtension.java", 141),
+            new StackTraceElement("org.junit.platform.launcher.core.DefaultLauncher", "execute", "DefaultLauncher.java", 248)
+    });
+
+    @Test public void
+    should_not_display_the_proxy_elements_between_nested_quickperf_proxies() {
+
+        // GIVEN
+        StackTraceDisplayConfig stackTraceDisplayConfig = buildConfigFilteringStackTrace(StackTrace.StackDepth.ALL);
+
+        // WHEN
+        StackTraceElement[] formattedStackTrace = stackTraceDisplayConfig.format(NESTED_PROXIES_STACK_TRACE);
+
+        // THEN
+        assertThat(formattedStackTrace).containsExactly(REPOSITORY_ELEMENT, SERVICE_ELEMENT, TEST_METHOD_ELEMENT);
+
+    }
+
+    // Simplified Java 8 stack trace of Connection.prepareStatement(String) called by reflection with the JUnit 5 utilities
+    private static final StackTraceElement[] JUNIT5_REFLECTIVE_CALL_STACK_TRACE = concat(QUICKPERF_ELEMENTS, new StackTraceElement[] {
+            new StackTraceElement("sun.reflect.NativeMethodAccessorImpl", "invoke0", null, -2),
+            new StackTraceElement("sun.reflect.NativeMethodAccessorImpl", "invoke", "NativeMethodAccessorImpl.java", 62),
+            new StackTraceElement("sun.reflect.DelegatingMethodAccessorImpl", "invoke", "DelegatingMethodAccessorImpl.java", 43),
+            new StackTraceElement("java.lang.reflect.Method", "invoke", "Method.java", 498),
+            new StackTraceElement("org.junit.platform.commons.util.ReflectionUtils", "invokeMethod", "ReflectionUtils.java", 686),
+            new StackTraceElement("org.junit.platform.commons.support.ReflectionSupport", "invokeMethod", "ReflectionSupport.java", 198),
+            TEST_METHOD_ELEMENT,
+            new StackTraceElement("sun.reflect.NativeMethodAccessorImpl", "invoke0", null, -2),
+            new StackTraceElement("java.lang.reflect.Method", "invoke", "Method.java", 498),
+            new StackTraceElement("org.junit.platform.commons.util.ReflectionUtils", "invokeMethod", "ReflectionUtils.java", 686),
+            new StackTraceElement("org.quickperf.junit5.QuickPerfTestExtension", "interceptTestMethod", "QuickPerfTestExtension.java", 141),
+            new StackTraceElement("org.junit.platform.launcher.core.DefaultLauncher", "execute", "DefaultLauncher.java", 248)
+    });
+
+    @Test public void
+    should_not_display_any_element_if_the_filters_cross() {
+
+        // GIVEN
+        StackTraceDisplayConfig stackTraceDisplayConfig = buildConfigFilteringStackTrace(StackTrace.StackDepth.ALL);
+
+        // WHEN
+        StackTraceElement[] formattedStackTrace = stackTraceDisplayConfig.format(JUNIT5_REFLECTIVE_CALL_STACK_TRACE);
+
+        // THEN
+        assertThat(formattedStackTrace).isEmpty();
+
+    }
+
     @Test public void
     should_limit_the_unfiltered_stack_trace_to_the_stack_depth() {
 

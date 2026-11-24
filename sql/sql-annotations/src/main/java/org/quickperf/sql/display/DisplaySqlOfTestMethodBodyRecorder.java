@@ -15,7 +15,6 @@ package org.quickperf.sql.display;
 import net.ttddyy.dsproxy.ExecutionInfo;
 import net.ttddyy.dsproxy.QueryInfo;
 import org.quickperf.TestExecutionContext;
-import org.quickperf.sql.DataSourceProxyVerifier;
 import org.quickperf.sql.SqlExecutions;
 import org.quickperf.sql.SqlRecorder;
 import org.quickperf.sql.SqlRecorderRegistry;
@@ -26,8 +25,6 @@ import java.util.List;
 
 public class DisplaySqlOfTestMethodBodyRecorder implements SqlRecorder<SqlExecutions> {
 
-    private final DataSourceProxyVerifier datasourceProxyVerifier = new DataSourceProxyVerifier();
-
     @Override
     public void startRecording(TestExecutionContext testExecutionContext) {
         SqlRecorderRegistry.INSTANCE.register(this);
@@ -36,10 +33,6 @@ public class DisplaySqlOfTestMethodBodyRecorder implements SqlRecorder<SqlExecut
     @Override
     public void stopRecording(TestExecutionContext testExecutionContext) {
         SqlRecorderRegistry.unregister(this);
-        if(datasourceProxyVerifier.hasQuickPerfBuiltSeveralDataSourceProxies()) {
-            System.out.println();
-            System.out.println(DataSourceProxyVerifier.SEVERAL_PROXIES_WARNING);
-        }
         System.out.println();
         System.out.println("Use @" + DisplaySql.class.getSimpleName() + " to also see queries before and after test execution.");
     }
@@ -60,8 +53,7 @@ public class DisplaySqlOfTestMethodBodyRecorder implements SqlRecorder<SqlExecut
     }
 
     @Override
-    public void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries, int listenerIdentifier) {
-        datasourceProxyVerifier.addListenerIdentifier(listenerIdentifier);
+    public void addQueryExecution(ExecutionInfo execInfo, List<QueryInfo> queries) {
         String sqlQueries = QuickPerfSqlFormatter.INSTANCE.format(execInfo, queries);
         System.out.println(sqlQueries);
     }

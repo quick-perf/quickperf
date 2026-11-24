@@ -64,7 +64,7 @@ public class SqlStatementBatchRecorderConcurrencyTest {
                     execInfo.setStatementType(StatementType.PREPARED);
                     execInfo.setBatch(true);
                     execInfo.setBatchSize((i % 5) + 1);
-                    recorder.addQueryExecution(execInfo, queries, 0);
+                    recorder.addQueryExecution(execInfo, queries);
                 }
             }
         });
@@ -96,7 +96,7 @@ public class SqlStatementBatchRecorderConcurrencyTest {
                     execInfo.setStatementType(StatementType.PREPARED);
                     execInfo.setBatch(true);
                     execInfo.setBatchSize(expectedSizes[i % expectedSizes.length]);
-                    recorder.addQueryExecution(execInfo, queries, 0);
+                    recorder.addQueryExecution(execInfo, queries);
                 }
             }
         });
