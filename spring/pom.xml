@@ -46,7 +46,7 @@
                 <jdk>[1.8,)</jdk>
             </activation>
             <modules>
-                <module>junit4-spring-boot-test</module>
+                <module>junit4-spring-boot-2-test</module>
             </modules>
         </profile>
         <profile>
