@@ -12,6 +12,7 @@
  */
 package org.quickperf.issue;
 
+import org.junit.AssumptionViolatedException;
 import org.junit.Test;
 import org.quickperf.ExtractablePerformanceMeasure;
 import org.quickperf.TestExecutionContext;
@@ -180,10 +181,87 @@ public class PerfIssuesEvaluatorTest {
 
     }
 
+    @Test public void
+    the_performance_of_a_test_aborted_before_the_end_of_its_test_method_should_not_be_evaluated() {
+
+        // GIVEN a record reporting an issue of its own, an annotation not respected, and an abort
+        FakeRecorder fakeRecorder = new FakeRecorder(new FakeRecord(new PerfIssue(RECORD_ISSUE)));
+        TestExecutionContext testExecutionContext =
+                testExecutionContext(fakeRecorder, PerfAnnotationWithIssue.class);
+        TestIssue abort = TestIssue.buildFrom(new AssumptionViolatedException("assumption not respected"));
+
+        // WHEN
+        Collection<PerfIssuesToFormat> perfIssuesToFormat = evaluate(testExecutionContext, abort);
+
+        // THEN
+        assertThat(perfIssuesToFormat).isEmpty();
+
+    }
+
+    @Test public void
+    the_records_of_a_test_aborted_before_the_end_of_its_test_method_should_not_be_read() {
+
+        // GIVEN a recorder without record, as in the test JVM when a @Before method aborted the test in the specific JVM
+        FakeRecorder recorderWithoutRecord = new RecorderWithoutRecord();
+        TestExecutionContext testExecutionContext =
+                testExecutionContext(recorderWithoutRecord, PerfAnnotationWithIssue.class);
+        TestIssue abort = TestIssue.buildFrom(new AssumptionViolatedException("assumption not respected"));
+
+        // WHEN
+        Collection<PerfIssuesToFormat> perfIssuesToFormat = evaluate(testExecutionContext, abort);
+
+        // THEN
+        assertThat(perfIssuesToFormat).isEmpty();
+
+    }
+
+    @Test public void
+    the_performance_of_a_test_aborted_after_its_test_method_should_be_evaluated() {
+
+        // GIVEN
+        FakeRecorder fakeRecorder = new FakeRecorder(new FakeRecord(new PerfIssue(RECORD_ISSUE)));
+        TestExecutionContext testExecutionContext =
+                testExecutionContext(fakeRecorder, PerfAnnotationWithIssue.class);
+        TestIssue abortAfterTestMethod =
+                TestIssue.buildFromThrowableAfterTestMethod(new AssumptionViolatedException("assumption not respected"));
+
+        // WHEN
+        Collection<PerfIssuesToFormat> perfIssuesToFormat = evaluate(testExecutionContext, abortAfterTestMethod);
+
+        // THEN
+        assertThat(perfIssuesToFormat).hasSize(1);
+        String formattedIssues = perfIssuesToFormat.iterator().next().format();
+        assertThat(formattedIssues).contains(RECORD_ISSUE)
+                                   .contains(ANNOTATION_ISSUE);
+
+    }
+
+    @Test public void
+    the_performance_of_a_failing_test_should_be_evaluated() {
+
+        // GIVEN
+        FakeRecorder fakeRecorder = new FakeRecorder(new FakeRecord(PerfIssue.NONE));
+        TestExecutionContext testExecutionContext =
+                testExecutionContext(fakeRecorder, PerfAnnotationWithIssue.class);
+        TestIssue failure = TestIssue.buildFrom(new AssertionError("functional failure"));
+
+        // WHEN
+        Collection<PerfIssuesToFormat> perfIssuesToFormat = evaluate(testExecutionContext, failure);
+
+        // THEN
+        assertThat(perfIssuesToFormat).hasSize(1);
+        assertThat(perfIssuesToFormat.iterator().next().format()).contains(ANNOTATION_ISSUE);
+
+    }
+
     private Collection<PerfIssuesToFormat> evaluate(TestExecutionContext testExecutionContext) {
+        return evaluate(testExecutionContext, TestIssue.NONE);
+    }
+
+    private Collection<PerfIssuesToFormat> evaluate(TestExecutionContext testExecutionContext, TestIssue testIssue) {
         return PerfIssuesEvaluator.INSTANCE.evaluatePerfIssuesIfNoJvmIssue(annotationConfigs()
                                                                          , testExecutionContext
-                                                                         , JvmOrTestIssue.NONE);
+                                                                         , JvmOrTestIssue.buildFrom(testIssue));
     }
 
     private SetOfAnnotationConfigs annotationConfigs() {
@@ -274,6 +352,19 @@ public class PerfIssuesEvaluatorTest {
 
         @Override
         public void cleanResources() { }
+
+    }
+
+    private static class RecorderWithoutRecord extends FakeRecorder {
+
+        RecorderWithoutRecord() {
+            super(null);
+        }
+
+        @Override
+        public FakeRecord findRecord(TestExecutionContext testExecutionContext) {
+            throw new IllegalStateException("No record to read");
+        }
 
     }
 

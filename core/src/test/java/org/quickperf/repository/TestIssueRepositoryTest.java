@@ -12,13 +12,66 @@
  */
 package org.quickperf.repository;
 
+import org.junit.AssumptionViolatedException;
 import org.junit.Test;
+import org.quickperf.WorkingFolder;
 import org.quickperf.issue.TestIssue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class TestIssueRepositoryTest {
+
+    // As the specific JVM, which saves the test issue for the test JVM
+    @Test public void
+    should_keep_an_abort_thrown_after_the_test_method_marked_as_such() {
+
+        // GIVEN
+        WorkingFolder workingFolder = WorkingFolder.createOrRetrieveWorkingFolder(true);
+        AssumptionViolatedException assumptionFailure = new AssumptionViolatedException("assumption not respected");
+        TestIssue testIssue = TestIssue.buildFromThrowableAfterTestMethod(assumptionFailure);
+
+        // WHEN
+        TestIssueRepository.INSTANCE.save(testIssue, workingFolder.getPath());
+        TestIssue foundTestIssue = TestIssueRepository.INSTANCE.findFrom(workingFolder);
+
+        // THEN
+        assertThat(foundTestIssue.asThrowable()).isInstanceOf(AssumptionViolatedException.class)
+                                                .hasMessage("assumption not respected");
+        assertThat(foundTestIssue.isAbort()).isTrue();
+        assertThat(foundTestIssue.isThrownAfterTestMethod()).isTrue();
+
+    }
+
+    @Test public void
+    should_keep_an_abort_that_cannot_be_serialized_as_an_abort() {
+
+        // GIVEN
+        WorkingFolder workingFolder = WorkingFolder.createOrRetrieveWorkingFolder(true);
+        TestIssue testIssue = TestIssue.buildFrom(new NotSerializableAssumptionViolatedException());
+
+        // WHEN
+        TestIssueRepository.INSTANCE.save(testIssue, workingFolder.getPath());
+        TestIssue foundTestIssue = TestIssueRepository.INSTANCE.findFrom(workingFolder);
+
+        // THEN
+        assertThat(foundTestIssue.asThrowable()).hasMessageContaining("assumption not respected");
+        assertThat(foundTestIssue.isAbort()).isTrue();
+        assertThat(foundTestIssue.isThrownAfterTestMethod()).isFalse();
+
+    }
+
+    private static class NotSerializableAssumptionViolatedException extends AssumptionViolatedException {
+
+        private final Object notSerializable = new Object();
+
+        NotSerializableAssumptionViolatedException() {
+            super("assumption not respected");
+        }
+
+    }
 
     @Test public void
     should_not_fail_if_throwable_is_not_serializable() {

@@ -57,6 +57,10 @@ public class PerfIssuesEvaluator {
             return Collections.emptyList();
         }
 
+        if(isAbortBeforeTheEndOfTheTestMethod(jvmOrTestIssue.getTestIssue())) {
+            return Collections.emptyList();
+        }
+
         Map<Annotation, PerfRecord> perfRecordByAnnotation
                 = buildPerfRecordByAnnotation(annotationConfigs, testExecutionContext);
 
@@ -65,6 +69,16 @@ public class PerfIssuesEvaluator {
 
         return perfIssuesToFormatGroup(perfRecordByAnnotation, perfIssuesByAnnotation);
 
+    }
+
+    // A test aborted before or by its test method, by a failed assumption for example, stays aborted: the abort cut the
+    // performance recording short, or the test method was not executed. The performance-related properties are about
+    // the whole test method, so they are not evaluated, as the test frameworks skip the assertions following a failed
+    // assumption. This also applies to an abort that the test framework adapter does not mark as thrown after the test
+    // method. An abort thrown once the test method has returned, by an @AfterEach method for example, leaves the
+    // recording complete: the properties are then evaluated as for a test without abort.
+    private static boolean isAbortBeforeTheEndOfTheTestMethod(TestIssue testIssue) {
+        return testIssue.isAbort() && !testIssue.isThrownAfterTestMethod();
     }
 
     private Map<Annotation, PerfIssue> evaluatePerfIssuesByAnnotation(Map<Annotation, PerfRecord> perfRecordByAnnotation, TestExecutionContext testExecutionContext, SetOfAnnotationConfigs testAnnotationConfigs) {

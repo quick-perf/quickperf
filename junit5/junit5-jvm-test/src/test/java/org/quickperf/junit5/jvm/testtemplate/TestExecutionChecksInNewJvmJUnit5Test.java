@@ -546,6 +546,59 @@ public class TestExecutionChecksInNewJvmJUnit5Test {
 
     }
 
+    static class IllegalStateExceptionHandler implements TestExecutionExceptionHandler {
+
+        @Override
+        public void handleTestExecutionException(ExtensionContext extensionContext, Throwable throwable) throws Throwable {
+            if (!(throwable instanceof IllegalStateException)) {
+                throw throwable;
+            }
+        }
+
+    }
+
+    @QuickPerfTest
+    @ExtendWith(IllegalStateExceptionHandler.class)
+    static class AssumptionFailingInAnAfterEachMethodOfATestMethodWithAHandledExceptionInTheSpecificJvm {
+
+        @AfterEach
+        public void after_each() {
+            assumeFalse(executingInTheSpecificJvm(), "Assumption failing in an @AfterEach method of the specific JVM");
+        }
+
+        @ExpectMaxHeapAllocation(value = 1, unit = AllocationUnit.MEGA_BYTE)
+        @Test
+        public void test_method_allocating_3_mega_bytes_and_throwing_a_handled_exception() {
+            byte[] allocatedBytes = new byte[3 * 1024 * 1024];
+            throw new IllegalStateException("Exception handled by a TestExecutionExceptionHandler");
+        }
+
+    }
+
+    // The test method ended without abort: its performance recording is complete
+    @Test public void
+    should_report_the_performance_issue_of_a_test_method_with_a_handled_exception_and_aborted_after_it_in_the_specific_jvm() {
+
+        // GIVEN
+        Class<?> testClass = AssumptionFailingInAnAfterEachMethodOfATestMethodWithAHandledExceptionInTheSpecificJvm.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        String errorReport = jUnit5TestsResult.getErrorReport();
+
+        assertThat(jUnit5TestsResult.getNumberOfFailures())
+                .as("The performance issue should fail the test, as when the test does not need a specific JVM.%s"
+                  , errorReport)
+                .isOne();
+
+        assertThat(errorReport).contains("Expected heap allocation (test method thread) to be less than 1.00 Mega bytes")
+                               .contains("Assumption failing in an @AfterEach method of the specific JVM");
+
+    }
+
     @QuickPerfTest
     static class AssumptionWithACauseFailingInTheTestMethodInTheSpecificJvm {
 
@@ -578,6 +631,47 @@ public class TestExecutionChecksInNewJvmJUnit5Test {
 
         assertThat(jUnit5TestsResult.getAbortReport())
                 .contains("TestAbortedException: assumption was not met due to: [Server available]");
+
+    }
+
+    @QuickPerfTest
+    static class AssumptionFailingInATestMethodAllocatingInTheSpecificJvm {
+
+        @ExpectMaxHeapAllocation(value = 1, unit = AllocationUnit.MEGA_BYTE)
+        @Test
+        public void test_method_allocating_3_mega_bytes() {
+            byte[] allocatedBytes = new byte[3 * 1024 * 1024];
+            assumeFalse(executingInTheSpecificJvm(), "Assumption failing in the test method of the specific JVM");
+        }
+
+    }
+
+    @Test public void
+    should_not_report_the_performance_issue_of_a_test_aborted_by_its_test_method_in_the_specific_jvm() {
+
+        // GIVEN
+        Class<?> testClass = AssumptionFailingInATestMethodAllocatingInTheSpecificJvm.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        String errorReport = jUnit5TestsResult.getErrorReport();
+
+        assertThat(jUnit5TestsResult.getNumberOfFailures())
+                .as("The abort cut the measurement short: the test should be aborted, as when an assumption aborts"
+                  + " a test that does not need a specific JVM.%s", errorReport)
+                .isZero();
+
+        assertThat(jUnit5TestsResult.getNumberOfAbortedTests())
+                .as("The test should be aborted, as in the specific JVM.")
+                .isOne();
+
+        assertThat(jUnit5TestsResult.getAbortReport())
+                .contains("Assumption failing in the test method of the specific JVM");
+
+        assertThat(errorReport).doesNotContain("Expected heap allocation");
 
     }
 

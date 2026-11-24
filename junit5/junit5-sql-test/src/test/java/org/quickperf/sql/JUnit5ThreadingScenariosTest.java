@@ -12,6 +12,7 @@
  */
 package org.quickperf.sql;
 
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.quickperf.annotation.DisableGlobalAnnotations;
 import org.quickperf.junit5.JUnit5Tests;
@@ -637,9 +638,10 @@ class JUnit5ThreadingScenariosTest {
     // =========================================================================
     // SQL executed on a worker thread while another test is recording cannot
     // be attributed reliably. The test fails with the cross-test contamination
-    // error even if its SQL properties are respected, and keeps reporting its
-    // own functional failure. The sibling test is simulated by a recorder
-    // registered from another thread, so these scenarios run sequentially.
+    // error even if its SQL properties are respected, keeps reporting its own
+    // functional failure, and stays aborted when an assumption aborts its test
+    // method. The sibling test is simulated by a recorder registered from
+    // another thread, so these scenarios run sequentially.
 
     /** Executes {@code sql} on a worker thread while the recorder built by
      * {@code siblingRecorder} on another thread is registered. */
@@ -841,6 +843,25 @@ class JUnit5ThreadingScenariosTest {
                 .contains(SqlExecutions.CROSS_TEST_CONTAMINATION_MESSAGE)
                 .contains("FUNCTIONAL PROPERTY")
                 .contains("functional failure of the test itself");
+    }
+
+    @QuickPerfTest
+    public static class ContaminatedTestAbortedByAnAssumption extends SqlTestBaseJUnit5 {
+
+        @ExpectSelect(1)
+        @Test
+        public void executes_sql_on_worker_thread_and_is_aborted() throws Exception {
+            executeSelectOnWorkerThreadWhileASiblingTestIsRecording(emf);
+            Assumptions.assumeTrue(false, "assumption not respected");
+        }
+    }
+
+    @Test
+    void contaminated_test_aborted_by_an_assumption_should_stay_aborted() {
+        TestExecutionSummary summary = runSequentially(ContaminatedTestAbortedByAnAssumption.class);
+
+        assertThat(summary.getTestsFailedCount()).isZero();
+        assertThat(summary.getTestsAbortedCount()).isOne();
     }
 
     // A sibling test only displaying its SQL is also a recording test.

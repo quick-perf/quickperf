@@ -54,6 +54,10 @@ public class TestExecutionContext {
 
     private int runnerAllocationOffset;
 
+    // Written by the thread executing the test method, which can be another thread than the one reading it, under a
+    // timeout for example
+    private volatile boolean testMethodCompleted;
+
     private TestExecutionContext() {}
 
     // TODO: RENAME METHOD AND REFACTOR
@@ -306,5 +310,19 @@ public class TestExecutionContext {
     public void setRunnerAllocationOffset(int runnerAllocationOffset) {
         this.runnerAllocationOffset = runnerAllocationOffset;
     }
+
+    /**
+     * Records whether the last execution of the test method completed: it returned, or threw the exception that the
+     * test expects. A test framework adapter can then tell an abort thrown after the test method, with a complete
+     * performance recording, from an abort thrown before the test method or by it.
+     */
+    public void setTestMethodCompleted(boolean testMethodCompleted) {
+        this.testMethodCompleted = testMethodCompleted;
+    }
+
+    public boolean isTestMethodCompleted() {
+        return testMethodCompleted;
+    }
+
 }
 

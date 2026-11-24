@@ -149,8 +149,16 @@ class JUnit5TestRunner implements TestRunnerFromMain.FrameworkTestRunner {
             return TestIssue.buildInNewJvmFrom(Collections.singletonList(testMethodThrowable));
         }
 
-        // An assumption failing in the test method or in an @AfterEach method, for example. The test JVM evaluates the
-        // performance records, as when it executes the test.
+        if (testMethodThrowable == null || !isAbort(testMethodThrowable)) {
+            // An assumption failing in an @AfterEach method, for example, once the test method has returned, or has
+            // thrown an exception that a TestExecutionExceptionHandler handled: the test method ended without abort.
+            // The test JVM evaluates the performance recording, as when it executes the test, where QuickPerf evaluates
+            // it before JUnit calls the @AfterEach methods and the TestExecutionExceptionHandler extensions.
+            return TestIssue.buildFromThrowableAfterTestMethod(toSerializableAbort(testAbort));
+        }
+
+        // An assumption failing in the test method, for example: the abort cut the performance recording short. The
+        // test JVM reports the abort without evaluating the recording, as when it executes the test.
         return TestIssue.buildFrom(toSerializableAbort(testAbort));
     }
 
