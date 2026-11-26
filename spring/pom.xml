@@ -62,6 +62,15 @@
                 <module>testng-spring-boot-3-test</module>
             </modules>
         </profile>
+        <profile>
+            <id>SpringBoot4Tests</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <modules>
+                <module>junit6-spring-boot-4-test</module>
+            </modules>
+        </profile>
     </profiles>
 
 </project>
