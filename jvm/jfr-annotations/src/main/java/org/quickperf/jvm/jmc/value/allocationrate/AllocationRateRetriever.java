@@ -45,6 +45,31 @@ public class AllocationRateRetriever {
     }
 
 
+    /**
+     * Computes the allocation rate from the jdk.ObjectAllocationSample events (available from Java 16).
+     */
+    public AllocationRate retrieveAllocationRateAtLeastJava16(IItemCollection jfrEvents) {
+
+        IItemCollection allocationSamples = jfrEvents.apply(JdkFilters.OBJ_ALLOC);
+
+        long allocationDurationInMs;
+        try {
+            allocationDurationInMs =   computeMaxTimeStampInMs(allocationSamples)
+                                     - computeMinTimeStampInMs(allocationSamples);
+        } catch (QuantityConversionException e) {
+            return AllocationRate.NONE;
+        }
+
+        if (allocationDurationInMs <= 0) {
+            return AllocationRate.NONE;
+        }
+
+        IQuantity totalAlloc = jfrEvents.getAggregate(JdkAggregators.OBJ_ALLOC_TOTAL_SUM);
+        long totalAllocationInBytes = totalAlloc == null ? 0 : totalAlloc.longValue();
+
+        return new AllocationRate(totalAllocationInBytes, allocationDurationInMs);
+    }
+
     private long computeTotalAllocationInBytes(IItemCollection jfrEvents) {
         IQuantity totalAlloc = jfrEvents.getAggregate(JdkAggregators.ALLOCATION_TOTAL);
         return totalAlloc == null ? 0 : totalAlloc.longValue();

@@ -20,6 +20,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.quickperf.SystemProperties;
 import org.quickperf.issue.PerfIssue;
 import org.quickperf.issue.VerifiablePerformanceIssue;
+import org.quickperf.jvm.JVM;
 import org.quickperf.jvm.jfr.annotation.ProfileJvm;
 
 import static org.quickperf.jvm.jmc.value.ProfilingInfo.*;
@@ -43,13 +44,24 @@ public class DisplayJvmProfilingValueVerifier implements
         if(!SystemProperties.SIMPLIFIED_JVM_PROFILE_DISPLAY.evaluate()) {
 
             IItemCollection jfrEvents = jfrEventsMeasure.getValue();
-            boolean tlabAndOutsideTlabEventsDisabled =  ! jfrEvents.apply(JdkFilters.ALLOC_OUTSIDE_TLAB).hasItems()
+            // jdk.ObjectAllocationSample events are available and enabled by default from Java 16
+            boolean allocationAtLeastJava16 = JVM.INSTANCE.version.isGreaterThanOrEqualTo16();
+
+            boolean tlabAndOutsideTlabEventsDisabled =  !allocationAtLeastJava16
+                                                      &&! jfrEvents.apply(JdkFilters.ALLOC_OUTSIDE_TLAB).hasItems()
                                                       &&! jfrEvents.apply(JdkFilters.ALLOC_INSIDE_TLAB).hasItems();
 
-            String allocationTotal = tlabAndOutsideTlabEventsDisabled ? "(*)" : ALLOCATION_TOTAL.formatAsString(jfrEvents);
+            String allocationTotal;
+            String allocationRate;
+            if (allocationAtLeastJava16) {
+                allocationTotal = ALLOCATION_TOTAL_JAVA_16.formatAsString(jfrEvents);
+                allocationRate = ALLOCATION_SAMPLE_RATE.formatAsString(jfrEvents);
+            } else {
+                allocationTotal = tlabAndOutsideTlabEventsDisabled ? "(*)" : ALLOCATION_TOTAL.formatAsString(jfrEvents);
+                allocationRate = tlabAndOutsideTlabEventsDisabled ? "(*)" : ALLOCATION_RATE.formatAsString(jfrEvents);
+            }
             String insideTlabSum = tlabAndOutsideTlabEventsDisabled ? "(*)" : ALLOC_INSIDE_TLAB_SUM.formatAsString(jfrEvents);
             String outsideTlabSum = tlabAndOutsideTlabEventsDisabled ? "(*)" : ALLOC_OUTSIDE_TLAB_SUM.formatAsString(jfrEvents);
-            String allocationRate = tlabAndOutsideTlabEventsDisabled ? "(*)" : ALLOCATION_RATE.formatAsString(jfrEvents);
 
             String totalGcPause = TOTAL_GC_PAUSE.formatAsString(jfrEvents);
             String gcPause = LONGEST_GC_PAUSE.formatAsString(jfrEvents);
@@ -85,14 +97,27 @@ public class DisplayJvmProfilingValueVerifier implements
 
             StringWidthAdapter thirtyLength = new StringWidthAdapter(30);
 
-            String text =
-                LINE_SEPARATOR
-                + LINE
-                + " ALLOCATION (estimations)"                           + "     |   " + "GARBAGE COLLECTION           "                             + "|  THROWABLE" + LINE_SEPARATOR
+            String allocationSection;
+            if (allocationAtLeastJava16) {
+                allocationSection =
+                  " ALLOCATION (estimations)"                           + "     |   " + "GARBAGE COLLECTION           "                             + "|  THROWABLE" + LINE_SEPARATOR
+                + " Total       : " + fifteenLength.adapt(allocationTotal)   + "|   " + twentyNineLength.adapt("Total pause     : " + totalGcPause) + "|  Exception: " + exceptionsCount + LINE_SEPARATOR
+                + " Allocation rate: " + twelveLength.adapt(allocationRate)  + "|   " + twentyNineLength.adapt("Longest GC pause: " + gcPause)      + "|  Error    : " + errorCount + LINE_SEPARATOR
+                + thirtyLength.adapt("")                                     + "|   " + twentyNineLength.adapt("Young: " + youngGcCollection)       + "|  Throwable: " + throwablesCount + LINE_SEPARATOR
+                + thirtyLength.adapt("")                                     + "|   " + twentyNineLength.adapt("Old  : " + oldGcCollection)         + "|" + LINE_SEPARATOR;
+            } else {
+                allocationSection =
+                  " ALLOCATION (estimations)"                           + "     |   " + "GARBAGE COLLECTION           "                             + "|  THROWABLE" + LINE_SEPARATOR
                 + " Total       : " + fifteenLength.adapt(allocationTotal)   + "|   " + twentyNineLength.adapt("Total pause     : " + totalGcPause) + "|  Exception: " + exceptionsCount + LINE_SEPARATOR
                 + " Inside TLAB : " + fifteenLength.adapt(insideTlabSum)     + "|   " + twentyNineLength.adapt("Longest GC pause: " + gcPause)      + "|  Error    : " + errorCount + LINE_SEPARATOR
                 + " Outside TLAB: " + fifteenLength.adapt(outsideTlabSum)    + "|   " + twentyNineLength.adapt("Young: " + youngGcCollection)       + "|  Throwable: " + throwablesCount + LINE_SEPARATOR
-                + " Allocation rate: " + twelveLength.adapt(allocationRate)  + "|   " + twentyNineLength.adapt("Old  : " + oldGcCollection)         + "|" + LINE_SEPARATOR
+                + " Allocation rate: " + twelveLength.adapt(allocationRate)  + "|   " + twentyNineLength.adapt("Old  : " + oldGcCollection)         + "|" + LINE_SEPARATOR;
+            }
+
+            String text =
+                LINE_SEPARATOR
+                + LINE
+                + allocationSection
                 + LINE
                 + thirtyLength.adapt(" COMPILATION")                    + "|   " + "CODE CACHE" + LINE_SEPARATOR
                 + thirtyLength.adapt(" Number : " + compilationsCount)  + "|   " + codeCacheFullCount + LINE_SEPARATOR

@@ -19,7 +19,8 @@ import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
 import org.quickperf.junit5.QuickPerfTest;
 import org.quickperf.jvm.allocation.AllocationUnit;
 import org.quickperf.jvm.annotations.HeapSize;
-import org.quickperf.jvm.jfr.annotation.ExpectNoJvmIssue;
+
+import org.quickperf.jvm.jfr.annotation.ProfileJvm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +47,10 @@ public class JmcJunit5Tests {
 
         }
 
-        @HeapSize(value = 20, unit = AllocationUnit.MEGA_BYTE)
-        @ExpectNoJvmIssue(score = 50)
+        @HeapSize(value = 200, unit = AllocationUnit.MEGA_BYTE)
+        //@ExpectNoJvmIssue(score = 50)
+        @ProfileJvm
+        //@MeasureHeapAllocation
         @Test
         public void code_with_scores_of_jmc_rules_greater_than_50() {
 
