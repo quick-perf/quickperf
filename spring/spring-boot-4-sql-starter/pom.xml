@@ -22,6 +22,8 @@
     <artifactId>quick-perf-springboot4-sql-starter</artifactId>
 
     <properties>
+        <!-- Target Spring Boot 4's Java 17 baseline for the starter and its dependencies.
+             CI also runs the integration tests on Java 25 to verify runtime compatibility. -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <dependencies.max.jdk.version>17</dependencies.max.jdk.version>
