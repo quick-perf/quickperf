@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  ~ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+  ~
+  ~ Copyright 2019-2022 the original author or authors.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>quick-perf</artifactId>
+        <groupId>org.quickperf</groupId>
+        <version>1.1.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>quick-perf-junit6-parent</artifactId>
+
+    <packaging>pom</packaging>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <!-- The JUnit 6 jars are Java 17 bytecode, and the enforcer also checks the test and provided scopes -->
+        <dependencies.max.jdk.version>17</dependencies.max.jdk.version>
+        <!-- The version of Spring Boot 4.1. Before a release, also run the tests with the latest JUnit 6 version:
+             ./mvnw -pl junit6/junit6-sql-test test -Djunit6.version=<latest 6.x> -->
+        <junit6.version>6.0.3</junit6.version>
+        <!-- JUnit 6 requires Maven Surefire 3.0.0 or later -->
+        <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Also aligns the JUnit dependencies of the quick-perf-junit5-test-util test-jar -->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit6.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- JUnit 6 requires Java 17: on JDK 8 and 11, Maven reads this POM only -->
+    <profiles>
+        <profile>
+            <id>JUnit6</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <modules>
+                <module>junit6-extension</module>
+                <module>junit6-sql-test</module>
+                <module>junit6-jvm-test</module>
+                <module>junit6-global-jvm-annotation-test</module>
+            </modules>
+        </profile>
+    </profiles>
+
+</project>

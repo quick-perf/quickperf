@@ -54,7 +54,7 @@ jobs:
     name: Java ${{ matrix.java }}
     strategy:
       matrix:
-        java: [11]
+        java: [17]
     steps:
     - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
     - name: Set up JDK ${{ matrix.java }}
@@ -88,7 +88,7 @@ jobs:
     name: Java ${{ matrix.java }}
     strategy:
       matrix:
-        java: [11]
+        java: [17]
     env:
       # Force UTF-8 so the mvnd daemon log is written in UTF-8,
       # matching DaemonDiagnostics.tail() which reads it as UTF-8.

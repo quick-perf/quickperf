@@ -1,0 +1,300 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ *
+ * Copyright 2019-2022 the original author or authors.
+ */
+package org.quickperf.sql;
+
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.DynamicNode;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.quickperf.junit5.JUnit5Tests;
+import org.quickperf.junit5.JUnit5Tests.JUnit5TestsResult;
+import org.quickperf.sql.annotation.ExpectJdbcBatching;
+import org.quickperf.sql.annotation.ExpectSelect;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class QuickPerfJUnit5SqlDynamicTest {
+
+    @QuickPerfUnderTest
+    public static class SqlSelectJUnit5OneDynamicTest extends SqlTestBaseJUnit5 {
+
+        @ExpectSelect(2)
+        @TestFactory
+        public DynamicTest execute_one_select_but_five_select_expected() {
+            return DynamicTest.dynamicTest("Dynamic test", () -> {
+                EntityManager em = emf.createEntityManager();
+                Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+                query.getResultList();
+            });
+        }
+    }
+
+    @QuickPerfUnderTest
+    public static class SqlSelectJUnit5MultipleDynamicTest extends SqlTestBaseJUnit5 {
+        // The @ExpectSelect(5) will be used by each test, so we will have 2 failing tests here
+        @ExpectSelect(2)
+        @TestFactory
+        public List<DynamicTest> execute_two_select_but_five_select_expected() {
+            List<DynamicTest> dynamicTests = new ArrayList<>();
+            dynamicTests.add(DynamicTest.dynamicTest("Dynamic test 1", () -> {
+                EntityManager em = emf.createEntityManager();
+                Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+                query.getResultList();
+            }));
+            dynamicTests.add(DynamicTest.dynamicTest("Dynamic test 2", () -> {
+                EntityManager em = emf.createEntityManager();
+                Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+                query.getResultList();
+            }));
+            return dynamicTests;
+        }
+    }
+
+    @QuickPerfUnderTest
+    public static class SqlSelectJUnit5OneDynamicContainer extends SqlTestBaseJUnit5 {
+        // The @ExpectSelect(5) will be used by each test, so we will have 2 failing tests here
+        @ExpectSelect(2)
+        @TestFactory
+        public DynamicNode execute_two_select_but_five_select_expected() {
+            List<DynamicTest> dynamicTests = new ArrayList<>();
+            dynamicTests.add(DynamicTest.dynamicTest("Dynamic test 1", () -> {
+                EntityManager em = emf.createEntityManager();
+                Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+                query.getResultList();
+            }));
+            dynamicTests.add(DynamicTest.dynamicTest("Dynamic test 2", () -> {
+                EntityManager em = emf.createEntityManager();
+                Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+                query.getResultList();
+            }));
+            return DynamicContainer.dynamicContainer("Dynamic container", dynamicTests);
+        }
+    }
+
+    @QuickPerfUnderTest
+    public static class SqlSelectJUnit5MultipleDynamicContainer extends SqlTestBaseJUnit5 {
+        // The @ExpectSelect(5) will be used by each test, so we will have 4 failing tests here
+        @ExpectSelect(2)
+        @TestFactory
+        public List<DynamicNode> execute_four_select_but_five_select_expected() {
+            List<DynamicNode> dynamicNodes = new ArrayList<>();
+            List<DynamicTest> dynamicTests = new ArrayList<>();
+            dynamicTests.add(DynamicTest.dynamicTest("Dynamic test 1", () -> {
+                EntityManager em = emf.createEntityManager();
+                Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+                query.getResultList();
+            }));
+            dynamicTests.add(DynamicTest.dynamicTest("Dynamic test 2", () -> {
+                EntityManager em = emf.createEntityManager();
+                Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+                query.getResultList();
+            }));
+            dynamicNodes.add(DynamicContainer.dynamicContainer("Dynamic container 1", dynamicTests));
+            dynamicNodes.add(DynamicContainer.dynamicContainer("Dynamic container 2", dynamicTests));
+            return dynamicNodes;
+        }
+    }
+
+    @QuickPerfUnderTest
+    public static class SqlJdbcBatchingJUnit5DynamicTests extends SqlTestBaseJUnit5 {
+
+        @ExpectJdbcBatching
+        @TestFactory
+        public List<DynamicTest> execute_an_insert_not_batched_then_inserts_in_batch() {
+            List<DynamicTest> dynamicTests = new ArrayList<>();
+            dynamicTests.add(DynamicTest.dynamicTest("Insert not batched", () -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO Book (id,title) VALUES (?, ?)")) {
+                    insertStatement.setLong(1, 1000);
+                    insertStatement.setString(2, "Book title");
+                    insertStatement.executeUpdate();
+                }
+            }));
+            dynamicTests.add(DynamicTest.dynamicTest("Inserts in batch", () -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO Book (id,title) VALUES (?, ?)")) {
+                    for (int i = 1; i <= 3; i++) {
+                        insertStatement.setLong(1, 1000 + i);
+                        insertStatement.setString(2, "Book title");
+                        insertStatement.addBatch();
+                    }
+                    insertStatement.executeBatch();
+                }
+            }));
+            return dynamicTests;
+        }
+    }
+
+    @Test public void
+    should_record_the_sql_executions_of_each_dynamic_test_separately() {
+
+        // GIVEN
+        Class<?> testClass = SqlJdbcBatchingJUnit5DynamicTests.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        String errorReport = jUnit5TestsResult.getErrorReport();
+
+        assertThat(jUnit5TestsResult.getNumberOfFailures())
+                .as("Only the dynamic test executing an insert not batched should fail.%s", errorReport)
+                .isOne();
+
+        assertThat(errorReport).contains("Insert not batched")
+                               .contains("JDBC batching is disabled")
+                               .doesNotContain("Inserts in batch");
+
+    }
+
+    @QuickPerfUnderTest
+    public static class SqlSelectJUnit5DynamicTestWithQuickPerfRegisteredTwice extends SqlTestBaseJUnit5 {
+
+        // Registered in addition to the extension of @QuickPerfUnderTest
+        @RegisterExtension
+        static QuickPerfExtensionForwarder quickPerfExtension = new QuickPerfExtensionForwarder();
+
+        @ExpectSelect(1)
+        @TestFactory
+        public DynamicTest execute_one_select() {
+            return DynamicTest.dynamicTest("Dynamic test", () -> {
+                EntityManager em = emf.createEntityManager();
+                Query query = em.createQuery("FROM " + Book.class.getCanonicalName());
+                query.getResultList();
+            });
+        }
+    }
+
+    @Test public void
+    should_record_the_sql_executions_of_a_dynamic_test_with_quickperf_registered_twice() {
+
+        // GIVEN
+        Class<?> testClass = SqlSelectJUnit5DynamicTestWithQuickPerfRegisteredTwice.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        assertThat(jUnit5TestsResult.getNumberOfFailures())
+                .as(jUnit5TestsResult.getErrorReport())
+                .isZero();
+
+        assertThat(jUnit5TestsResult.getNumberOfSucceededTests()).isOne();
+
+    }
+
+    @Test public void
+    should_fail_if_a_sql_performance_property_is_un_respected_on_a_single_dynamic_test() {
+
+        // GIVEN
+        Class<?> testClass = SqlSelectJUnit5OneDynamicTest.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isOne();
+
+        String errorReport = jUnit5TestsResult.getErrorReport();
+        assertThat(errorReport).contains("You may think that <2> select statements were sent to the database")
+                               .contains("But there is in fact <1>...")
+                               .contains("select")
+                               .contains("book0_.id")
+                               .contains("from")
+                               .contains("Book book0_");
+
+    }
+
+    @Test public void
+    should_fail_if_a_sql_performance_property_is_un_respected_on_all_tests_dynamic_test() {
+
+        // GIVEN
+        Class<?> testClass = SqlSelectJUnit5MultipleDynamicTest.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(2);
+
+        String errorReport = jUnit5TestsResult.getErrorReport();
+        assertThat(errorReport).contains("You may think that <2> select statements were sent to the database")
+                .contains("But there is in fact <1>...")
+                .contains("select")
+                .contains("book0_.id")
+                .contains("from")
+                .contains("Book book0_");
+
+    }
+
+    @Test public void
+    should_fail_if_a_sql_performance_property_is_un_respected_on_all_tests_dynamic_test_of_a_single_container() {
+
+        // GIVEN
+        Class<?> testClass = SqlSelectJUnit5OneDynamicContainer.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(2);
+
+        String errorReport = jUnit5TestsResult.getErrorReport();
+        assertThat(errorReport).contains("You may think that <2> select statements were sent to the database")
+                .contains("But there is in fact <1>...")
+                .contains("select")
+                .contains("book0_.id")
+                .contains("from")
+                .contains("Book book0_");
+
+    }
+
+    @Test public void
+    should_fail_if_a_sql_performance_property_is_un_respected_on_all_tests_dynamic_test_of_all_containers() {
+
+        // GIVEN
+        Class<?> testClass = SqlSelectJUnit5MultipleDynamicContainer.class;
+        JUnit5Tests jUnit5Tests = JUnit5Tests.createInstance(testClass);
+
+        // WHEN
+        JUnit5TestsResult jUnit5TestsResult = jUnit5Tests.run();
+
+        // THEN
+        assertThat(jUnit5TestsResult.getNumberOfFailures()).isEqualTo(4);
+
+        String errorReport = jUnit5TestsResult.getErrorReport();
+        assertThat(errorReport).contains("You may think that <2> select statements were sent to the database")
+                .contains("But there is in fact <1>...")
+                .contains("select")
+                .contains("book0_.id")
+                .contains("from")
+                .contains("Book book0_");
+
+    }
+
+}

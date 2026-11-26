@@ -32,6 +32,23 @@
         <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
     </properties>
 
+    <profiles>
+        <profile>
+            <!-- Spring Boot 1 runs on JDK 8 only. On the other JDKs, the module stays in the reactor, so that a release
+                 updates its version, but builds nothing -->
+            <id>SpringBoot1TestsSkipped</id>
+            <activation>
+                <jdk>[9,)</jdk>
+            </activation>
+            <properties>
+                <maven.main.skip>true</maven.main.skip>
+                <maven.test.skip>true</maven.test.skip>
+                <maven.javadoc.skip>true</maven.javadoc.skip>
+                <maven.source.skip>true</maven.source.skip>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

@@ -108,6 +108,21 @@ public class TestExecutionContext {
                        , runnerAllocationOffset);
     }
 
+    /**
+     * Builds the context of a test executed in the test JVM by a test framework adapter that never starts a specific JVM.
+     * The context applies perfAnnotations in the test JVM, so the adapter leaves out the annotations needing a specific
+     * JVM: it creates no working folder and computes no JVM option.
+     */
+    public static TestExecutionContext buildInTestJvmFrom(QuickPerfConfigs quickPerfConfigs, Annotation[] perfAnnotations) {
+        boolean testMethodToBeLaunchedInASpecificJvm = false;
+        int noAllocationOffsetBecauseOnlyOneJvm = 0;
+        return buildFrom(quickPerfConfigs
+                       , quickPerfConfigs.getTestAnnotationConfigs()
+                       , perfAnnotations
+                       , testMethodToBeLaunchedInASpecificJvm
+                       , noAllocationOffsetBecauseOnlyOneJvm);
+    }
+
     private static TestExecutionContext buildFrom(QuickPerfConfigs quickPerfConfigs
                                                 , SetOfAnnotationConfigs testAnnotationConfigs
                                                 , Annotation[] perfAnnotations
@@ -157,17 +172,35 @@ public class TestExecutionContext {
     private static List<RecordablePerformance> buildPerfRecordersToExecute(SetOfAnnotationConfigs testAnnotationConfigs, Annotation[] perfAnnotations) {
         List<RecordablePerformance> perfRecordersToExecute = new ArrayList<>();
         Set<Class<? extends RecordablePerformance>> perfRecorderClasses = new HashSet<>();
-        for (Annotation perfAnnotation : perfAnnotations) {
-            Class<? extends RecordablePerformance> perfRecorderClass = testAnnotationConfigs.retrievePerfRecorderClassFor(perfAnnotation);
-            if(perfRecorderClass!= null && !perfRecorderClasses.contains(perfRecorderClass)) {
-                RecordablePerformance perfRecorder = buildPerfRecorder(perfAnnotation
-                                                                     , perfRecorderClass
-                                                                     , testAnnotationConfigs
-                                                                      );
-                perfRecordersToExecute.add(perfRecorder);
+        try {
+            for (Annotation perfAnnotation : perfAnnotations) {
+                Class<? extends RecordablePerformance> perfRecorderClass = testAnnotationConfigs.retrievePerfRecorderClassFor(perfAnnotation);
+                if(perfRecorderClass!= null && !perfRecorderClasses.contains(perfRecorderClass)) {
+                    RecordablePerformance perfRecorder = buildPerfRecorder(perfAnnotation
+                                                                         , perfRecorderClass
+                                                                         , testAnnotationConfigs
+                                                                          );
+                    perfRecordersToExecute.add(perfRecorder);
+                }
             }
+        } catch (RuntimeException | Error buildFailure) {
+            // An invalid annotation value, for example. Releases the recorders already built: some of them register
+            // themselves when they are built (DisplaySqlRecorder, TestConnectionProfiler), and the test framework
+            // adapter gets no context to clean.
+            cleanResourcesOf(perfRecordersToExecute, buildFailure);
+            throw buildFailure;
         }
         return perfRecordersToExecute;
+    }
+
+    private static void cleanResourcesOf(List<RecordablePerformance> perfRecorders, Throwable buildFailure) {
+        for (RecordablePerformance perfRecorder : perfRecorders) {
+            try {
+                perfRecorder.cleanResources();
+            } catch (RuntimeException | Error cleaningFailure) {
+                buildFailure.addSuppressed(cleaningFailure);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")

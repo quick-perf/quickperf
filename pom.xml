@@ -196,6 +196,7 @@
         <module>sql</module>
         <module>junit4</module>
         <module>junit5</module>
+        <module>junit6</module>
         <module>testng</module>
         <module>spring</module>
         <module>bom</module>
@@ -206,6 +207,30 @@
             <id>release</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>${maven-enforcer-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <!-- A release updates the versions of the modules of the reactor only. The junit6
+                                     modules are built on JDK 17 or later, and the modules compiled with -source 7 on
+                                     JDK 19 or earlier -->
+                                <id>enforce-release-jdk</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireJavaVersion>
+                                            <version>[17,20)</version>
+                                            <message>Release QuickPerf on JDK 17, 18 or 19</message>
+                                        </requireJavaVersion>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>1.6</version>
@@ -247,6 +272,9 @@
                         </executions>
                         <configuration>
                             <failOnError>true</failOnError>
+                            <!-- The class Javadoc of the annotations starts with an <h3> heading, which the
+                                 accessibility checks of JDK 13 and later reject -->
+                            <doclint>all,-accessibility</doclint>
                             <show>public</show>
                             <subpackages>${javadoc-subpackages}</subpackages>
                             <sourceFileIncludes>${javadoc-sourceFileIncludes}</sourceFileIncludes>

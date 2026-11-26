@@ -81,6 +81,14 @@ public class JvmExecutionReport {
                           .doesNotContain(THIS_JVM_ID);
     }
 
+    public static void assertThatEachTestWasExecutedInThisJvm(List<JvmExecutionReport> reports) {
+        assertThat(reports).as("JVM execution reports").isNotEmpty();
+        for (JvmExecutionReport report : reports) {
+            assertThat(report.jvmId).as("JVM executing %s", report.testUniqueId)
+                                    .isEqualTo(THIS_JVM_ID);
+        }
+    }
+
     // The test JVM reports the execution of a new JVM for the test that this new JVM executed
     public static void assertThatEachTestWasTheTestExecutedInItsNewJvm(List<JvmExecutionReport> reports) {
         for (JvmExecutionReport report : reports) {

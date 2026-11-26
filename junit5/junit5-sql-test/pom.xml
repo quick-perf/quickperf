@@ -28,11 +28,43 @@
         <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
     </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- Runs the shared SQL scenarios with the extension named by the
+                         quickperf-extension-under-test.properties resource. No includes or excludes: setting excludes
+                         replaces the default one, which keeps Surefire from running the nested test classes. -->
+                    <dependenciesToScan>
+                        <dependency>org.quickperf:quick-perf-junit-jupiter-sql-scenarios</dependency>
+                    </dependenciesToScan>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-junit5</artifactId>
             <version>1.1.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.quickperf</groupId>
+            <artifactId>quick-perf-junit-jupiter-sql-scenarios</artifactId>
+            <version>1.1.1-SNAPSHOT</version>
+            <classifier>tests</classifier>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <!-- The shared scenarios also use it: their module declares their dependencies provided or test, so not
+             transitive -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit5.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  ~ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+  ~
+  ~ Copyright 2019-2022 the original author or authors.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.quickperf</groupId>
+        <artifactId>quick-perf-junit5-parent</artifactId>
+        <version>1.1.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+        The SQL scenarios shared by the QuickPerf JUnit 5 and JUnit 6 extensions, as a test-jar. junit5-sql-test runs
+        them with quick-perf-junit5 on JUnit 5.6, and junit6-sql-test with quick-perf-junit6 on JUnit 6, through
+        QuickPerfExtensionForwarder. This module does not run them: it has no extension to forward to.
+        Compiled once, to Java 8 bytecode: use Jupiter API newer than 5.6 only for the 3-argument interceptDynamicTest
+        methods of the extension classes, which must be nested or have a name that Maven Surefire does not include.
+    -->
+    <artifactId>quick-perf-junit-jupiter-sql-scenarios</artifactId>
+
+    <properties>
+        <!-- Installed, so that a consumer module can be built alone, but not deployed -->
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <gpg.skip>true</gpg.skip>
+        <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+        <allowIncompleteProjects>true</allowIncompleteProjects>
+        <!-- Its test class path mixes junit-jupiter-api 5.8.2 with junit-jupiter-engine 5.6.2 -->
+        <skipTests>true</skipTests>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- Provided or test, so not transitive: the consumers of the test-jar declare the dependencies of the
+         scenarios -->
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <!-- For the 3-argument interceptDynamicTest methods (5.8+). No junit-bom import: the launcher calls of
+                 the scenarios stay compiled against JUnit Platform 1.6 -->
+            <version>5.8.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <!-- The version of junit5-sql-test: a compile check of this API -->
+            <version>${junit5.jupiter.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.quickperf</groupId>
+            <artifactId>quick-perf-sql-annotations</artifactId>
+            <version>1.1.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.quickperf</groupId>
+            <artifactId>quick-perf-junit5-test-util</artifactId>
+            <version>1.1.1-SNAPSHOT</version>
+            <classifier>tests</classifier>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.quickperf</groupId>
+            <artifactId>quick-perf-sql-memory-test-util</artifactId>
+            <version>1.1.1-SNAPSHOT</version>
+            <classifier>tests</classifier>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.quickperf</groupId>
+            <artifactId>quick-perf-sql-hibernate-test-util</artifactId>
+            <version>1.1.1-SNAPSHOT</version>
+            <classifier>tests</classifier>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

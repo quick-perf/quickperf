@@ -13,8 +13,10 @@
 package org.quickperf.junit5;
 
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.DynamicTestInvocationContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
@@ -42,10 +44,16 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 
-public class QuickPerfTestExtension implements BeforeAllCallback, BeforeEachCallback, InvocationInterceptor {
+public class QuickPerfTestExtension implements BeforeAllCallback, BeforeEachCallback, AfterEachCallback
+                                             , InvocationInterceptor {
 
     private static final ExtensionContext.Namespace NAMESPACE =
             ExtensionContext.Namespace.create(QuickPerfTestExtension.class);
+
+    // Shared with the QuickPerf JUnit 6 extension (quick-perf-junit6), which fails a test that both extensions would
+    // record: their SQL recorders would displace each other
+    private static final ExtensionContext.Namespace QUICK_PERF_EXTENSIONS =
+            ExtensionContext.Namespace.create("org.quickperf.junit");
 
     // A dynamic test is not invoked by reflection: there is no allocation to subtract
     private static final int DYNAMIC_TEST_ALLOCATION_OFFSET = 0;
@@ -77,6 +85,12 @@ public class QuickPerfTestExtension implements BeforeAllCallback, BeforeEachCall
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
         TestThreads.markCurrentThread();
+        markRegistrationIn(extensionContext);
+    }
+
+    // Also in beforeEach, for an extension registered on the test method only
+    private static void markRegistrationIn(ExtensionContext extensionContext) {
+        extensionContext.getStore(QUICK_PERF_EXTENSIONS).put(QuickPerfTestExtension.class.getName(), Boolean.TRUE);
     }
 
     @Override
@@ -95,6 +109,7 @@ public class QuickPerfTestExtension implements BeforeAllCallback, BeforeEachCall
     public void beforeEach(ExtensionContext extensionContext) {
         // Before the beforeEach callbacks of the extensions registered after this one, and the @BeforeEach methods
         TestThreads.markCurrentThread();
+        markRegistrationIn(extensionContext);
         Method testMethod = extensionContext.getRequiredTestMethod();
         if (isTestFactory(testMethod)) {
             // A test factory has no TestExecutionContext: each of its dynamic tests has its own, see
@@ -117,6 +132,19 @@ public class QuickPerfTestExtension implements BeforeAllCallback, BeforeEachCall
 
     private TestExecutionContext getTestExecutionContext(ExtensionContext extensionContext) {
         return extensionContext.getStore(NAMESPACE).get(TestExecutionContext.class, TestExecutionContext.class);
+    }
+
+    // On the thread that executed beforeEach and built the context. JUnit calls afterEach even when the test method was
+    // not executed, after a failure or an abort in a @BeforeEach method for example, or was executed on another thread,
+    // with @Timeout(threadMode = SEPARATE_THREAD) for example. Releases the recorders that registered themselves when
+    // the context was built (@DisplaySql, @ProfileConnection): they would otherwise display the SQL of the next tests
+    // executed by this thread. The resources can be released twice.
+    @Override
+    public void afterEach(ExtensionContext extensionContext) {
+        TestExecutionContext testExecutionContext = getTestExecutionContext(extensionContext);
+        if (testExecutionContext != null) {
+            testExecutionContext.cleanResources();
+        }
     }
 
     private int findJunit5AllocationOffset() {
@@ -218,8 +246,21 @@ public class QuickPerfTestExtension implements BeforeAllCallback, BeforeEachCall
         processJvmOrTestIssue(jvmOrTestIssue, testExecutionContext);
     }
 
-    // JUnit 5.8 to 5.14, which deprecate this method, call it through the default implementation of
-    // interceptDynamicTest(Invocation, DynamicTestInvocationContext, ExtensionContext).
+    // Called by JUnit 5.8 and later, JUnit 6 included. Its default implementation calls the 2-argument method in
+    // JUnit 5.8 to 5.14, but only executes the dynamic test in JUnit 6: without this override, QuickPerf would check
+    // no dynamic test on JUnit 6. Like the default implementation, it calls the 2-argument method, so that the
+    // override of this method by a subclass is still called. JUnit 5.6 and 5.7, which have no
+    // DynamicTestInvocationContext, never call it.
+    @Override
+    public void interceptDynamicTest(Invocation<Void> invocation
+                                   , DynamicTestInvocationContext invocationContext
+                                   , ExtensionContext extensionContext) throws Throwable {
+        interceptDynamicTest(invocation, extensionContext);
+    }
+
+    // Called by JUnit 5.6 and 5.7, and by the 3-argument method: JUnit 5.8 deprecated this method in
+    // InvocationInterceptor, and JUnit 6 removed it
+    @SuppressWarnings("deprecation")
     @Override
     public void interceptDynamicTest(Invocation<Void> invocation, ExtensionContext extensionContext) throws Throwable {
         // Be careful that this method will be called by each dynamic test produced by a single test factory method.

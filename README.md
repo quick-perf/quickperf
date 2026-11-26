@@ -60,6 +60,8 @@
 
 :point_right:  [JUnit 5](https://github.com/quick-perf/doc/wiki/JUnit-5)
 
+:point_right:  [JUnit 6](https://github.com/quick-perf/doc/wiki/JUnit-6)
+
 :point_right:  [TestNG](https://github.com/quick-perf/doc/wiki/TestNG)
 
 [more...](https://github.com/quick-perf/doc/wiki/QuickPerf#execute-quickperf)
