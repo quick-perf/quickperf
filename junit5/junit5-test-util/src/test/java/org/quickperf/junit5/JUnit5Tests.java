@@ -13,6 +13,7 @@
 package org.quickperf.junit5;
 
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -45,14 +46,18 @@ public class JUnit5Tests {
 
     private final TestAbortListener testAbortListener;
 
+    private final ReportEntryListener reportEntryListener;
+
     private JUnit5Tests(Launcher launcher
                       , LauncherDiscoveryRequest request
                       , SummaryGeneratingListener listener
-                      , TestAbortListener testAbortListener) {
+                      , TestAbortListener testAbortListener
+                      , ReportEntryListener reportEntryListener) {
         this.launcher = launcher;
         this.request = request;
         this.listener = listener;
         this.testAbortListener = testAbortListener;
+        this.reportEntryListener = reportEntryListener;
     }
 
     public static JUnit5Tests createInstance(Class<?> testClass) {
@@ -63,22 +68,36 @@ public class JUnit5Tests {
      * @param configurationParameters JUnit configuration parameters, for example to execute the tests concurrently
      */
     public static JUnit5Tests createInstance(Class<?> testClass, Map<String, String> configurationParameters) {
+        return createInstance(configurationParameters, testClass);
+    }
+
+    /**
+     * To execute several test classes in one launcher execution
+     *
+     * @param configurationParameters JUnit configuration parameters, for example to execute the tests concurrently
+     */
+    public static JUnit5Tests createInstance(Map<String, String> configurationParameters, Class<?>... testClasses) {
         SummaryGeneratingListener listener = new SummaryGeneratingListener();
         TestAbortListener testAbortListener = new TestAbortListener();
+        ReportEntryListener reportEntryListener = new ReportEntryListener();
+        List<ClassSelector> classSelectors = new ArrayList<>();
+        for (Class<?> testClass : testClasses) {
+            classSelectors.add(selectClass(testClass));
+        }
         LauncherDiscoveryRequest request =
                 LauncherDiscoveryRequestBuilder.request()
-                .selectors(selectClass(testClass))
+                .selectors(classSelectors)
                 .configurationParameters(configurationParameters)
                 .build();
         Launcher launcher = LauncherFactory.create();
-        launcher.registerTestExecutionListeners(new SynchronizedListener(listener), testAbortListener);
-        return new JUnit5Tests(launcher, request, listener, testAbortListener);
+        launcher.registerTestExecutionListeners(new SynchronizedListener(listener), testAbortListener, reportEntryListener);
+        return new JUnit5Tests(launcher, request, listener, testAbortListener, reportEntryListener);
     }
 
     public JUnit5TestsResult run()  {
         launcher.execute(request);
         TestExecutionSummary testExecutionSummary = listener.getSummary();
-        return new JUnit5TestsResult(testExecutionSummary, testAbortListener.testAborts);
+        return new JUnit5TestsResult(testExecutionSummary, testAbortListener.testAborts, reportEntryListener.reportEntries);
     }
 
     // SummaryGeneratingListener does not collect the failures in a thread-safe way: the tests can be executed concurrently
@@ -141,15 +160,35 @@ public class JUnit5Tests {
 
     }
 
+    private static class ReportEntryListener implements TestExecutionListener {
+
+        private final List<Map<String, String>> reportEntries = new CopyOnWriteArrayList<>();
+
+        @Override
+        public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
+            reportEntries.add(entry.getKeyValuePairs());
+        }
+
+    }
+
     public static class JUnit5TestsResult {
 
         private final TestExecutionSummary testExecutionSummary;
 
         private final List<Throwable> testAborts;
 
+        private final List<Map<String, String>> reportEntries;
+
         public JUnit5TestsResult(TestExecutionSummary testExecutionSummary, List<Throwable> testAborts) {
+            this(testExecutionSummary, testAborts, Collections.<Map<String, String>>emptyList());
+        }
+
+        public JUnit5TestsResult(TestExecutionSummary testExecutionSummary
+                               , List<Throwable> testAborts
+                               , List<Map<String, String>> reportEntries) {
             this.testExecutionSummary = testExecutionSummary;
             this.testAborts = testAborts;
+            this.reportEntries = reportEntries;
         }
 
         public int getNumberOfFailures() {
@@ -163,6 +202,21 @@ public class JUnit5Tests {
 
         public long getNumberOfSucceededTests() {
             return testExecutionSummary.getTestsSucceededCount();
+        }
+
+        /**
+         * The number of tests whose execution started, to check that the tests of a class failing before them were
+         * not executed. A container, such as a test class or a test factory, is not a test.
+         */
+        public long getNumberOfStartedTests() {
+            return testExecutionSummary.getTestsStartedCount();
+        }
+
+        /**
+         * The key-value pairs of the report entries published during the execution, by the tests and the extensions
+         */
+        public List<Map<String, String>> getReportEntries() {
+            return reportEntries;
         }
 
         public List<JvmExecutionReport> getJvmExecutionReports() {

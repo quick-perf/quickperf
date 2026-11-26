@@ -34,10 +34,11 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 /**
  * JUnit 5.8 to 5.14 intercept a dynamic test with
- * <code>InvocationInterceptor.interceptDynamicTest(Invocation, DynamicTestInvocationContext, ExtensionContext)</code>,
- * whose default implementation calls
- * <code>InvocationInterceptor.interceptDynamicTest(Invocation, ExtensionContext)</code>, the method that QuickPerf
- * overrides. The other JUnit 5 test modules use JUnit 5.6.2, which directly calls this method.
+ * <code>InvocationInterceptor.interceptDynamicTest(Invocation, DynamicTestInvocationContext, ExtensionContext)</code>.
+ * QuickPerf overrides it, and calls <code>interceptDynamicTest(Invocation, ExtensionContext)</code>, which this module
+ * tests through the 3-argument method. The other JUnit 5 test modules use JUnit 5.6.2, which directly calls the
+ * 2-argument method. QuickPerfJUnit5DynamicTestsOnJUnit6Test, in junit6-jvm-test, tests the 3-argument method on
+ * JUnit 6, which only calls this one.
  */
 public class DynamicTestInvocationContextInNewJvmJUnit5Test {
 

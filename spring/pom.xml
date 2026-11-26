@@ -37,6 +37,9 @@
         <module>spring-boot-1-sql-starter</module>
         <module>spring-boot-2-sql-starter</module>
         <module>junit4-spring-base-tests</module>
+        <!-- In the reactor on every JDK, so that a release, which runs on JDK 17, updates its version. It builds
+             nothing on JDK 9 and later: Spring Boot 1 runs on JDK 8 only -->
+        <module>junit4-spring-boot-1-test</module>
     </modules>
 
     <profiles>
@@ -47,15 +50,6 @@
             </activation>
             <modules>
                 <module>junit4-spring-boot-2-test</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>SpringBoot1Tests</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <modules>
-                <module>junit4-spring-boot-1-test</module>
             </modules>
         </profile>
         <profile>

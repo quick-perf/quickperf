@@ -24,8 +24,25 @@
     <version>1.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <!-- Every QuickPerf artifact must have the same version: quick-perf-junit6, for example, needs the quick-perf-core of
+         its version -->
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.quickperf</groupId>
+                <artifactId>quick-perf-core</artifactId>
+                <version>1.1.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.quickperf</groupId>
+                <artifactId>quick-perf-jvm-core</artifactId>
+                <version>1.1.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.quickperf</groupId>
+                <artifactId>quick-perf-jvm-annotations</artifactId>
+                <version>1.1.1-SNAPSHOT</version>
+            </dependency>
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-jfr-annotations</artifactId>
@@ -44,6 +61,12 @@
             <dependency>
                 <groupId>org.quickperf</groupId>
                 <artifactId>quick-perf-junit5</artifactId>
+                <version>1.1.1-SNAPSHOT</version>
+            </dependency>
+            <!-- Built on JDK 17 or later only: release on JDK 17 -->
+            <dependency>
+                <groupId>org.quickperf</groupId>
+                <artifactId>quick-perf-junit6</artifactId>
                 <version>1.1.1-SNAPSHOT</version>
             </dependency>
             <dependency>

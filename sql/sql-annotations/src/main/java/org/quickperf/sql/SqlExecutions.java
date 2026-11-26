@@ -51,7 +51,8 @@ public class SqlExecutions implements Iterable<SqlExecution>, ViewablePerfRecord
             + "       " + "The SQL properties of this test cannot be verified, even if they look respected."
             + System.lineSeparator()
             + "       " + "Run this test in isolation (disable parallel execution), or annotate it with @HeapSize / @Xmx"
-            + " (or another JVM-forking annotation) to force a dedicated JVM.";
+            + " (or another JVM-forking annotation) to force a dedicated JVM; the QuickPerf JUnit 6 extension"
+            + " (quick-perf-junit6) and QuickPerfSqlTestNGListener do not support these annotations.";
 
     private final Deque<SqlExecution> sqlExecutions = new ConcurrentLinkedDeque<SqlExecution>();
 
