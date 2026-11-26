@@ -26,6 +26,7 @@
         <maven.compiler.target>1.7</maven.compiler.target>
         <spring4-version>4.3.22.RELEASE</spring4-version>
         <spring5-version>5.1.8.RELEASE</spring5-version>
+        <spring-boot-4.version>4.0.10</spring-boot-4.version>
     </properties>
 
     <modules>
@@ -60,6 +61,16 @@
             <modules>
                 <module>junit5-spring-boot-3-test</module>
                 <module>testng-spring-boot-3-test</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>SpringBoot4</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <modules>
+                <module>spring-boot-4-sql-starter</module>
+                <module>junit6-spring-boot-4-test</module>
             </modules>
         </profile>
     </profiles>

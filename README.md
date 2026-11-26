@@ -119,6 +119,14 @@ Auto-detection of Hibernate and Spring Data JPA:
 
 📙 [All the SQL annotations](https://github.com/quick-perf/doc/wiki/SQL-annotations)  &nbsp;&nbsp; :mag_right: [Spring Boot & JUnit 4](https://github.com/quick-perf/quickperf-examples/tree/master/springboot-junit4) &nbsp;&nbsp; :mag_right: [Spring Boot & JUnit 5](https://github.com/quick-perf/quickperf-examples/tree/master/springboot-junit5)
 
+### Spring Boot 4 with JUnit 6
+
+Add `org.quickperf:quick-perf-springboot4-sql-starter` as your QuickPerf test dependency.
+The starter includes the JUnit 6 extension and Spring Boot automatically configures SQL recording.
+Import `org.quickperf.junit6.QuickPerfTest` and place `@QuickPerfTest` before `@SpringBootTest`
+or the test slice annotation. You can then use SQL assertions such as `@ExpectSelect` on your
+test methods. The compatibility tests run on Java 17 and Java 25.
+
 ## Talks and videos
 
 ### [English](https://www.youtube.com/playlist?list=PLyRtZQwOxA6e7hOpc_n0WJ0exOYyVaS_b)

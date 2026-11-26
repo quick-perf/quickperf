@@ -109,6 +109,11 @@
                 <artifactId>quick-perf-springboot2-sql-starter</artifactId>
                 <version>1.1.1-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>org.quickperf</groupId>
+                <artifactId>quick-perf-springboot4-sql-starter</artifactId>
+                <version>1.1.1-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

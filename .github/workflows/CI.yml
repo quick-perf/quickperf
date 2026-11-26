@@ -23,6 +23,13 @@ jobs:
         java: [8, 11, 17]
     steps:
     - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+    - name: Set up JDK 25 for Spring Boot 4 tests
+      id: java25
+      if: matrix.java == 17
+      uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+      with:
+        java-version: '25'
+        distribution: temurin
     - name: Set up JDK ${{ matrix.java }}
       uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
       with:
@@ -39,6 +46,15 @@ jobs:
         version: ${{ env.MVND_VERSION }}
     - name: Build
       run: ${{ steps.mvnd.outputs.mvn_cmd }} --global-settings .mvn/settings.xml verify
+    - name: Test Spring Boot 4 on JDK 25
+      if: matrix.java == 17
+      env:
+        JAVA_25_HOME: ${{ steps.java25.outputs.path }}
+      # Maven runs on JDK 17 to compile the modules targeting Java 7.
+      run: >-
+        ${{ steps.mvnd.outputs.mvn_cmd }} --global-settings .mvn/settings.xml verify
+        -pl spring/junit6-spring-boot-4-test -am -Dtest=SpringBoot4SqlTest
+        -Dsurefire.failIfNoSpecifiedTests=false -Djvm="$JAVA_25_HOME/bin/java"
     - name: Upload mvn-lens report
       if: always()
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
