@@ -65,6 +65,21 @@ public enum ProfilingInfo {
 
     }
     ,
+
+    ALLOCATION_TOTAL_JAVA_16 {
+
+        @Override
+        public String formatAsString(IItemCollection jfrEvents) {
+            return formatAsString(jfrEvents, JdkAggregators.OBJ_ALLOC_TOTAL_SUM, IQuantity.class);
+        }
+
+        @Override
+        public String getLabel() {
+            return getLabel(JdkAggregators.OBJ_ALLOC_TOTAL_SUM, IQuantity.class);
+        }
+
+    }
+    ,
     ALLOC_INSIDE_TLAB_SUM {
 
         @Override
@@ -292,6 +307,25 @@ public enum ProfilingInfo {
 
             AllocationRate allocationRate = AllocationRateRetriever.INSTANCE
                                            .retrieveAllocationRateFrom(jfrEvents);
+
+            return AllocationRateFormatter.INSTANCE.format(allocationRate);
+
+        }
+
+        @Override
+        public String getLabel() {
+            return "Allocation Rate";
+        }
+    },
+    /**
+     * Allocation rate estimated from the jdk.ObjectAllocationSample events, available from Java 16.
+     */
+    ALLOCATION_SAMPLE_RATE {
+        @Override
+        public String formatAsString(IItemCollection jfrEvents) {
+
+            AllocationRate allocationRate = AllocationRateRetriever.INSTANCE
+                                           .retrieveAllocationRateAtLeastJava16(jfrEvents);
 
             return AllocationRateFormatter.INSTANCE.format(allocationRate);
 
